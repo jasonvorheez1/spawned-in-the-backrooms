@@ -2905,6 +2905,7 @@ l178-stone-lantern:
   physics: static
   tags: [l178]
 l178-story-andon-1:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   children: [{feetPosition: {x: 0, y: 0.372, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 5, intensity: 1.2, kind: point}}]
   feetPosition: {x: -8.6, y: 0.44983142614364624, z: -16.4}
@@ -2913,9 +2914,10 @@ l178-story-andon-1:
   model: /cdn/value.0f2e136e1e81146ac90b3ba3c6055b6ee9ef050a45847946d6775b8516d51d2a.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 15}
-  state: {why: ""}
-  tags: [l178-story]
+  state: {hp: 10, kind: qspot, mat: washi, maxHp: 10, name: Andon lamp, verb: Look, why: Paper lantern on a wooden frame. The washi is browned where the flame sits closest.}
+  tags: [l178-story, breakable, usable]
 l178-story-andon-2:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   children: [{feetPosition: {x: 0, y: 0.372, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 5, intensity: 1.2, kind: point}}]
   feetPosition: {x: 2.55, y: 0.44983142614364624, z: -16.4}
@@ -2924,9 +2926,10 @@ l178-story-andon-2:
   model: /cdn/value.0f2e136e1e81146ac90b3ba3c6055b6ee9ef050a45847946d6775b8516d51d2a.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: -10}
-  state: {why: ""}
-  tags: [l178-story]
+  state: {hp: 10, kind: qspot, mat: washi, maxHp: 10, name: Andon lamp, verb: Look, why: The paper's been patched twice with rice glue. Someone cares about this one.}
+  tags: [l178-story, breakable, usable]
 l178-story-andon-3:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   children: [{feetPosition: {x: 0, y: 0.372, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 5, intensity: 1.2, kind: point}}]
   feetPosition: {x: 3.6, y: 0.44983142614364624, z: -16.4}
@@ -2935,9 +2938,10 @@ l178-story-andon-3:
   model: /cdn/value.0f2e136e1e81146ac90b3ba3c6055b6ee9ef050a45847946d6775b8516d51d2a.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 5}
-  state: {why: ""}
-  tags: [l178-story]
+  state: {hp: 10, kind: qspot, mat: washi, maxHp: 10, name: Andon lamp, verb: Look, why: "Warm, steady light. No flicker. It never needs refilling, apparently."}
+  tags: [l178-story, breakable, usable]
 l178-story-andon-4:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   children: [{feetPosition: {x: 0, y: 0.372, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 5, intensity: 1.2, kind: point}}]
   feetPosition: {x: 16.55, y: 0.45012607856811127, z: 5.55}
@@ -2946,8 +2950,8 @@ l178-story-andon-4:
   model: /cdn/value.0f2e136e1e81146ac90b3ba3c6055b6ee9ef050a45847946d6775b8516d51d2a.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 0}
-  state: {why: ""}
-  tags: [l178-story]
+  state: {hp: 10, kind: qspot, mat: washi, maxHp: 10, name: Andon lamp, verb: Look, why: A moth sleeps on the paper. Even it seems comfortable here.}
+  tags: [l178-story, breakable, usable]
 l178-story-backpack:
   behavior: scripts/l178-prop.js
   castShadow: true
@@ -2961,6 +2965,7 @@ l178-story-backpack:
   state: {c: {x: -0.95, y: 0.6998314261436462, z: -16.5}, kind: read, name: Note under the backpack, page: 1784, verb: Read}
   tags: [l178-story, usable, l178-prop]
 l178-story-bottle:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: -0.55, y: 0.44983142614364624, z: -16.2}
   id: l178-story-bottle
@@ -2968,9 +2973,10 @@ l178-story-bottle:
   model: /cdn/value.081c36881c2a0b7c6645cc27fa50fa1fd1ee820145d7abd41b6503ef59e06e88.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 70}
-  state: {why: empty almond water}
-  tags: [l178-story]
+  state: {kind: qspot, mat: ceramic, name: Empty bottle, verb: Look, why: "Almond Water, drunk to the last drop. Someone arrived very thirsty."}
+  tags: [l178-story, breakable, usable]
 l178-story-broom:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   feetPosition: {x: -4.8, y: 0, z: 6.95}
   id: l178-story-broom
@@ -2978,9 +2984,10 @@ l178-story-broom:
   model: /cdn/value.1db258b720759612ed4562f2c36c587542016f0bcc20324935c6bf4a7ccd8f45.glb
   receiveShadow: true
   rotation: {pitch: -12, roll: 0, yaw: 0}
-  state: {why: broom against the porch lantern}
-  tags: [l178-story]
+  state: {kind: qspot, name: Bamboo broom, verb: Look, why: "Worn flat on one side. Somebody sweeps this porch every morning, always the same way."}
+  tags: [l178-story, usable]
 l178-story-bucket-1:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: -15.35, y: 0.4753917908398645, z: -1}
   id: l178-story-bucket-1
@@ -2988,9 +2995,10 @@ l178-story-bucket-1:
   model: /cdn/value.a69c1a581e4da208020f85acfc581fcad728f898a9106c49bfc545376ae715d1.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 0}
-  state: {why: ""}
-  tags: [l178-story]
+  state: {kind: qspot, name: Wooden bucket, verb: Look, why: "Hinoki bucket, still damp. Smells like cedar and hot spring."}
+  tags: [l178-story, breakable, usable]
 l178-story-bucket-2:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: -15.9, y: 0.6755967177176421, z: 0.7}
   id: l178-story-bucket-2
@@ -2998,19 +3006,21 @@ l178-story-bucket-2:
   model: /cdn/value.a69c1a581e4da208020f85acfc581fcad728f898a9106c49bfc545376ae715d1.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 30}
-  state: {why: ""}
-  tags: [l178-story]
+  state: {kind: qspot, name: Wooden bucket, verb: Look, why: Someone left their bathing bucket on the stool. The water inside is still warm.}
+  tags: [l178-story, breakable, usable]
 l178-story-calli-cup:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
-  feetPosition: {x: 3.2, y: 0.8199615538120271, z: 14.8}
+  feetPosition: {x: 2.88, y: 0.82, z: 14.62}
   id: l178-story-calli-cup
   layout: {box: {max: {x: 0.04, y: 0.08, z: 0.04}, min: {x: -0.04, y: 0, z: -0.04}}}
   model: /cdn/value.603e20634b7c61679301843cedd4119e6e70ba007dbde5f923a21faf2f4636d7.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 0}
-  state: {why: ""}
-  tags: [l178-story]
+  state: {kind: qspot, mat: ceramic, name: Brush cup, verb: Look, why: "Water for the brush, gone grey with ink."}
+  tags: [l178-story, breakable, usable]
 l178-story-calli-zabuton:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: 2.6, y: 0.4799615442752838, z: 14.05}
   id: l178-story-calli-zabuton
@@ -3018,9 +3028,10 @@ l178-story-calli-zabuton:
   model: /cdn/value.15dc7415aa439093b0d220e0db76e800ec4c88afecdad901ad6f72286582b8e3.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 0}
-  state: {why: cushion for the writer}
-  tags: [l178-story]
+  state: {kind: qspot, name: Cushion, verb: Look, why: Pressed flat. Whoever writes here sits for hours.}
+  tags: [l178-story, usable]
 l178-story-callidesk:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   feetPosition: {x: 2.6, y: 0.4799615442752838, z: 14.7}
   id: l178-story-callidesk
@@ -3029,9 +3040,10 @@ l178-story-callidesk:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 180}
-  state: {why: calligraphy practice mid-sheet}
-  tags: [l178-story]
+  state: {hp: 35, kind: qspot, mat: wood, maxHp: 35, name: Calligraphy desk, verb: Look, why: "The same character, forty times. The last one is almost right."}
+  tags: [l178-story, breakable, usable]
 l178-story-catdish:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: 6.4, y: 0.4904158115386963, z: 7.55}
   id: l178-story-catdish
@@ -3039,9 +3051,10 @@ l178-story-catdish:
   model: /cdn/value.fef192fdfd2c8cd5d1923b85f851eba63edc989fb4706c56eddc8a3aab456c27.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 0}
-  state: {why: "a cat dish: no cat"}
-  tags: [l178-story]
+  state: {kind: qspot, mat: ceramic, name: Cat dish, verb: Look, why: "Fresh water, a few dried fish. There's no cat. Nobody has ever seen one."}
+  tags: [l178-story, breakable, usable]
 l178-story-crumpled-1:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: 2, y: 0.4799615442752838, z: 14.35}
   id: l178-story-crumpled-1
@@ -3049,9 +3062,10 @@ l178-story-crumpled-1:
   model: /cdn/value.53059fe9cb301c6e6396d6ea9e9fbbc761282ca10b2c8c491a094dd90076ce6b.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 0}
-  state: {why: a failed character}
-  tags: [l178-story]
+  state: {kind: qspot, name: Crumpled sheet, verb: Look, why: "A practice character, crushed in one fist. Too heavy on the last stroke."}
+  tags: [l178-story, usable]
 l178-story-crumpled-2:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: 3.15, y: 0.4799615442752838, z: 14.25}
   id: l178-story-crumpled-2
@@ -3059,19 +3073,21 @@ l178-story-crumpled-2:
   model: /cdn/value.53059fe9cb301c6e6396d6ea9e9fbbc761282ca10b2c8c491a094dd90076ce6b.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 40}
-  state: {why: ""}
-  tags: [l178-story]
+  state: {kind: qspot, name: Crumpled sheet, verb: Look, why: Another try. You can see the frustration in the ink.}
+  tags: [l178-story, usable]
 l178-story-donabe:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
-  feetPosition: {x: 12.02, y: 1.280763336175204, z: 1.38}
+  feetPosition: {x: 12.02, y: 1.11, z: 1.38}
   id: l178-story-donabe
   layout: {box: {max: {x: 0.15, y: 0.22, z: 0.15}, min: {x: -0.15, y: 0, z: -0.15}}}
   model: /cdn/value.52cc1a14135ac839a38a9b5da962298174eed8c27131ba0fcfa33a351868584f.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 90}
-  state: {why: pot on the stove}
-  tags: [l178-story]
+  state: {kind: qspot, mat: ceramic, name: Clay pot, verb: Look, why: "Donabe on the stove, lid rattling softly. Dashi and something green."}
+  tags: [l178-story, breakable, usable]
 l178-story-dryrack:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   feetPosition: {x: 12.05, y: 1.339745044708252, z: -0.46}
   id: l178-story-dryrack
@@ -3079,9 +3095,10 @@ l178-story-dryrack:
   model: /cdn/value.fefb19543d81a446739ac9e41f8a8b8c52f603618ee0804c1928e1aa509646a1.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 90}
-  state: {why: bowls drying in the sink}
-  tags: [l178-story]
+  state: {kind: qspot, name: Drying rack, verb: Look, why: Bowls stacked to dry. Twelve of them. The Sector feeds a lot of people.}
+  tags: [l178-story, usable]
 l178-story-flashlight:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: -1.2, y: 0.44983142614364624, z: -16.05}
   id: l178-story-flashlight
@@ -3089,9 +3106,10 @@ l178-story-flashlight:
   model: /cdn/value.d626743fa03c074395186d332c3c7f46d470cca69ed88f670db36e6d1ce453b6.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 20}
-  state: {why: "cracked flashlight, no longer needed"}
-  tags: [l178-story]
+  state: {kind: qspot, name: Cracked flashlight, verb: Look, why: Its lens is spiderwebbed. Whoever carried this through the dark doesn't need it here.}
+  tags: [l178-story, usable]
 l178-story-futon-folded:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   feetPosition: {x: -1.9, y: 0.44983142614364624, z: -16.45}
   id: l178-story-futon-folded
@@ -3100,9 +3118,10 @@ l178-story-futon-folded:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 0}
-  state: {why: futon folded the way the house folds them}
-  tags: [l178-story]
+  state: {kind: qspot, name: Folded futon, verb: Look, why: "Folded in thirds, corners square. The house folds them this way and so does everyone who stays."}
+  tags: [l178-story, usable]
 l178-story-geta-2:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: 1.28, y: 0.4799615442752838, z: 16.5}
   id: l178-story-geta-2
@@ -3110,9 +3129,10 @@ l178-story-geta-2:
   model: /cdn/value.2d76afb22d94326794a0d3147b16f9e77c46fb8d1c39f31636522e24b7fadf32.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 0}
-  state: {why: the house keeps a row of geta}
-  tags: [l178-story]
+  state: {kind: qspot, name: Geta, verb: Look, why: "Wooden sandals, worn smooth where the toes grip. Free to borrow."}
+  tags: [l178-story, usable]
 l178-story-getabako:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   feetPosition: {x: -1.3, y: 0.44983142614364624, z: 16.77}
   id: l178-story-getabako
@@ -3121,9 +3141,10 @@ l178-story-getabako:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 180}
-  state: {why: shoe shelf by the hub door}
-  tags: [l178-story]
+  state: {kind: qspot, name: Shoe shelf, verb: Look, why: "Sneakers, boots, a lone M.E.G. issue shoe. Everyone takes theirs off here."}
+  tags: [l178-story, usable]
 l178-story-go-zabuton-1:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: 15.6, y: 0.4501425674935572, z: 2.95}
   id: l178-story-go-zabuton-1
@@ -3131,9 +3152,10 @@ l178-story-go-zabuton-1:
   model: /cdn/value.15dc7415aa439093b0d220e0db76e800ec4c88afecdad901ad6f72286582b8e3.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 10}
-  state: {why: ""}
-  tags: [l178-story]
+  state: {kind: qspot, name: Cushion, verb: Look, why: Still warm. Someone stood up mid-game.}
+  tags: [l178-story, usable]
 l178-story-go-zabuton-2:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: 15.6, y: 0.45011055805084366, z: 4.3}
   id: l178-story-go-zabuton-2
@@ -3141,9 +3163,10 @@ l178-story-go-zabuton-2:
   model: /cdn/value.15dc7415aa439093b0d220e0db76e800ec4c88afecdad901ad6f72286582b8e3.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: -6}
-  state: {why: ""}
-  tags: [l178-story]
+  state: {kind: qspot, name: Cushion, verb: Look, why: The other player's seat. Their tea's gone cold.}
+  tags: [l178-story, usable]
 l178-story-goboard:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   feetPosition: {x: 15.6, y: 0.45013061384261455, z: 3.6}
   id: l178-story-goboard
@@ -3152,8 +3175,8 @@ l178-story-goboard:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 0}
-  state: {why: a game nobody finished}
-  tags: [l178-story]
+  state: {kind: qspot, name: Go board, verb: Look, why: "Black is winning. Nobody has touched it in days, and nobody will clear it."}
+  tags: [l178-story, usable]
 l178-story-guestbook:
   behavior: scripts/l178-prop.js
   castShadow: false
@@ -3166,6 +3189,7 @@ l178-story-guestbook:
   state: {c: {x: -1.3, y: 0.797801296710968, z: 16.77}, kind: read, name: Guestbook, page: 1781, verb: Read}
   tags: [l178-story, usable, l178-prop]
 l178-story-hairpin:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: -15.9, y: 0.7009108688014263, z: -1}
   id: l178-story-hairpin
@@ -3173,9 +3197,10 @@ l178-story-hairpin:
   model: /cdn/value.bf00eaff224250938724cb8e71b8544d2d94142b82c3c512b1dc49a32d35cd32.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 30}
-  state: {why: a forgotten hairpin}
-  tags: [l178-story]
+  state: {kind: qspot, name: Hairpin, verb: Look, why: "Lacquered kanzashi, a tiny plum blossom on the end. Someone will come looking for it."}
+  tags: [l178-story, usable]
 l178-story-kamidana:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   feetPosition: {x: -2.3, y: 2.05, z: 16.95}
   id: l178-story-kamidana
@@ -3183,9 +3208,10 @@ l178-story-kamidana:
   model: /cdn/value.4d2faad8c18b0f45887c5902a49096bf54a143cd0ce7d2d87fc723ada8999320.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 180}
-  state: {why: household shrine high over the sword cabinet}
-  tags: [l178-story]
+  state: {kind: qspot, name: Kamidana, verb: Look, why: Household shrine. Fresh rice and water in the little dishes. Changed this morning.}
+  tags: [l178-story, usable]
 l178-story-kimono-stand:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   feetPosition: {x: 8.2, y: 0.44983142614364624, z: -16.45}
   id: l178-story-kimono-stand
@@ -3194,9 +3220,10 @@ l178-story-kimono-stand:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 0}
-  state: {why: kimono airing on its stand}
-  tags: [l178-story]
+  state: {kind: qspot, name: Kimono stand, verb: Look, why: Indigo kimono airing out. It smells like the spring.}
+  tags: [l178-story, usable]
 l178-story-laundry:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   feetPosition: {x: -4.6, y: 0, z: 5.6}
   id: l178-story-laundry
@@ -3205,9 +3232,10 @@ l178-story-laundry:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 10}
-  state: {why: yukata drying}
-  tags: [l178-story]
+  state: {kind: qspot, name: Drying yukata, verb: Look, why: "Yukata on the line. They never quite dry, the morning never ends."}
+  tags: [l178-story, usable]
 l178-story-leaves:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: -3.9, y: 0, z: 6.3}
   id: l178-story-leaves
@@ -3215,9 +3243,10 @@ l178-story-leaves:
   model: /cdn/value.2359016171d993f4ade41e8c06b36363d1e9fe08419f55f47c805705335adeaf.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 0}
-  state: {why: swept maple leaves}
-  tags: [l178-story]
+  state: {kind: qspot, name: Swept leaves, verb: Look, why: Maple leaves in a neat pile. There are no maples here.}
+  tags: [l178-story, usable]
 l178-story-letter-zabuton:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: 15.8, y: 0.450121428161563, z: -5.2}
   id: l178-story-letter-zabuton
@@ -3225,9 +3254,10 @@ l178-story-letter-zabuton:
   model: /cdn/value.15dc7415aa439093b0d220e0db76e800ec4c88afecdad901ad6f72286582b8e3.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 0}
-  state: {why: ""}
-  tags: [l178-story]
+  state: {kind: qspot, name: Cushion, verb: Look, why: A dent where someone knelt to write.}
+  tags: [l178-story, usable]
 l178-story-paperback:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: -5.25, y: 0.4799615442752838, z: -12.75}
   id: l178-story-paperback
@@ -3235,9 +3265,10 @@ l178-story-paperback:
   model: /cdn/value.7220d022c8abfcb91c27a16d9ba930a411a937cf60b9a713f2f65aa9ba6c6ce6.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 25}
-  state: {why: left face down mid-chapter}
-  tags: [l178-story]
+  state: {kind: qspot, name: Paperback, verb: Look, why: "Face down, spine cracked at chapter nine. A survival guide. Unneeded here."}
+  tags: [l178-story, usable]
 l178-story-ricecooker:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   feetPosition: {x: 12.05, y: 1.3324843645095825, z: -4.55}
   id: l178-story-ricecooker
@@ -3245,9 +3276,10 @@ l178-story-ricecooker:
   model: /cdn/value.64d934828726d707a762ade1979dceefeb714455eba97e45332b35ce87206a91.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 90}
-  state: {why: rice on before sunrise}
-  tags: [l178-story]
+  state: {kind: qspot, name: Rice cooker, verb: Look, why: Set for before sunrise. It's always just finished.}
+  tags: [l178-story, usable]
 l178-story-ricesack:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   feetPosition: {x: 9.75, y: 0.45300018787384033, z: -5.45}
   id: l178-story-ricesack
@@ -3256,8 +3288,8 @@ l178-story-ricesack:
   physics: {body: static, collider: box}
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 30}
-  state: {why: rice sack slumped open in the corner}
-  tags: [l178-story]
+  state: {kind: qspot, name: Rice sack, verb: Look, why: "Slumped open, half gone. Somehow it's never empty in the morning."}
+  tags: [l178-story, usable]
 l178-story-rota:
   behavior: scripts/l178-prop.js
   castShadow: true
@@ -3270,6 +3302,7 @@ l178-story-rota:
   state: {c: {x: 12.4, y: 1.9, z: 4.95}, kind: read, name: Chalkboard rota, page: 1783, verb: Read}
   tags: [l178-story, usable, l178-prop]
 l178-story-rumpled:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   feetPosition: {x: -6.1, y: 0.7334961891174316, z: -13.7}
   id: l178-story-rumpled
@@ -3277,9 +3310,10 @@ l178-story-rumpled:
   model: /cdn/value.36ea745fceed712feec174cafd5565c89960737e194beafb1051408adebcfb0c.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 0}
-  state: {why: quilt thrown back}
-  tags: [l178-story]
+  state: {kind: qspot, name: Rumpled quilt, verb: Look, why: Thrown back in a hurry. The pillow still holds a head's shape.}
+  tags: [l178-story, usable]
 l178-story-scallion:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: 12.02, y: 1.3293952941894531, z: 0.77}
   id: l178-story-scallion
@@ -3287,9 +3321,10 @@ l178-story-scallion:
   model: /cdn/value.a80691b815530cdd530aac04a164d1e0224238656f84faec0f942840f4112e4f.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 90}
-  state: {why: "scallions half chopped, knife laid down"}
-  tags: [l178-story]
+  state: {kind: qspot, name: Scallions, verb: Look, why: "Half chopped, knife laid neatly beside. Someone stepped away mid-task."}
+  tags: [l178-story, usable]
 l178-story-shamisen:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   feetPosition: {x: 16.78, y: 0.45012962953674507, z: -1.4}
   id: l178-story-shamisen
@@ -3297,9 +3332,10 @@ l178-story-shamisen:
   model: /cdn/value.1980356289b08c7eaaa2df88d19ffc654a297ecba2d77353e6abba9a4e2455b7.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: -14, yaw: 90}
-  state: {why: leaning on the wall}
-  tags: [l178-story]
+  state: {kind: qspot, name: Shamisen, verb: Look, why: "One string slightly out of tune. Someone plays this at night, if there is one."}
+  tags: [l178-story, usable]
 l178-story-slippers:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: 1.9, y: 0.4904158115386963, z: 7.45}
   id: l178-story-slippers
@@ -3307,9 +3343,10 @@ l178-story-slippers:
   model: /cdn/value.c3fa0485100a7b03f0f1e1d34d385a28281ec3ca2dad9609fd08ab0981f73af9.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 180}
-  state: {why: slippers at the porch edge facing the spring}
-  tags: [l178-story]
+  state: {kind: qspot, name: Slippers, verb: Look, why: Toes pointed toward the spring. Whoever wore them went for a soak.}
+  tags: [l178-story, usable]
 l178-story-sneakers:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: 0.46, y: 0.4799615442752838, z: 16.28}
   id: l178-story-sneakers
@@ -3317,9 +3354,10 @@ l178-story-sneakers:
   model: /cdn/value.921d81533d8f1bf0f7e57976d6047fc3041d6ec073ac86e46aeb3695dd05161b.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 200}
-  state: {why: "a wanderer's muddy sneakers, kicked off at the door"}
-  tags: [l178-story]
+  state: {kind: qspot, name: Muddy sneakers, verb: Look, why: Yellow carpet fibres still in the tread. Fresh from Level 0.}
+  tags: [l178-story, usable]
 l178-story-stool-1:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   feetPosition: {x: -15.9, y: 0.4753892495911174, z: -1}
   id: l178-story-stool-1
@@ -3327,9 +3365,10 @@ l178-story-stool-1:
   model: /cdn/value.94cf59d6216c28c0ed99b62c942188545170cf5aecefbac8b324fc8bf008908e.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 8}
-  state: {why: ""}
-  tags: [l178-story]
+  state: {kind: qspot, name: Bath stool, verb: Look, why: Low wooden stool for washing before the spring.}
+  tags: [l178-story, breakable, usable]
 l178-story-stool-2:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   feetPosition: {x: -15.9, y: 0.4500750985073333, z: 0.7}
   id: l178-story-stool-2
@@ -3337,9 +3376,10 @@ l178-story-stool-2:
   model: /cdn/value.94cf59d6216c28c0ed99b62c942188545170cf5aecefbac8b324fc8bf008908e.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: -12}
-  state: {why: ""}
-  tags: [l178-story]
+  state: {kind: qspot, name: Bath stool, verb: Look, why: Still beaded with water.}
+  tags: [l178-story, breakable, usable]
 l178-story-teatray:
+  behavior: [scripts/l178-prop.js]
   castShadow: true
   feetPosition: {x: 8, y: 0.4904158115386963, z: 2.6}
   id: l178-story-teatray
@@ -3347,9 +3387,10 @@ l178-story-teatray:
   model: /cdn/value.9998018082ef216e7f931e145f49e45ce9de6b4a18ee2bd64e7587c0240d7afc.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 90}
-  state: {why: "tea for two, one cup tipped"}
-  tags: [l178-story]
+  state: {kind: qspot, mat: ceramic, name: Tea tray, verb: Look, why: "Tea for two, one cup tipped over. Nobody wiped it up. Odd, for this house."}
+  tags: [l178-story, breakable, usable]
 l178-story-tray-done:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: 12.7, y: 0.8160602450370789, z: -12.82}
   id: l178-story-tray-done
@@ -3357,9 +3398,10 @@ l178-story-tray-done:
   model: /cdn/value.6b89d085035d52488cdf58dfc3ee5aa022321c9b03a40b9909acb37340f5a949.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 0}
-  state: {why: breakfast eaten}
-  tags: [l178-story]
+  state: {kind: qspot, name: Breakfast tray, verb: Look, why: "Rice, miso, fish bones picked clean. A good morning."}
+  tags: [l178-story, usable]
 l178-story-tray-full:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: 13.5, y: 0.8154860734939575, z: -12.38}
   id: l178-story-tray-full
@@ -3367,9 +3409,10 @@ l178-story-tray-full:
   model: /cdn/value.6847f76b2da83e49a24435ad43b6b8d042e68579817ed425b018502222785910.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 180}
-  state: {why: "breakfast untouched, tea still full"}
-  tags: [l178-story]
+  state: {kind: qspot, name: Breakfast tray, verb: Look, why: Untouched. The tea is still full and still warm. Whoever it was for hasn't come.}
+  tags: [l178-story, usable]
 l178-story-umbrella:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: -1.25, y: 0.4799615442752838, z: 16.42}
   fx: {script: "fx\npop drip rate=3 on=disc(.02) life=.5..0.7 v=<0,-0.4,0> acc=grav() size=.012..0.018 col=<.8,.88,1> a=.6 sz=$size floor=die r=sprite(soft-disc,alpha,velocity,.03)"}
@@ -3378,8 +3421,8 @@ l178-story-umbrella:
   model: /cdn/value.673b5e444b8e39ae26c10d1ac761cef020f4f7f33e03b0f0735b079d2b930dd3.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 0}
-  state: {why: "folded umbrella still dripping: it rains somewhere else"}
-  tags: [l178-story]
+  state: {kind: qspot, name: Umbrella, verb: Look, why: Still dripping. It doesn't rain here. It rained wherever they came from.}
+  tags: [l178-story, usable]
 l178-story-writedesk:
   behavior: scripts/l178-prop.js
   castShadow: true
@@ -3393,6 +3436,7 @@ l178-story-writedesk:
   state: {c: {x: 16.45, y: 0.6500911893010144, z: -5.2}, kind: read, name: Unfinished letter, page: 1782, verb: Read}
   tags: [l178-story, usable, l178-prop]
 l178-story-yukata-fold:
+  behavior: [scripts/l178-prop.js]
   castShadow: false
   feetPosition: {x: -16.4, y: 0.4501400586504094, z: 2.5}
   id: l178-story-yukata-fold
@@ -3400,8 +3444,8 @@ l178-story-yukata-fold:
   model: /cdn/value.5dcc859cda9394822b2c83bc6d9e12ea04201141add47d2fbe638357884384b5.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 90}
-  state: {why: someone folded their yukata and went to soak}
-  tags: [l178-story]
+  state: {kind: qspot, name: Folded yukata, verb: Look, why: Folded neatly with a towel on top. Its owner is in the spring.}
+  tags: [l178-story, usable]
 l178-table-dining:
   behavior: [scripts/l178-prop.js]
   feetPosition: {x: 13.1, y: 0.48, z: -12.6}
