@@ -1,4 +1,5 @@
 // The Hub: fixed fixtures and furniture live in the cells. The sim builds tunnels and doors and keeps the camps staffed.
+import L178 from "../../scripts/lib/data/level178.yml";
 import { RUNS, DOORS, CURB, symbolSvg, doorFront, KEY_NAMES, sealed } from "../../scripts/lib/thehub.js";
 import { keysOf, keyDoor } from "../../scripts/lib/hubkeys.js";
 import { layThings, keepCrew, keymaster } from "../../scripts/lib/hub-people.js";
@@ -42,6 +43,7 @@ export function tick(ctx) {
   if ((s.hubV ?? 0) < 1) layShell(ctx);
   if ((s.hubV ?? 0) < 9) { if ((s.hubV ?? 0) >= 2) for (const d of DOORS) { if (ctx.place.objects[d.obj]) ctx.destroy(d.obj); if (ctx.place.objects[d.obj + "-t"]) ctx.destroy(d.obj + "-t"); } layDoors(ctx); } // v9: Level 11 door (t10-a3) is locked behind a key
   if ((s.hubV ?? 0) < 3) { layThings(ctx); if (!ctx.place.objects["hub-from-l1"]) ctx.spawn("hub-from-l1", { feetPosition: { x: -39.2, y: 0.2, z: 2.8 }, rotation: { yaw: 0 } }); }
+  if (!ctx.place.objects["hub-from-l178"]) ctx.spawn("hub-from-l178", { feetPosition: { x: L178.hubReturn.x, y: L178.hubReturn.y, z: L178.hubReturn.z }, rotation: { yaw: L178.hubReturn.yaw } }); // Level 178's hall door lands here
   if ((s.hubV ?? 0) < 11) layPlaques(ctx); // v11: Level 169 plaque; v9: refresh plaques for Level 11 key requirement
   if ((s.campBenchV ?? 0) < 1) {
     s.campBenchV = 1;

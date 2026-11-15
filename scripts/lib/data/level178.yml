@@ -59,3 +59,14 @@ parts:
 tap: { spout: [0, 1.12, 0.06], gain: 0.2, maxDistance: 8 }
 hubReturn: { x: 192.8, y: 0.2, z: -51.5, yaw: 90 }
 arriveMark: { x: 0, y: 0.5, z: 15.6, yaw: 0 }
+people:   # who lives here: look, name, role (all unarmed, all friendly; Class 0)
+  l178-irawan: { name: "Irawan · Sector of Amaterasu", sex: m, hairc: "#3a6fd8", expr: "smug", voice: l178-irawan }
+  l178-sector-1: { name: "Sector Cook", sex: f, expr: "happy", voice: l178-sector-1 }
+  l178-sector-2: { name: "Sector Cook", sex: m, expr: "calm", voice: l178-sector-2 }
+  l178-sector-3: { name: "Sector Runner", sex: f, expr: "keen", voice: l178-sector-3 }
+  l178-sector-4: { name: "Sector Host", sex: m, expr: "calm", voice: l178-sector-4 }
+  l178-order-1: { name: "Order of the Sun Goddess", sex: f, expr: "calm", voice: l178-order-1 }
+  l178-order-2: { name: "Order of the Sun Goddess", sex: m, expr: "calm", voice: l178-order-2 }
+  l178-order-3: { name: "Order of the Sun Goddess", sex: f, expr: "calm", voice: l178-order-3 }
+residentLevel: 8
+residentHp: 60
