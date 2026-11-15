@@ -1,6 +1,6 @@
 # Lumiria's people (scripts/lib/l132-people.js). Metres, north = -Z, ground y = 0. post: [x, z, yaw]; rounds: [[x, z, dwell, {sit: seconds, yaw, look}]].
 # Stallkeeper k stands behind stall k (angle 22.5 + 45k, radius 16.6) facing the tree. collects / wants / offers use l132-barter.js CATS.
-peopleV: 3
+peopleV: 4
 ground: 0
 level: 6
 hp: 60
