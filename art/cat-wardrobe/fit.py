@@ -5,6 +5,7 @@
 import bpy, sys, math, os, numpy as np
 from mathutils import Vector, Matrix
 from mathutils.bvhtree import BVHTree
+ROBE = float(os.environ.get("FIT_HEM", 0))   # Nov 15 Kyoto yukata: a top whose skirt runs below the hips, its lower half leaning with the thighs
 SL = None   # a sleeveless kind (vest, poncho) once its branch ran
 A = sys.argv[sys.argv.index("--") + 1:]; GARM, SEX, KIND, OUT = A[:4]
 BODYF = A[4] if len(A) > 4 else f"/workspace/tripo-cat/cat-{'female' if SEX == 'f' else 'male'}-rigged.glb"
@@ -44,10 +45,11 @@ if KIND == "top":
     sl = P[(np.abs(P[:, 0]) > half * 0.55) & ~kill]; zs = np.median(sl[:, 2])     # sleeve axis height
     ba = bw[(np.abs(bw[:, 0]) > B["arm"][1] - 0.03) & (np.abs(bw[:, 0]) < B["arm"][1] + 0.03) & (bw[:, 2] > B["waist"] + 0.04) & (bw[:, 1] < 0.07)]; za = np.median(ba[:, 2])   # the arm alone: her tail passes this x lower and behind
     print("arm z", round(float(za), 3), "sleeve z", round(float(zs), 3))
-    z_hem = B["top"][0] - 0.035
+    z_hem = B["top"][0] - 0.035; z_t = z_hem
+    if ROBE: z_hem = B["top"][0] * ROBE   # a long robe (yukata): FIT_HEM = its hem as a share of the hip-line height, the torso still measured over the shirt band
     sz = (za - z_hem) / zs; P[:, 2] = z_hem + P[:, 2] * sz
     sx = (B["arm"][2] - 0.025) / cuff; P[:, 0] *= sx
-    gy0, gy1 = torso_y(P, B["arm"][0] * 0.8, z_hem, za - 0.02); by0, by1 = torso_y(bw, B["arm"][0] * 0.8, z_hem, za - 0.02)
+    gy0, gy1 = torso_y(P, B["arm"][0] * 0.8, z_t, za - 0.02); by0, by1 = torso_y(bw, B["arm"][0] * 0.8, z_t, za - 0.02)
     sy = ((by1 - by0) * 1.22 + 0.03) / (gy1 - gy0); P[:, 1] = (P[:, 1] - (gy0 + gy1) / 2) * sy + (by0 + by1) / 2
     # sleeves onto the arms: Tripo's sleeve axis sits behind or ahead of her arm; each x slice past the shoulder slides to the arm's own centre
     ax0 = B["arm"][0]
@@ -224,6 +226,10 @@ if KIND == "top":   # weights by where the cloth sits, never by the nearest skin
         ts = sum(t.values())
         if ts > 0.5 and a > 0:   # the sleeve bends as the arm's own skin bends (the torso keeps position weights: there the tail side dragged his back)
             for k in set(w) | set(t): w[k] = w.get(k, 0) * (1 - a) + t.get(k, 0) / ts * a
+        hz = bz("Hips").z
+        if ROBE and v.co.z < hz and a < 0.5:   # a robe's skirt: as the skirt kind, the lower it hangs the more it leans with the thigh on its side
+            k = 0.5 * min(1.0, (hz - v.co.z) / max(0.05, hz - z_hem)); sd = min(1.0, max(-1.0, v.co.x / 0.06))
+            w = {"Hips": 1 - k, "LeftUpLeg": k * (0.5 + 0.5 * sd), "RightUpLeg": k * (0.5 - 0.5 * sd)}
         setw(v, w)
 bpy.ops.object.vertex_group_normalize_all(lock_active=False); bpy.ops.object.vertex_group_limit_total(limit=4)
 g.parent = arm; am = g.modifiers.new("Armature", "ARMATURE"); am.object = arm
