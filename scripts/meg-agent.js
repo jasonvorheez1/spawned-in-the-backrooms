@@ -472,7 +472,7 @@ export function update(ctx, dt) {
     }
   }
   const talkLen = s.line && typeof s.line === "object" && s.line.at >= (s.talkAt ?? 0) - 50 ? Math.max(2600, (s.line.d ?? 0) + 300) : 2600; // the gesture lasts the line, not a fixed beat
-  const talking = s.talkAt && now - s.talkAt < talkLen;
+  const talking = (s.talkAt && now - s.talkAt < talkLen) || ctx.place.players.some((q) => q.state?.talkWith === me.id || q.state?.shopOpen === me.id); // holds still the whole conversation, not just the first line (Shelly Nov 15: "it keeps kicking me out")
   if (talking !== !!m.talking) { m.talking = talking; me.anim.talk = talking ? { clip: (s.wear?.sex ?? s.look?.sex) === "f" ? "cdn/clip-talk-female-loop.glb" : "cdn/clip-talk-loop.glb", loop: "loop", weight: 1, blendIn: 0.25, blendOut: 0.4, mask: { from: "Spine" } } : null; }
   // one-shot clips end: cleared after their length, so a body never holds a wave's or a flinch's last frame
   if (me.anim.hit && now - (m.hitAt ?? 0) > 900) me.anim.hit = null;

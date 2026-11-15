@@ -449,7 +449,7 @@ function cine(ctx, s) {
 const FOES = ['hound', 'stealer', 'smiler', 'lurker', 'l5rat', 'l3rat', 'l5staff', 'hostile', 'moth', 'moths', 'l8spider', 'l8-hostile', 'zdrone', 'l11foe', 'l7beast', 'l10worm']
 function combat(ctx, it, ses) {
   const s = ctx.self.state, hp = s.hp ?? 0, ihp = it.state?.hp ?? 0
-  const hurt = ses.tkHp != null && hp < ses.tkHp - 0.5, ihurt = ses.tkIt === it.id && ses.tkIhp != null && ihp < ses.tkIhp - 0.5
+  const hurt = ses.tkHp != null && hp < ses.tkHp - 2.5 // a hit, not thirst or hunger ticking, ihurt = ses.tkIt === it.id && ses.tkIhp != null && ihp < ses.tkIhp - 0.5
   ses.tkHp = hp; ses.tkIhp = ihp; ses.tkIt = it.id
   if (hurt || ihurt || it.state?.target) return true
   const me = ctx.self.feetPosition
