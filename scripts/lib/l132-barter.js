@@ -42,3 +42,14 @@ export function tick(ctx) { // restock
   const now = ctx.now();
   for (const w of ctx.query({ tags: ["usable"], center: { x: 0, y: 0, z: 0 }, radius: 30 })) if (w.state?.goneAt && now - w.state.goneAt > RESTOCK_MS) { w.visible = true; w.state = { ...w.state, goneAt: null }; }
 }
+// a townsfolk keeper's offer in talk: they part with one piece of their own stall's kind for the one kind their shelf lacks
+const KEEPER = { "l132-teodora": "pottery", "l132-benny": "phones", "l132-margo": "remedies", "l132-silas": "records", "l132-anouk": "spices" };
+export function offer(ctx, { by, npc }) {
+  const p = ctx.place.players.find((q) => q.id === by), cat = KEEPER[npc];
+  if (!p || !cat) return;
+  let b = bookOf(p.state); const want = WANTS[cat];
+  if (!b.gift) { p.state.l132 = { ...put(b, cat, 1), gift: true }; return tell(ctx, p, `"First piece is a gift. Welcome to Lumiria." You have ${NAMES[cat]}.`); }
+  if (!holds(p.state, want)) return tell(ctx, p, `"Bring me ${NAMES[want]} and ${NAMES[cat]} is yours."`);
+  p.state.l132 = put(put(b, want, -1), cat, 1);
+  tell(ctx, p, `Traded ${NAMES[want]} for ${NAMES[cat]}.`);
+}
