@@ -61,6 +61,7 @@ export function finishRescueToAlcove(ctx, player, ses) {
   player.feetPosition = { ...CORRIDOR.safePos };
   player.rotation = { yaw: CORRIDOR.safeYaw };
   player.velocity = { x: 0, y: 0, z: 0 };
+  if (noStory(s)) { s.notice = { text: "The ceiling comes down behind you. A side door, a quiet alcove, and two ways out.", at: ctx.now() }; return; } // story off: no Phoebe, no quest step
   setCh2Step(ctx, s, 6, "Phoebe pulled you into a quiet alcove. Speak with her before leaving.");
 }
 

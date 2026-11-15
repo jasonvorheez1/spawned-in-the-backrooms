@@ -218,7 +218,7 @@ export const ears = {
         w.notice = { text: "Only dry masonry stands behind the frame now. The red hospital threshold is sealed.", at: now };
         return;
       }
-      if ((w.ch2Q ?? 0) < 4) {
+      if ((w.ch2Q ?? 0) < 4 && !noStory(w)) { // story off: the red door is just a door
         heard(ctx, { clip: CLIP_LOCKED, position: pos, volume: 0.8, maxDistance: 12 });
         const needText = !w.ch2ClinicDone
           ? "Cold static leaks under the steel sill. Search Centro Dermatologico for Dina's clinic note first."
@@ -233,7 +233,7 @@ export const ears = {
       }
       heard(ctx, { clip: CLIP_DOOR, position: pos, volume: 0.9, maxDistance: 14 });
       ctx.emit("screenFlash", { color: "#8b0000", duration: 0.55, intensity: 0.75 }, { audience: { player: who.id } });
-      if (!w.lrunRescued) setCh2Step(ctx, w, 5);
+      if (!w.lrunRescued && !noStory(w)) setCh2Step(ctx, w, 5);
       const dest = w.lrunRescued ? "levelrun#lrun-alcove" : "levelrun#lrun-start";
       carryAcross(ctx, who, dest);
       ctx.cross(who, dest);
@@ -249,7 +249,7 @@ export const ears = {
       return;
     }
     if (s.kind === "levelrun-exit") {
-      if (w.lrunRescued && !w.ch2Done) {
+      if (w.lrunRescued && !w.ch2Done && !noStory(w)) {
         w.notice = { text: "Speak with Phoebe in the alcove before stepping back to Level 11.", at: now };
         return;
       }

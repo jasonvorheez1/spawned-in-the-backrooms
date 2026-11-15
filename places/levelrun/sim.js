@@ -285,7 +285,7 @@ function ensureHorde(ctx, z0) {
 }
 
 function syncAlcovePhoebe(ctx, players) {
-  const needPhoebe = players.some((p) => p.state?.lrunRescued && !p.state?.ch2Done);
+  const needPhoebe = players.some((p) => p.state?.lrunRescued && !p.state?.ch2Done && !noStory(p.state)); // story off: nobody waits in the alcove
   const existing = ctx.place.objects?.["phoebe-lrun"];
   if (!needPhoebe) {
     if (existing) ctx.destroy("phoebe-lrun");
@@ -354,7 +354,14 @@ export function tick(ctx) {
   for (const p of players) {
     const ps = p.state ?? {};
     if (ps.dead) continue;
-    if (ps.lrunCut?.phase === "rescue" && now - (ps.lrunCut.at ?? 0) >= LRUN_RESCUE_LEN * 1000 + 600) {
+    const plain = noStory(ps); // story off: no cutscenes here, the hall is just a hall with a way out
+    if (plain && !ps.lrunIntroDone && !ps.lrunRescued) { // no intro to sit through: the doors stand open and the run is on
+      ps.lrunCut = null; ps.lrunIntroDone = 1;
+      for (const id of ["lrun-entry-door", "lrun-chain-door"]) { const d = ctx.place.objects?.[id]; if (d) d.rotation = { yaw: 0 }; }
+      chase.gateOpen = true;
+      continue;
+    }
+    if (ps.lrunCut?.phase === "rescue" && (plain || now - (ps.lrunCut.at ?? 0) >= LRUN_RESCUE_LEN * 1000 + 600)) {
       finishRescueToAlcove(ctx, p, null);
       continue;
     }
