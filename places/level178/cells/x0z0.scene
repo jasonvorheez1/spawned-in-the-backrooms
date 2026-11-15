@@ -707,7 +707,7 @@ l178-cab-1:
   children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
   feetPosition: {x: 12.05, y: 0.45, z: -1.38}
   id: l178-cab-1
-  model: /cdn/value.40a800e450bc9d11302fb04f6ff546f72d2b1714ff3cf839c5073350b852f7b7.glb
+  model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 90}
   tags: [l178]
@@ -715,7 +715,7 @@ l178-cab-2:
   children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
   feetPosition: {x: 12.05, y: 0.45, z: 0.46}
   id: l178-cab-2
-  model: /cdn/value.40a800e450bc9d11302fb04f6ff546f72d2b1714ff3cf839c5073350b852f7b7.glb
+  model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 90}
   tags: [l178]
@@ -723,7 +723,7 @@ l178-cab-3:
   children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
   feetPosition: {x: 12.05, y: 0.45, z: 4.6}
   id: l178-cab-3
-  model: /cdn/value.40a800e450bc9d11302fb04f6ff546f72d2b1714ff3cf839c5073350b852f7b7.glb
+  model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 90}
   tags: [l178]
@@ -731,7 +731,7 @@ l178-cab-4:
   children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
   feetPosition: {x: 12.05, y: 0.45, z: 5.5}
   id: l178-cab-4
-  model: /cdn/value.40a800e450bc9d11302fb04f6ff546f72d2b1714ff3cf839c5073350b852f7b7.glb
+  model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 90}
   tags: [l178]
@@ -739,7 +739,7 @@ l178-cab-5:
   children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
   feetPosition: {x: 9.8, y: 0.45, z: 5.6}
   id: l178-cab-5
-  model: /cdn/value.40a800e450bc9d11302fb04f6ff546f72d2b1714ff3cf839c5073350b852f7b7.glb
+  model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 180}
   tags: [l178]
@@ -747,7 +747,7 @@ l178-cab-6:
   children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
   feetPosition: {x: 10.72, y: 0.45, z: 5.6}
   id: l178-cab-6
-  model: /cdn/value.40a800e450bc9d11302fb04f6ff546f72d2b1714ff3cf839c5073350b852f7b7.glb
+  model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 180}
   tags: [l178]
@@ -755,7 +755,7 @@ l178-cabinet-swords:
   behavior: [scripts/l178-prop.js]
   feetPosition: {x: -2.3, y: 0.48, z: 16.6}
   id: l178-cabinet-swords
-  model: /cdn/value.845b416129b105ea14cf7d9b98417e91747f0d93d053185f12dcc4875d09e1a3.glb
+  model: /cdn/value.0a713aa977e45590e5f0dcf745ecb4e6f320b77560e0b8ab662591653cba3992.glb
   physics: static
   rotation: {yaw: 0}
   state: {c: {x: -2.3, y: 1.3, z: 16.6}, kind: cabinet, name: Sword cabinet, verb: Look}
@@ -974,7 +974,7 @@ l178-closet-kimono:
   behavior: [scripts/l178-prop.js]
   feetPosition: {x: 2.4, y: 0.48, z: 16.6}
   id: l178-closet-kimono
-  model: /cdn/value.0114db78382671f63616c7a780d482d6978e4a695164d461eed3954f68306939.glb
+  model: /cdn/value.9c750a5a5945b9fb73192cc3002ae42482f351b46c58b07638a72e826678afca.glb
   physics: static
   rotation: {yaw: 0}
   state: {c: {x: 2.4, y: 1.2, z: 16.6}, kind: closet, name: Kimono closet, open: false, verb: Open}
@@ -983,7 +983,7 @@ l178-cupboard-1:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb, pivot: {x: -0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb, pivot: {x: 0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}]
   feetPosition: {x: 12.2, y: 1.9, z: -1.38}
   id: l178-cupboard-1
-  model: /cdn/value.5ba57997812cab4aa11f00478ecb52e0f2e266c47d4d3b8e52b9666f8778eb0c.glb
+  model: /cdn/value.4f84aae4877da6b601d54be867bc88f00f4a00df180c8ff07d162ad9ffef14a8.glb
   rotation: {yaw: 90}
   state: {containerOpen: false, items: "l178_miso,l178_onigiri", name: Cupboard, propArt: l178-cupboard}
   tags: [container, l178, l178-prop]
@@ -991,7 +991,7 @@ l178-cupboard-2:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb, pivot: {x: -0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb, pivot: {x: 0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}]
   feetPosition: {x: 12.2, y: 1.9, z: -0.46}
   id: l178-cupboard-2
-  model: /cdn/value.5ba57997812cab4aa11f00478ecb52e0f2e266c47d4d3b8e52b9666f8778eb0c.glb
+  model: /cdn/value.4f84aae4877da6b601d54be867bc88f00f4a00df180c8ff07d162ad9ffef14a8.glb
   rotation: {yaw: 90}
   state: {containerOpen: false, items: "warm_tea,almond", name: Cupboard, propArt: l178-cupboard}
   tags: [container, l178, l178-prop]
@@ -999,7 +999,7 @@ l178-cupboard-3:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb, pivot: {x: -0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb, pivot: {x: 0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}]
   feetPosition: {x: 12.2, y: 1.9, z: 0.46}
   id: l178-cupboard-3
-  model: /cdn/value.5ba57997812cab4aa11f00478ecb52e0f2e266c47d4d3b8e52b9666f8778eb0c.glb
+  model: /cdn/value.4f84aae4877da6b601d54be867bc88f00f4a00df180c8ff07d162ad9ffef14a8.glb
   rotation: {yaw: 90}
   state: {containerOpen: false, items: l178_bento, name: Cupboard, propArt: l178-cupboard}
   tags: [container, l178, l178-prop]
@@ -1007,7 +1007,7 @@ l178-cupboard-4:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb, pivot: {x: -0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb, pivot: {x: 0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}]
   feetPosition: {x: 12.2, y: 1.9, z: 1.38}
   id: l178-cupboard-4
-  model: /cdn/value.5ba57997812cab4aa11f00478ecb52e0f2e266c47d4d3b8e52b9666f8778eb0c.glb
+  model: /cdn/value.4f84aae4877da6b601d54be867bc88f00f4a00df180c8ff07d162ad9ffef14a8.glb
   rotation: {yaw: 90}
   state: {containerOpen: false, items: "almond,l178_onigiri", name: Cupboard, propArt: l178-cupboard}
   tags: [container, l178, l178-prop]
@@ -1509,7 +1509,7 @@ l178-fridge:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door, model: /cdn/value.9cfbf325bd20af01268b1869d578032db116ec4005e23a2c18b552ea8187d45d.glb, pivot: {x: 0.345, y: 0, z: -0.32}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.ff466e6642952c13915042b74d9dc92a5b9dc4ee64deb133b5d6f859091a16f3.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 12, y: 0.45, z: -5.45}
   id: l178-fridge
-  model: /cdn/value.285d274e7939c624eabbe16fa51d068cd66e29e8498ab315ecf27f75b117d0d4.glb
+  model: /cdn/value.d75dc17e2aef9994a67a30ed0afc3f89b2d1ef73cf129f648f6df7d89c4b728d.glb
   physics: static
   rotation: {yaw: 90}
   state: {containerOpen: false, items: "l178_onigiri,l178_onigiri,l178_bento,almond,almond", name: Refrigerator, propArt: l178-fridge}
@@ -1522,7 +1522,7 @@ l178-futon-1:
   behavior: [scripts/l178-prop.js]
   feetPosition: {x: -6.1, y: 0.48, z: -13.4}
   id: l178-futon-1
-  model: /cdn/value.ea44b30f3f7dd9f064eb517670f90cb648f20e371982dd15b83c0762a436ab15.glb
+  model: /cdn/value.9ea8416ee4b7f0bd6f7853813f212b6f146dc8e21c55e56a3d621593aa3b32a2.glb
   rotation: {yaw: 0}
   state: {c: {x: -6.1, y: 0.62, z: -13.4}, kind: futon, name: Futon, verb: Lie down}
   tags: [l178, l178-prop, usable]
@@ -1530,7 +1530,7 @@ l178-futon-2:
   behavior: [scripts/l178-prop.js]
   feetPosition: {x: 0, y: 0.48, z: -13.4}
   id: l178-futon-2
-  model: /cdn/value.c39a0117fe93a848d91ce54de611c7e10ae1b6d68845e1e1a627a366cc785907.glb
+  model: /cdn/value.fa01964bed8473ad74f445d439d2c36c0415b54228210b9c49954ccd66af74dc.glb
   rotation: {yaw: 0}
   state: {c: {x: 0, y: 0.62, z: -13.4}, kind: futon, name: Futon, verb: Lie down}
   tags: [l178, l178-prop, usable]
@@ -1538,7 +1538,7 @@ l178-futon-3:
   behavior: [scripts/l178-prop.js]
   feetPosition: {x: 5.4, y: 0.48, z: -13.4}
   id: l178-futon-3
-  model: /cdn/value.8ebdbbc7c636fc62013d1cd6e9c39eacedf97d59ed30d7e0a46c8c263625d1ad.glb
+  model: /cdn/value.e91b2cc057c83960133a1fc37640ab28bc7f9cfbb342554ecea27d7ac142ac2f.glb
   rotation: {yaw: 0}
   state: {c: {x: 5.4, y: 0.62, z: -13.4}, kind: futon, name: Futon, verb: Lie down}
   tags: [l178, l178-prop, usable]
@@ -1546,14 +1546,14 @@ l178-futon-4:
   behavior: [scripts/l178-prop.js]
   feetPosition: {x: 6.9, y: 0.48, z: -13.4}
   id: l178-futon-4
-  model: /cdn/value.ea44b30f3f7dd9f064eb517670f90cb648f20e371982dd15b83c0762a436ab15.glb
+  model: /cdn/value.9ea8416ee4b7f0bd6f7853813f212b6f146dc8e21c55e56a3d621593aa3b32a2.glb
   rotation: {yaw: 0}
   state: {c: {x: 6.9, y: 0.62, z: -13.4}, kind: futon, name: Futon, verb: Lie down}
   tags: [l178, l178-prop, usable]
 l178-geta:
   feetPosition: {x: 0.9, y: 0.48, z: 16.5}
   id: l178-geta
-  model: /cdn/value.2d76afb22d94326794a0d3147b16f9e77c46fb8d1c39f31636522e24b7fadf32.glb
+  model: /cdn/value.3ec63a2f1c81226ed1fcad1678fbe4f643df62710493180d5026e10e67c6b8d0.glb
   rotation: {yaw: 20}
   tags: [l178]
 l178-gravel:
@@ -2368,7 +2368,7 @@ l178-oven:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door, model: /cdn/value.28a8b24d50ff34ed752870ac1eadc2a5277204bd65ca7e7f3f46e2e7b36a0ddc.glb, pivot: {x: 0, y: 0.14, z: -0.29}, state: {axis: pitch, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -80, value: 0}}]
   feetPosition: {x: 12.05, y: 0.45, z: 1.38}
   id: l178-oven
-  model: /cdn/value.d48802c292b2b87cb743da09b8f9cc055230e1f64dbee2a91a86f63928930896.glb
+  model: /cdn/value.83f08564c223924ef74070a4042e31a638f07d37434cfedbb22b4468f285b0f9.glb
   physics: static
   rotation: {yaw: 90}
   state: {containerOpen: false, items: "", name: Oven, propArt: l178-oven}
@@ -2377,7 +2377,7 @@ l178-pantry:
   children: [{behavior: scripts/prop-part.js, id: prop-motion-door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb, pivot: {x: -0.42, y: 0, z: -0.28}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 12.05, y: 0.45, z: -4.55}
   id: l178-pantry
-  model: /cdn/value.40a800e450bc9d11302fb04f6ff546f72d2b1714ff3cf839c5073350b852f7b7.glb
+  model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 90}
   state: {containerOpen: false, items: "l178_miso,warm_tea,almond", name: Pantry, propArt: l178-pantry}
@@ -2785,7 +2785,7 @@ l178-shrub-9:
 l178-sink:
   feetPosition: {x: 12.05, y: 0.45, z: -0.46}
   id: l178-sink
-  model: /cdn/value.cd3db1bb6e12ab3e1668c44ced9ab7dd17ea8f359b48b68c91fa34c76419e9af.glb
+  model: /cdn/value.0196d647bd18b0c8ca7cd84b7a9e1d0ee520718ffd3c2c14573abf63c3ee3728.glb
   physics: static
   rotation: {yaw: 90}
   tags: [l178]
@@ -2876,7 +2876,7 @@ l178-table-dining:
   behavior: [scripts/l178-prop.js]
   feetPosition: {x: 13.1, y: 0.48, z: -12.6}
   id: l178-table-dining
-  model: /cdn/value.01fc9ac89d1291ebeb8a223fc510907975fff1addf3eb0e45e9d81305ad1ee96.glb
+  model: /cdn/value.10ee070b4185f930786e42cdcab3cf470efe76a72f79d12dfc7d4a7aac94f650.glb
   physics: static
   rotation: {yaw: 0}
   state: {c: {x: 13.1, y: 0.78, z: -12.6}, kind: table, name: Dining table, verb: Sit for a meal}
@@ -2999,7 +2999,7 @@ l178-tobi-3:
 l178-towel-shelf:
   feetPosition: {x: -9.65, y: 0.45, z: -7.6}
   id: l178-towel-shelf
-  model: /cdn/value.5ba57997812cab4aa11f00478ecb52e0f2e266c47d4d3b8e52b9666f8778eb0c.glb
+  model: /cdn/value.8818ea9a82d5a2041af129fd42c0e3dfccc0784999eb21ccd04a73973e3961de.glb
   physics: static
   rotation: {yaw: -90}
   tags: [l178]
@@ -3007,94 +3007,94 @@ l178-towels:
   behavior: [scripts/l178-prop.js]
   feetPosition: {x: -9.65, y: 1.05, z: -7.6}
   id: l178-towels
-  model: /cdn/value.f99c56b2a91348700f4aa17e60fb69cce7dbcc3d5047bdfa4bc0a670eaa1f3a0.glb
+  model: /cdn/value.f1b320647c9f8ac994489eac35f666e56925e71dcce7caf99ed7b5925a710b26.glb
   rotation: {yaw: -90}
   state: {c: {x: -9.65, y: 1.35, z: -7.6}, kind: towels, name: Towel closet, verb: Take a towel}
   tags: [l178, l178-prop, usable]
 l178-ware-0:
   feetPosition: {x: 12, y: 1.34, z: -1.6}
   id: l178-ware-0
-  model: /cdn/value.0370b66690b572e03bd865f3a2eecb7d8c9b0cc2bc5e2ffcef1eb57bd789d06a.glb
+  model: /cdn/value.8225f7da92a24f50c3a84d41156710089d81a4718c99a83d10ecf56329032e58.glb
   rotation: {yaw: 0}
   state: {hp: 1}
   tags: [l178, l178-break]
 l178-ware-1:
   feetPosition: {x: 12.12, y: 1.34, z: -1.38}
   id: l178-ware-1
-  model: /cdn/value.603e20634b7c61679301843cedd4119e6e70ba007dbde5f923a21faf2f4636d7.glb
+  model: /cdn/value.6281e9c4165a26686b344ed0a3c6c399660fdf3c5e5c20ddcf579f39652dd881.glb
   rotation: {yaw: 0}
   state: {hp: 1}
   tags: [l178, l178-break]
 l178-ware-2:
   feetPosition: {x: 12, y: 1.34, z: -1.15}
   id: l178-ware-2
-  model: /cdn/value.0370b66690b572e03bd865f3a2eecb7d8c9b0cc2bc5e2ffcef1eb57bd789d06a.glb
+  model: /cdn/value.8225f7da92a24f50c3a84d41156710089d81a4718c99a83d10ecf56329032e58.glb
   rotation: {yaw: 0}
   state: {hp: 1}
   tags: [l178, l178-break]
 l178-ware-3:
   feetPosition: {x: 12.12, y: 1.34, z: 0.3}
   id: l178-ware-3
-  model: /cdn/value.0370b66690b572e03bd865f3a2eecb7d8c9b0cc2bc5e2ffcef1eb57bd789d06a.glb
+  model: /cdn/value.8225f7da92a24f50c3a84d41156710089d81a4718c99a83d10ecf56329032e58.glb
   rotation: {yaw: 0}
   state: {hp: 1}
   tags: [l178, l178-break]
 l178-ware-4:
   feetPosition: {x: 12, y: 1.34, z: 0.55}
   id: l178-ware-4
-  model: /cdn/value.603e20634b7c61679301843cedd4119e6e70ba007dbde5f923a21faf2f4636d7.glb
+  model: /cdn/value.6281e9c4165a26686b344ed0a3c6c399660fdf3c5e5c20ddcf579f39652dd881.glb
   rotation: {yaw: 0}
   state: {hp: 1}
   tags: [l178, l178-break]
 l178-ware-5:
   feetPosition: {x: 12.12, y: 1.34, z: 4.5}
   id: l178-ware-5
-  model: /cdn/value.0370b66690b572e03bd865f3a2eecb7d8c9b0cc2bc5e2ffcef1eb57bd789d06a.glb
+  model: /cdn/value.8225f7da92a24f50c3a84d41156710089d81a4718c99a83d10ecf56329032e58.glb
   rotation: {yaw: 0}
   state: {hp: 1}
   tags: [l178, l178-break]
 l178-ware-6:
   feetPosition: {x: 12, y: 1.34, z: 4.75}
   id: l178-ware-6
-  model: /cdn/value.0370b66690b572e03bd865f3a2eecb7d8c9b0cc2bc5e2ffcef1eb57bd789d06a.glb
+  model: /cdn/value.8225f7da92a24f50c3a84d41156710089d81a4718c99a83d10ecf56329032e58.glb
   rotation: {yaw: 0}
   state: {hp: 1}
   tags: [l178, l178-break]
 l178-ware-7:
   feetPosition: {x: 12.12, y: 1.34, z: 5.4}
   id: l178-ware-7
-  model: /cdn/value.603e20634b7c61679301843cedd4119e6e70ba007dbde5f923a21faf2f4636d7.glb
+  model: /cdn/value.6281e9c4165a26686b344ed0a3c6c399660fdf3c5e5c20ddcf579f39652dd881.glb
   rotation: {yaw: 0}
   state: {hp: 1}
   tags: [l178, l178-break]
 l178-ware-8:
   feetPosition: {x: 12, y: 1.34, z: 5.65}
   id: l178-ware-8
-  model: /cdn/value.603e20634b7c61679301843cedd4119e6e70ba007dbde5f923a21faf2f4636d7.glb
+  model: /cdn/value.6281e9c4165a26686b344ed0a3c6c399660fdf3c5e5c20ddcf579f39652dd881.glb
   rotation: {yaw: 0}
   state: {hp: 1}
   tags: [l178, l178-break]
 l178-zabuton-0:
   feetPosition: {x: 12.7, y: 0.48, z: -13.35}
   id: l178-zabuton-0
-  model: /cdn/value.15dc7415aa439093b0d220e0db76e800ec4c88afecdad901ad6f72286582b8e3.glb
+  model: /cdn/value.63ca1d9c5cad00e405f15a7d940238f89dde6e6d4dcb757b0d027d83c80fb9d6.glb
   rotation: {yaw: 0}
   tags: [l178]
 l178-zabuton-1:
   feetPosition: {x: 13.5, y: 0.48, z: -13.35}
   id: l178-zabuton-1
-  model: /cdn/value.15dc7415aa439093b0d220e0db76e800ec4c88afecdad901ad6f72286582b8e3.glb
+  model: /cdn/value.63ca1d9c5cad00e405f15a7d940238f89dde6e6d4dcb757b0d027d83c80fb9d6.glb
   rotation: {yaw: 0}
   tags: [l178]
 l178-zabuton-2:
   feetPosition: {x: 12.7, y: 0.48, z: -11.85}
   id: l178-zabuton-2
-  model: /cdn/value.15dc7415aa439093b0d220e0db76e800ec4c88afecdad901ad6f72286582b8e3.glb
+  model: /cdn/value.63ca1d9c5cad00e405f15a7d940238f89dde6e6d4dcb757b0d027d83c80fb9d6.glb
   rotation: {yaw: 0}
   tags: [l178]
 l178-zabuton-3:
   feetPosition: {x: 13.5, y: 0.48, z: -11.85}
   id: l178-zabuton-3
-  model: /cdn/value.15dc7415aa439093b0d220e0db76e800ec4c88afecdad901ad6f72286582b8e3.glb
+  model: /cdn/value.63ca1d9c5cad00e405f15a7d940238f89dde6e6d4dcb757b0d027d83c80fb9d6.glb
   rotation: {yaw: 0}
   tags: [l178]
