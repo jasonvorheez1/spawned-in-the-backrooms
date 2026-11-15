@@ -23,7 +23,7 @@ const act = (k, v) => `sendAction('hub',${JSON.stringify(v === undefined ? { k }
 const bd = (n) => `$${Number(n).toFixed(0)}`
 // The Teleport Station: a departures board. Every level you have stood in is a card you can ride to; the rest are blank slots (Shelly Nov 15).
 const SCSS = `<style>
-#stn{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(880px,calc(100vw - 96px));max-height:84vh;display:flex;flex-direction:column;pointer-events:auto;
+#stn{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(880px,calc(100vw - 150px));max-height:84vh;display:flex;flex-direction:column;pointer-events:auto;
 background:linear-gradient(165deg,rgba(30,10,52,.96),rgba(8,6,26,.97));border:2px solid #ff71ce;border-radius:12px;box-shadow:0 0 28px rgba(255,113,206,.5),inset 0 0 22px rgba(1,205,254,.16);
 font-family:'Helvetica Neue',Arial,sans-serif;color:#f6eaff;overflow:hidden}
 #stn .hd{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:16px 20px 12px;border-bottom:1px solid rgba(1,205,254,.3);background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 2px,transparent 2px 4px)}
