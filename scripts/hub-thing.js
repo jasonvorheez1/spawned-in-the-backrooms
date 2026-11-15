@@ -14,7 +14,7 @@ function looseKey(ctx, p, s) {
   if (!pool.length) return notify(ctx, p, "A Level Key. You already carry one for every door that opens.");
   s.hubLoose = { ...(s.hubLoose ?? {}), [id]: now };
   ctx.emit("playSound", { clip: "cdn/sfx-large-iron-key-turning-in-heavy-old-lock-clunk.mp3", position: ctx.self.worldFeetPosition, volume: 0.45, pitch: 1.5 });
-  giveKey(ctx, p, pool[Math.floor(ctx.random() * pool.length) % pool.length]);
+  giveKey(ctx, p, s.quests?.["the-tenth-tunnel"] && pool.includes("level11") ? "level11" : pool[Math.floor(ctx.random() * pool.length) % pool.length]); // on the tenth tunnel's trail the road gives its key first
   return notify(ctx, p, "A Level Key, nobody's. The mark on its bow matches a door somewhere down these tunnels.");
 }
 export const ears = {
