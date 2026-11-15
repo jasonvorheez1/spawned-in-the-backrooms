@@ -1515,7 +1515,7 @@ l178-fridge:
   state: {containerOpen: false, items: "l178_onigiri,l178_onigiri,l178_bento,almond,almond", name: Refrigerator, propArt: l178-fridge}
   tags: [container, l178, l178-prop]
 l178-from-hub:
-  feetPosition: {x: 0, y: 0.5, z: 15.6}
+  feetPosition: {x: 0, y: 0.5, z: 12.6}
   id: l178-from-hub
   rotation: {yaw: 0}
 l178-futon-1:
