@@ -33,7 +33,7 @@ for sex in ("f", "m"):
     a = Vector([min(v[i] for v in vs) for i in range(3)]); b = Vector([max(v[i] for v in vs) for i in range(3)])
     s = fw * 1.0 / (b.x - a.x)                                                # uniform: the mask keeps its own shape
     cz = mn.z + (mx.z - mn.z) * 0.52                                           # centred on the eyes
-    back = mn.y + 0.035                                                        # its back rests just behind the muzzle tip
+    back = mn.y + 0.36 * (mx.y - mn.y)                                   # its rim sits on the cheeks, the snout over the muzzle
     for v in keep.data.vertices:
         c = v.co
         v.co = Vector(((c.x - (a.x + b.x) / 2) * s, back - (b.y - c.y) * s, (c.z - (a.z + b.z) / 2) * s + cz))
@@ -47,7 +47,7 @@ for sex in ("f", "m"):
     sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 8; sc.render.resolution_x = sc.render.resolution_y = 420
     w = bpy.data.worlds.new("w"); sc.world = w; w.color = (0.8, 0.8, 0.8)
     hz = (mn.z + mx.z) / 2
-    for nm, loc in (("front", (0, -2.2, hz)), ("side", (-2.2, -0.2, hz))):
+    for nm, loc in (("front", (0, -2.2, hz)), ("side", (-2.2, 0.0, hz)), ("top", (-1.2, -1.2, hz + 1.2))):
         cam = bpy.data.objects.new(nm, bpy.data.cameras.new(nm)); sc.collection.objects.link(cam); cam.location = loc
         e = bpy.data.objects.new("e" + nm, None); sc.collection.objects.link(e); e.location = (0, (mn.y + mx.y) / 2, hz)
         t = cam.constraints.new("TRACK_TO"); t.target = e; t.track_axis = "TRACK_NEGATIVE_Z"; t.up_axis = "UP_Y"; cam.data.lens = 70
