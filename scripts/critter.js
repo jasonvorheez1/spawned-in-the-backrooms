@@ -278,7 +278,7 @@ export function update(ctx) {
     if (ctx.self.anim.hit && now3 - (ses.hitAt3 ?? 0) > 900) ctx.self.anim.hit = null
     const st3 = stance(ctx), had = !!ses.pose
     ses.pose = st3?.bones ?? null
-    if (st3?.aiming || (st3?.armed && s3.tp)) { if (s3.turnTo !== 'camera') s3.turnTo = 'camera' } else if (s3.turnTo === 'camera') s3.turnTo = null
+    if ((st3?.aiming || (st3?.armed && s3.tp)) && s3.turnTo !== 'none') { if (s3.turnTo !== 'camera') s3.turnTo = 'camera' } else if (s3.turnTo === 'camera' && !st3?.armed) s3.turnTo = null
     if (ses.pose || had) applyBones(ctx)
   }
   { const h = Number(l.heightS) || 1, w = Number(l.buildS) || 1, k = h + ':' + w // height and build: the whole body, everyone sees it
