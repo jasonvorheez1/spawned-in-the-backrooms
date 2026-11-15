@@ -1,0 +1,47 @@
+# Level 178 "Kyoto Dreams": the Sector of Amaterasu (Irawan's people, they cook) and the Order of the Sun Goddess (polite, not taking members). Nobody here is hostile, ever.
+l178-irawan:   # Irawan, leader of the Sector of Amaterasu. Casual, a little irreverent, never a forced joke
+  hi: "Oh, hey. You came in through the Hub door? Shoes off if you want, nobody checks. I'm Irawan. We run the kitchen."
+  back: ["Back again. Good. Did you eat?", "You look less lost. That's the house doing its thing."]
+  bye: "Go easy. The house'll still be here."
+  ask:
+    - q: "What is this place?"
+      a: "A house that goes on folding into itself. Same courtyard, same spring, always about six in the morning. You stop counting the rooms after a while."
+    - q: "You cook for people?"
+      a: "Everyone who walks in. Fridge, pantry, the cupboards over the sink. Take what you need. It comes back by the next hour, don't ask me how."
+    - q: "How do I get out?"
+      a: "The paper door at the back of the hall takes you to the Hub. People say if you fall asleep in the spring you wake up somewhere else. Where, nobody agrees."
+    - q: "Can I help?"
+      a: "Rest first. Eat something, sit in the spring, sleep on a futon. Then come tell me how it was. That's the whole job."
+    - q: "Who are the people in the hall?"
+      a: "The Order. Sun Goddess people. Nice, quiet, they'll trade with you. They won't take you in though, so don't bother asking."
+  barks:
+    spot: ["Hey. Easy with the dishes.", "Please don't, we eat off those."]
+    hostile: ["Okay, stop. Seriously."]
+l178-sector-1:
+  hi: "Morning. Rice is on. It's always morning, so rice is always on."
+  back: ["Hungry?", "There's onigiri in the fridge."]
+  bye: "Eat something before you go."
+l178-sector-2:
+  hi: "Watch the porch boards, I just swept. Kidding. Walk wherever."
+  back: ["Still here?", "Dew's on the moss again."]
+  bye: "See you round the courtyard."
+l178-sector-3:
+  hi: "You're new. Irawan's in the studio if you want the tour."
+  back: ["Find a futon yet?"]
+  bye: "Sleep well when you do."
+l178-sector-4:
+  hi: "Sit, sit. The table's big enough. Nobody eats alone here."
+  back: ["Tea's warm."]
+  bye: "Come back for supper. Or breakfast. Same thing here."
+l178-order-1:
+  hi: "Welcome, traveller. We are the Order of the Sun Goddess. We will gladly trade, though we do not take new members."
+  back: ["Peace to you again."]
+  bye: "May the light keep you."
+l178-order-2:
+  hi: "Good morning. If you need anything mended or traded, ask. We have little, but we share it."
+  back: ["You return. Good."]
+  bye: "Walk gently."
+l178-order-3:
+  hi: "The sun never quite rises here. We find that restful. You may too."
+  back: ["Rest well?"]
+  bye: "Go in peace."

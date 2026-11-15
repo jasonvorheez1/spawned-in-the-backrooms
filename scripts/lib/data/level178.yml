@@ -23,3 +23,29 @@ residents:
   l178-order-1: { x: -4, z: 13, yaw: 0 }
   l178-order-2: { x: -8, z: 4, yaw: 90 }
   l178-order-3: { x: 3, z: -8, yaw: 180 }
+# --- the live layer (places/level178/sim.js, scripts/l178-prop.js); Savi's picks unless noted
+layoutV: 1
+exits: { hub: "thehub#hub-from-l178", notBuilt: { level66: "Level 66 (not built)", level132: "Level 132 (not built)" } }
+threshold: { x: 0, y: 0.45, z: 16.45, w: 1.4, h: 2.0, d: 0.5 }
+stock:   # the shared container refill brings these back an hour after they are taken
+  l178-fridge: { name: "Refrigerator", items: "l178_onigiri,l178_onigiri,l178_bento,almond,almond" }
+  l178-pantry: { name: "Pantry", items: "l178_miso,warm_tea,almond" }
+  l178-cupboard-1: { name: "Cupboard", items: "l178_miso,l178_onigiri" }
+  l178-cupboard-2: { name: "Cupboard", items: "warm_tea,almond" }
+  l178-cupboard-3: { name: "Cupboard", items: "l178_bento" }
+  l178-cupboard-4: { name: "Cupboard", items: "almond,l178_onigiri" }
+swing: { door: 100, oven: 80 }      # degrees a cabinet door opens
+drawer: { pull: 0.35, ease: 0.35 }
+tapAt: { y: 0.93 }
+pool: { hx: 3.0, hz: 1.8, top: 0.10, stepZ: 1.1, ripMove: 0.35, soakSec: 15, dozeFade: 1.6 }
+quest: { id: "l178-rest", name: "A Place to Rest", near: 3.5, ate: 8 }
+breaks: { warnRadius: 14, compensate: 3 }
+rounds:   # resident stops: [x, z, dwell seconds]; meg-agent walks between them with findPath
+  l178-irawan: [[14.5, 1, 40], [10.8, -1, 25], [13, -11.8, 30]]
+  l178-sector-1: [[10.6, -3, 35], [13, -11.6, 30], [10.6, 2, 20]]
+  l178-sector-2: [[10.6, 3, 30], [8.1, 4, 25], [8.1, -4, 25], [10.6, 1, 20]]
+  l178-sector-3: [[14.8, -3.5, 30], [13.8, -12.3, 35], [8.1, -8.1, 25]]
+  l178-sector-4: [[13, -12, 40], [8.1, 8.1, 25], [-8.1, 8.1, 25]]
+  l178-order-1: [[-4, 13, 45], [-2, 11.5, 30]]
+  l178-order-2: [[-6, 12, 40], [-8.1, 8.1, 25]]
+  l178-order-3: [[4, 13, 45], [5, 11.5, 30]]

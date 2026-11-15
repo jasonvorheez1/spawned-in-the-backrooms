@@ -19,10 +19,11 @@ import D31 from "./data/dlg-level31.yml";
 import D70 from "./data/dlg-level70.yml";
 import D109 from "./data/dlg-level109.yml"; // Level 109 Doctors // Level 70 Froidetown
 import D169 from "./data/dlg-level169.yml"; // Level 169 Ferry's Friends
+import D178 from "./data/dlg-level178.yml"; // Level 178 Kyoto Dreams: the Sector of Amaterasu and the Order
 import DG from "./data/dlg-generic.yml";
 import DHUB from "./data/dlg-thehub.yml"; // The Hub
 import DLRUN from "./data/dlg-levelrun.yml"; // Level ! Safe Alcove
-const ALL = { ...DHUB, ...DLRUN, ...DG, ...D1, ...D4, ...D5, ...D7, ...D10, ...D13, ...D31, ...D70, ...D109, ...D169 };
+const ALL = { ...DHUB, ...DLRUN, ...DG, ...D1, ...D4, ...D5, ...D7, ...D10, ...D13, ...D31, ...D70, ...D109, ...D169, ...D178 };
 // people who share one script of lines (a pair of guards, a crew)
 for (const [k, v] of Object.entries({ "l61-guard-b": "l61-guard-a", "l61-amber-b": "l61-amber-a", "l61-guild-b": "l61-guild-a", "l61-guild-c": "l61-guild-a" })) ALL[k] ??= ALL[v];
 export const DLG = ALL;
