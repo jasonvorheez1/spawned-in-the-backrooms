@@ -130,7 +130,7 @@ export function tick(ctx) {
     ctx.spawn("l1-from-main", { feetPosition: { x: BACK.x + 2.4, y: 0.1, z: BACK.z }, rotation: { yaw: -90 } });
     ctx.spawn("l1-backwall", { feetPosition: { x: BACK.x - 0.2 + L1M.wallDx, y: 0, z: BACK.z }, physics: "static", model: { id: L1M.wall }, receiveShadow: true, castShadow: false });
   }
-  if (s.seeded && !s.hubDoor) { s.hubDoor = true; // Nov 13: the Hub's way in. Deep in the south-east halls, one more door in the east wall, unmarked but for a carved mark over it
+  if (s.seeded && (!s.hubDoor || !("l1-to-hub" in ctx.place.objects))) { s.hubDoor = true; // Nov 13: the Hub's way in. Deep in the south-east halls, one more door in the east wall, unmarked but for a carved mark over it
     const hz = cellCenter(N - 1, 28).z, hx = HALF;
     ctx.spawn("l1-to-hub", { feetPosition: { x: hx - 0.9, y: 0, z: hz }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.8, height: 2.4, depth: 1.6 }, visible: false, behavior: "scripts/level-door.js", state: { to: "thehub" } });
     ctx.spawn("l1-hub-door", { feetPosition: { x: hx - 0.15, y: 0, z: hz }, physics: { body: "static", collider: "box" }, model: { id: L1M.door }, visibleRange: { max: 60 }, castShadow: false });

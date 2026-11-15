@@ -5,6 +5,7 @@ import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
 import { endQuest, payOnce, setQuest } from "./quests.js";
 import { rollCheck } from "./npc-talk.js";
+import { noNpcs } from "./run-opts.js";
 
 const CHIME = "cdn/sfx-soft-bright-two-note-success-chime.mp3";
 const FANFARE = "/cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3";
@@ -240,7 +241,7 @@ export function ch2Tick(ctx, ses, st, place) {
   if (!st) return false;
   let dirty = false;
 
-  if (!st.ch2Q && !st.ch2Done && (st.dinaQ ?? 0) >= 9 && place !== "intake" && place !== "tutorial0" && place !== "bonus") {
+  if (!st.ch2Q && !st.ch2Done && !noNpcs(st) && (st.dinaQ ?? 0) >= 9 && place !== "intake" && place !== "tutorial0" && place !== "bonus") {
     st.ch2Q = 1;
     syncCh2(st);
     st.notice = { text: "New Lead: The Dead Signal (Dina's trail picks up past Level 11)", at: ctx.now() };
