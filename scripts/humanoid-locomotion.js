@@ -123,7 +123,7 @@ function pacesOf(ctx, gait) {
 // A gait clip's rate: the body's speed over the clip's pace, so the feet cover what the body covers. A running clip
 // (`running`: the Run and the Sprint) past its pace plays at the square root of that ratio. Standing (or with no pace to
 // read) the clip plays as authored. This `speed` is the rate the engine plays: nothing overrules it.
-const STRAFE = { left: 'cdn/clip-ash-rifle-walk-left-384a4451-loop.glb', right: 'cdn/clip-ash-rifle-walk-right-a4cb54c4-loop.glb', back: 'cdn/clip-ash-rifle-walk-back-a99a8bdc-loop.glb' } // Nov 15 (Shelly: 'strafing is off'): the ash set's matched 1.4 s steps; the long unhashed takes stood still most of their 7 s and played at every speed
+const STRAFE = { left: 'cdn/clip-ash-rifle-walk-left-loop.glb', right: 'cdn/clip-ash-rifle-walk-right-a4cb54c4-loop.glb', back: 'cdn/clip-ash-rifle-walk-back-a99a8bdc-loop.glb' } // Nov 15 (Shelly: 'strafing is off'): the ash set's matched 1.4 s steps; the long unhashed takes stood still most of their 7 s and played at every speed
 const STRAFE_RUN = { left: 'cdn/clip-ash-rifle-run-left-a663e6c9-loop.glb', right: 'cdn/clip-ash-rifle-run-right-a1a3f376-loop.glb', back: 'cdn/clip-ash-rifle-run-back-25b7a511-loop.glb' } // a run sideways wears running legs, not a walk sped up
 function strafeOf(g) { const x = g.mx ?? 0, z = g.mz ?? 0; if (Math.abs(x) > 0.2 && Math.abs(x) >= Math.abs(z) * 0.9) return x > 0 ? 'right' : 'left'; return z < -0.2 ? 'back' : null }
 function paceRate(speed, pace, running) {
