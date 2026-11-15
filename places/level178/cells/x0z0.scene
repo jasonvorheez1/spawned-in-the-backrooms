@@ -2822,7 +2822,7 @@ l178-stair:
   id: l178-stair
   model: /cdn/value.3907b899fbbbeefad3e8c1da746d7251f6c80ebb983abbc345ba4ed5fa009fc7.glb
   physics: {body: static, collider: mesh}
-  rotation: {yaw: 0}
+  rotation: {yaw: 180}
   tags: [l178]
 l178-steam:
   feetPosition: {x: 0, y: 0.12, z: 0}
