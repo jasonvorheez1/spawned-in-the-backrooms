@@ -141,7 +141,7 @@ export function longHands(me, held, yaw, pitch, aiming, crouch, len = 0.62) {
   const f = { x: -Math.sin(yaw), z: -Math.cos(yaw) }, r = { x: Math.cos(yaw), z: -Math.sin(yaw) }, p = me.feetPosition, sc = me.scale?.y ?? 1, y0 = p.y + (crouch ? 1.0 : 1.38) * sc
   const pc = aiming ? pitch : -0.5, c = Math.cos(pc), sn = Math.sin(pc)
   const at = (fwd, side, up) => ({ x: p.x + f.x * c * fwd + r.x * side, y: y0 + sn * fwd + up, z: p.z + f.z * c * fwd + r.z * side })
-  const R = aiming ? at(0.4, 0.2, -0.1) : at(0.26, 0.2, -0.32) // aimed: 34 cm out, 20 cm under the eye line, so a snout clears the stock
+  const R = aiming ? at(0.34, 0.17, -0.2) : at(0.26, 0.2, -0.32) // aimed: 34 cm out, 20 cm under the eye line, so a snout clears the stock
   const L = aiming ? at(0.3 + len, 0.0, -0.06) : at(0.26 + len * 0.8, 0.02, -0.32)
   const pole = { x: p.x - r.x * 0.6, y: y0 - 0.6, z: p.z - r.z * 0.6 }
   // the right hand holds the grip at the shoulder pocket; the left hand is solved onto the held gun's foregrip
