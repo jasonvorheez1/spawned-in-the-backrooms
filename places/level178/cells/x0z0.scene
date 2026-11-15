@@ -935,37 +935,37 @@ l178-closet-kimono:
   state: {open: false}
   tags: [l178, l178-prop]
 l178-cupboard-1:
-  children: [{id: door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb}, {id: door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb}]
+  children: [{behavior: scripts/prop-part.js, id: prop-motion-door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb, pivot: {x: -0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb, pivot: {x: 0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}]
   feetPosition: {x: 12.2, y: 1.9, z: -1.38}
   id: l178-cupboard-1
   model: /cdn/value.5ba57997812cab4aa11f00478ecb52e0f2e266c47d4d3b8e52b9666f8778eb0c.glb
   rotation: {yaw: 90}
-  state: {open: false}
-  tags: [l178, l178-prop]
+  state: {containerOpen: false, items: "l178_miso,l178_onigiri", name: Cupboard, propArt: l178-cupboard}
+  tags: [container, l178, l178-prop]
 l178-cupboard-2:
-  children: [{id: door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb}, {id: door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb}]
+  children: [{behavior: scripts/prop-part.js, id: prop-motion-door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb, pivot: {x: -0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb, pivot: {x: 0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}]
   feetPosition: {x: 12.2, y: 1.9, z: -0.46}
   id: l178-cupboard-2
   model: /cdn/value.5ba57997812cab4aa11f00478ecb52e0f2e266c47d4d3b8e52b9666f8778eb0c.glb
   rotation: {yaw: 90}
-  state: {open: false}
-  tags: [l178, l178-prop]
+  state: {containerOpen: false, items: "warm_tea,almond", name: Cupboard, propArt: l178-cupboard}
+  tags: [container, l178, l178-prop]
 l178-cupboard-3:
-  children: [{id: door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb}, {id: door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb}]
+  children: [{behavior: scripts/prop-part.js, id: prop-motion-door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb, pivot: {x: -0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb, pivot: {x: 0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}]
   feetPosition: {x: 12.2, y: 1.9, z: 0.46}
   id: l178-cupboard-3
   model: /cdn/value.5ba57997812cab4aa11f00478ecb52e0f2e266c47d4d3b8e52b9666f8778eb0c.glb
   rotation: {yaw: 90}
-  state: {open: false}
-  tags: [l178, l178-prop]
+  state: {containerOpen: false, items: l178_bento, name: Cupboard, propArt: l178-cupboard}
+  tags: [container, l178, l178-prop]
 l178-cupboard-4:
-  children: [{id: door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb}, {id: door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb}]
+  children: [{behavior: scripts/prop-part.js, id: prop-motion-door_l, model: /cdn/value.3ae6ef87f9c225543400f5c3ea48d877960ed23aa430c3848798044dc42b110f.glb, pivot: {x: -0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-door_r, model: /cdn/value.70764694466520785e37ae7d83c2f7c885031d9f75820ef3a10dacb228be1c32.glb, pivot: {x: 0.435, y: 0, z: -0.17}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}]
   feetPosition: {x: 12.2, y: 1.9, z: 1.38}
   id: l178-cupboard-4
   model: /cdn/value.5ba57997812cab4aa11f00478ecb52e0f2e266c47d4d3b8e52b9666f8778eb0c.glb
   rotation: {yaw: 90}
-  state: {open: false}
-  tags: [l178, l178-prop]
+  state: {containerOpen: false, items: "almond,l178_onigiri", name: Cupboard, propArt: l178-cupboard}
+  tags: [container, l178, l178-prop]
 l178-dew:
   feetPosition: {x: 0, y: 0.08, z: 0}
   fx: {script: "fx\npop dew n=?mobile:40|90 on=box(6.5,.05,6.5) life=1.5..3 size=.015..0.03 col=hdr(2,1.8,1.3) a=(0>.5:1>0)*flick(3,.6) sz=$size r=sprite(mote,add)"}
@@ -980,47 +980,47 @@ l178-door-hub:
   state: {to: thehub}
   tags: [l178, l178-door]
 l178-drawer-1:
+  children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 12.05, y: 0.45, z: -1.38}
   id: l178-drawer-1
-  model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb
   rotation: {yaw: 90}
-  state: {open: false, pull: 0.3}
-  tags: [l178, l178-prop]
+  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
+  tags: [container, l178, l178-prop]
 l178-drawer-2:
+  children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 12.05, y: 0.45, z: 0.46}
   id: l178-drawer-2
-  model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb
   rotation: {yaw: 90}
-  state: {open: false, pull: 0.3}
-  tags: [l178, l178-prop]
+  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
+  tags: [container, l178, l178-prop]
 l178-drawer-3:
+  children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 12.05, y: 0.45, z: 4.6}
   id: l178-drawer-3
-  model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb
   rotation: {yaw: 90}
-  state: {open: false, pull: 0.3}
-  tags: [l178, l178-prop]
+  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
+  tags: [container, l178, l178-prop]
 l178-drawer-4:
+  children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 12.05, y: 0.45, z: 5.5}
   id: l178-drawer-4
-  model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb
   rotation: {yaw: 90}
-  state: {open: false, pull: 0.3}
-  tags: [l178, l178-prop]
+  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
+  tags: [container, l178, l178-prop]
 l178-drawer-5:
+  children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 9.8, y: 0.45, z: 5.6}
   id: l178-drawer-5
-  model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb
   rotation: {yaw: 180}
-  state: {open: false, pull: 0.3}
-  tags: [l178, l178-prop]
+  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
+  tags: [container, l178, l178-prop]
 l178-drawer-6:
+  children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 10.72, y: 0.45, z: 5.6}
   id: l178-drawer-6
-  model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb
   rotation: {yaw: 180}
-  state: {open: false, pull: 0.3}
-  tags: [l178, l178-prop]
+  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
+  tags: [container, l178, l178-prop]
 l178-engawa-e0:
   feetPosition: {x: 8.1, y: 0, z: -6}
   id: l178-engawa-e0
@@ -1461,14 +1461,18 @@ l178-floor-w4:
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-fridge:
-  children: [{id: door, model: /cdn/value.9cfbf325bd20af01268b1869d578032db116ec4005e23a2c18b552ea8187d45d.glb}, {id: drawer, model: /cdn/value.ff466e6642952c13915042b74d9dc92a5b9dc4ee64deb133b5d6f859091a16f3.glb}]
+  children: [{behavior: scripts/prop-part.js, id: prop-motion-door, model: /cdn/value.9cfbf325bd20af01268b1869d578032db116ec4005e23a2c18b552ea8187d45d.glb, pivot: {x: 0.345, y: 0, z: -0.32}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.ff466e6642952c13915042b74d9dc92a5b9dc4ee64deb133b5d6f859091a16f3.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 12, y: 0.45, z: -5.45}
   id: l178-fridge
   model: /cdn/value.285d274e7939c624eabbe16fa51d068cd66e29e8498ab315ecf27f75b117d0d4.glb
   physics: static
   rotation: {yaw: 90}
-  state: {open: false}
-  tags: [l178, l178-prop]
+  state: {containerOpen: false, items: "l178_onigiri,l178_onigiri,l178_bento,almond,almond", name: Refrigerator, propArt: l178-fridge}
+  tags: [container, l178, l178-prop]
+l178-from-hub:
+  feetPosition: {x: 0, y: 0.5, z: 15.6}
+  id: l178-from-hub
+  rotation: {yaw: 0}
 l178-futon-1:
   feetPosition: {x: -6.1, y: 0.48, z: -13.4}
   id: l178-futon-1
@@ -2186,23 +2190,23 @@ l178-out-w9:
   scale: {x: 0.983, y: 1, z: 1}
   tags: [l178]
 l178-oven:
-  children: [{id: door, model: /cdn/value.28a8b24d50ff34ed752870ac1eadc2a5277204bd65ca7e7f3f46e2e7b36a0ddc.glb}]
+  children: [{behavior: scripts/prop-part.js, id: prop-motion-door, model: /cdn/value.28a8b24d50ff34ed752870ac1eadc2a5277204bd65ca7e7f3f46e2e7b36a0ddc.glb, pivot: {x: 0, y: 0.14, z: -0.29}, state: {axis: pitch, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -80, value: 0}}]
   feetPosition: {x: 12.05, y: 0.45, z: 1.38}
   id: l178-oven
   model: /cdn/value.d48802c292b2b87cb743da09b8f9cc055230e1f64dbee2a91a86f63928930896.glb
   physics: static
   rotation: {yaw: 90}
-  state: {open: false}
-  tags: [l178, l178-prop]
+  state: {containerOpen: false, items: "", name: Oven, propArt: l178-oven}
+  tags: [container, l178, l178-prop]
 l178-pantry:
-  children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}, {id: drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb}]
+  children: [{behavior: scripts/prop-part.js, id: prop-motion-door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb, pivot: {x: -0.42, y: 0, z: -0.28}, state: {axis: yaw, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: 100, value: 0}}, {behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
   feetPosition: {x: 12.05, y: 0.45, z: -4.55}
   id: l178-pantry
   model: /cdn/value.40a800e450bc9d11302fb04f6ff546f72d2b1714ff3cf839c5073350b852f7b7.glb
   physics: static
   rotation: {yaw: 90}
-  state: {open: false}
-  tags: [l178, l178-prop]
+  state: {containerOpen: false, items: "l178_miso,warm_tea,almond", name: Pantry, propArt: l178-pantry}
+  tags: [container, l178, l178-prop]
 l178-porch-lantern-0:
   children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 7, intensity: 1.6, kind: point}}]
   feetPosition: {x: 0, y: 3.2, z: 7.25}
@@ -2356,125 +2360,137 @@ l178-roof-90:
   rotation: {yaw: 90}
   tags: [l178]
 l178-shoji-1:
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, rotation: {yaw: 90}, tags: [l178-break]}]
+  behavior: scripts/l178-prop.js
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: [l178-break]}]
   feetPosition: {x: -6.44, y: 0.45, z: 9.2}
   id: l178-shoji-1
   model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, open: true, openX: 0, slide: 0.9}
-  tags: [l178, l178-shoji]
+  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  tags: [l178, l178-shoji, usable]
 l178-shoji-10:
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, rotation: {yaw: 90}, tags: []}]
+  behavior: scripts/l178-prop.js
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: 12.4, y: 0.45, z: 3}
   id: l178-shoji-10
   model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.099, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, open: true, openX: 0, slide: 0.9}
-  tags: [l178, l178-shoji]
+  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  tags: [l178, l178-shoji, usable]
 l178-shoji-11:
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, rotation: {yaw: 90}, tags: []}]
+  behavior: scripts/l178-prop.js
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: 3.74, y: 0.45, z: 12.125}
   id: l178-shoji-11
   model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, open: true, openX: 0, slide: 0.9}
-  tags: [l178, l178-shoji]
+  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  tags: [l178, l178-shoji, usable]
 l178-shoji-12:
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, rotation: {yaw: 90}, tags: []}]
+  behavior: scripts/l178-prop.js
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: -3.74, y: 0.45, z: 12.125}
   id: l178-shoji-12
   model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, open: true, openX: 0, slide: 0.9}
-  tags: [l178, l178-shoji]
+  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  tags: [l178, l178-shoji, usable]
 l178-shoji-2:
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, rotation: {yaw: 90}, tags: []}]
+  behavior: scripts/l178-prop.js
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: 6.44, y: 0.45, z: 9.2}
   id: l178-shoji-2
   model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, open: true, openX: 0, slide: 0.9}
-  tags: [l178, l178-shoji]
+  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  tags: [l178, l178-shoji, usable]
 l178-shoji-3:
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, rotation: {yaw: 90}, tags: []}]
+  behavior: scripts/l178-prop.js
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: -6.44, y: 0.45, z: -9.2}
   id: l178-shoji-3
   model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, open: true, openX: 0, slide: 0.9}
-  tags: [l178, l178-shoji]
+  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  tags: [l178, l178-shoji, usable]
 l178-shoji-4:
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, rotation: {yaw: 90}, tags: []}]
+  behavior: scripts/l178-prop.js
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: 6.44, y: 0.45, z: -9.2}
   id: l178-shoji-4
   model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, open: true, openX: 0, slide: 0.9}
-  tags: [l178, l178-shoji]
+  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  tags: [l178, l178-shoji, usable]
 l178-shoji-5:
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, rotation: {yaw: 90}, tags: []}]
+  behavior: scripts/l178-prop.js
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: 9.2, y: 0.45, z: -6.44}
   id: l178-shoji-5
   model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, open: true, openX: 0, slide: 0.9}
-  tags: [l178, l178-shoji]
+  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  tags: [l178, l178-shoji, usable]
 l178-shoji-6:
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, rotation: {yaw: 90}, tags: []}]
+  behavior: scripts/l178-prop.js
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: 9.2, y: 0.45, z: 6.44}
   id: l178-shoji-6
   model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, open: true, openX: 0, slide: 0.9}
-  tags: [l178, l178-shoji]
+  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  tags: [l178, l178-shoji, usable]
 l178-shoji-7:
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, rotation: {yaw: 90}, tags: []}]
+  behavior: scripts/l178-prop.js
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: -9.2, y: 0.45, z: -6.44}
   id: l178-shoji-7
   model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, open: true, openX: 0, slide: 0.9}
-  tags: [l178, l178-shoji]
+  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  tags: [l178, l178-shoji, usable]
 l178-shoji-8:
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, rotation: {yaw: 90}, tags: []}]
+  behavior: scripts/l178-prop.js
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: -9.2, y: 0.45, z: 6.44}
   id: l178-shoji-8
   model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, open: true, openX: 0, slide: 0.9}
-  tags: [l178, l178-shoji]
+  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  tags: [l178, l178-shoji, usable]
 l178-shoji-9:
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, rotation: {yaw: 90}, tags: []}]
+  behavior: scripts/l178-prop.js
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: 12.4, y: 0.45, z: -3}
   id: l178-shoji-9
   model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.099, y: 1, z: 1}
-  state: {axis: x, closedX: -0.9, ease: 0.35, open: true, openX: 0, slide: 0.9}
-  tags: [l178, l178-shoji]
+  state: {axis: x, closedX: -0.9, ease: 0.35, kind: shoji, name: Shoji, open: true, openX: 0, slide: 0.9, verb: Close}
+  tags: [l178, l178-shoji, usable]
 l178-shrub-0:
   feetPosition: {x: -5.6, y: 0, z: -5.8}
   id: l178-shrub-0
@@ -2632,12 +2648,13 @@ l178-table-dining:
   rotation: {yaw: 0}
   tags: [l178, l178-prop]
 l178-tap:
+  behavior: scripts/l178-prop.js
   feetPosition: {x: 12.05, y: 0.45, z: -0.46}
   id: l178-tap
   model: /cdn/value.26eac501187c10f5586c3089ceee2f94705efd0b14accf2976a9bb6342ff22e9.glb
   rotation: {yaw: 90}
-  state: {"on": false}
-  tags: [l178, l178-prop]
+  state: {kind: tap, name: Tap, "on": false, verb: Turn on}
+  tags: [l178, l178-prop, usable]
 l178-tatami-0:
   feetPosition: {x: -1.82, y: 0.45, z: 11.1}
   id: l178-tatami-0
@@ -2704,6 +2721,15 @@ l178-tatami-9:
   model: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb
   rotation: {yaw: 0}
   tags: [l178]
+l178-to-hub:
+  behavior: scripts/level-door.js
+  feetPosition: {x: 0, y: 0.45, z: 16.45}
+  id: l178-to-hub
+  physics: {body: static, trigger: true}
+  primitive: {depth: 0.5, height: 2, kind: box, width: 1.4}
+  state: {to: thehub}
+  tags: [l178]
+  visible: false
 l178-towel-shelf:
   feetPosition: {x: -9.65, y: 0.45, z: -7.6}
   id: l178-towel-shelf
