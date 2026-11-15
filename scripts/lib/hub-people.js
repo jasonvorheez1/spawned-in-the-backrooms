@@ -28,6 +28,9 @@ const THINGS = [
   { id: "hub-ledger", kind: "ledger", at: [19.6, -7.2], y: 0.18, face: 180, state: { kind: "ledger", name: "Key ledger", verb: "Read", info: "KEYS OUT, in three hands." } },
   { id: "hub-amberbox", kind: "amberbox", at: [185.2, 7.0], face: 10, state: { kind: "amberbox", name: "Newcomer box", verb: "Open", info: "One per face." } },
   { id: "hub-keytag", kind: "keytag", at: [360.6, -84.0], face: 30, lamp: 0.5, state: { kind: "keytag", name: "Something on the road", verb: "Pick up", info: "Small. Metal." } },
+  { id: "hub-loosekey-0", kind: "keytag", at: [-31.0, 2.7], face: -20, lamp: 0.5, state: { kind: "loosekey", name: "Something on the road", verb: "Pick up", info: "Small. Metal." } }, // a key with no keeper: the world source when a run has no story or no people (scripts/hub-thing.js)
+  { id: "hub-loosekey-1", kind: "keytag", at: [97.5, -2.8], face: 65, lamp: 0.5, state: { kind: "loosekey", name: "Something on the road", verb: "Pick up", info: "Small. Metal." } }, // a key with no keeper: the world source when a run has no story or no people (scripts/hub-thing.js)
+  { id: "hub-loosekey-2", kind: "keytag", at: [263.0, 2.6], face: 140, lamp: 0.5, state: { kind: "loosekey", name: "Something on the road", verb: "Pick up", info: "Small. Metal." } }, // a key with no keeper: the world source when a run has no story or no people (scripts/hub-thing.js)
   { id: "hub-rec-0", kind: "recorder", at: [516.2, -2.6], face: 70, lamp: 0.6, state: { kind: "rec", i: 0, name: "Orange recorder", verb: "Take the tape", info: "M.E.G. survey, 2019." } },
   { id: "hub-rec-1", kind: "recorder", at: [534.8, 3.1], face: -40, lamp: 0.6, state: { kind: "rec", i: 1, name: "Orange recorder", verb: "Take the tape", info: "M.E.G. survey, 2019." } },
   { id: "hub-rec-2", kind: "recorder", at: [553.4, -1.2], face: 150, lamp: 0.6, state: { kind: "rec", i: 2, name: "Orange recorder", verb: "Take the tape", info: "M.E.G. survey, 2019." } },
