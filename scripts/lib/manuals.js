@@ -1,4 +1,4 @@
-// Crafting manuals: a recipe stays locked until a manual of its kind teaches it. Each manual read teaches THREE (player.js; Nov 15) random recipe of
+// Crafting manuals: a recipe stays locked until a manual of its kind teaches it. Each manual read teaches ONE random recipe of
 // its kind you do not know yet (player.state.recipes, a comma list of recipe ids). player.state.manuals is the older rule
 // (a whole kind at once, Nov 14 only) and still counts for anyone who read one then.
 import C from './data/craft.yml'
