@@ -28,7 +28,7 @@ export function onInput(ctx, input) {
   const ray = getInputRay(ctx, input); if (ray) m.ray = ray
   if (s.level == null) return
   const gNow = clockNow(ctx)
-  s._clockNow = gNow
+  if (!(Math.abs(gNow - (s._clockNow ?? -1e9)) < 1000)) s._clockNow = gNow // Nov 15 (lag): the stamp the menus read moves once a second, not every tick on every player
   if (pruneEffects(s, gNow)) pushFeed(s, 'An item effect wore off.', ctx.now())
   if (input.pressed?.sheet && s.creating) return
   if (input.pressed?.sheet && (s.sheetOpen || canOpen(s, ctx.self.place, 'sheet'))) { if (s.sheetOpen) s.sheetOpen = false; else { openWrist(s, 'sheet'); s.lvlPrompt = false } ctx.emit('playSound', { clip: s.sheetOpen ? 'cdn/moodboard-realistic-gritty/sfx-wrist-device-raise-click-crt-power-on-hum.mp3' : 'cdn/moodboard-realistic-gritty/sfx-wrist-device-lower-click-crt-power-off.mp3', volume: 0.55, bus: 'UI' }) }
@@ -91,7 +91,7 @@ export function update(ctx, dt) {
   const s = ctx.self.state, m = mem(ctx)
   if (s.level == null) return
   const gNow = clockNow(ctx)
-  s._clockNow = gNow
+  if (!(Math.abs(gNow - (s._clockNow ?? -1e9)) < 1000)) s._clockNow = gNow // Nov 15 (lag): the stamp the menus read moves once a second, not every tick on every player
   if (pruneEffects(s, gNow)) pushFeed(s, 'An item effect wore off.', ctx.now())
   if (s.attr == null) Object.assign(s, START) // a new wanderer: 5 in everything, 5 points, three skills to tag
   else if (s.sver !== 2) { // an older sheet: attributes stay, skills become the thirteen Fallout-style ones with their points

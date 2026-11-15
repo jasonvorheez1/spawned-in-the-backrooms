@@ -258,7 +258,7 @@ export function update(ctx, dt) {
       else { say(ctx, p, S.lines.none); ctx.self.state.dishAt = now; warn(ctx, p, now) } // she looks to her empty dish; no meat is never a fight
     }
   }
-  st.offers = [['o:feed', 'Offer meat'], ['o:refuse', 'Refuse']]
+  if (st.offers?.length !== 2 || st.offers[0]?.[0] !== 'o:feed') st.offers = [['o:feed', 'Offer meat'], ['o:refuse', 'Refuse']] // Nov 15 (lag): written once, not a fresh list every tick
   if (talker) {
     const a = me.feetPosition, b = talker.feetPosition; me.rotation = { yaw: yawTo(b.x - a.x, b.z - a.z) }
     if (ses.mode === 'walk') rest(ctx, now, 'sit')

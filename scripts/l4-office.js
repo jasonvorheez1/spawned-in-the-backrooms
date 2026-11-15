@@ -146,7 +146,7 @@ export function update(ctx, dt) {
   const s = ctx.self.state;
   if (s.kind !== "manager") return;
   const now = ctx.now();
-  s.acc = (s.acc ?? 0) + dt; if (s.acc < 1) return; s.acc = 0;
+  const ses = ctx.self.session; ses.acc = (ses.acc ?? 0) + dt; if (ses.acc < 1) return; ses.acc = 0; // Nov 15 (lag): the 1 s pacer is this machine's scratch, not a shared write every tick
   for (const pl of ctx.place.players) { // a memo is delivered by walking into its office
     const t = pl.state?.l4task; if (t?.kind !== "memo") continue
     const r = ROOMS.find((q) => q.id === t.room), f = pl.feetPosition

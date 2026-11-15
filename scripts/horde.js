@@ -102,7 +102,8 @@ export function update(ctx, dt) {
   }
   // night
   m.night += dt
-  s.sanity = Math.max(0, (s.sanity ?? 0) - H.sanityDrain * dt)
+  m.san = (m.san ?? 0) + H.sanityDrain * dt // Nov 15 (lag): the same drain, landed in quarter points instead of a write every tick
+  if (m.san >= 0.25) { s.sanity = Math.max(0, (s.sanity ?? 0) - m.san); m.san = 0 }
   if (m.wave < H.waves && m.night >= m.nextWave) wave(ctx, s, m)
   if (m.acc < 1) return
   m.acc = 0
