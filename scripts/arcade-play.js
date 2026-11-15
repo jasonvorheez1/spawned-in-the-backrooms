@@ -58,9 +58,10 @@ export function onInput(ctx, input) {
   if (input.pressed?.jump) k.drop = true
 }
 
+// a reload empties the session but keeps the channel: read the channel too, so a stale arcade idle never plays over the walk
 export function update(ctx, dt) {
   const s = ctx.self.state, a = s.arcade
-  if (!!a !== !!ctx.self.session.arcOn) { ctx.self.session.arcOn = !!a; ctx.self.anim.arcade = a ? { clip: 'cdn/clip-idle-loop.glb', weight: 1, loop: true } : null }
+  if (!!a !== !!(ctx.self.session.arcOn ?? ctx.self.anim.arcade)) { ctx.self.session.arcOn = !!a; ctx.self.anim.arcade = a ? { clip: 'cdn/clip-idle-loop.glb', weight: 1, loop: true } : null }
   if (!a) return
   const cab = ctx.getObject(a.id), me = ctx.self.feetPosition
   if (!cab || Math.hypot(cab.feetPosition.x - me.x, cab.feetPosition.z - me.z) > 4) { s.arcade = null; s.arcadeClosedAt = ctx.now(); ctx.self.session.ap = null; ctx.self.session.ff = null; ctx.session.ffv = null; return } // a saved screen whose cabinet isn't here (another level, a reload) closes instead of trapping the player
