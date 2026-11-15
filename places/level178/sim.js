@@ -2,7 +2,7 @@
 // walking their rounds (scripts/meg-agent.js reads state.rounds) and lays the Hub's return marker once.
 import L from "../../scripts/lib/data/level178.yml";
 import { sweepProps } from "../../scripts/lib/breakables.js";
-import { weaponBody } from "../../scripts/lib/loot.js";
+import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { keepPeople, every } from "../../scripts/lib/level-kit.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
