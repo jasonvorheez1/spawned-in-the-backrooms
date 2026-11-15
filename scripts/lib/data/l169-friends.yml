@@ -82,6 +82,10 @@ people:
       day: [[0, north], [5, help], [6, meal], [7, help], [9, sleep], [15, help], [18, meal], [19, north]] }
 # the house talks among itself. Never about the player.
 chatter:
+  - [[l169-bro-1, "any word from head office?"], [l169-bro-3, "no."], [l169-bro-1, "they're busy. big company."], [l169-bro-3, "sure."]]
+  - [[l169-bro-2, "desmond, what's the head office address?"], [l169-bro-1, "it's, uh. it's classified."], [l169-bro-2, "you don't know."], [l169-bro-1, "it's classified that i don't know."]]
+  - [[l169-bro-3, "heard spurs out east last night."], [l169-bro-2, "oh no. how many?"], [l169-bro-3, "enough."], [l169-bro-2, "ugh. every time."]]
+  - [[l169-bro-2, "i miss when they just carried luggage."], [l169-bro-1, "they were great at luggage."], [l169-bro-2, "and then cowboy mode."], [l169-bro-1, "we don't say cowboy mode."]]
   - [[l169-friend-3, "someone was in the pantry last night."], [l169-friend-2, "two tins short. i checked twice."], [l169-friend-4, "nobody signed in at a."], [l169-friend-3, "then they came over the ridge. i'll walk it at dusk."]]
   - [[l169-friend-7, "would you really fight someone? for beans?"], [l169-friend-1, "for the beans, no. for this table, yes."], [l169-friend-7, "okay. that makes sense."]]
   - [[l169-friend-6, "front lock's bent."], [l169-friend-4, "forced?"], [l169-friend-6, "forced. somebody leaned hard."], [l169-friend-4, "i'll log it."], [l169-friend-6, "log won't fix it."]]

@@ -197,3 +197,121 @@ l169-friend-7:   # Pim Laurier, newcomer
     clear: ["Is that it? Is it really over?"]
     idle: ["Lot of stars.", "North's that way.", "Two weeks."]
     hi: ["Oh. Hi.", "Hey."]
+
+# Field Office 7: three people who say they're Backrooms Robotics. No badges, no proof, a door they never open. Their gunslinger units went frenzied.
+l169-bro-1:   # Desmond Vail, "site supervisor"
+  hi: "Welcome to Field Office Seven, Backrooms Robotics. Desmond Vail, site supervisor. Please don't touch the antenna."
+  back: ["Ah. Our favourite independent contractor.", "Back again. Good. Very good. Please don't tell anyone how good."]
+  bye: "Backrooms Robotics thanks you for your discretion."
+  ask:
+    - q: "You're really Backrooms Robotics?"
+      a: "Absolutely. Completely. Do I have a badge? No. Paperwork? Lost in transit. Head office? Can't say where. But look at that dish. Would a liar have a dish?"
+    - q: "What's behind the locked door?"
+      a: "Proprietary. Very proprietary. It hums. That's all I'm cleared to tell you, and honestly, that's all I know."
+    - q: "What are those robots out in the sand?"
+      a: "Gunslinger Series field units. Hats, holsters, the full frontier package. Marketing's idea. They were meant to escort wanderers. Then they started shooting the wanderers."
+    - q: "You need help, don't you?"
+      a: "Ugh. Fine. Yes. Three units, minimum, put down before head office notices. Bring nothing back, just stop them. I'll pay. In cash. Real cash, not company scrip, I promise."
+    - q: "Can I keep their armor?"
+      a: "Officially, that plating is company property. Unofficially, I'm not walking out there to get it back. Wear it in good health. Maybe take the hat off indoors."
+  quest:
+    start: "Three units. That's all I'm asking. They spawn wherever somebody's alone out there, so go be alone."
+    progress: "Still counting? Every one you drop is one less incident report."
+    done: "Three down. Wonderful. Fantastic. I'm writing this up as a scheduled recall. You were never here. Here's your money."
+  barks:
+    spot: ["Easy! We're the good robotics people!", "Hey, hey, nobody shoot the supervisor!"]
+    hostile: ["That's assault on a corporate officer! Probably!", "I am calling head office! Eventually!"]
+    hit: ["Ow! That's my clipboard arm!", "Ah! Workplace injury!"]
+    hurt: ["I'm filing a complaint.", "Oh, this is going in the report."]
+    relief: ["Okay. Okay. Nobody saw that.", "Everyone breathe. That's a company directive."]
+    clear: ["Is it off? Is it fully off?"]
+    allyDown: ["Wren! Somebody grab the kit!", "Pruitt's down! Get the kit!"]
+    idle: ["Signal's weak today.", "Head office will call. Any minute.", "Seventeen units. We had seventeen."]
+    hi: ["Backrooms Robotics, how can we help?", "Afternoon. Corporate afternoon."]
+l169-bro-2:   # Wren Okoye, field technician
+  hi: "Hi! Wren. I fix them. Well. I used to fix them. Now I mostly hide from them."
+  back: ["Oh good, it's you and not a unit.", "Hey! You're alive! That's honestly the nicest thing that's happened today."]
+  bye: "Stay off the ridgelines. They love a ridgeline."
+  ask:
+    - q: "Why did the robots go frenzied?"
+      a: "Somebody pushed a patch called COWBOY MODE. Every unit took it at once. Now they think every stranger is a bandit. I've cried about it twice. Today."
+    - q: "Who actually built them?"
+      a: "Backrooms Robotics. I think. The crates said so. The manuals said so. I never met anyone who said so. That's normal, right? That's normal for a company."
+    - q: "How do I fight them?"
+      a: "Deadeyes have revolvers, keep moving. Buckshots have coach guns, keep far. Longhorns snipe, use cover. And if you see a Tin Sheriff, just run. Seriously, run."
+    - q: "Can I wear the plating?"
+      a: "Yes! It's just shell plates over a cat-shaped frame. Pop the clips, it comes off clean. Underneath they look just like you. Which is honestly the creepiest part."
+  barks:
+    spot: ["Oh no, oh no, is that a unit?", "Somebody's here!"]
+    hostile: ["Please stop! I just fix things!", "Why is everyone always shooting!"]
+    hit: ["Ow! Ow!", "Ah, that really hurt!"]
+    hurt: ["I'm bleeding, I'm bleeding!", "Ugh, not again."]
+    relief: ["Ha. Ha ha. We're okay. We're okay!", "Oh thank goodness."]
+    clear: ["Is it over? Please say it's over."]
+    allyDown: ["Desmond! No!", "Pruitt, get up, please get up!"]
+    idle: ["Where did I put the eleven millimetre.", "Come on, firmware, come on.", "Don't spark. Don't spark. Don't spark."]
+    hi: ["Hi!", "Oh! Hello!"]
+l169-bro-3:   # Pruitt, gate guard
+  hi: "Pruitt. Gate. You can stand there. Not there. There."
+  back: ["You.", "Still breathing. Good."]
+  bye: "Watch the horizon."
+  ask:
+    - q: "Do you work for Backrooms Robotics?"
+      a: "I work for whoever fills the water tank. Desmond fills it. So yes. I work for Backrooms Robotics. Whatever that is."
+    - q: "What happened to the other guards?"
+      a: "Two of them went out to recover a Tin Sheriff. The Sheriff came back. They didn't."
+    - q: "Any advice?"
+      a: "They spin up loud. Spurs and a whirr. You hear the jingle, you get low. Every time."
+  barks:
+    spot: ["Contact.", "Unit on the line!", "Get behind me!"]
+    hostile: ["Wrong gate, friend.", "Last warning. Drop it."]
+    hit: ["Hngh.", "Took one."]
+    hurt: ["I'm fine. I'm fine.", "Still standing."]
+    kill: ["Stay down.", "That's one."]
+    relief: ["Clear.", "Holster up."]
+    clear: ["Line's quiet."]
+    allyDown: ["Man down!", "Cover them!"]
+    idle: ["Quiet.", "Too quiet.", "Wind's shifting."]
+    hi: ["Gate's open.", "Mm."]
+
+# The frenzied Gunslinger Series: four chassis, one bad patch. Cartoon cowboys with a corrupted voice box.
+l169-bot-1:   # Deadeye, revolver
+  barks:
+    spot: ["Well howdy, bandit! Reach for the sky!", "This desert ain't big enough for the both of us, partner!", "Draw!"]
+    hostile: ["Yeehaw! Yeehaw! Yee, error, haw!", "You're under arrest by order of, by order of, by order of!"]
+    hit: ["Ow! My chassis!", "Varmint!"]
+    hurt: ["Sparkin', I'm sparkin'!", "Critical damage, partner."]
+    kill: ["Another bandit for Boot Hill! Hah!", "Yeehaw!"]
+    death: ["Tell, tell head office, I was a good, good boy.", "Ridin', off, into, the sun, set."]
+    clear: ["Town's safe again. Hah ha!"]
+    idle: ["Escort protocol engaged. Escort protocol engaged.", "Howdy. Howdy. Howdy."]
+l169-bot-2:   # Buckshot, coach gun
+  barks:
+    spot: ["Git off my land!", "Bandit! Bandit! Bandit!", "Both barrels, pardner!"]
+    hostile: ["Two shells, one varmint! Hah ha!", "Ain't nobody escapin' Buckshot!"]
+    hit: ["Hrrk! Dang!", "That smarts!"]
+    hurt: ["Losin' oil, losin' oil!", "Ain't done yet!"]
+    kill: ["Hah! Two barrels, zero bandits!", "Buckshot rides again!"]
+    death: ["Aw, shucks.", "Reload, reload, re, load."]
+    clear: ["Range is clear, pardner."]
+    idle: ["Shells loaded. Shells loaded.", "Mighty fine day for a showdown."]
+l169-bot-3:   # Longhorn, lever rifle
+  barks:
+    spot: ["Got you in my sights, stranger.", "Long ride for a short life, partner.", "Bandit at four hundred yards."]
+    hostile: ["Hold still now. Hold still.", "Lever's racked, friend."]
+    hit: ["Scope's cracked!", "Ngh, lucky shot."]
+    hurt: ["Optics failing.", "Can't see the horizon."]
+    kill: ["Clean shot.", "One less outlaw."]
+    death: ["The sun's, so bright.", "Long, ride, home."]
+    clear: ["Ridge is clear."]
+    idle: ["Scanning the ridge.", "Wind from the west. Eight knots."]
+l169-bot-4:   # Tin Sheriff, the big one
+  barks:
+    spot: ["THIS IS THE LAW! AND THE LAW SAYS DIE!", "I AM THE SHERIFF OF NOWHERE!", "HALT, OUTLAW!"]
+    hostile: ["RESISTING ARREST! RESISTING ARREST! HAH HA HA!", "THERE'S A NEW SHERIFF IN TOWN! IT'S STILL ME!"]
+    hit: ["YOU SCRATCHED THE BADGE!", "HOW DARE YOU!"]
+    hurt: ["THE LAW BENDS! IT DOES NOT BREAK!", "SYSTEMS, FAILING, TEMPORARILY!"]
+    kill: ["CASE CLOSED!", "JUSTICE, SERVED, WARM!"]
+    death: ["The badge, was always, too heavy.", "Tell my deputies, they're fired."]
+    clear: ["TOWN SECURED! HAH!"]
+    idle: ["THE LAW NEVER SLEEPS.", "PATROLLING. PATROLLING. PATROLLING."]
