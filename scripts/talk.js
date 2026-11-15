@@ -44,7 +44,7 @@ import { factionReply } from './lib/faction-dialogue.js'
 import { megAssignmentReply } from './lib/meg-assignment.js'
 import { handleDialogueQuest70 } from './lib/level70-quest.js'
 
-import { greetingOf, rootChoices, childChoices, nodeOf, lineOf, barkOf, gestOf, BYE_CHOICE } from './lib/dialogue.js'
+import { greetingOf, rootChoices, childChoices, nodeOf, lineOf, barkOf, gestOf, BYE_CHOICE, warmDialogue } from './lib/dialogue.js'
 import { questChoices, realtyChoice } from './lib/npc-starters.js'
 import { zenithChoice } from './lib/zenith-quest.js'
 import { l1Choice } from './lib/level1-quests.js'
@@ -459,6 +459,7 @@ function combat(ctx, it, ses) {
 }
 export function update(ctx, dt) {
   const s = ctx.self.state, m = (ctx.self.session.tk ??= { acc: 0 }), ses = ctx.self.session
+  if (!ses.dlgWarm) { ses.dlgWarm = 1; warmDialogue() } // level dialogue tables load once the player stands, not on boot
   cine(ctx, s)
   if (s.talkWith && ses.talkingTo !== s.talkWith) {
     const it = live(ctx, s.talkWith)

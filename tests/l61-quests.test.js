@@ -8,7 +8,8 @@ const { QUESTS: QUESTS11, handleDialogueQuest: handleL11, l11Choices } = await i
 const { jobOffer, questBriefing } = await import('../scripts/lib/quest-dialogue.js')
 const { nextQuestExit } = await import('../scripts/lib/quest-route.js')
 const { ears: propEars } = await import('../scripts/quest-prop-use.js')
-const { DLG } = await import('../scripts/lib/dialogue.js')
+const { DLG, dlgReady } = await import('../scripts/lib/dialogue.js')
+await dlgReady()
 
 const mkCtx = (r = 0.5, extra = {}) => ({
   now: () => 1e7,
