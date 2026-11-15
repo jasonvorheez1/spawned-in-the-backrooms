@@ -22,8 +22,9 @@ for sex in SEXES:
     xs = [abs((body.matrix_world @ v.co).x) for v in body.data.vertices]
     # torso band by share of height (feet 0 .. ears 1): hips to collar
     lo, hi = z0 + H * (0.40 if sex == "f" else 0.40), z0 + H * (0.635 if sex == "f" else 0.665)
-    sh = body.data.copy(); ar = bpy.data.objects.new("Armor", sh); bpy.context.collection.objects.link(ar); ar.matrix_world = body.matrix_world
-    ar.shape_key_clear() if sh.shape_keys else None
+    sh = body.data.copy(); ar = bpy.data.objects.new("Armor", sh); bpy.context.collection.objects.link(ar)
+    if sh.shape_keys: ar.shape_key_clear()
+    BW = body.matrix_world.copy(); sh.transform(BW)   # work in world metres (Z-up, front -Y); handed back to the body's own space before export
     bm = bmesh.new(); bm.from_mesh(sh)
     # find the torso half-width at chest height: arm verts are those farther out than the ribcage
     chest = [abs(v.co.x) for v in bm.verts if abs(v.co.z - (lo + hi) / 2) < H * 0.03]
@@ -95,6 +96,7 @@ for sex in SEXES:
     mid = (lo + hi) / 2; cam.location = (0.9, -1.4, mid + 0.25); d = Vector((0, 0, mid)) - cam.location; cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
     l = bpy.data.objects.new("l", bpy.data.lights.new("l", "SUN")); s.collection.objects.link(l); l.rotation_euler = (0.7, 0.2, 0.6)
     s.render.filepath = f"/tmp/robo-{sex}.png"; bpy.ops.render.render(write_still=True)
+    sh.transform(BW.inverted()); ar.matrix_world = BW
     ar.parent = arm; ar.matrix_parent_inverse = arm.matrix_world.inverted()
     if not any(m.type == "ARMATURE" for m in ar.modifiers): ar.modifiers.new("skin", "ARMATURE").object = arm
     arm.data.pose_position = "POSE"
