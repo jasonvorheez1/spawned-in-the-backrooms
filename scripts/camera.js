@@ -30,6 +30,9 @@ function seatedOn(player, ride) {
 export function update(ctx, dt) {
   // The eye sits inside the body, so the body is not drawn for its owner (everyone else still sees it).
   ctx.self.hideLocalPlayer = true
+  { const v = ctx.view?.camera, b = ctx.player?.feetPosition // a stray view (a cut's eye lost in the void, non-finite or km off its player) is handed back
+    const e = v && !v.parent && v.eye && typeof v.eye === 'object' ? v.eye : null
+    if (e && b && (![e.x, e.y, e.z].every(Number.isFinite) || Math.abs(e.x - b.x) + Math.abs(e.y - b.y) + Math.abs(e.z - b.z) > 2000)) { ctx.view.camera = null; ctx.log('[camera] stray view dropped', e) } }
   { const cs = ctx.player?.state // Absolute Cinema drives the view while a shot is possessed or a sequence plays
     if (cs && (cs.possessedNodeId || cs.cinemaPlaying || cs.cinemaPlayback?.playing)) { ctx.self.session.cinemaYield = true; return }
     if (ctx.self.session.cinemaYield) { ctx.self.session.cinemaYield = false; ctx.self.session.cam = { t: 0 } } }
