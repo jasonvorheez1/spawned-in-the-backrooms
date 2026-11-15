@@ -9,6 +9,16 @@ l132-keep:
   rotation: {yaw: 135}
   state: {name: The Duke's Palace}
   tags: [l132, l132-palace]
+l132-keep-gate:
+  behavior: scripts/l132-duke-gate.js
+  feetPosition: {x: 98.49497474683058, y: 9, z: -98.49497474683058}
+  id: l132-keep-gate
+  layout: {box: {max: {x: 1.6, y: 4.4, z: 0.25}, min: {x: -1.6, y: 0, z: -0.25}}}
+  model: {forward: "+x", id: /cdn/value.4cc1e813551175e6ceae96b6e11dadbcd8d45c8d4f01eab3eeaa4bf21a25f555.glb}
+  physics: {body: static, collider: box}
+  rotation: {yaw: 135}
+  state: {info: shut, name: Palace Gate, verb: Knock}
+  tags: [l132, usable, l132-palace]
 l132-keep-torch-0:
   children: [{feetPosition: {x: 0, y: 1.9, z: 0}, fx: {script: "fx\npop flame rate=flick(.45,.2)*?low:18|30 on=disc(.06).c(.02) life=.35..0.6 v=up(1.1)+cone(18)*(.2..0.5) size=.12..0.22 acc=curl(.5)+buoy(1.8)+drag(1.4) sz=$size*(.5>.25:1>.7:.7>.1) col=hdr(4.6,3.2,1.3)>.3:hdr(3,1.3,.3)>.65:hdr(1.6,.45,.1)>hdr(.5,.1,.02) a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)\npop embers rate=2 on=disc(.06) life=.6..1.2 v=up(1.6)+cone(30)*(.3..0.8) size=.015..0.03 acc=curl(.8)+grav()*.4+drag(.5) col=hdr(5,2.6,.7)>hdr(1.4,.3,.05) a=(0>.1:1>.7:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)\npop smoke on=@flame?.15 inh=p;v:$v*.4 life=1.2..2 size=.1..0.18 acc=buoy(.8)+curl(.3)*.5+drag(.8) sz=$size*(.7>2.6) col=<.2,.19,.18> a=0>.2:.25>.7:.15>0 r=sprite(smoke-puff,alpha)\npop glow n=1 at=point().c(.2) glo=fire()*(#flame/16)~ r=light(<1,.58,.26>,$glo*14,9)"}, id: flame}]
   feetPosition: {x: 99.83847763108503, y: 9, z: -96.16152236891497}
