@@ -2830,7 +2830,7 @@ l178-steam:
   id: l178-steam
   tags: [l178]
 l178-step-0:
-  feetPosition: {x: 0, y: -0.03, z: 6.55}
+  feetPosition: {x: 0, y: -0.03, z: 6.8}
   id: l178-step-0
   layout: {box: {max: {x: 0.73, y: 0.4, z: 0.48}, min: {x: -0.73, y: -0.1, z: -0.48}}}
   model: /cdn/value.4644cf2471e40f2ddb8cc7ddaed1f33e7a9a921ef7bd7e53ec97e4200b4bb307.glb
@@ -2839,7 +2839,7 @@ l178-step-0:
   scale: {x: 0.9, y: 0.6, z: 0.8}
   tags: [l178]
 l178-step-1:
-  feetPosition: {x: 0, y: -0.03, z: -6.55}
+  feetPosition: {x: 0, y: -0.03, z: -6.8}
   id: l178-step-1
   layout: {box: {max: {x: 0.73, y: 0.4, z: 0.48}, min: {x: -0.73, y: -0.1, z: -0.48}}}
   model: /cdn/value.4644cf2471e40f2ddb8cc7ddaed1f33e7a9a921ef7bd7e53ec97e4200b4bb307.glb
@@ -2848,7 +2848,7 @@ l178-step-1:
   scale: {x: 0.9, y: 0.6, z: 0.8}
   tags: [l178]
 l178-step-2:
-  feetPosition: {x: 6.55, y: -0.03, z: 0}
+  feetPosition: {x: 6.8, y: -0.03, z: 0}
   id: l178-step-2
   layout: {box: {max: {x: 0.73, y: 0.4, z: 0.48}, min: {x: -0.73, y: -0.1, z: -0.48}}}
   model: /cdn/value.4644cf2471e40f2ddb8cc7ddaed1f33e7a9a921ef7bd7e53ec97e4200b4bb307.glb
@@ -2857,7 +2857,7 @@ l178-step-2:
   scale: {x: 0.9, y: 0.6, z: 0.8}
   tags: [l178]
 l178-step-3:
-  feetPosition: {x: -6.55, y: -0.03, z: 0}
+  feetPosition: {x: -6.8, y: -0.03, z: 0}
   id: l178-step-3
   layout: {box: {max: {x: 0.73, y: 0.4, z: 0.48}, min: {x: -0.73, y: -0.1, z: -0.48}}}
   model: /cdn/value.4644cf2471e40f2ddb8cc7ddaed1f33e7a9a921ef7bd7e53ec97e4200b4bb307.glb
