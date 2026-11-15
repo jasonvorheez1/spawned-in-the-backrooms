@@ -212,7 +212,7 @@ def build_engawa():
     z = -1.6
     while z < 1.1 - 1e-3:   # nojiita boards on the rafters, seams showing between them
         w = min(rnd.uniform(.17, .23), 1.1 - z); zc = z + w / 2
-        sweep("wood_mid", ch(2.4, .012, .002), (-1.2, ry(zc) - .068, zc), (1.2, ry(zc) - .068, zc), up=nrm, seg=1, tile=1.4)
+        sweep("wood_mid", ch(w - .003, .012, .002), (-1.2, ry(zc) - .068, zc), (1.2, ry(zc) - .068, zc), up=nrm, seg=1, tile=1.4)
         z += w + .0
     export("engawa", [((3.2, 2.6, -4.2), (0, .9, 0), 30), ((-.3, .95, -2.4), (-.9, .45, -1.0), 38), ((.6, 1.7, -2.3), (0, 2.8, -1.0), 30)])
 def build_stair():
@@ -305,12 +305,10 @@ def build_roof():
     def ridge(p0, p1, base_up=(0, 1, 0)):
         p0, p1 = Vector(p0), Vector(p1); Lr = (p1 - p0).length; d = (p1 - p0).normalized(); n = max(1, int(Lr / .3))
         for lay, (w, y) in enumerate(((.34, .0), (.29, .045), (.24, .09))):
-            for i in range(n):
-                a = p0 + d * (Lr * i / n + .004); b = p0 + d * (Lr * (i + 1) / n - .004); o = Vector((0, y + .02, 0))
-                sweep("kawara", ch(w, .04, .006), a + o, b + o, seg=1, tile=.6, sa=40)
+            o = Vector((0, y + .02, 0)); sweep("kawara", ch(w, .04, .006), p0 + o, p1 + o, seg=1, tile=.6, sa=40)
         sweep("kawara", circ(.085, 12, .07), p0 + Vector((0, .155, 0)), p1 + Vector((0, .155, 0)), seg=1, tile=.6, sa=50)
         for i in range(n + 1):
-            c = p0 + d * (Lr * i / n) + Vector((0, .155, 0)); sweep("kawara", circ(.092, 12, .077), c - d * .018, c + d * .018, seg=1, tile=.5, sa=50)
+            c = p0 + d * (Lr * i / n) + Vector((0, .155, 0)); sweep("kawara", circ(.092, 10, .077), c - d * .018, c + d * .018, seg=1, tile=.5, sa=50)
     ridge((-13.1, 4.86, -13.1), (13.1, 4.86, -13.1))
     for s in (-1, 1): ridge((s * 13.1, 4.86, -13.1), (s * 17.62, roofY(17.62) - .03, -17.62))
     oni = "/workspace/kyoto/shell2/tripo/onigawara.glb"
