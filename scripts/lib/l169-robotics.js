@@ -35,7 +35,7 @@ export function layRobotics(ctx, put, L) {
   put("l169-bro-tablelamp", { feetPosition: g(-8.1, 0, 2.1), light: { kind: "point", color: "oklch(0.85 0.1 70)", intensity: 1.2, distance: 6 } });
   put("l169-bro-hum", { feetPosition: g(3.3, 4.5, 1), audio: { clip: "cdn/moodboard-realistic-gritty/sfx-diesel-generator-idling-steady-loop.mp3", gain: 0.25, loop: true, spatial: true, maxDistance: 30 } });
   put("l169-bro-locker", { tags: ["usable", "container"], feetPosition: g(4.6, -4.55, 0.2), rotation: { yaw: 0 }, primitive: { kind: "box", width: 0.01, height: 0.01, depth: 0.01 }, visible: false,
-    state: { kind: "container", name: "Parts crate", verb: "Search", owner: ID(2), ownerName: "Wren Okoye", items: ["scrap", "scrap", "battery", "almond"] } });
+    state: { kind: "container", name: "Parts crate", verb: "Search", owner: ID(2), ownerName: "Wren Okoye", items: ["scrap_metal", "scrap_metal", "battery", "almond"] } });
   Promise.all([import("./critter-model.js"), import("./clothes.js"), import("./stats.js")]).then(([{ critterSpec }, { npcLook }, { npcState }]) => {
     for (const c of CREW) {
       if (ctx.getObject(ID(c.n))) continue;
