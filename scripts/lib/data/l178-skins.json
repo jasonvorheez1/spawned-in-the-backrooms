@@ -1,0 +1,14 @@
+{
+  "_": "Level 178 house shell: PBR skins per kit material slot (model.materials). One row per slot; every kit module wears the same table. UVs on the kit are metres per tile.",
+  "wood_dark":  { "texture": "cdn/texture-aged-dark-keyaki-wood-grain-oiled.png", "pbr": true, "wrap": "repeat", "roughness": 0.45 },
+  "wood_mid":   { "texture": "cdn/texture-warm-hinoki-cypress-wood-grain-satin.png", "pbr": true, "wrap": "repeat", "roughness": 0.55 },
+  "wood_light": { "texture": "cdn/texture-pale-sugi-cedar-wood-grain-fine.png", "pbr": true, "wrap": "repeat", "roughness": 0.6 },
+  "wood_wet":   { "texture": "cdn/texture-polished-dark-engawa-cedar-wood-grain.png", "pbr": true, "wrap": "repeat", "roughness": 0.25 },
+  "tatami":     { "texture": "cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png", "pbr": true, "wrap": "repeat", "roughness": 0.9 },
+  "border":     { "texture": "cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png", "pbr": true, "wrap": "repeat", "roughness": 0.85 },
+  "washi":      { "texture": "cdn/texture-white-washi-paper-long-fibers.png", "pbr": true, "wrap": "repeat", "roughness": 0.95, "emissive": "oklch(0.78 0.04 85)", "emissiveIntensity": 0.25 },
+  "plaster":    { "texture": "cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png", "pbr": true, "wrap": "repeat", "roughness": 0.92 },
+  "ochre":      { "texture": "cdn/texture-ochre-japanese-tsuchikabe-clay-plaster-straw.png", "pbr": true, "wrap": "repeat", "roughness": 0.94 },
+  "stone":      { "texture": "cdn/texture-grey-granite-foundation-stone-weathered.png", "pbr": true, "wrap": "repeat", "roughness": 0.85 },
+  "kawara":     { "texture": "cdn/texture-dark-silver-grey-kawara-glazed-clay-roof-tiles.png", "pbr": true, "wrap": "repeat", "roughness": 0.4, "metalness": 0.15 }
+}
