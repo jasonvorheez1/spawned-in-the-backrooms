@@ -19,8 +19,9 @@ const V = 1; // bump to re-lay the level
 const T = ["l1c"];
 const M = { crate: "/cdn/value.96f48b56e826ebb5fd584d269b08f2272040ab5d50589b2e04101b00f31d82a2.glb", tent: "/cdn/value.876d02a55c4b5fe879189ef5684d6e5d4836e9e5f6b7295f7e9b0b85ad9f7b58.glb", cot: "/cdn/value.7c6ab929e07fc61864842584ca2d254442f6dc31bfa7d2e2b9e4e3f48588f485.glb", table: "/cdn/value.c015312d6391f45684bfd1e30ad93c9391f659d879584af998cf53decc1613de.glb", stove: "/cdn/value.330d65cefe10f77c51d0fea1858662db291a4746b272dfdc2f81d21c681479f7.glb", bags: "/cdn/value.3ef438addb021fb2564e48689de4b5281d9464d3a65b502624bd0244ce8cad87.glb", pallet: "/cdn/value.e55e3090a6f8a13ae4db1cc993f62b0f07ee7a16a6c05c0fccde459bf7f1d9f8.glb",
   radio: "/cdn/value.f1226f58e269ddcf3e7ad202f86321f7e4d1e85c80fc9c48e05de310ca179c89.glb", chair: "/cdn/value.43409c9170eee8570170bc2e51c135fc29bb79c0455bc055066382edcccd96df.glb", gen: "/cdn/value.80d2ced5ed0ef62f2d773415d1cba7f0691d479e734b5866f1ce463bb6861c96.glb", drum: "/cdn/value.de68d3453156f6d0341dc0143da17f0a5f60f2da731a9b018363a51fcf233712.glb", cone: "/cdn/value.a551b5000627f75d0d6595406211bf3c968f4ec63f676742b66ef4c667374d92.glb",
+  locker: "/cdn/value.ac588f5447d2ddb6addaef77cb3bf255a2d108fb0c5a29bb77a6566622a25b60.glb", pack: "/cdn/value.791caacc394ad1207d2f95fd9acea541c7baff44abdc9e272f2bf77b6a6550d9.glb", phone: "/cdn/value.b561d5052cd200bcc0924967e95a1d80511130c3f4288980d47d710d0df29394.glb",
   hound: "/cdn/value.180d1072a97d34551e1394960b70202777c9d0b51fb0ca67779a59e429ef6fa7.glb" };
-const SIZE = { crate: [0.63, 0.6, 0.77], tent: [4.6, 3.3, 4.6], cot: [2.0, 0.6, 2.0], table: [1.6, 1.4, 1.6], stove: [0.75, 1.0, 0.75], bags: [1.6, 1.0, 0.5], pallet: [1.3, 1.4, 1.3], radio: [0.34, 0.2, 0.17], chair: [0.48, 0.86, 0.52], gen: [0.84, 0.72, 0.72], drum: [0.6, 0.9, 0.6], cone: [0.36, 0.5, 0.36] };
+const SIZE = { crate: [0.63, 0.6, 0.77], tent: [4.6, 3.3, 4.6], cot: [2.0, 0.6, 2.0], table: [1.6, 1.4, 1.6], stove: [0.75, 1.0, 0.75], bags: [1.6, 1.0, 0.5], pallet: [1.3, 1.4, 1.3], radio: [0.34, 0.2, 0.17], chair: [0.48, 0.86, 0.52], gen: [0.84, 0.72, 0.72], drum: [0.6, 0.9, 0.6], cone: [0.36, 0.5, 0.36], locker: [0.9, 0.62, 0.62], pack: [0.42, 0.55, 0.3], phone: [0.3, 0.55, 0.2] };
 const RUST = { texture: "cdn/texture-rusted-corrugated-steel-shutter.png", wrap: "repeat", repeat: [0.8, 0.8], color: "oklch(0.6 0.05 50)", metalness: 0.6, roughness: 0.6 };
 const WARM = "oklch(0.85 0.12 75)", COLD = "oklch(0.96 0.02 230)", PINK = "oklch(0.93 0.07 350)";
 const fit = ([w, h, d]) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
@@ -245,8 +246,29 @@ function walkers(ctx) {
   }
   for (const id of Object.keys(seen)) if (!ctx.place.players.some((p) => p.id === id)) delete seen[id];
 }
+// ---- extras: things to open and things that answer (its own version, so the hall is not re-laid)
+const XV = 1;
+function searchable(ctx, id, m, x, z, yaw, items, name, mat, o = {}) {
+  ctx.spawn(id, { tags: ["l1c", "container", "breakable"], feetPosition: { x, y: o.y ?? Y(x, z), z }, rotation: { yaw }, model: { id: M[m] }, layout: fit(SIZE[m]), physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 40 },
+    state: { name, mat, hp: mat === "metal" ? 90 : 25, maxHp: mat === "metal" ? 90 : 25, items: items.join(",") } });
+}
+function layExtras(ctx) {
+  for (const o of ctx.query({ tags: ["l1c-x"], radius: 1e6, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id);
+  const zb = -HW - bay("post1").depth;
+  searchable(ctx, "l1c-x-locker0", "locker", 43.6, zb + 2.9, 90, loot(ctx, 3), "Team Corridor Footlocker", "metal");
+  searchable(ctx, "l1c-x-locker1", "locker", 127.0, -3.5, 0, loot(ctx, 3), "Quartermaster's Footlocker", "metal");
+  [[0, 201, 1, 200], [1, 258, -1, 15], [2, 381, 1, 160], [3, 432, -1, 300]].forEach(([k, x, sd, yaw]) =>
+    searchable(ctx, "l1c-x-pack" + k, "pack", x, sd * (halfW(x) - 0.45), yaw, loot(ctx, 2), "Wanderer's Backpack", "cloth"));
+  const px = 158, pz = -HW + 0.12;
+  ctx.spawn("l1c-x-phone", { tags: ["l1c", "l1c-x", "usable"], feetPosition: { x: px, y: Y(px, pz) + 1.0, z: pz }, rotation: { yaw: 0 }, model: { id: M.phone }, layout: fit(SIZE.phone), castShadow: false, visibleRange: { max: 35 }, behavior: "scripts/l1c-use.js",
+    audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-old-payphone-ringing-muffled-loop.mp3", gain: 0.18, loop: true, spatial: true, maxDistance: 14 },
+    state: { kind: "note", name: "Payphone", verb: "Pick up", info: "It rings. There is no wire behind it.",
+      text: "A man's voice, close, like he's standing behind you: \"...if Ines is listening, Post Three is gone. Don't send anyone. The hall folded at the green lamp and we walked the same forty metres for a day. Tell Wren I kept the splint. Tell her I'm sorry about the...\" Then the tone. Then nothing.", c: { x: px, y: Y(px, pz) + 1.3, z: pz } } });
+  for (const k of ["locker0", "locker1", "pack0", "pack1", "pack2", "pack3"]) { const o = ctx.place.objects["l1c-x-" + k]; if (o) o.tags = [...o.tags, "l1c-x"]; }
+}
 export function tick(ctx) {
   const s = ctx.place.state;
+  if ((s.builtV ?? 0) >= V && (s.xV ?? 0) < XV) { s.xV = XV; layExtras(ctx); }
   if ((s.builtV ?? 0) < V) { const ph = s.l1cPh ?? 0; LAY[ph](ctx); if (ph + 1 >= LAY.length) { s.builtV = V; delete s.l1cPh; } else s.l1cPh = ph + 1; return; }
   if (!ctx.place.players?.length) return;
   walkers(ctx);
