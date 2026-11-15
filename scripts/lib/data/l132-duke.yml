@@ -1,0 +1,36 @@
+# Level 132 · the Duke of Morigont and his Palace (scripts/lib/l132-duke.js reads every number here)
+dukeV: 1
+duke:
+  model: /cdn/value.118e8b05644a06b8aaefc83afe558939108bf42b210d0ab43c3d9d347983c43d.glb
+  forward: "+x"
+  height: 2.6
+  hover: 0.04          # floats this far off the cobbles
+  bob: 0.06            # and drifts up this much more, every bobSeconds
+  bobSeconds: 4
+  speed: 1.0           # m/s on his stroll
+  pause: [20, 40]      # seconds he lingers to inspect a stall
+  faceRange: 6         # turns to a player this close
+  turnRate: 90         # degrees a second
+  # each stop, and the waypoints walked to reach it from the stop before (round the bench at (9,0))
+  stops:
+    - { at: [9, 9],    via: [[6.8, 0]] }
+    - { at: [-10, 11], via: [] }
+    - { at: [-12, -9], via: [] }
+    - { at: [10, -12], via: [] }
+keep:
+  model: /cdn/value.a92782e59096074bea629f7d39e65eb7a1e647660f3564d917e8808867d000be.glb
+  forward: "+x"
+  size: [30, 24, 30]
+  yaw: 135             # gatehouse toward the town road (south-west)
+gate:
+  model: /cdn/value.4cc1e813551175e6ceae96b6e11dadbcd8d45c8d4f01eab3eeaa4bf21a25f555.glb
+  at: [98, -98]
+  size: [3.2, 4.4, 0.5]
+  notice: "The Palace opens for the festival. The Duke will send for you."
+  knock: /cdn/moodboard-realistic-gritty/sfx-three-heavy-knocks-on-a-great-oak-castle-door.mp3
+torch:
+  model: /cdn/value.75ee1026ab64afd722da9116ffe9adde2972c3a464e2a33755a6f68d2a9a88d6.glb
+  height: 1.9
+  side: 2.6            # metres either side of the gate, along the wall
+chimney: [0, 25.5, 2]  # keep-local (x, y, z), smoke source
+window: [-3, 17, -9.2] # keep-local high window, glows gold
