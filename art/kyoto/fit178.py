@@ -24,7 +24,7 @@ T = {  # name: (W, H, D, zc, counter)
 }
 only = sys.argv[sys.argv.index("--")+1:] if "--" in sys.argv else list(T)
 def bb(objs):
-    pts = [o.matrix_world @ Vector(c) for o in objs for c in o.bound_box]
+    pts = [o.matrix_world @ v.co for o in objs for v in o.data.vertices]
     return Vector([min(p[i] for p in pts) for i in range(3)]), Vector([max(p[i] for p in pts) for i in range(3)])
 for n in only:
     if not os.path.exists(f"{SRC}/{n}.glb"): print("MISSING", n); continue
@@ -56,6 +56,6 @@ for n in only:
     w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[1].default_value = 1.6
     cam = bpy.data.objects.new("c", bpy.data.cameras.new("c")); sc.collection.objects.link(cam); sc.camera = cam
     c = (mn + mx) / 2; r = (mx - mn).length
-    cam.location = c + Vector((-0.5, 1, 0.45)).normalized() * r * 1.3   # engine front (-Z) = blender +Y
+    cam.location = c + Vector((-0.5, 1, 0.45)).normalized() * r * 1.6   # engine front (-Z) = blender +Y
     cam.rotation_euler = (c - cam.location).to_track_quat("-Z", "Y").to_euler()
     sc.render.filepath = f"/tmp/pf2/{n}.png"; bpy.ops.render.render(write_still=True)
