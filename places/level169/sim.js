@@ -7,8 +7,9 @@ import { layFriends, tickFriends } from "../../scripts/lib/l169-friends.js";
 import { layRoad, tickRoad } from "../../scripts/lib/l169-road.js";
 import { shipTick } from "../../scripts/lib/ssfun-voyage.js";
 import { questTick } from "../../scripts/lib/level169-quest.js";
+import { layRobotics, roboTick } from "../../scripts/lib/l169-robotics.js";
 export const cadence = "1s";
-const V = 19; // bump to lay out the house and recheck streamed checkpoint placements
+const V = 20; // bump to lay out the house and recheck streamed checkpoint placements
 const STONE = { texture: "cdn/texture-rough-stacked-sandstone-well-masonry.png", color: "oklch(0.7 0.05 65)", repeat: [4, 1], roughness: 1 };
 const WOOD = { texture: "cdn/texture-sun-bleached-grey-desert-timber.png", color: "oklch(0.62 0.04 70)", roughness: 1 };
 function sp(ctx, id, spec) {
@@ -52,8 +53,8 @@ export function tick(ctx) {
   const put = (id, spec) => sp(ctx, id, spec);
   if (s.l169WellV !== 2) { layWell(ctx, put); s.l169WellV = 2; }
   if (s.l169V !== V) {
-    layHouse(ctx, put, L); layFerry(ctx, put, L); layFriends(ctx, put, L); layRoad(ctx, put, L);
+    layHouse(ctx, put, L); layFerry(ctx, put, L); layFriends(ctx, put, L); layRoad(ctx, put, L); layRobotics(ctx, put, L);
     s.l169V = V;
   }
-  tickFriends(ctx, L); tickRoad(ctx, put, L); shipTick(ctx, put, "level169", L.ship); questTick(ctx, L);
+  tickFriends(ctx, L); tickRoad(ctx, put, L); shipTick(ctx, put, "level169", L.ship); questTick(ctx, L); roboTick(ctx, L);
 }
