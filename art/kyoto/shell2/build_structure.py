@@ -106,6 +106,10 @@ QP = {"roof_side": 13}; QN = {"roof_side": 8}
 def export(name, views, embed=False):
     sc = bpy.context.scene; obs = [o for o in sc.objects if o.type == "MESH"]
     for o in obs: o.data.set_sharp_from_angle(angle=math.radians(o.get("sa", 40)))
+    if os.environ.get('DBG'):
+        from collections import Counter; c = Counter()
+        for o in obs: o.data.calc_loop_triangles(); c[o.name.split('.')[0] + ':' + (o.data.materials[0].name if o.data.materials else '')] += len(o.data.loop_triangles)
+        print('DBG', c.most_common(12)); return
     shoot(name, views)
     if not embed: strip_images()
     else:
