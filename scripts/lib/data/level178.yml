@@ -22,7 +22,7 @@ residents:
   l178-sector-4: { x: 13, z: -12, yaw: 180 }
   l178-order-1: { x: -4, z: 13, yaw: 0 }
   l178-order-2: { x: -8, z: 4, yaw: 90 }
-  l178-order-3: { x: 3, z: -8, yaw: 180 }
+  l178-order-3: { x: 4, z: 12, yaw: 180 }
 # --- the live layer (places/level178/sim.js, scripts/l178-prop.js); Savi's picks unless noted
 layoutV: 1
 exits: { hub: "thehub#hub-from-l178", notBuilt: { level66: "Level 66 (not built)", level132: "Level 132 (not built)" } }
