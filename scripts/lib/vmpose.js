@@ -12,7 +12,7 @@ import W, { baseOf } from './weapons.js'
 import { handling } from './stats.js'
 import { cndOf } from './condition.js'
 import { screen } from './screen.js'
-const NO_HANDS_PLACES = new Set(['bonus', 'intake'])
+const NO_HANDS_PLACES = new Set(['intake']) // Shelly Nov 15: the mall shows arms for every body (critters already did), plymodels too
 const NO_HANDS_SCREENS = new Set(['cutscene', 'menu', 'wardrobe', 'mahjong'])
 import { NV_SWINGS } from './data/nv-swings.js' // Shelly's New Vegas melee overhaul, decoded (art/nv-melee)
 
