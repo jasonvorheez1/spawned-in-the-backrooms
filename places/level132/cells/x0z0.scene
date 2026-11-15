@@ -53,7 +53,7 @@ l132-shop-a-camera:
   model: /cdn/value.eb9043ffee889ef53f7797e2af2908562b0e11141b0c8f8d4be5b7ddc3fc543f.glb
   physics: {body: static, collider: box}
   rotation: {yaw: 360}
-  scale: 0.3
+  scale: 0.6
   state: {info: [Through the finder the shop looks older than it is.], name: Film camera, verb: Look through}
   tags: [l132, usable, l132-top]
 l132-shop-a-case-1:
