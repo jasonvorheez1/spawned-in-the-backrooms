@@ -33,8 +33,8 @@ l11-lot-booth:
   model: {forward: "+z", id: /cdn/value.81df5dcd9facfce891f660c61a078c0a091ea5cbaa3d866169dcc9e3bc139d88.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: 90}
-  state: {info: "Desk fan still running. A note: BACK IN 5 MIN, dated 1994.", name: Idle Hands sales booth, verb: Look}
-  tags: [usable]
+  state: {"name":"Idle Hands sales booth","items":"battery,tape","fixedStock":true,"scavved":true}
+  tags: ["container"]
 l11-lot-booth-sign:
   feetPosition: {x: 10.9, y: 3.15, z: 31.4}
   id: l11-lot-booth-sign
@@ -178,8 +178,8 @@ l11-newsstand:
   model: {id: /cdn/value.38a910ab7dd9da93467fddaca8b97b42d2de3d34aa73ca56ed83b8ee4fe9c594.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: -90}
-  state: {info: Every paper is dated tomorrow. The headline is about you., name: Newsstand, verb: Read}
-  tags: [usable]
+  state: {"name":"Tomorrow's newspaper","items":"page:30","fixedStock":true,"scavved":true}
+  tags: ["container"]
 l11-sub-nose-0:
   feetPosition: {x: 13.6, y: 0.048727272727272744, z: 58.44}
   id: l11-sub-nose-0

@@ -576,7 +576,19 @@ export function tick(ctx) {
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const s = ctx.place.state;
   if (s.lakeDoorV !== 2) { const d = ctx.place.objects["l8-lake-back"]; if (d) { s.lakeDoorV = 2; d.primitive = { kind: "box", width: 6, height: 0.7, depth: 6 }; d.feetPosition = { ...d.feetPosition, y: -2.65 }; } } // the lake swims; only its bed's middle leads down to 7
-  if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); }
+  if ((s.builtV ?? 0) < V) { s.builtV = V; lay(ctx); s.campRestV = 0; }
+    if (!s.campRestV) {
+      const tents = Array.from({ length: 4 }, (_, i) => ctx.getObject(`l8-tent-${i}`));
+      if (tents.every(Boolean)) {
+        for (const tent of tents) {
+          tent.tags = [...new Set([...(tent.tags ?? []), "usable"])];
+          tent.behavior = ["scripts/field-fixture.js"];
+          const p = tent.worldFeetPosition ?? tent.feetPosition;
+          Object.assign(tent.state, { c: { ...p, y: p.y + 0.3 }, kind: "field-rest", name: "Camp bedroll", verb: "Rest", info: "A dry place to catch your breath" });
+        }
+        s.campRestV = 1;
+      }
+    }
   if ((s.campBenchV ?? 0) < 1) {
     s.campBenchV = 1;
     const ab = P(425.5, 5.4, 0.05);

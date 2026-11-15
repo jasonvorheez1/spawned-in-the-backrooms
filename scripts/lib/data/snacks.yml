@@ -39,6 +39,7 @@ tomato_soup: { name: "Tin of tomato soup", info: "Ferry's shelf. Thick, salty, f
 peach_jar: { name: "Jar of peaches", info: "Ferry's own, put up in syrup", hunger: 18, thirst: 10, sanity: 10, hp: 8, color: "#e09a4a" }
 pickle_jar: { name: "Jar of pickles", info: "Sour, crunchy, keeps forever", hunger: 10, thirst: -4, sanity: 7, hp: 4, color: "#7a9a3a" }
 beans:   { name: "Can of beans", info: "Cold, filling tin", hunger: 25, thirst: -2, sanity: 6, hp: 22, color: "#a85a3a" }
+l70_hot_beans: { name: "Hot tin of beans", info: "Warmed at Burns Crescent. Reduces chill by 24.", hunger: 25, thirst: -2, sanity: 8, hp: 22, warm: 24, color: "#a85a3a" }
 bar:     { name: "Energy bar", info: "Chalky and sweet · instant stamina & short sprint recovery", hunger: 12, thirst: -2, sanity: 0, hp: 9, color: "#c8a03a", stamina: 40, durationGameMin: 60, stackingGroup: "electrolyte", mods: { stamRegen: 0.1 } }
 firstaid: { name: "First aid kit", info: "Field trauma kit: strong healing (Medicine scales) & stops bleeding", hunger: 0, thirst: 0, sanity: 0, hp: 52, color: "#e83a3a", aid: true, stopBleed: true }
 medkit:  { name: "Surgical trauma medkit", info: "Hospital-grade kit: heavy heal, stops bleeding, +15 Max HP & +1 END", hunger: 0, thirst: 0, sanity: 10, hp: 85, color: "#ff4f64", aid: true, stopBleed: true, durationGameMin: 120, stackingGroup: "med_trauma", mods: { maxHp: 15, e: 1 } }

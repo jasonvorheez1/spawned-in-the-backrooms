@@ -11,7 +11,7 @@
   "children": [{"id": "drop", "feetPosition": {"x": 0, "y": 0.43, "z": 0}, "primitive": {"kind": "cylinder", "radiusTop": 0.012, "radiusBottom": 0.012, "height": 2.608461538461538}, "material": {"color": "oklch(0.3 0.01 80)", "metalness": 0.8, "roughness": 0.5}, "castShadow": false}, {"id": "glow", "feetPosition": {"x": 0, "y": 0.1, "z": 0}, "visibleRange": {"max": 75}, "light": {"kind": "point", "color": "oklch(0.88 0.09 82)", "intensity": 1.8, "distance": 11, "shadow": {"enabled": false}, "visibleRange": {"max": 28}}}]
 "hub-camp-10-crates":
   "id": "hub-camp-10-crates"
-  "tags": ["hub-camp"]
+  "tags": ["hub-camp", "container"]
   "feetPosition": {"x": 178.2, "y": 0.18, "z": 10.6}
   "rotation": {"yaw": 0}
   "physics": {"body": "static", "collider": "box"}
@@ -19,9 +19,10 @@
   "castShadow": false
   "receiveShadow": true
   "visibleRange": {"max": 90}
+  "state": {"name":"Camp Amber supply crates","items":"bandage,battery,tape","fixedStock":true,"scavved":true}
 "hub-camp-11-cot":
   "id": "hub-camp-11-cot"
-  "tags": ["hub-camp"]
+  "tags": ["hub-camp", "usable"]
   "feetPosition": {"x": 179, "y": 0.18, "z": 7.4}
   "rotation": {"yaw": 90}
   "physics": {"body": "static", "collider": "box"}
@@ -29,6 +30,8 @@
   "castShadow": false
   "receiveShadow": true
   "visibleRange": {"max": 90}
+  "behavior": "scripts/field-fixture.js"
+  "state": {"name":"Camp Amber cot","kind":"field-rest","verb":"Rest","info":"A place to catch your breath before leaving the Hub"}
 "hub-camp-8-ambertent":
   "id": "hub-camp-8-ambertent"
   "tags": ["hub-camp"]

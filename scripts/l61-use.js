@@ -8,6 +8,7 @@ import { errandStep, errandDone } from "./lib/quests.js";
 import { setStep61, BUS_TRAY as BUS } from "./lib/level61-quests.js";
 import { carryAcross } from "./lib/carry.js";
 import { rollCheck } from "./lib/npc-talk.js";
+import { canCarry } from "./lib/stats.js";
 import SNACKS from "./lib/data/snacks.yml";
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
@@ -234,6 +235,9 @@ export const ears = {
     const tray = s.tray?.[uid];
     if (s.kind === "vend" && tray) {
       if (!tray.down) { tell("DISPENSING..."); return; }
+      if (w.payout) { tell("Give it a moment."); return; }
+      const carry = canCarry(w, tray.tok);
+      if (!carry.ok) { tell(carry.msg ?? "Your bag is full."); return; }
       const t = { ...s.tray }; delete t[uid]; s.tray = t;
       w.grab = { at: now, tok: tray.tok };
       ctx.after(0.45, "takeItem", { id: tray.item });

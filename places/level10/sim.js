@@ -182,7 +182,7 @@ pop silt rate=3 on=disc(3) life=3..5 v=up(.1..0.25) size=.3..0.6 acc=curl(.2)*.2
     feetPosition: T(-42, -17.9),
     primitive: { kind: "scripted", script: "scripts/props10.js", params: { kind: "hopper" } }, physics: "static",
     behavior: "scripts/level10-use.js",
-    state: { kind: "silo-hopper", name: "Grain Discharge Chute", verb: "Inspect Grain Reserves" },
+    state: { kind: "silo-hopper", name: "Grain discharge chute", verb: "Draw grain", info: "A scoop for the windmill quern" },
   });
 
   // ==========================================
@@ -469,12 +469,33 @@ export function tick(ctx) {
   if (ctx.place.players?.length) shipTick(ctx, null, "level10"); // the S.S. Fun calls here some hours (scripts/lib/ssfun-voyage.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   const s = ctx.place.state;
+  if (!s.fieldFixtureV && s.builtV === V && ctx.place.players?.length) {
+    const hopper = ctx.getObject("l10-silo-hopper"), beds = ctx.getObject("l10-fam-beds"), barrow = ctx.getObject("l10-fam-barrow");
+    if (hopper && beds && barrow) {
+      Object.assign(hopper.state, { verb: "Draw grain", info: "A scoop for the windmill quern" });
+      if (!ctx.getObject(hopper.id + "/wheel")) ctx.spawn("wheel", {
+        parent: hopper.id, feetPosition: { x: 0, y: 0.64, z: -0.21 },
+        primitive: { kind: "cylinder", radiusTop: 0.14, radiusBottom: 0.14, height: 0.035 },
+        material: { color: "#932d24", roughness: 0.65 },
+        children: [{ feetPosition: { x: 0.09, y: 0.033, z: 0 }, primitive: { kind: "sphere", radius: 0.023 }, material: { color: "#4c3026" } }],
+      });
+      beds.tags = [...new Set([...(beds.tags ?? []), "usable"])];
+      beds.behavior = ["scripts/field-fixture.js"];
+      Object.assign(beds.state, { kind: "field-rest", verb: "Rest", info: "A folded bedroll in the old stable", restLine: "There's still a dog's bowl beside the bedrolls." });
+      barrow.tags = [...new Set([...(barrow.tags ?? []), "container"])];
+      barrow.state.items ??= "scrap_wood,scrap_wood,bobbypin";
+      barrow.state.fixedStock = true;
+      barrow.state.scavved = true;
+      s.fieldFixtureV = 1;
+    }
+  }
   if ((s.builtV ?? 0) < V) {
     for (const id of Object.keys(ctx.place.objects)) {
       if (/^l10-(hedge-\d+|dock-post-[-\d.]+|sign-post)$/.test(id)) ctx.destroy(id);
     }
     lay(ctx);
     s.builtV = V;
+    s.fieldFixtureV = 0;
   }
   if ((s.campBenchV ?? 0) < 1) {
     s.campBenchV = 1;

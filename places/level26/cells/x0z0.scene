@@ -2503,7 +2503,8 @@ l26x-bar-shelf-0:
   physics: {body: static, collider: box}
   rotation: {yaw: -90}
   scale: 2.2
-  tags: [l26x]
+  tags: [l26x, container]
+  state: {name: "S.S. Fun bar stock", items: "coke,doritos", fixedStock: true, scavved: true}
 l26x-bar-shelf-1:
   feetPosition: {x: -1.9, y: 3.4, z: -7.55}
   id: l26x-bar-shelf-1
@@ -3436,28 +3437,32 @@ l26x-rest-chair-0-1:
   layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
   model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
   rotation: {yaw: 240.7}
-  tags: [l26x]
+  tags: ["l26x","seat"]
+  state: {"name":"Deck chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l26x-rest-chair-0-2:
   feetPosition: {x: -4.861852108809945, y: 0, z: -30.176627292758344}
   id: l26x-rest-chair-0-2
   layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
   model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
   rotation: {yaw: 31.399999999999977}
-  tags: [l26x]
+  tags: ["l26x","seat"]
+  state: {"name":"Deck chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l26x-rest-chair-1-0:
   feetPosition: {x: 1.4001970961969852, y: 0, z: -28.91252439400415}
   id: l26x-rest-chair-1-0
   layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
   model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
   rotation: {yaw: 186.672}
-  tags: [l26x]
+  tags: ["l26x","seat"]
+  state: {"name":"Deck chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l26x-rest-chair-1-1:
   feetPosition: {x: 0.7272503098597048, y: 0, z: -31.169558047042987}
   id: l26x-rest-chair-1-1
   layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
   model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
   rotation: {yaw: 337.372}
-  tags: [l26x]
+  tags: ["l26x","seat"]
+  state: {"name":"Deck chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l26x-rest-chair-1-2:
   feetPosition: {x: 3.313054690272077, y: 0.24, z: -31.198529618653954}
   id: l26x-rest-chair-1-2
@@ -3471,7 +3476,8 @@ l26x-rest-chair-2-0:
   layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
   model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
   rotation: {yaw: 213.918}
-  tags: [l26x]
+  tags: ["l26x","seat"]
+  state: {"name":"Deck chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l26x-rest-chair-2-1:
   feetPosition: {x: 4.120829855548957, y: 0.24, z: -25.94869869706794}
   id: l26x-rest-chair-2-1
@@ -3485,7 +3491,8 @@ l26x-rest-chair-2-2:
   layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
   model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
   rotation: {yaw: 155.31799999999998}
-  tags: [l26x]
+  tags: ["l26x","seat"]
+  state: {"name":"Deck chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l26x-rest-chair-3-0:
   feetPosition: {x: -3.1364898704106015, y: 0.24, z: -23.00948798911918}
   id: l26x-rest-chair-3-0
@@ -3499,14 +3506,16 @@ l26x-rest-chair-3-1:
   layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
   model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
   rotation: {yaw: 51.69999999999999}
-  tags: [l26x]
+  tags: ["l26x","seat"]
+  state: {"name":"Deck chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l26x-rest-chair-3-2:
   feetPosition: {x: -0.8266378967483927, y: 0, z: -21.930131417841356}
   id: l26x-rest-chair-3-2
   layout: {box: {max: {x: 0.24, y: 0.88, z: 0.24}, min: {x: -0.24, y: 0, z: -0.24}}}
   model: {forward: "+x", id: /cdn/value.6ac0141defda1de85e5b4bc9f7c0cdb799505df6ba528ecd4906124942f021f2.glb}
   rotation: {yaw: 202.4000000000001}
-  tags: [l26x]
+  tags: ["l26x","seat"]
+  state: {"name":"Deck chair","seat":{"y":0.31,"out":{"x":0,"z":0.64}}}
 l26x-rest-cloth-0:
   castShadow: false
   feetPosition: {x: -3.5, y: 0.01, z: -28.5}

@@ -200,7 +200,7 @@ export function openLoot(ctx, c) {
     c.state.lock = ''; c.state.name = sk === 'science' ? 'Unlocked locker' : 'Opened crate'
     note(ctx, `[${SKN[sk]} ${lv}] ${sk === 'science' ? 'You crack the locker' : 'You pick the lock'}`); snd(ctx, 'lock-picking-click', 0.5)
   }
-  if (!c.tags?.includes('storage') && !c.state.scavved && c.state.items !== undefined) { // Scavenge and Luck: a chance of one extra find, once per container
+  if (!c.tags?.includes('storage') && !c.state.fixedStock && !c.state.scavved && c.state.items !== undefined) { // Scavenge and Luck: a chance of one extra find, once per container
     c.state.scavved = true
     if (ctx.random() < derived(s).scav) c.state.items = [c.state.items, (ctx.self.place === 'level1' ? rollItemL1(ctx) : ctx.self.place === 'level2' ? rollItemL2(ctx) : ctx.self.place === 'level3' ? rollItemL3(ctx) : rollItem(ctx, poolOf(ctx.self.place)))].filter(Boolean).join(',')
     const cl = spotCloth(ctx, derived(s).clothFind) // Observation (Perception) spots a wearable tucked in the junk

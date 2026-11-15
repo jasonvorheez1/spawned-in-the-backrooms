@@ -73,10 +73,12 @@ function furnish(ctx, sp, l, H, D, Y) {
     const takeBook = k0 === "lava_lamp" && !ctx.place.state.suburbsBookPlaced;
     if (takeBook) ctx.place.state.suburbsBookPlaced = true;
     const items = LOOT[k] ? [takeBook ? "ubook:l9_suburbs_survival" : "", ...rollLoot(ctx, 1, 1, "l5")].filter(Boolean).join(",") : "";
-    sp(`l9-${l.id}-${tag}`, {
+    const spec = {
       ...IN, tags: LOOT[k] ? ["l9furn", "container", "breakable"] : ["l9furn", "breakable"], feetPosition: at(x, z, tip ? Math.min(w, d) / 2 : 0), rotation: tip ? { yaw: Y + yaw, roll: 88 } : { yaw: Y + yaw }, model: { id: F.model, forward: F.forward ?? "-z" }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, physics: { body: "static", collider: "box" },
       state: { mat, hp, maxHp: hp, ...(LOOT[k] ? { name: LOOT[k], verb: "Search", items } : { name: F.name }) }
-    });
+    };
+    if (!tip) makeSeat(spec);
+    sp(`l9-${l.id}-${tag}`, spec);
   };
   // living room: sofa on the back wall, rug and table before it, the TV facing it, a shelf on the outer wall, dining by the front
   if (plan === 1) { // armchairs round the set instead of a sofa, a second shelf on the back wall
@@ -103,6 +105,17 @@ function furnish(ctx, sp, l, H, D, Y) {
 }
 
 const MOTEL = { sofa: "motel_couch", double_bed: "motel_bed", armchair: "wingback_chair", floor_lamp: "bulb_lamp", dining_table: "pedestal_table", dining_chair: "leather_chair" };
+const SEATS = new Map(["sofa", "armchair", "dining_chair", "motel_couch", "wingback_chair", "leather_chair"]
+  .filter((k) => FURN.pieces[k])
+  .map((k) => [FURN.pieces[k].model, /sofa|couch/.test(k) ? { w: 2, gap: 0.68 } : /dining|leather/.test(k) ? { out: { x: 0, z: 0.58 } } : {}]));
+function makeSeat(o) {
+  const fit = SEATS.get(o.model?.id ?? o.model);
+  const r = o.rotation;
+  if (!fit || o.state?.broke || o.tags?.includes("seat") || Math.abs(r?.roll ?? 0) > 10
+    || Math.abs(r?.pitch ?? 0) > 10 || (r?.w != null && Math.hypot(r.x, r.z) > 0.12)) return;
+  o.tags = [...o.tags, "seat"];
+  o.state.seat = fit;
+}
 const CH = { l: 90, r: -90 }, CAB = (s) => (s > 0 ? -90 : 90), DRS = (s) => (s > 0 ? -90 : 90); // facings, checked by eye
 const l9Spawn = (ctx, keep) => (id, spec) => {
   if (keep?.[id] && spec.state) for (const k of ["items", "scavved", "lock"]) if (keep[id][k] !== undefined) spec.state[k] = keep[id][k];
@@ -222,6 +235,10 @@ export function tick(ctx) {
   if (s.l9V !== V) { lay(ctx, L, s); s.l9V = V; s.l9DressV = 0; }
   if (s.l9DressV !== 1) { dressStreets(ctx, L); s.l9DressV = 1; }
   if (s.l9FurnQ?.length) furnishStep(ctx, L, s, 6);
+  if (ctx.place.players.length && s.seatsV !== V) {
+    for (const o of Object.values(ctx.place.objects)) if (o.tags?.includes("l9furn")) makeSeat(o);
+    s.seatsV = V;
+  }
   if (ctx.place.players.length) { fog(ctx, s); hounds(ctx, s, L); }
 }
 
