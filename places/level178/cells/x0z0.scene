@@ -763,210 +763,210 @@ l178-cabinet-swords:
 l178-ceil-e0:
   feetPosition: {x: 13.1, y: 2.95, z: -7.359999999999999}
   id: l178-ceil-e0
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-e1:
   feetPosition: {x: 13.1, y: 2.95, z: -3.679999999999999}
   id: l178-ceil-e1
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-e2:
   feetPosition: {x: 13.1, y: 2.95, z: 1.7763568394002505e-15}
   id: l178-ceil-e2
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-e3:
   feetPosition: {x: 13.1, y: 2.95, z: 3.6800000000000015}
   id: l178-ceil-e3
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-e4:
   feetPosition: {x: 13.1, y: 2.95, z: 7.360000000000003}
   id: l178-ceil-e4
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n0:
   feetPosition: {x: -15.3, y: 2.95, z: -13.1}
   id: l178-ceil-n0
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n1:
   feetPosition: {x: -11.9, y: 2.95, z: -13.1}
   id: l178-ceil-n1
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n2:
   feetPosition: {x: -8.5, y: 2.95, z: -13.1}
   id: l178-ceil-n2
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n3:
   feetPosition: {x: -5.1, y: 2.95, z: -13.1}
   id: l178-ceil-n3
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n4:
   feetPosition: {x: -1.700000000000001, y: 2.95, z: -13.1}
   id: l178-ceil-n4
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n5:
   feetPosition: {x: 1.6999999999999993, y: 2.95, z: -13.1}
   id: l178-ceil-n5
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n6:
   feetPosition: {x: 5.099999999999998, y: 2.95, z: -13.1}
   id: l178-ceil-n6
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n7:
   feetPosition: {x: 8.5, y: 2.95, z: -13.1}
   id: l178-ceil-n7
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n8:
   feetPosition: {x: 11.899999999999999, y: 2.95, z: -13.1}
   id: l178-ceil-n8
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n9:
   feetPosition: {x: 15.299999999999997, y: 2.95, z: -13.1}
   id: l178-ceil-n9
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s0:
   feetPosition: {x: -15.3, y: 2.95, z: 13.1}
   id: l178-ceil-s0
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s1:
   feetPosition: {x: -11.9, y: 2.95, z: 13.1}
   id: l178-ceil-s1
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s2:
   feetPosition: {x: -8.5, y: 2.95, z: 13.1}
   id: l178-ceil-s2
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s3:
   feetPosition: {x: -5.1, y: 2.95, z: 13.1}
   id: l178-ceil-s3
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s4:
   feetPosition: {x: -1.700000000000001, y: 2.95, z: 13.1}
   id: l178-ceil-s4
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s5:
   feetPosition: {x: 1.6999999999999993, y: 2.95, z: 13.1}
   id: l178-ceil-s5
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s6:
   feetPosition: {x: 5.099999999999998, y: 2.95, z: 13.1}
   id: l178-ceil-s6
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s7:
   feetPosition: {x: 8.5, y: 2.95, z: 13.1}
   id: l178-ceil-s7
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s8:
   feetPosition: {x: 11.899999999999999, y: 2.95, z: 13.1}
   id: l178-ceil-s8
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s9:
   feetPosition: {x: 15.299999999999997, y: 2.95, z: 13.1}
   id: l178-ceil-s9
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-w0:
   feetPosition: {x: -13.1, y: 2.95, z: -7.359999999999999}
   id: l178-ceil-w0
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-w1:
   feetPosition: {x: -13.1, y: 2.95, z: -3.679999999999999}
   id: l178-ceil-w1
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-w2:
   feetPosition: {x: -13.1, y: 2.95, z: 1.7763568394002505e-15}
   id: l178-ceil-w2
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-w3:
   feetPosition: {x: -13.1, y: 2.95, z: 3.6800000000000015}
   id: l178-ceil-w3
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-w4:
   feetPosition: {x: -13.1, y: 2.95, z: 7.360000000000003}
   id: l178-ceil-w4
-  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
+  model: {id: /cdn/value.b0d3fd98cc9ef5f7347e0070d6dfd3762698a9161438afc3c9726e83eba7c08b.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
@@ -1069,49 +1069,49 @@ l178-drawer-6:
 l178-engawa-e0:
   feetPosition: {x: 8.1, y: 0, z: -6}
   id: l178-engawa-e0
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   tags: [l178]
 l178-engawa-e1:
   feetPosition: {x: 8.1, y: 0, z: -3.6}
   id: l178-engawa-e1
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   tags: [l178]
 l178-engawa-e2:
   feetPosition: {x: 8.1, y: 0, z: -1.2}
   id: l178-engawa-e2
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   tags: [l178]
 l178-engawa-e3:
   feetPosition: {x: 8.1, y: 0, z: 1.2}
   id: l178-engawa-e3
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   tags: [l178]
 l178-engawa-e4:
   feetPosition: {x: 8.1, y: 0, z: 3.6}
   id: l178-engawa-e4
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   tags: [l178]
 l178-engawa-e5:
   feetPosition: {x: 8.1, y: 0, z: 6}
   id: l178-engawa-e5
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   tags: [l178]
 l178-engawa-n0:
   feetPosition: {x: -8.2, y: 0, z: -8.1}
   id: l178-engawa-n0
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 180}
   scale: {x: 0.833, y: 1, z: 1}
@@ -1119,7 +1119,7 @@ l178-engawa-n0:
 l178-engawa-n1:
   feetPosition: {x: -6, y: 0, z: -8.1}
   id: l178-engawa-n1
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 180}
   scale: {x: 1, y: 1, z: 1}
@@ -1127,7 +1127,7 @@ l178-engawa-n1:
 l178-engawa-n2:
   feetPosition: {x: -3.6, y: 0, z: -8.1}
   id: l178-engawa-n2
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 180}
   scale: {x: 1, y: 1, z: 1}
@@ -1135,7 +1135,7 @@ l178-engawa-n2:
 l178-engawa-n3:
   feetPosition: {x: -1.2, y: 0, z: -8.1}
   id: l178-engawa-n3
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 180}
   scale: {x: 1, y: 1, z: 1}
@@ -1143,7 +1143,7 @@ l178-engawa-n3:
 l178-engawa-n4:
   feetPosition: {x: 1.2, y: 0, z: -8.1}
   id: l178-engawa-n4
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 180}
   scale: {x: 1, y: 1, z: 1}
@@ -1151,7 +1151,7 @@ l178-engawa-n4:
 l178-engawa-n5:
   feetPosition: {x: 3.6, y: 0, z: -8.1}
   id: l178-engawa-n5
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 180}
   scale: {x: 1, y: 1, z: 1}
@@ -1159,7 +1159,7 @@ l178-engawa-n5:
 l178-engawa-n6:
   feetPosition: {x: 6, y: 0, z: -8.1}
   id: l178-engawa-n6
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 180}
   scale: {x: 1, y: 1, z: 1}
@@ -1167,7 +1167,7 @@ l178-engawa-n6:
 l178-engawa-n7:
   feetPosition: {x: 8.2, y: 0, z: -8.1}
   id: l178-engawa-n7
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 180}
   scale: {x: 0.833, y: 1, z: 1}
@@ -1175,98 +1175,98 @@ l178-engawa-n7:
 l178-engawa-s0:
   feetPosition: {x: -8.2, y: 0, z: 8.1}
   id: l178-engawa-s0
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.833, y: 1, z: 1}
   tags: [l178]
 l178-engawa-s1:
   feetPosition: {x: -6, y: 0, z: 8.1}
   id: l178-engawa-s1
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 1, y: 1, z: 1}
   tags: [l178]
 l178-engawa-s2:
   feetPosition: {x: -3.6, y: 0, z: 8.1}
   id: l178-engawa-s2
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 1, y: 1, z: 1}
   tags: [l178]
 l178-engawa-s3:
   feetPosition: {x: -1.2, y: 0, z: 8.1}
   id: l178-engawa-s3
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 1, y: 1, z: 1}
   tags: [l178]
 l178-engawa-s4:
   feetPosition: {x: 1.2, y: 0, z: 8.1}
   id: l178-engawa-s4
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 1, y: 1, z: 1}
   tags: [l178]
 l178-engawa-s5:
   feetPosition: {x: 3.6, y: 0, z: 8.1}
   id: l178-engawa-s5
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 1, y: 1, z: 1}
   tags: [l178]
 l178-engawa-s6:
   feetPosition: {x: 6, y: 0, z: 8.1}
   id: l178-engawa-s6
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 1, y: 1, z: 1}
   tags: [l178]
 l178-engawa-s7:
   feetPosition: {x: 8.2, y: 0, z: 8.1}
   id: l178-engawa-s7
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.833, y: 1, z: 1}
   tags: [l178]
 l178-engawa-w0:
   feetPosition: {x: -8.1, y: 0, z: -6}
   id: l178-engawa-w0
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: -90}
   tags: [l178]
 l178-engawa-w1:
   feetPosition: {x: -8.1, y: 0, z: -3.6}
   id: l178-engawa-w1
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: -90}
   tags: [l178]
 l178-engawa-w2:
   feetPosition: {x: -8.1, y: 0, z: -1.2}
   id: l178-engawa-w2
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: -90}
   tags: [l178]
 l178-engawa-w3:
   feetPosition: {x: -8.1, y: 0, z: 1.2}
   id: l178-engawa-w3
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: -90}
   tags: [l178]
 l178-engawa-w4:
   feetPosition: {x: -8.1, y: 0, z: 3.6}
   id: l178-engawa-w4
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: -90}
   tags: [l178]
 l178-engawa-w5:
   feetPosition: {x: -8.1, y: 0, z: 6}
   id: l178-engawa-w5
-  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
+  model: {id: /cdn/value.1608297d51b9774f993e730e1c092787af2232e3e05c85d878bc7c87675c612b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: -90}
   tags: [l178]
@@ -1288,7 +1288,7 @@ l178-fall-2:
 l178-floor-e0:
   feetPosition: {x: 13.1, y: 0, z: -7.359999999999999}
   id: l178-floor-e0
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1296,7 +1296,7 @@ l178-floor-e0:
 l178-floor-e1:
   feetPosition: {x: 13.1, y: 0, z: -3.679999999999999}
   id: l178-floor-e1
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1304,7 +1304,7 @@ l178-floor-e1:
 l178-floor-e2:
   feetPosition: {x: 13.1, y: 0, z: 1.7763568394002505e-15}
   id: l178-floor-e2
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1312,7 +1312,7 @@ l178-floor-e2:
 l178-floor-e3:
   feetPosition: {x: 13.1, y: 0, z: 3.6800000000000015}
   id: l178-floor-e3
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1320,7 +1320,7 @@ l178-floor-e3:
 l178-floor-e4:
   feetPosition: {x: 13.1, y: 0, z: 7.360000000000003}
   id: l178-floor-e4
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1328,147 +1328,147 @@ l178-floor-e4:
 l178-floor-n0:
   feetPosition: {x: -15.3, y: 0, z: -13.1}
   id: l178-floor-n0
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n1:
   feetPosition: {x: -11.9, y: 0, z: -13.1}
   id: l178-floor-n1
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n2:
   feetPosition: {x: -8.5, y: 0, z: -13.1}
   id: l178-floor-n2
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n3:
   feetPosition: {x: -5.1, y: 0, z: -13.1}
   id: l178-floor-n3
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n4:
   feetPosition: {x: -1.700000000000001, y: 0, z: -13.1}
   id: l178-floor-n4
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n5:
   feetPosition: {x: 1.6999999999999993, y: 0, z: -13.1}
   id: l178-floor-n5
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n6:
   feetPosition: {x: 5.099999999999998, y: 0, z: -13.1}
   id: l178-floor-n6
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n7:
   feetPosition: {x: 8.5, y: 0, z: -13.1}
   id: l178-floor-n7
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n8:
   feetPosition: {x: 11.899999999999999, y: 0, z: -13.1}
   id: l178-floor-n8
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n9:
   feetPosition: {x: 15.299999999999997, y: 0, z: -13.1}
   id: l178-floor-n9
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s0:
   feetPosition: {x: -15.3, y: 0, z: 13.1}
   id: l178-floor-s0
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s1:
   feetPosition: {x: -11.9, y: 0, z: 13.1}
   id: l178-floor-s1
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s2:
   feetPosition: {x: -8.5, y: 0, z: 13.1}
   id: l178-floor-s2
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s3:
   feetPosition: {x: -5.1, y: 0, z: 13.1}
   id: l178-floor-s3
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s4:
   feetPosition: {x: -1.700000000000001, y: 0, z: 13.1}
   id: l178-floor-s4
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s5:
   feetPosition: {x: 1.6999999999999993, y: 0, z: 13.1}
   id: l178-floor-s5
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s6:
   feetPosition: {x: 5.099999999999998, y: 0, z: 13.1}
   id: l178-floor-s6
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s7:
   feetPosition: {x: 8.5, y: 0, z: 13.1}
   id: l178-floor-s7
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s8:
   feetPosition: {x: 11.899999999999999, y: 0, z: 13.1}
   id: l178-floor-s8
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s9:
   feetPosition: {x: 15.299999999999997, y: 0, z: 13.1}
   id: l178-floor-s9
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-w0:
   feetPosition: {x: -13.1, y: 0, z: -7.359999999999999}
   id: l178-floor-w0
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1476,7 +1476,7 @@ l178-floor-w0:
 l178-floor-w1:
   feetPosition: {x: -13.1, y: 0, z: -3.679999999999999}
   id: l178-floor-w1
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1484,7 +1484,7 @@ l178-floor-w1:
 l178-floor-w2:
   feetPosition: {x: -13.1, y: 0, z: 1.7763568394002505e-15}
   id: l178-floor-w2
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1492,7 +1492,7 @@ l178-floor-w2:
 l178-floor-w3:
   feetPosition: {x: -13.1, y: 0, z: 3.6800000000000015}
   id: l178-floor-w3
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1500,7 +1500,7 @@ l178-floor-w3:
 l178-floor-w4:
   feetPosition: {x: -13.1, y: 0, z: 7.360000000000003}
   id: l178-floor-w4
-  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.294ca659f7546001d42771311e16ffaa09d6a159358f9d4a083d79b46281721e.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -2531,25 +2531,25 @@ l178-rock-9:
 l178-roof-0:
   feetPosition: {x: 0, y: 3.25, z: -12.136}
   id: l178-roof-0
-  model: {id: /cdn/value.ce2ff7aaa81353cc33ccf0285d292dcf4017bf6ed6214ab03cb78e0ad5dd54b9.glb, materials: {kawara: {metalness: 0.15, pbr: true, roughness: 0.4, texture: cdn/texture-dark-silver-grey-kawara-glazed-clay-roof-tiles.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.ac7ad172043d343d90009142eb5abb933019a31ee97892fbab9c233e33545e42.glb, materials: {kawara: {metalness: 0.15, pbr: true, roughness: 0.4, texture: cdn/texture-dark-silver-grey-kawara-glazed-clay-roof-tiles.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-roof-180:
   feetPosition: {x: 0, y: 3.25, z: 12.136}
   id: l178-roof-180
-  model: {id: /cdn/value.ce2ff7aaa81353cc33ccf0285d292dcf4017bf6ed6214ab03cb78e0ad5dd54b9.glb, materials: {kawara: {metalness: 0.15, pbr: true, roughness: 0.4, texture: cdn/texture-dark-silver-grey-kawara-glazed-clay-roof-tiles.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.ac7ad172043d343d90009142eb5abb933019a31ee97892fbab9c233e33545e42.glb, materials: {kawara: {metalness: 0.15, pbr: true, roughness: 0.4, texture: cdn/texture-dark-silver-grey-kawara-glazed-clay-roof-tiles.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   rotation: {yaw: 180}
   tags: [l178]
 l178-roof-270:
   feetPosition: {x: 12.136, y: 3.25, z: 0}
   id: l178-roof-270
-  model: {id: /cdn/value.ce2ff7aaa81353cc33ccf0285d292dcf4017bf6ed6214ab03cb78e0ad5dd54b9.glb, materials: {kawara: {metalness: 0.15, pbr: true, roughness: 0.4, texture: cdn/texture-dark-silver-grey-kawara-glazed-clay-roof-tiles.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.ac7ad172043d343d90009142eb5abb933019a31ee97892fbab9c233e33545e42.glb, materials: {kawara: {metalness: 0.15, pbr: true, roughness: 0.4, texture: cdn/texture-dark-silver-grey-kawara-glazed-clay-roof-tiles.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   rotation: {yaw: 270}
   tags: [l178]
 l178-roof-90:
   feetPosition: {x: -12.136, y: 3.25, z: 0}
   id: l178-roof-90
-  model: {id: /cdn/value.ce2ff7aaa81353cc33ccf0285d292dcf4017bf6ed6214ab03cb78e0ad5dd54b9.glb, materials: {kawara: {metalness: 0.15, pbr: true, roughness: 0.4, texture: cdn/texture-dark-silver-grey-kawara-glazed-clay-roof-tiles.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
+  model: {id: /cdn/value.ac7ad172043d343d90009142eb5abb933019a31ee97892fbab9c233e33545e42.glb, materials: {kawara: {metalness: 0.15, pbr: true, roughness: 0.4, texture: cdn/texture-dark-silver-grey-kawara-glazed-clay-roof-tiles.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   rotation: {yaw: 90}
   tags: [l178]
 l178-shishi:
@@ -2820,7 +2820,7 @@ l178-spring-rim:
 l178-stair:
   feetPosition: {x: -8.6, y: 0.45, z: -10.2}
   id: l178-stair
-  model: /cdn/value.e5d4d2b7d884617e03be398ab39b6dd2572eb7aaa6c0c5daaeb022fa4c029bf6.glb
+  model: /cdn/value.3907b899fbbbeefad3e8c1da746d7251f6c80ebb983abbc345ba4ed5fa009fc7.glb
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   tags: [l178]
@@ -2892,67 +2892,67 @@ l178-tap:
 l178-tatami-0:
   feetPosition: {x: -1.82, y: 0.45, z: 11.1}
   id: l178-tatami-0
-  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
+  model: {id: /cdn/value.d45d65119b073d0328e25b18cbc37b7b04f1b3259ebff31343e2239a1cdab740.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-1:
   feetPosition: {x: 1.82, y: 0.45, z: 11.1}
   id: l178-tatami-1
-  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
+  model: {id: /cdn/value.d45d65119b073d0328e25b18cbc37b7b04f1b3259ebff31343e2239a1cdab740.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-10:
   feetPosition: {x: -9, y: 0.45, z: 13.1}
   id: l178-tatami-10
-  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
+  model: {id: /cdn/value.d45d65119b073d0328e25b18cbc37b7b04f1b3259ebff31343e2239a1cdab740.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-2:
   feetPosition: {x: -1.82, y: 0.45, z: 14.85}
   id: l178-tatami-2
-  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
+  model: {id: /cdn/value.d45d65119b073d0328e25b18cbc37b7b04f1b3259ebff31343e2239a1cdab740.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-3:
   feetPosition: {x: 1.82, y: 0.45, z: 14.85}
   id: l178-tatami-3
-  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
+  model: {id: /cdn/value.d45d65119b073d0328e25b18cbc37b7b04f1b3259ebff31343e2239a1cdab740.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-4:
   feetPosition: {x: -6.1, y: 0.45, z: -13.1}
   id: l178-tatami-4
-  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
+  model: {id: /cdn/value.d45d65119b073d0328e25b18cbc37b7b04f1b3259ebff31343e2239a1cdab740.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-5:
   feetPosition: {x: 0, y: 0.45, z: -13.1}
   id: l178-tatami-5
-  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
+  model: {id: /cdn/value.d45d65119b073d0328e25b18cbc37b7b04f1b3259ebff31343e2239a1cdab740.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-6:
   feetPosition: {x: 6.1, y: 0.45, z: -13.1}
   id: l178-tatami-6
-  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
+  model: {id: /cdn/value.d45d65119b073d0328e25b18cbc37b7b04f1b3259ebff31343e2239a1cdab740.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-7:
   feetPosition: {x: 13.1, y: 0.45, z: -12.6}
   id: l178-tatami-7
-  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
+  model: {id: /cdn/value.d45d65119b073d0328e25b18cbc37b7b04f1b3259ebff31343e2239a1cdab740.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-8:
   feetPosition: {x: 9, y: 0.45, z: 13.1}
   id: l178-tatami-8
-  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
+  model: {id: /cdn/value.d45d65119b073d0328e25b18cbc37b7b04f1b3259ebff31343e2239a1cdab740.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-9:
   feetPosition: {x: 14.7, y: 0.45, z: 0}
   id: l178-tatami-9
-  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
+  model: {id: /cdn/value.d45d65119b073d0328e25b18cbc37b7b04f1b3259ebff31343e2239a1cdab740.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-to-hub:
