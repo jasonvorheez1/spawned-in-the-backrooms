@@ -1,0 +1,127 @@
+# Lumiria's three walk-in shops. Shop-local metres: +Z = the door side, x across, f = the way a piece FACES (0 = to the back wall, 180 = to the door, 270 = +x, 90 = -x).
+# Row: id, m (model key), x, z, f; top: guess of the surface it rests on (it settles by a ray); wall: its height on a wall; u: what E does; seat; booth/pc: adds their sit spots.
+V: 1
+floor: 0.02
+door: { w: 1.28, h: 2.28, open: 95 }
+tune: "/cdn/moodboard-toon-vibrant/music-1950s-doo-wop-jukebox-slow-dance-instrumental.mp3"
+shops:
+  a: { x: 0, z: -40, yaw: 0, rx: 6.63, front: 4.31, back: 4.24, jamb: 4.56, name: "RadioShed", light: "oklch(0.97 0.02 240)",
+       shell: "/cdn/value.0882e91ad30c06c026715f90b46021f89bfc87e778caf4aa5feb3576380269df.glb",
+       mats: { wall_in: "cdn/texture-beige-slatwall-retail-panel.png", floor_in: "cdn/texture-grey-commercial-carpet-tiles.png", ceil_in: "cdn/texture-white-acoustic-ceiling-tiles.png", jamb: "cdn/texture-oak-wood-planks-dark.png" } }
+  b: { x: 40, z: 0, yaw: -90, rx: 7.1, front: 4.6, back: 4.42, jamb: 4.85, name: "Starlite Diner", light: "oklch(0.96 0.04 60)",
+       shell: "/cdn/value.2726e0ba69d8039630c71076235bb8b319598ac602b628a4516d81485df8f1df.glb",
+       mats: { wall_in: "cdn/texture-mint-green-diner-wall-tiles-chrome-trim.png", floor_in: "cdn/texture-black-white-checkerboard-diner-floor.png", ceil_in: "cdn/texture-white-pressed-tin-ceiling.png", jamb: "cdn/texture-oak-wood-planks-dark.png" } }
+  c: { x: -40, z: 0, yaw: 90, rx: 6.67, front: 4.45, back: 4.46, jamb: 5.0, name: "Dial-Up Cafe", light: "oklch(0.95 0.05 80)",
+       shell: "/cdn/value.5d3776904b9252fac495230c5e741297499836e8ca7866380653a2091f591fbe.glb",
+       mats: { wall_in: "cdn/texture-teal-sponge-painted-plaster-wall.png", floor_in: "cdn/texture-purple-confetti-pattern-arcade-carpet.png", ceil_in: "cdn/texture-white-acoustic-ceiling-tiles.png", jamb: "cdn/texture-oak-wood-planks-dark.png" } }
+models:   # key: [address, the axis the file faces, scale]
+  monitors: ["/cdn/value.fd77a1a3758558c1ae8ee279ca68052869bee176446daf993be83dce9e44d9c8.glb", "+z", 1]
+  shelf: ["/cdn/value.9f3b838cc1b4403a54d96e1b80372c75c9a440c1d4e61a4760f60de82133526b.glb", "+z", 1]
+  slat: ["/cdn/value.1e06f865e3bab819652a7465866afc2c45f18e4e921be428e2aa3ee858166281.glb", "+z", 1]
+  wire: ["/cdn/value.8e72f7f37b80c9e96c97fa180ed93d497a4099cbdfbc464895fc5a8894c8c120.glb", "+x", 1.15]
+  case: ["/cdn/value.4e4232d504243753b8093ecbded15cf7a15d83caa454d9a7267753de18ec803b.glb", "+z", 1]
+  register: ["/cdn/value.f2663b8e02cbce4a46bcfac7649bc914ec716a82c522683d3afa35ae62387855.glb", "+z", 1]
+  spinner: ["/cdn/value.be7eb6c9bc6772c442cbd253702e165b10228b7f25c091d9b7fe1a9fee5eef61.glb", "+z", 1]
+  router: ["/cdn/value.2ee6d65e80f6bdb605e09f0ddf35522299c2c9aca1c14b28e52653eb02a03d3a.glb", "+z", 1.6]
+  laptop: ["/cdn/value.057f996de00404bf98410b7deabf7d3b9c2fb08d17f7c440de21a7c8fcc8d5a0.glb", "+z", 0.4]
+  camera: ["/cdn/value.eb9043ffee889ef53f7797e2af2908562b0e11141b0c8f8d4be5b7ddc3fc543f.glb", "+z", 0.3]
+  phone: ["/cdn/value.726b4ce1eb3fc52d4e35252d822b6f420f37c4c28ce628366a59b8cb7449f3e8.glb", "+z", 1]
+  boombox: ["/cdn/value.b65239e4484936755ff171a40f1ea0104ad73cf5d0d2b21261bab60345e000f9.glb", "+z", 1]
+  headphones: ["/cdn/value.87d349fb28a803101ebd00e7bb018e6420979590d2fa9e76265e08b573d3df15.glb", "+z", 1]
+  gamecube: ["/cdn/value.185618f9f20a119640545fa71d4eb703ad0b49b77820590eaeacb3202089bee4.glb", "+z", 1]
+  crt: ["/cdn/value.30ae8e4fd0c2e307d21943aa6fa38f3f816fcc7a10335f5a15ff865b00b84ce4.glb", "+x", 1]
+  counter: ["/cdn/value.d101cc0389dc3f27245b75dd77016c79ceda43dd83507b05a45136333874847b.glb", "+z", 1.2]
+  stool: ["/cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb", "+z", 1]
+  booth: ["/cdn/value.16e718586e8a4ad9bc8fee6f9deb9a8a0783a3d7735609809865f55591915948.glb", "-z", 1]
+  jukebox: ["/cdn/value.eb676c37706ec7e4c3e6457d46b4a565b82fc50d9cb775ec70525a1fe3fcad67.glb", "+z", 0.85]
+  grill: ["/cdn/value.52e8c951e79935129fcfb50a305e01a547c4ea962c25fb44339c09ac673636a4.glb", "+z", 1]
+  piecase: ["/cdn/value.a619c121b4e830206d2c59969fdebd9d2a47dac9189109031f381cc44c28a2b3.glb", "+x", 1]
+  cloche: ["/cdn/value.64d2f93ebecd6175138979d5fac9d6994949f98ae4f4be1047298cf53d65caac.glb", "+z", 1]
+  plate: ["/cdn/value.4855edb39e5d71348b9d525fadd939ecb40086bb9ffc24c8daa9ee4a8642ae99.glb", "+z", 1]
+  mug: ["/cdn/value.576793eb000bea5267305695a7d529d11db108319af52abfdfcec00b9db2f3f3.glb", "+z", 1]
+  hatch: ["/cdn/value.eeb98634b39070e4a360bb42bae8d93236bb9ef0ecab2fb9c226d07cf93a4aab.glb", "+x", 2.1]
+  coffee: ["/cdn/value.6fd5817efd4dcf472f9dfe25b04d117ca9faf65d880f5ee6d965c1ba3f407eec.glb", "+z", 1]
+  pcdesk: ["/cdn/value.c19a3a1207063b8231b343d67d98657a158515407d7c01b6c2286a1bd2d5c18c.glb", "+x", 1.3]
+  arcade: ["/cdn/value.f025413cd07f33ee4e744a88cdbe78e81a6057ba2b9fa1e5b77a9543ea556977.glb", "+z", 1]
+  vr: ["/cdn/value.0a43e1f48f4d8d160b984a97452d3ffc150031de7e9a71f470fe2d1f31c5dba5.glb", "+z", 0.42]
+  cork: ["/cdn/value.beb7071005bd70aad16d4238ce3646be9ac16d7ad388eeb7f3a659d1b143bb04.glb", "+x", 1.5]
+  beanbag: ["/cdn/value.afa0c785ed6f8de02e08eba83bb07a5b8b9afdb7a0cd08c5469c281133c00d57.glb", "+z", 1.15]
+  rug: ["/cdn/value.455dde0ca22a985f649dee005f80bad45966342485d248a0fa95d86fb0a2d2c3.glb", "+z", 1]
+  plant: ["/cdn/value.53fa6b1388302684d3e567ca755e213843bd4d5ac5ee17c0b54fa1d579c9a019.glb", "+z", 1]
+  sofa: ["/cdn/value.0feff3db97a7d03c96c612e304e76e62ee1a577e754a9073a4ca0d3ddfb2c023.glb", "+x", 1]
+  lava: ["/cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb", "+z", 1]
+  bar: ["/cdn/value.53a6ef111aac797583ca330cad268f4e401bd0fe5613021c07eda571623e5ea2.glb", "+z", 1]
+rows:
+  a:
+    - { id: tvwall-1, m: monitors, x: -4.4, z: -3.9, f: 180, u: { name: "Wall of televisions", verb: "Watch", info: ["Every screen shows the same channel: grey snow, and now and then a street you almost know.", "The picture rolls. Nobody here minds; it restocks itself by morning."] } }
+    - { id: tvwall-2, m: monitors, x: -1.6, z: -3.9, f: 180, u: { name: "Wall of televisions", verb: "Watch", info: ["Static, flecked with the square outside, seen from above."] } }
+    - { id: shelf-1, m: shelf, x: 1.3, z: -3.95, f: 180, u: { name: "Boxed gadgets", verb: "Look over", info: ["Pagers, a breadmaker, a talking fish. Beside them, a clay oil lamp with a barcode."] } }
+    - { id: shelf-2, m: shelf, x: 2.45, z: -3.95, f: 180, u: { name: "Boxed gadgets", verb: "Look over", info: ["Walkie-talkies, sealed. Somebody's cassette collection must be nearly whole."] } }
+    - { id: shelf-3, m: shelf, x: 3.6, z: -3.95, f: 180 }
+    - { gid: l132-router, m: router, x: 3.6, z: -3.95, f: 180, top: 1.92, u: { name: "Router", verb: "Inspect", kind: router, on: false } }
+    - { id: slat-l, m: slat, x: -6.5, z: 0.3, f: 270, u: { name: "Wall of cables and adapters", verb: "Look over", info: ["Every plug that ever was. None of them fit each other."] } }
+    - { id: slat-r, m: slat, x: 6.5, z: -1.2, f: 90 }
+    - { id: wire-1, m: wire, x: 6.25, z: 2.2, f: 90 }
+    - { id: case-1, m: case, x: 2.3, z: 1.4, f: 180 }
+    - { id: case-2, m: case, x: 4.15, z: 1.4, f: 180 }
+    - { id: register, m: register, x: 4.6, z: 1.4, f: 180, top: 1.0, u: { name: "Till", verb: "Open", info: ["No coins inside. A ledger of collections: who lacks what, and who would trade it."] } }
+    - { id: laptop, m: laptop, x: 2.9, z: 1.4, f: 180, top: 1.0, u: { name: "Laptop · M.E.G. database", verb: "Browse", kind: read, page: 1322 } }
+    - { id: phone-1, m: phone, x: 1.75, z: 1.3, f: 180, top: 1.0, u: { name: "Flip phone", verb: "Flip open", info: ["One bar. Then none. Then a text from nobody: 'u up? lol'"] } }
+    - { id: phone-2, m: phone, x: 2.05, z: 1.5, f: 150, top: 1.0 }
+    - { id: camera, m: camera, x: 3.8, z: 1.4, f: 180, top: 1.0, u: { name: "Film camera", verb: "Look through", info: ["Through the finder the shop looks older than it is."] } }
+    - { id: spinner, m: spinner, x: -2.2, z: 1.8, f: 180, u: { name: "Battery rack", verb: "Spin", kind: spin } }
+    - { id: case-3, m: case, x: -4.2, z: 0.2, f: 180 }
+    - { id: boombox, m: boombox, x: -4.5, z: 0.2, f: 180, top: 1.0, u: { name: "Boombox", verb: "Press play", info: ["The tape hisses, then somebody's holiday, taped over somebody's wedding."] } }
+    - { id: headphones, m: headphones, x: -3.7, z: 0.2, f: 180, top: 1.0 }
+    - { id: crt-1, m: crt, x: 5.9, z: 3.6, f: 135 }
+    - { id: plant, m: plant, x: -5.9, z: 3.6, f: 0 }
+  b:
+    - { id: counter-1, m: counter, x: -3.3, z: -1.9, f: 180 }
+    - { id: counter-2, m: counter, x: 0.4, z: -1.9, f: 180 }
+    - { id: stool-1, m: stool, x: -4.6, z: -1.0, f: 0, seat: { w: 1, d: 0, y: 0.4 }, name: "Counter stool" }
+    - { id: stool-2, m: stool, x: -3.5, z: -1.0, f: 0, seat: { w: 1, d: 0, y: 0.4 }, name: "Counter stool" }
+    - { id: stool-3, m: stool, x: -2.4, z: -1.0, f: 0, seat: { w: 1, d: 0, y: 0.4 }, name: "Counter stool" }
+    - { id: stool-4, m: stool, x: -0.6, z: -1.0, f: 0, seat: { w: 1, d: 0, y: 0.4 }, name: "Counter stool" }
+    - { id: stool-5, m: stool, x: 0.5, z: -1.0, f: 0, seat: { w: 1, d: 0, y: 0.4 }, name: "Counter stool" }
+    - { id: stool-6, m: stool, x: 1.6, z: -1.0, f: 0, seat: { w: 1, d: 0, y: 0.4 }, name: "Counter stool" }
+    - { id: grill, m: grill, x: -2.6, z: -3.85, f: 180, u: { name: "Griddle", verb: "Check", info: ["Hot, and scraped clean. Something was just flipped by nobody."] } }
+    - { id: hatch, m: hatch, x: 1.6, z: -3.9, f: 180, u: { name: "Serving hatch", verb: "Ring", kind: bell } }
+    - { id: piecase, m: piecase, x: 3.2, z: -1.9, f: 180, u: { name: "Pie case", verb: "Look in", info: ["Cherry, lemon, and one nobody can name. A slice is worth whatever your collection is missing."] } }
+    - { id: cloche, m: cloche, x: -0.3, z: -1.9, f: 180, top: 0.96 }
+    - { id: coffee, m: coffee, x: -4.3, z: -2.0, f: 180, top: 0.96, u: { name: "Coffee urn", verb: "Pour", info: ["Hot, bottomless, and a little burnt. Like a real one."] } }
+    - { id: register, m: register, x: 1.5, z: -1.9, f: 180, top: 0.96, u: { name: "Till", verb: "Open", info: ["The drawer holds a stack of handwritten swaps. 'One milkshake: one button I did not have.'"] } }
+    - { gid: l132-ware-ceramic-b-1, m: plate, x: -3.5, z: -1.75, f: 0, top: 0.96, ware: "Plate" }
+    - { gid: l132-ware-ceramic-b-2, m: mug, x: -3.2, z: -1.7, f: 40, top: 0.96, ware: "Coffee cup" }
+    - { gid: l132-ware-ceramic-b-3, m: plate, x: 0.5, z: -1.75, f: 0, top: 0.96, ware: "Plate" }
+    - { gid: l132-ware-ceramic-b-4, m: mug, x: 0.85, z: -1.7, f: 200, top: 0.96, ware: "Coffee cup" }
+    - { id: jukebox, m: jukebox, x: 6.65, z: 0.2, f: 90, u: { name: "Jukebox", verb: "Play", kind: jukebox } }
+    - { id: booth-1, m: booth, x: -5.9, z: 3.6, f: 180, booth: 1 }
+    - { id: booth-2, m: booth, x: -3.4, z: 3.6, f: 180, booth: 1 }
+    - { id: booth-3, m: booth, x: 3.2, z: 3.6, f: 180, booth: 1 }
+    - { id: booth-4, m: booth, x: 5.7, z: 3.6, f: 180, booth: 1 }
+    - { id: plant, m: plant, x: 6.4, z: -3.7, f: 0 }
+  c:
+    - { id: pc-1, m: pcdesk, x: -4.4, z: -3.8, f: 180, pc: 1, u: { name: "Beige PC · M.E.G. database", verb: "Browse the database", kind: read, page: 1322 } }
+    - { id: pc-2, m: pcdesk, x: -2.9, z: -3.8, f: 180, pc: 1, u: { name: "Beige PC", verb: "Use", kind: modem } }
+    - { id: pc-3, m: pcdesk, x: -1.4, z: -3.8, f: 180, pc: 1, u: { name: "Beige PC", verb: "Use", info: ["A chat room with one other name in it. It types: 'a/s/l?' and then 'jk. welcome to Lumiria.'"] } }
+    - { id: pc-4, m: pcdesk, x: -6.0, z: -1.6, f: 270, pc: 1, u: { name: "Beige PC", verb: "Use", info: ["Somebody's photo page, half loaded. The top third of a very good sunset."] } }
+    - { id: pc-5, m: pcdesk, x: -6.0, z: -0.1, f: 270, pc: 1, u: { name: "Beige PC", verb: "Use", info: ["Solitaire, two moves from done. You leave it for whoever started it."] } }
+    - { id: pc-6, m: pcdesk, x: -6.0, z: 1.4, f: 270, pc: 1, u: { name: "Beige PC", verb: "Use", kind: modem } }
+    - { id: arcade-1, m: arcade, x: 1.2, z: -3.95, f: 180, u: { name: "Arcade cabinet", verb: "Play", kind: arcade } }
+    - { id: arcade-2, m: arcade, x: 2.1, z: -3.95, f: 180, u: { name: "Arcade cabinet", verb: "Play", kind: arcade } }
+    - { id: vrcase, m: case, x: 5.2, z: -3.9, f: 180 }
+    - { id: vr, m: vr, x: 5.2, z: -3.9, f: 180, top: 1.0, u: { name: "VR headset", verb: "Try on", info: ["Red wireframe hills. You lift it off after a minute, seasick and grinning."] } }
+    - { id: rug, m: rug, x: 4.3, z: -1.2, f: 0 }
+    - { id: bean-1, m: beanbag, x: 3.4, z: -1.0, f: 270, seat: { w: 1, d: 0, y: 0.05 }, name: "Bean bag" }
+    - { id: bean-2, m: beanbag, x: 4.5, z: -0.2, f: 310, seat: { w: 1, d: 0, y: 0.05 }, name: "Bean bag" }
+    - { id: bean-3, m: beanbag, x: 4.2, z: -2.2, f: 240, seat: { w: 1, d: 0, y: 0.05 }, name: "Bean bag" }
+    - { id: crt, m: crt, x: 6.1, z: -1.3, f: 90, u: { name: "Console and television", verb: "Play", kind: arcade } }
+    - { id: cube, m: gamecube, x: 5.5, z: -0.6, f: 90 }
+    - { id: cork, m: cork, x: 3.4, z: 4.38, f: 0, wall: 1.0, u: { name: "Corkboard of polaroids", verb: "Look", info: ["The photography club's wall: the hollow tree in every light, the Duke mid-laugh, a cat asleep on a television.", "A note pinned under one: 'Swap you this for any photo with snow in it.'"] } }
+    - { id: bar, m: bar, x: 6.2, z: 2.2, f: 90 }
+    - { id: coffee, m: coffee, x: 6.2, z: 1.8, f: 90, top: 1.44, u: { name: "Coffee machine", verb: "Pour", info: ["It gurgles for a long time and gives you half a cup. Patchy, like the Wi-Fi."] } }
+    - { gid: l132-ware-ceramic-c-1, m: mug, x: 6.15, z: 2.5, f: 30, top: 1.44, ware: "Coffee mug" }
+    - { gid: l132-ware-ceramic-c-2, m: mug, x: 6.25, z: 2.75, f: 200, top: 1.44, ware: "Coffee mug" }
+    - { id: lava, m: lava, x: 6.2, z: 1.3, f: 0, top: 1.44 }
+    - { id: sofa, m: sofa, x: -3.0, z: 3.85, f: 0, seat: { w: 2, d: 0.05, gap: 0.65 }, name: "Sofa" }
+    - { id: plant, m: plant, x: -5.9, z: 3.7, f: 0 }
