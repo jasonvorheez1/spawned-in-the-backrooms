@@ -80,10 +80,11 @@ uses:
   l178-table-dining: { kind: table, name: "Dining table", verb: "Have a meal", c: [13.1, 0.78, -12.6] }
   l178-tap: { kind: tap, name: "Kitchen tap", verb: "Fill bottle", c: [11.78, 1.14, -0.46] }
 rest: { sanity: 40, hp: 25, fade: 1.6, cooldown: 120 }
-meal: { hunger: 45, thirst: 25, cooldown: 300 }            # the Sector's breakfast at the low table
-soak: { sanity: 12, hp: 8, warm: 30, cooldown: 180 }
+meal: { hunger: 45, thirst: 25, seatedSanity: 6, cooldown: 300 }
+soak: { sanity: 12, hp: 8, warm: 30, seconds: 6, cooldown: 180 }
 oven: { seconds: 8 }
 water: { carry: 3, fillSeconds: 3 }
+tea: { seconds: 6 }
 kitchenLight: { intensity: 4.2, distance: 8, y: 2.55, at: [[10.8, -4.5], [10.8, 0], [10.8, 4.5]] }
 slate: { x: 10.8, z: 0, w: 3.15, d: 11.9, texture: "cdn/texture-dark-grey-slate-square-floor-tiles.png", repeat: [5, 19], tint: "oklch(0.78 0.012 240)" }
 basin: { curb: 0.14, deep: -1.1, shallow: -0.5, stepZ: 1.1, hx: 3.0, hz: 1.8, wall: 0.3 }

@@ -11,6 +11,10 @@ const STREAM = `fx
 pop water rate=?mobile:30|60 on=disc(.008) life=.22..0.28 v=<0,-0.6,0> acc=grav() size=.01..0.016 col=<.82,.9,1> a=.55 sz=$size r=sprite(soft-disc,alpha,velocity,.04)`;
 const SHOJI = "wooden-shoji-paper-door-sliding-in-wood-track";
 const SLIPPERS = "cloth:shoes:slippers:f4f1ea:velvet";
+const KETTLE = "l178-tea-kettle";
+const CUP_IDS = ["l178-tea-cup-north", "l178-tea-cup-south"];
+const TEA_STEAM = `fx
+pop steam burst=7..10 on=disc(.035) life=1.4..2.2 v=up(.09..0.20) size=.035..0.06 col=<.95,.94,.90> a=0>.2:.2>0 sz=$size*(.6>2.4) r=sprite(smoke-puff,alpha)`;
 
 function leaf(ctx, instant) {
   const s = ctx.self.state, id = ctx.self.id + "/leaf", x = s.open ? s.openX : s.closedX;
@@ -118,6 +122,72 @@ function takeTowel(ctx, p) {
   }
 }
 
+function teaCups(ctx) {
+  return CUP_IDS.map((id) => ctx.getObject(id));
+}
+
+function setCup(ctx, cup, full) {
+  cup.state.full = full;
+  cup.state.verb = full ? "Take tea" : "Check";
+  cup.state.info = full ? "Roasted barley tea to drink from Aid" : "Brew a fresh pot at the kettle";
+  const surface = ctx.getObject(cup.id + "/tea");
+  if (surface) surface.visible = full;
+}
+
+export function teaReady(ctx) {
+  const s = ctx.self.state;
+  if (!s.readyAt || ctx.now() < s.readyAt) return;
+  const cups = teaCups(ctx);
+  if (cups.some((cup) => !cup)) return;
+  s.readyAt = 0;
+  s.verb = "Check tea";
+  s.info = "Two cups ready to share";
+  for (const cup of cups) setCup(ctx, cup, true);
+  const pot = ctx.getObject(ctx.self.id + "/pot");
+  if (pot) animate(ctx, pot.id, {
+    "feetPosition.y": [0, 0.09, 0.09, 0],
+    "rotation.roll": [0, 30, 30, 0],
+  }, { duration: 1.5, easing: "easeInOutSine" });
+  ctx.emit("playSound", { clip: "cdn/moodboard-realistic-gritty/sfx-water-pour-splash-short.mp3", position: ctx.self.worldFeetPosition, volume: 0.3, maxDistance: 6 });
+}
+
+function brewTea(ctx, p) {
+  const s = ctx.self.state, ps = p.state;
+  if (s.readyAt) {
+    teaReady(ctx);
+    say(ctx, p, s.readyAt ? "Give the tea a moment to steep." : "Tea's ready. Take a cup from the table.");
+    return;
+  }
+  const cups = teaCups(ctx);
+  if (cups.some((cup) => !cup)) return;
+  if (cups.some((cup) => cup.state.full)) { say(ctx, p, "There's still tea on the table."); return; }
+  const water = ps.snacks?.l178_water ?? 0;
+  if (!water) { say(ctx, p, "Fill a bottle at the kitchen tap first."); return; }
+  ps.snacks = { ...ps.snacks, l178_water: water - 1 };
+  s.readyAt = ctx.now() + L.tea.seconds * 1000;
+  s.verb = "Check kettle";
+  s.info = "Barley tea is steeping";
+  hands(ctx, p);
+  const at = ctx.self.worldFeetPosition;
+  ctx.emit("fx", { position: { x: at.x, y: at.y + 0.19, z: at.z }, script: TEA_STEAM }, { audience: { nearby: at, radius: 12 } });
+  ctx.after(L.tea.seconds, "teaReady");
+}
+
+function takeTea(ctx, p) {
+  const cup = ctx.self;
+  if (!cup.state.full) { say(ctx, p, "Empty. There's a kettle at the end of the table."); return; }
+  if ((p.state.snacks?.l178_barley_tea ?? 0) > 0) { say(ctx, p, "You already have a serving. Leave this one out for the next guest."); return; }
+  if (!collect(ctx, p, "l178_barley_tea")) return;
+  setCup(ctx, cup, false);
+  sound(ctx, "ceramic-bowl-set-on-wooden-table-chopsticks", 0.25);
+  const kettle = ctx.getObject(KETTLE);
+  if (kettle) {
+    const left = teaCups(ctx).filter((c) => c?.state.full).length;
+    kettle.state.verb = left ? "Check tea" : "Brew tea";
+    kettle.state.info = left ? "One cup left on the table" : "Needs one bottle of Kyoto tap water";
+  }
+}
+
 export function restockSlippers(ctx) {
   ctx.self.state.taken = false;
   ctx.self.state.restockAt = 0;
@@ -154,11 +224,33 @@ function restore(ctx, p, key, config, waitText) {
   return true;
 }
 
-function soak(ctx, p, feet) {
+function inShallows(feet) {
   const { x, z, w, d, surface } = L.spring;
-  if (Math.abs(feet.x - x) >= w / 2 || Math.abs(feet.z - z) >= d / 2 || feet.y > surface + 0.15) {
-    say(ctx, p, "Step into the shallows first."); return;
+  return feet && Math.abs(feet.x - x) < w / 2 && feet.z >= z + L.basin.stepZ && feet.z < z + d / 2
+    && feet.y >= L.spring.shallow - 0.12 && feet.y <= surface + 0.15;
+}
+
+function soak(ctx, p, feet) {
+  if (!inShallows(feet)) { say(ctx, p, "Step onto the shallow shelf by the south edge."); return; }
+  const ps = p.state, now = ctx.now();
+  if (now - (ps.l178soak ?? -1e12) < L.soak.cooldown * 1000) { say(ctx, p, "Give yourself time between soaks."); return; }
+  if (ps.l178soakingAt == null) ps.l178soakingAt = now;
+  const remaining = L.soak.seconds - (now - ps.l178soakingAt) / 1000;
+  say(ctx, p, "Stay in the shallows for " + Math.max(1, Math.ceil(remaining)) + " s to warm up.");
+}
+
+export function tickSoak(ctx, p) {
+  const ps = p.state, start = ps?.l178soakingAt;
+  if (start == null) return;
+  const elapsed = ctx.now() - start;
+  if (ps.dead || elapsed > (L.soak.seconds + 3) * 1000) { ps.l178soakingAt = null; return; }
+  if (!inShallows(p.worldFeetPosition ?? p.feetPosition)) {
+    ps.l178soakingAt = null;
+    say(ctx, p, "You stepped out of the spring.");
+    return;
   }
+  if (elapsed < L.soak.seconds * 1000) return;
+  ps.l178soakingAt = null;
   if (!restore(ctx, p, "l178soak", L.soak, "Give yourself time between soaks.")) return;
   p.state.chill = Math.max(0, (p.state.chill ?? 0) - L.soak.warm);
   ctx.emit("screenFlash", { color: "oklch(0.94 0.02 90)", duration: 1.1, intensity: 0.28 }, { audience: { player: p.id } });
@@ -174,6 +266,8 @@ export function onSpawn(ctx) {
     if (left > 0) ctx.after(left / 1000, "ovenReady");
     else ovenReady(ctx);
   }
+  if (s.kind === "kettle" && s.readyAt) ctx.after(Math.max(0.1, (s.readyAt - ctx.now()) / 1000), "teaReady");
+  if (s.kind === "teaCup") setCup(ctx, ctx.self, !!s.full);
   if (s.kind === "slippers" && s.taken) {
     const left = s.restockAt - ctx.now();
     if (left > 0) { ctx.self.visible = false; ctx.after(left / 1000, "restockSlippers"); }
@@ -197,6 +291,8 @@ export const ears = {
         break;
       case "tap": fillBottle(ctx, p); break;
       case "oven": useOven(ctx, p); break;
+      case "kettle": brewTea(ctx, p); break;
+      case "teaCup": takeTea(ctx, p); break;
       case "towels": takeTowel(ctx, p); break;
       case "slippers": takeSlippers(ctx, p); break;
       case "spring": soak(ctx, p, feet); break;
@@ -204,6 +300,10 @@ export const ears = {
         if (!restore(ctx, p, "l178meal", L.meal, "The kitchen hasn't set out another meal yet.")) break;
         p.state.hunger = Math.min(100, (p.state.hunger ?? 100) + L.meal.hunger);
         p.state.thirst = Math.min(100, (p.state.thirst ?? 100) + L.meal.thirst);
+        if (p.state.sit?.phase === "sat" && p.state.sit.id?.startsWith("l178-zabuton-")) {
+          const max = maxSan(p.state.level ?? 1, p.state);
+          p.state.sanity = Math.min(max, (p.state.sanity ?? max) + L.meal.seatedSanity);
+        }
         sound(ctx, "ceramic-bowl-set-on-wooden-table-chopsticks", 0.45);
         say(ctx, p, "Grilled fish, rice and pickles. There's always a place for a traveller.");
         break;

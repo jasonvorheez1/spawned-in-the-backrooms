@@ -93,4 +93,5 @@ l178_miso: { name: "Miso soup", info: "Tofu, wakame, spring onion. Still warm in
 l178_bento: { name: "Sector bento", info: "Rice, tamagoyaki, pickles and grilled mackerel in a lacquer box. Irawan's people pack one for anyone walking on", hunger: 38, thirst: -4, sanity: 12, hp: 14, color: "#8a3a2a" }
 l178_toasted_onigiri: { name: "Toasted salmon onigiri", info: "A crisp edge and a warm center. Reduces chill by 12.", hunger: 29, thirst: -2, sanity: 10, hp: 8, color: "#b6834e", warm: 12 }
 l178_water: { name: "Kyoto tap water", info: "A bottle filled at the kitchen sink. Restores 20 thirst.", thirst: 20, drink: true, color: "#b7d7df" }
+l178_barley_tea: { name: "Roasted barley tea", info: "Toasty and unsweetened. Restores 12 thirst and 4 sanity and reduces chill by 8.", thirst: 12, sanity: 4, warm: 8, drink: true, color: "#be914c" }
 l178_towel: { name: "Fresh cotton towel", verb: "Use", info: "Wrap up after a soak. Soothes aches, restores 5 sanity and reduces chill by 15.", hp: 2, sanity: 5, warm: 15, aid: true, color: "#e6dfcd" }

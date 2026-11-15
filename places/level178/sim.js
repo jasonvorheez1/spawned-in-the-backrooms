@@ -7,12 +7,13 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import { setQuest, tellQuest, finishLevelQuest } from "../../scripts/lib/quests.js";
+import { tickSoak } from "../../scripts/l178-prop.js";
 const Q = { key: "l178q", id: L.quest.id, name: L.quest.name };
 const mk = (u, label) => ({ place: "level178", x: L.uses[u].c[0], y: 0, z: L.uses[u].c[2], label });
 function quest(ctx, p) { // A Place to Rest: eat at the low table, then doze on a futon (stamps written by scripts/l178-prop.js)
   const ps = p.state; if (!ps || ps[Q.key] === 99) return;
   const front = () => { ps.qtrack = [Q.id, ...(ps.qtrack ?? []).filter((k) => k !== Q.id)].slice(0, 3); };
-  if (!ps[Q.key]) { ps[Q.key] = 1; setQuest(ps, Q.id, { name: Q.name, step: "Irawan's crew leaves breakfast out. Sit at the low table in the dining room", mark: mk("l178-table-dining", "Dining room") }); front(); tellQuest(ctx, p, "New quest: A Place to Rest"); return; }
+  if (!ps[Q.key]) { ps[Q.key] = 1; setQuest(ps, Q.id, { name: Q.name, step: "Irawan's crew leaves breakfast out. Look at the low table in the dining room and choose Have a meal", mark: mk("l178-table-dining", "Dining room") }); front(); tellQuest(ctx, p, "New quest: A Place to Rest"); return; }
   if (ps[Q.key] === 1 && ps.l178meal) { ps[Q.key] = 2; setQuest(ps, Q.id, { name: Q.name, step: "Lie down on a futon in the north bedrooms", mark: mk("l178-futon-2", "Bedrooms") }); return; }
   if (ps[Q.key] === 2 && ps.l178rest && ps.l178rest >= ps.l178meal) finishLevelQuest(ctx, p, Q.key, Q, { xp: 100, cents: 0, items: [], by: "survivors", text: "Quest Completed: A Place to Rest" });
 }
@@ -30,6 +31,9 @@ export function tick(ctx) {
   if ((s.layoutV ?? 0) < L.layoutV + 1) { s.layoutV = L.layoutV + 1; for (const id of IDS) if (!ctx.place.objects[id]) person(ctx, id); }
   if (!ctx.place.players.length) return;
   if (every(ctx, "l178people", 5000)) keepPeople(ctx, IDS, person);
-  for (const p of ctx.place.players) quest(ctx, p);
+  for (const p of ctx.place.players) {
+    tickSoak(ctx, p);
+    quest(ctx, p);
+  }
   tickChatter(ctx, CHATTER.level178 ?? [], Object.fromEntries(IDS.map((id) => [id, L.people[id]?.voice ?? id]))); // the house talks in its own words, never the Backrooms pool
 }

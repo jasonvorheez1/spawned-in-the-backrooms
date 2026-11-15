@@ -1622,29 +1622,33 @@ l178-lantern-4:
   model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
   tags: [l178]
 l178-lantern-5:
-  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  children: [{behavior: scripts/prop-part.js, feetPosition: {x: 0, y: -0.33, z: 0}, id: prop-motion-light, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}, state: {axis: light, goal: 1, value: 1, power: 2.2}}]
   feetPosition: {x: 13.1, y: 2.93, z: -12.6}
   id: l178-lantern-5
   model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
-  tags: [l178]
+  state: {c: {x: 13.1, y: 2.61, z: -12.6}, lampOn: true, name: Dining lantern, propLamp: true, verb: Turn off}
+  tags: [l178, usable]
 l178-lantern-6:
-  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  children: [{behavior: scripts/prop-part.js, feetPosition: {x: 0, y: -0.33, z: 0}, id: prop-motion-light, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}, state: {axis: light, goal: 1, value: 1, power: 2.2}}]
   feetPosition: {x: -6.1, y: 2.93, z: -13}
   id: l178-lantern-6
   model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
-  tags: [l178]
+  state: {c: {x: -6.1, y: 2.61, z: -13}, lampOn: true, name: Bedroom lantern, propLamp: true, verb: Turn off}
+  tags: [l178, usable]
 l178-lantern-7:
-  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  children: [{behavior: scripts/prop-part.js, feetPosition: {x: 0, y: -0.33, z: 0}, id: prop-motion-light, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}, state: {axis: light, goal: 1, value: 1, power: 2.2}}]
   feetPosition: {x: 0, y: 2.93, z: -13}
   id: l178-lantern-7
   model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
-  tags: [l178]
+  state: {c: {x: 0, y: 2.61, z: -13}, lampOn: true, name: Bedroom lantern, propLamp: true, verb: Turn off}
+  tags: [l178, usable]
 l178-lantern-8:
-  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  children: [{behavior: scripts/prop-part.js, feetPosition: {x: 0, y: -0.33, z: 0}, id: prop-motion-light, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}, state: {axis: light, goal: 1, value: 1, power: 2.2}}]
   feetPosition: {x: 6.1, y: 2.93, z: -13}
   id: l178-lantern-8
   model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
-  tags: [l178]
+  state: {c: {x: 6.1, y: 2.61, z: -13}, lampOn: true, name: Bedroom lantern, propLamp: true, verb: Turn off}
+  tags: [l178, usable]
 l178-lantern-9:
   children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
   feetPosition: {x: -13, y: 2.93, z: 0}
@@ -2667,7 +2671,7 @@ l178-spring:
   material: {color: oklch(0.82 0.07 185), kind: water, opacity: 0.5, waveIntensity: 0.12}
   primitive: {depth: 3.6, height: 1.3, kind: box, width: 6}
   tags: [swimwater, l178, l178-prop, usable]
-  state: {c: {x: 0, y: 0.19, z: 1.22}, kind: spring, name: Hot spring, verb: Soak, info: Step into the shallows}
+  state: {c: {x: 0, y: 0.19, z: 1.22}, kind: spring, name: Hot spring, verb: Soak, info: Stay on the shallow shelf to warm up}
   behavior: [scripts/l178-prop.js]
 l178-stair:
   feetPosition: {x: -8.6, y: 0.45, z: -10.2}
@@ -2721,12 +2725,15 @@ l178-stone-lantern:
   tags: [l178]
 l178-table-dining:
   behavior: [scripts/l178-prop.js]
+  children:
+    - {id: bowl-north, feetPosition: {x: -0.48, y: 0.345, z: -0.24}, model: /cdn/value.0370b66690b572e03bd865f3a2eebcb7d8c9b0cc2bc5e2ffcef1eb57bd789d06a.glb}
+    - {id: bowl-south, feetPosition: {x: -0.48, y: 0.345, z: 0.24}, model: /cdn/value.0370b66690b572e03bd865f3a2eebcb7d8c9b0cc2bc5e2ffcef1eb57bd789d06a.glb}
   feetPosition: {x: 13.1, y: 0.48, z: -12.6}
   id: l178-table-dining
   model: /cdn/value.01fc9ac89d1291ebeb8a223fc510907975fff1addf3eb0e45e9d81305ad1ee96.glb
   physics: static
   rotation: {yaw: 0}
-  state: {c: {x: 13.1, y: 0.78, z: -12.6}, kind: table, name: Dining table, verb: Have a meal}
+  state: {c: {x: 12.82, y: 0.83, z: -12.6}, kind: table, name: Dining table, verb: Have a meal, info: Take a floor cushion for a quieter meal}
   tags: [l178, l178-prop, usable]
 l178-tap:
   behavior: [scripts/l178-prop.js]
@@ -2802,6 +2809,32 @@ l178-tatami-9:
   model: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb
   rotation: {yaw: 0}
   tags: [l178]
+l178-tea-cup-north:
+  behavior: [scripts/l178-prop.js]
+  children:
+    - {id: tea, feetPosition: {x: 0, y: 0.071, z: 0}, primitive: {kind: cylinder, radiusTop: 0.03, radiusBottom: 0.03, height: 0.003}, material: {color: '#a56829', roughness: 0.2}, visible: false}
+  feetPosition: {x: 13.26, y: 0.825, z: -12.85}
+  id: l178-tea-cup-north
+  model: /cdn/value.603e20634b7c61679301843cedd4119e6e70ba007dbde5f923a21faf2f4636d7.glb
+  state: {c: {x: 13.26, y: 0.90, z: -12.85}, kind: teaCup, full: false, name: Tea cup, verb: Check, info: Brew a fresh pot at the kettle}
+  tags: [l178, l178-prop, usable]
+l178-tea-cup-south:
+  behavior: [scripts/l178-prop.js]
+  children:
+    - {id: tea, feetPosition: {x: 0, y: 0.071, z: 0}, primitive: {kind: cylinder, radiusTop: 0.03, radiusBottom: 0.03, height: 0.003}, material: {color: '#a56829', roughness: 0.2}, visible: false}
+  feetPosition: {x: 13.26, y: 0.825, z: -12.35}
+  id: l178-tea-cup-south
+  model: /cdn/value.603e20634b7c61679301843cedd4119e6e70ba007dbde5f923a21faf2f4636d7.glb
+  state: {c: {x: 13.26, y: 0.90, z: -12.35}, kind: teaCup, full: false, name: Tea cup, verb: Check, info: Brew a fresh pot at the kettle}
+  tags: [l178, l178-prop, usable]
+l178-tea-kettle:
+  behavior: [scripts/l178-prop.js]
+  children:
+    - {id: pot, feetPosition: {x: 0, y: 0, z: 0}, model: /cdn/value.810914cfe1e05887a3e49d79f7c7c720cccf01197f4b954ee255229fed98a445.glb}
+  feetPosition: {x: 13.61, y: 0.825, z: -12.6}
+  id: l178-tea-kettle
+  state: {c: {x: 13.61, y: 0.95, z: -12.6}, kind: kettle, name: Tea kettle, verb: Brew tea, info: Needs one bottle of Kyoto tap water, readyAt: 0}
+  tags: [l178, l178-prop, usable]
 l178-to-hub:
   behavior: scripts/level-door.js
   feetPosition: {x: 0, y: 0.45, z: 16.45}
