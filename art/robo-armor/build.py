@@ -21,20 +21,22 @@ for sex in SEXES:
     zs = [(body.matrix_world @ v.co).z for v in body.data.vertices]; H = max(zs) - min(zs); z0 = min(zs)
     xs = [abs((body.matrix_world @ v.co).x) for v in body.data.vertices]
     # torso band by share of height (feet 0 .. ears 1): hips to collar
-    lo, hi = z0 + H * (0.40 if sex == "f" else 0.40), z0 + H * (0.635 if sex == "f" else 0.665)
+    bw = lambda n: arm.matrix_world @ arm.data.bones[n].head_local
+    lo, hi = bw("mixamorig:Hips").z - 0.025, bw("mixamorig:Neck").z + 0.005   # hips to the collar, by her own bones (the Body mesh stops at the neck; the Head is its own mesh)
+    sx, ex = bw("mixamorig:LeftArm").x, bw("mixamorig:LeftForeArm").x
+    H = hi - lo + 0.3
     sh = body.data.copy(); ar = bpy.data.objects.new("Armor", sh); bpy.context.collection.objects.link(ar)
     if sh.shape_keys: ar.shape_key_clear()
     BW = body.matrix_world.copy(); sh.transform(BW)   # work in world metres (Z-up, front -Y); handed back to the body's own space before export
     bm = bmesh.new(); bm.from_mesh(sh)
     # find the torso half-width at chest height: arm verts are those farther out than the ribcage
-    chest = [abs(v.co.x) for v in bm.verts if abs(v.co.z - (lo + hi) / 2) < H * 0.03]
-    chest.sort(); rib = chest[int(len(chest) * 0.55)] if chest else 0.12
+    rib = sx
     kill = []
     for f in bm.faces:
         c = f.calc_center_median()
         inz = lo < c.z < hi
-        cap = c.z > hi - H * 0.06 and abs(c.x) < rib * 1.9   # shoulder caps reach a little onto the upper arm
-        if not (inz and (abs(c.x) < rib * 1.25 or cap)): kill.append(f)
+        cap = c.z > hi - 0.075 and abs(c.x) < (sx + ex) / 2   # shoulder caps reach a little onto the upper arm
+        if not (inz and (abs(c.x) < rib * 1.08 or cap)): kill.append(f)
     bmesh.ops.delete(bm, geom=kill, context="FACES")
     # keep the biggest island (the tail root or a stray finger tip falls away)
     bm.verts.ensure_lookup_table(); seen = set(); best = []
@@ -49,7 +51,7 @@ for sex in SEXES:
         if len(isl) > len(best): best = isl
     keep = set(best); bmesh.ops.delete(bm, geom=[v for v in bm.verts if v not in keep], context="VERTS")
     bm.normal_update()
-    for v in bm.verts: v.co += v.normal * (0.022 if v.co.z < hi - H * 0.05 else 0.03)
+    for v in bm.verts: v.co += v.normal * (0.02 if v.co.z < hi - 0.06 else 0.028)
     bm.to_mesh(sh); bm.free()
     for m in list(sh.materials): pass
     sh.materials.clear()
@@ -57,7 +59,7 @@ for sex in SEXES:
     ar.data.materials.append(mat("brass", (0.78, 0.55, 0.22, 1), 1.0, 0.3))
     for p in sh.polygons:
         c = p.center
-        p.material_index = 1 if (c.z < lo + H * 0.03 or (abs(c.x) < 0.012)) else 0   # brass hem and the centre seam
+        p.material_index = 1 if (c.z < lo + 0.035 or (abs(c.x) < 0.012)) else 0   # brass hem and the centre seam
     sm = ar.modifiers.new("sm", "SMOOTH"); sm.iterations = 6; sm.factor = 0.6
     so = ar.modifiers.new("so", "SOLIDIFY"); so.thickness = 0.012; so.offset = 1
     bpy.context.view_layer.objects.active = ar
@@ -68,12 +70,12 @@ for sex in SEXES:
     for i, v in enumerate(sh.vertices): kd.insert(v.co, i)
     kd.balance()
     studs = []
-    hemz = lo + H * 0.03
+    hemz = lo + 0.03
     ring = [v for v in sh.vertices if abs(v.co.z - hemz) < H * 0.012]
     ring.sort(key=lambda v: math.atan2(v.co.y, v.co.x))
     for k in range(0, len(ring), max(1, len(ring) // 14)): studs.append(ring[k].co.copy() + ring[k].normal * 0.004)
     for k in range(6):
-        z = lo + H * 0.06 + k * (hi - lo - H * 0.1) / 6
+        z = lo + 0.07 + k * (hi - lo - 0.12) / 6
         cand = [v for v in sh.vertices if abs(v.co.z - z) < H * 0.01 and abs(v.co.x) < 0.03 and v.co.y < 0]
         if cand: c = min(cand, key=lambda v: v.co.y); studs.append(c.co.copy() + Vector((0.025, -0.002, 0))); studs.append(c.co.copy() + Vector((-0.025, -0.002, 0)))
     bm = bmesh.new(); bm.from_mesh(sh)
@@ -93,7 +95,7 @@ for sex in SEXES:
     s = bpy.context.scene; s.render.engine = "CYCLES"; s.cycles.samples = 16; s.render.resolution_x = s.render.resolution_y = 512
     w = bpy.data.worlds.new("w"); s.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[0].default_value = (0.55, 0.55, 0.6, 1)
     cam = bpy.data.objects.new("c", bpy.data.cameras.new("c")); s.collection.objects.link(cam); s.camera = cam
-    mid = (lo + hi) / 2; cam.location = (0.9, -1.4, mid + 0.25); d = Vector((0, 0, mid)) - cam.location; cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
+    mid = (lo + hi) / 2; cam.location = (0.55, -0.9, mid + 0.15); d = Vector((0, 0, mid)) - cam.location; cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
     l = bpy.data.objects.new("l", bpy.data.lights.new("l", "SUN")); s.collection.objects.link(l); l.rotation_euler = (0.7, 0.2, 0.6)
     s.render.filepath = f"/tmp/robo-{sex}.png"; bpy.ops.render.render(write_still=True)
     sh.transform(BW.inverted()); ar.matrix_world = BW
