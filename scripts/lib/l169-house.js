@@ -80,7 +80,7 @@ export function layHouse(ctx, put, L) {
   // living: rug, bench, the map table and the board of routes
   { // basement crates you search (Shelly, Nov 15: "make some stuff lootables"): the shared container loot flow, E opens it
     const CR = "/cdn/value.64a96b8ea948f646874ae3d6f6e3f8139fcef1699363a1eb7523a8d82f929995.glb", XM = r.living[1], zs = r.living[3] - 0.2, BF = F - 3;
-    const loot = [["Ferry's supply crate", "almond,almond,bandage,canned_beans,cash:6"], ["Crate of spares", "battery,battery,bobbypin,flashlight,cloth"], ["Dusty crate", "almond,cloth,bobbypin,cash:3"]];
+    const loot = [["Ferry's supply crate", "almond,almond,bandage,beans,cash:6"], ["Crate of spares", "battery,battery,bobbypin,bandage"], ["Dusty crate", "almond,bobbypin,beans,cash:3"]];
     [[XM + 7.3, zs - 0.4, 0, 6], [XM + 7.25, zs - 0.4, 0.62, -8], [XM + 8.15, zs - 0.35, 0, 15]].forEach(([x, z, up, yaw], i) =>
       put(`l169-house-loot-${i}`, { tags: ["container"], feetPosition: { x, y: BF + up, z }, rotation: { yaw }, model: { id: CR }, castShadow: true,
         layout: { box: { min: { x: -0.4, y: 0, z: -0.3 }, max: { x: 0.4, y: 0.6, z: 0.3 } } }, physics: "static",
