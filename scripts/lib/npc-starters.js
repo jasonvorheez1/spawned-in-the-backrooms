@@ -17,6 +17,7 @@ import { l11Choices } from './level11-quests.js'
 import { l8Choices } from './level8-quests.js'
 import { l61Choices } from './level61-quests.js'
 import { l178Choices } from './level178-quests.js'
+import { l132Choices } from './l132-quests.js'
 import { wireCount } from './level21-quests.js'
 
 const short = (it) => String(it?.id ?? '').split('/').pop()
@@ -31,7 +32,7 @@ export function realtyChoice(ctx, it, s, list) {
 export function questChoices(ctx, it, s) {
   if (!it) return []
   const id = short(it)
-  const qChoices = [...remodelChoices(id, s), ...l13Choices(id, s), ...l31Choices(id, s), ...l70Choices(id, s), ...beastChoices(ctx, it, s), ...hubChoices(ctx, it, s), ...l61Choices(id, s), ...l178Choices(id, s), ...hubErrandChoices(it, s), ...fieldErrandChoices(ctx, it, s), ...factionChoices(it, s), ...megAssignmentChoices(it, s)]
+  const qChoices = [...remodelChoices(id, s), ...l13Choices(id, s), ...l31Choices(id, s), ...l70Choices(id, s), ...beastChoices(ctx, it, s), ...hubChoices(ctx, it, s), ...l61Choices(id, s), ...l178Choices(id, s), ...l132Choices(id, s), ...hubErrandChoices(it, s), ...fieldErrandChoices(ctx, it, s), ...factionChoices(it, s), ...megAssignmentChoices(it, s)]
   qChoices.push(...ch2Choices(ctx, it, s), ...l109Choices(it, s))
   if (id.startsWith('l10-') || id.startsWith('l11-')) {
     qChoices.push(...l10Choices(id, s), ...l11Choices(id, s)) // Levels 10 and 11, written in scripts/lib/level10-quests.js and level11-quests.js

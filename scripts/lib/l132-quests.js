@@ -8,6 +8,7 @@ import DLG from "./data/dlg-level132.yml";
 import { advanceQuest, finishLevelQuest } from "./quests.js";
 import { bookOf, holds, keep } from "./l132-barter.js";
 import { rollCheck } from "./npc-talk.js";
+import { animate } from "builtin/tween";
 const ME = "scripts/lib/l132-quests.js";
 const line = (who, k) => DLG[who]?.quest?.[k] ?? "";
 const MK = (k) => ({ place: "level132", id: `l132-q-${k}`, x: Q.marks[k].x, y: 0, z: Q.marks[k].z, label: Q.marks[k].label });
@@ -140,7 +141,7 @@ export function handleDialogueQuest132(ctx, p, npc, text) {
       const d = ctx.getObject("l132-duke"), o = p.feetPosition;
       if (d && near(d.feetPosition, o.x, o.z, Q.dukeRange)) {
         s.l132 = { ...bookOf(s), dukeCurious: true };
-        d.state = { ...d.state, admire: { x: Q.knot.at[0] + 1.5, z: Q.knot.at[2] - 3, at: ctx.now() } };
+        animate(ctx, d, { "feetPosition.x": Q.knot.at[0] + 1.5, "feetPosition.z": Q.knot.at[2] - 3.5 }, { duration: 8, easing: "easeInOutSine" });
         ctx.emit("damageNumber", { position: { x: d.feetPosition.x, y: d.feetPosition.y + 2.8, z: d.feetPosition.z }, text: "Ooh, what's that in my tree?", color: "#e8c766" });
       }
       s.keyItems = [...new Set([...(s.keyItems ?? []), Q.signal.pass])];
