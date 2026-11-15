@@ -32,11 +32,11 @@ export function interactiveSpec(o){
   return out
  }
  const row=A[kind];if(!row)return o
- const size=sizeOf(o,kind),ratio=size.map((n,i)=>n/row.size[i]),scaled=(v)=>vector(v.map((n,i)=>n*ratio[i])),goal=state.containerOpen?1:0
+ const size=sizeOf(o,kind),rs=Array.isArray(row.size)?row.size:size,ratio=size.map((n,i)=>n/(rs[i]||n||1)),scaled=(v)=>vector(v.map((n,i)=>n*ratio[i])),goal=state.containerOpen?1:0
  out.tags=[...new Set([...tags,'container'])];state.propArt=kind;state.items??='';out.model=null;out.primitive=null
  out.layout={box:{min:{x:-size[0]/2,y:0,z:-size[2]/2},max:{x:size[0]/2,y:size[1],z:size[2]/2}}}
  const orig=P.containers?.[kind]??(typeof o.model==='string'?o.model:o.model?.id) // Shelly Nov 12: the split code body read blocky; the detailed model stays whole, nothing swaps on a search
- if(orig){children.push({id:SHELL,physics:'none',model:orig,layout:{box:{min:{x:-size[0]/2,y:0,z:-size[2]/2},max:{x:size[0]/2,y:size[1],z:size[2]/2}}},castShadow:true});return out}
+ if(orig||!row.body||!Array.isArray(row.parts)){if(!orig)return o;children.push({id:SHELL,physics:'none',model:orig,layout:{box:{min:{x:-size[0]/2,y:0,z:-size[2]/2},max:{x:size[0]/2,y:size[1],z:size[2]/2}}},castShadow:true});return out}
  children.push({id:SHELL,physics:'none',model:row.body,scale:vector(ratio),feetPosition:scaled([row.center[0],row.center[1]-row.height/2,row.center[2]]),castShadow:true})
  for(const part of row.parts){const pivot=scaled(part.pivot),travel=part.axis==='slide'?part.travel*ratio[2]:part.travel
   children.push({id:PART+part.id,physics:'none',feetPosition:{...pivot,...(part.axis==='slide'?{z:pivot.z+travel*goal}:{})},rotation:part.axis==='slide'?0:{[part.axis]:travel*goal},behavior:'scripts/prop-part.js',state:{axis:part.axis,travel,rest:pivot,goal,value:goal},children:[{id:'mesh',physics:'none',model:part.file,feetPosition:scaled([part.offset[0],part.offset[1]-part.height/2,part.offset[2]]),scale:vector(ratio),castShadow:true}]})
