@@ -5,6 +5,14 @@ l178-basin:
   model: /cdn/value.f5ef79c9a264aad2ed5afd716936158eb41fec417a7998827ad2a462350a3177.glb
   physics: {body: static, collider: mesh}
   tags: [l178]
+l178-door-hub:
+  feetPosition: {x: -0.455, y: 0.47, z: 17}
+  id: l178-door-hub
+  model: /cdn/value.c6ee8b60927a8849a2731a3e2e6fb9ed6b43cc13e0feb371e7d9366c7b391a69.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  state: {to: thehub}
+  tags: [l178, l178-door]
 l178-engawa-e0:
   feetPosition: {x: 8.1, y: 0, z: -6}
   id: l178-engawa-e0
@@ -428,6 +436,614 @@ l178-floor-w4:
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
+  tags: [l178]
+l178-out-e0:
+  feetPosition: {x: 17, y: 0.45, z: -16.105263157894736}
+  id: l178-out-e0
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e1:
+  feetPosition: {x: 17, y: 0.45, z: -14.31578947368421}
+  id: l178-out-e1
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e10:
+  feetPosition: {x: 17, y: 0.45, z: 1.7894736842105274}
+  id: l178-out-e10
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e11:
+  feetPosition: {x: 17, y: 0.45, z: 3.5789473684210513}
+  id: l178-out-e11
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e12:
+  feetPosition: {x: 17, y: 0.45, z: 5.368421052631579}
+  id: l178-out-e12
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e13:
+  feetPosition: {x: 17, y: 0.45, z: 7.157894736842106}
+  id: l178-out-e13
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e14:
+  feetPosition: {x: 17, y: 0.45, z: 8.94736842105263}
+  id: l178-out-e14
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e15:
+  feetPosition: {x: 17, y: 0.45, z: 10.736842105263158}
+  id: l178-out-e15
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e16:
+  feetPosition: {x: 17, y: 0.45, z: 12.526315789473685}
+  id: l178-out-e16
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e17:
+  feetPosition: {x: 17, y: 0.45, z: 14.315789473684212}
+  id: l178-out-e17
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e18:
+  feetPosition: {x: 17, y: 0.45, z: 16.10526315789474}
+  id: l178-out-e18
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e2:
+  feetPosition: {x: 17, y: 0.45, z: -12.526315789473685}
+  id: l178-out-e2
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e3:
+  feetPosition: {x: 17, y: 0.45, z: -10.736842105263158}
+  id: l178-out-e3
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e4:
+  feetPosition: {x: 17, y: 0.45, z: -8.947368421052632}
+  id: l178-out-e4
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e5:
+  feetPosition: {x: 17, y: 0.45, z: -7.157894736842104}
+  id: l178-out-e5
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e6:
+  feetPosition: {x: 17, y: 0.45, z: -5.368421052631579}
+  id: l178-out-e6
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e7:
+  feetPosition: {x: 17, y: 0.45, z: -3.578947368421053}
+  id: l178-out-e7
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e8:
+  feetPosition: {x: 17, y: 0.45, z: -1.7894736842105257}
+  id: l178-out-e8
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-e9:
+  feetPosition: {x: 17, y: 0.45, z: 0}
+  id: l178-out-e9
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n0:
+  feetPosition: {x: -16.105263157894736, y: 0.45, z: -17}
+  id: l178-out-n0
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n1:
+  feetPosition: {x: -14.31578947368421, y: 0.45, z: -17}
+  id: l178-out-n1
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n10:
+  feetPosition: {x: 1.7894736842105274, y: 0.45, z: -17}
+  id: l178-out-n10
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n11:
+  feetPosition: {x: 3.5789473684210513, y: 0.45, z: -17}
+  id: l178-out-n11
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n12:
+  feetPosition: {x: 5.368421052631579, y: 0.45, z: -17}
+  id: l178-out-n12
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n13:
+  feetPosition: {x: 7.157894736842106, y: 0.45, z: -17}
+  id: l178-out-n13
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n14:
+  feetPosition: {x: 8.94736842105263, y: 0.45, z: -17}
+  id: l178-out-n14
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n15:
+  feetPosition: {x: 10.736842105263158, y: 0.45, z: -17}
+  id: l178-out-n15
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n16:
+  feetPosition: {x: 12.526315789473685, y: 0.45, z: -17}
+  id: l178-out-n16
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n17:
+  feetPosition: {x: 14.315789473684212, y: 0.45, z: -17}
+  id: l178-out-n17
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n18:
+  feetPosition: {x: 16.10526315789474, y: 0.45, z: -17}
+  id: l178-out-n18
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n2:
+  feetPosition: {x: -12.526315789473685, y: 0.45, z: -17}
+  id: l178-out-n2
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n3:
+  feetPosition: {x: -10.736842105263158, y: 0.45, z: -17}
+  id: l178-out-n3
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n4:
+  feetPosition: {x: -8.947368421052632, y: 0.45, z: -17}
+  id: l178-out-n4
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n5:
+  feetPosition: {x: -7.157894736842104, y: 0.45, z: -17}
+  id: l178-out-n5
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n6:
+  feetPosition: {x: -5.368421052631579, y: 0.45, z: -17}
+  id: l178-out-n6
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n7:
+  feetPosition: {x: -3.578947368421053, y: 0.45, z: -17}
+  id: l178-out-n7
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n8:
+  feetPosition: {x: -1.7894736842105257, y: 0.45, z: -17}
+  id: l178-out-n8
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-n9:
+  feetPosition: {x: 0, y: 0.45, z: -17}
+  id: l178-out-n9
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s0:
+  feetPosition: {x: -16.105263157894736, y: 0.45, z: 17}
+  id: l178-out-s0
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s1:
+  feetPosition: {x: -14.31578947368421, y: 0.45, z: 17}
+  id: l178-out-s1
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s10:
+  feetPosition: {x: 1.7894736842105274, y: 0.45, z: 17}
+  id: l178-out-s10
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s11:
+  feetPosition: {x: 3.5789473684210513, y: 0.45, z: 17}
+  id: l178-out-s11
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s12:
+  feetPosition: {x: 5.368421052631579, y: 0.45, z: 17}
+  id: l178-out-s12
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s13:
+  feetPosition: {x: 7.157894736842106, y: 0.45, z: 17}
+  id: l178-out-s13
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s14:
+  feetPosition: {x: 8.94736842105263, y: 0.45, z: 17}
+  id: l178-out-s14
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s15:
+  feetPosition: {x: 10.736842105263158, y: 0.45, z: 17}
+  id: l178-out-s15
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s16:
+  feetPosition: {x: 12.526315789473685, y: 0.45, z: 17}
+  id: l178-out-s16
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s17:
+  feetPosition: {x: 14.315789473684212, y: 0.45, z: 17}
+  id: l178-out-s17
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s18:
+  feetPosition: {x: 16.10526315789474, y: 0.45, z: 17}
+  id: l178-out-s18
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s2:
+  feetPosition: {x: -12.526315789473685, y: 0.45, z: 17}
+  id: l178-out-s2
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s3:
+  feetPosition: {x: -10.736842105263158, y: 0.45, z: 17}
+  id: l178-out-s3
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s4:
+  feetPosition: {x: -8.947368421052632, y: 0.45, z: 17}
+  id: l178-out-s4
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s5:
+  feetPosition: {x: -7.157894736842104, y: 0.45, z: 17}
+  id: l178-out-s5
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s6:
+  feetPosition: {x: -5.368421052631579, y: 0.45, z: 17}
+  id: l178-out-s6
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s7:
+  feetPosition: {x: -3.578947368421053, y: 0.45, z: 17}
+  id: l178-out-s7
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s8:
+  feetPosition: {x: -1.7894736842105257, y: 0.45, z: 17}
+  id: l178-out-s8
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-s9:
+  feetPosition: {x: 0, y: 0.45, z: 17}
+  id: l178-out-s9
+  model: /cdn/value.e0123855622d23a185de02739bf3eadfc79140f07ae180cb3d73494025dcedf0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 0}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w0:
+  feetPosition: {x: -17, y: 0.45, z: -16.105263157894736}
+  id: l178-out-w0
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w1:
+  feetPosition: {x: -17, y: 0.45, z: -14.31578947368421}
+  id: l178-out-w1
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w10:
+  feetPosition: {x: -17, y: 0.45, z: 1.7894736842105274}
+  id: l178-out-w10
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w11:
+  feetPosition: {x: -17, y: 0.45, z: 3.5789473684210513}
+  id: l178-out-w11
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w12:
+  feetPosition: {x: -17, y: 0.45, z: 5.368421052631579}
+  id: l178-out-w12
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w13:
+  feetPosition: {x: -17, y: 0.45, z: 7.157894736842106}
+  id: l178-out-w13
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w14:
+  feetPosition: {x: -17, y: 0.45, z: 8.94736842105263}
+  id: l178-out-w14
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w15:
+  feetPosition: {x: -17, y: 0.45, z: 10.736842105263158}
+  id: l178-out-w15
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w16:
+  feetPosition: {x: -17, y: 0.45, z: 12.526315789473685}
+  id: l178-out-w16
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w17:
+  feetPosition: {x: -17, y: 0.45, z: 14.315789473684212}
+  id: l178-out-w17
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w18:
+  feetPosition: {x: -17, y: 0.45, z: 16.10526315789474}
+  id: l178-out-w18
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w2:
+  feetPosition: {x: -17, y: 0.45, z: -12.526315789473685}
+  id: l178-out-w2
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w3:
+  feetPosition: {x: -17, y: 0.45, z: -10.736842105263158}
+  id: l178-out-w3
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w4:
+  feetPosition: {x: -17, y: 0.45, z: -8.947368421052632}
+  id: l178-out-w4
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w5:
+  feetPosition: {x: -17, y: 0.45, z: -7.157894736842104}
+  id: l178-out-w5
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w6:
+  feetPosition: {x: -17, y: 0.45, z: -5.368421052631579}
+  id: l178-out-w6
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w7:
+  feetPosition: {x: -17, y: 0.45, z: -3.578947368421053}
+  id: l178-out-w7
+  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w8:
+  feetPosition: {x: -17, y: 0.45, z: -1.7894736842105257}
+  id: l178-out-w8
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
+  tags: [l178]
+l178-out-w9:
+  feetPosition: {x: -17, y: 0.45, z: 0}
+  id: l178-out-w9
+  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 0.983, y: 1, z: 1}
   tags: [l178]
 l178-roof-0:
   feetPosition: {x: 0, y: 0.45, z: 0}
