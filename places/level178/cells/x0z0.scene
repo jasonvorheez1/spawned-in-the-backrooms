@@ -3202,12 +3202,13 @@ l178-story-hairpin:
 l178-story-kamidana:
   behavior: [scripts/l178-prop.js]
   castShadow: true
-  feetPosition: {x: -2.3, y: 2.05, z: 16.95}
+  feetPosition: {x: -2.3, y: 1.85, z: 17}
   id: l178-story-kamidana
   layout: {box: {max: {x: 0.5, y: 0.82, z: 0.18}, min: {x: -0.5, y: 0, z: -0.18}}}
   model: /cdn/value.4d2faad8c18b0f45887c5902a49096bf54a143cd0ce7d2d87fc723ada8999320.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 180}
+  scale: 1.8
   state: {kind: qspot, name: Kamidana, verb: Look, why: Household shrine. Fresh rice and water in the little dishes. Changed this morning.}
   tags: [l178-story, usable]
 l178-story-kimono-stand:
@@ -3293,12 +3294,12 @@ l178-story-ricesack:
 l178-story-rota:
   behavior: scripts/l178-prop.js
   castShadow: true
-  feetPosition: {x: 12.4, y: 1.5999999999999999, z: 4.95}
+  feetPosition: {x: 12.38, y: 1.15, z: 4.95}
   id: l178-story-rota
   layout: {box: {max: {x: 0.3, y: 0.6, z: 0.025}, min: {x: -0.3, y: 0, z: -0.025}}}
   model: /cdn/value.e1001dc69fa9c92bd0642cbec5d679a684ccc5de65150499e9c667c6f59783bf.glb
   receiveShadow: true
-  rotation: {pitch: 0, roll: 0, yaw: 270}
+  rotation: {yaw: 0}
   state: {c: {x: 12.4, y: 1.9, z: 4.95}, kind: read, name: Chalkboard rota, page: 1783, verb: Read}
   tags: [l178-story, usable, l178-prop]
 l178-story-rumpled:
