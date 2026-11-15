@@ -45,7 +45,7 @@ function act(ctx, s, d) {
   const sounds=new Set()
   for(let i=0;i<want;i++){
     const effects=[],walk=ctx.self.session?.['player.js'],dwalk={battery:walk?.battery??s.battery},draftContext=(draft)=>({self:{id:ctx.self.id,state:draft,feetPosition:ctx.self.feetPosition,session:{'player.js':dwalk}},now:()=>ctx.now(),random:()=>ctx.random(),emit:(...args)=>effects.push(args)})
-    const result=craftOne(s,id,(draft,token)=>{const mark=effects.length,k=token.startsWith('weapon:')?token.slice(7):null,had=k&&String(draft.weapons??'').split(',').includes(k),result=takeToken(draftContext(draft),token,{xp:false});if(result?.ok&&k&&!had&&r.skill)draft['cnd_'+k]=Math.round(Math.max(60,Math.min(100,60+st.got-st.need)));if(!result?.ok)effects.length=mark;return result},ctx.random()<st.bonusChance)
+    const result=craftOne(s,id,(draft,token)=>{const mark=effects.length,k=token.startsWith('weapon:')?token.slice(7):null,had=k&&String(draft.weapons??'').split(',').includes(k),result=takeToken(draftContext(draft),token,{xp:false});if(result?.ok&&k&&!had&&r.skill)draft['cnd_'+k]=Math.round(Math.max(60,Math.min(100,60+st.got-st.need)));if(!result?.ok)effects.length=mark;return result},ctx.random()<st.bonusChance,i>0)
     if(!result.ok){why=result.msg;break}
     for(const [key,value]of Object.entries(result.state))if(value!==s[key])s[key]=value
     if(walk&&dwalk.battery!==walk.battery)walk.battery=dwalk.battery // crafted charge reaches the real flashlight (it used to land on a throwaway copy and be overwritten next frame)

@@ -36,9 +36,9 @@ export function maxMakes(s,id) {
   }
   return count
 }
-export function craftOne(s,id,give,bonus=false) {
-  const status=recipeStatus(s,id),r=Object.hasOwn(C.recipes,id)?C.recipes[id]:null
-  if(!status.ok)return {ok:false,msg:status.reason}
+export function craftOne(s,id,give,bonus=false,checked=false) {
+  const r=Object.hasOwn(C.recipes,id)?C.recipes[id]:null
+  if(!checked){const status=recipeStatus(s,id);if(!status.ok)return {ok:false,msg:status.reason}} // a batch checks once: maxMakes already counted its materials and carry room
   // Inventory grants use copy-on-write state; nothing reaches the live player until the whole recipe succeeds.
   let draft={...s,scrap:{...(s.scrap??{})},snacks:{...(s.snacks??{})},meat:{...(s.meat??{})}}
   for(const [k,n]of Object.entries(r.in)){const [b,key]=slot(k);if(!b)draft[key]=scrapCount(s,k)-n;else draft[b][key]=scrapCount(s,k)-n}
