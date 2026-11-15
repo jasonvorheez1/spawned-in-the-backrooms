@@ -265,18 +265,27 @@ function subtitles(ctx, player, now) {
 // the old compass read (scripts/lib/compass.js): a brass dial whose needles turn with your view, and the vague words
 function compassRead(s, yaw, now) {
   const r = s.compassRead
-  if (!r || now - r.at > 8000) return ''
-  const needles = r.spun ? `<div style="position:absolute;inset:0;animation:cspin .5s linear infinite"><i style="position:absolute;left:50%;top:10px;width:4px;height:42px;margin-left:-2px;background:oklch(0.62 0.2 28)"></i></div>`
-    : r.hints.map((h, i) => `<div style="position:absolute;inset:0;transform:rotate(${h.h - yaw}deg);transition:transform .25s"><i style="position:absolute;left:50%;top:${10 + i * 8}px;width:${i ? 3 : 4}px;height:${42 - i * 8}px;margin-left:-2px;background:${i ? 'oklch(0.8 0.08 85)' : 'oklch(0.62 0.2 28)'};animation:cwob 1.3s ease-in-out infinite alternate"></i></div>`).join('')
-  const words = r.spun ? 'the needle spins and will not settle.' : r.hints.map((h) => h.t).join('<br>')
-  return `<style>@keyframes cspin{to{transform:rotate(360deg)}}@keyframes cwob{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}</style>
-  <div id="cmpr${r.at}" style="position:absolute;left:0;right:0;top:22%;display:flex;justify-content:center;animation:hud-pop .2s ease-out, hud-fade 8s forwards">
+  if (!s.compassOn || !r) return ''
+  const LB = { exit: 'WAY OUT', people: 'PEOPLE', loot: 'SUPPLIES', danger: 'DANGER' }, tint = { exit: 'oklch(0.62 0.2 28)', people: 'oklch(0.6 0.13 240)', loot: 'oklch(0.68 0.15 85)', danger: 'oklch(0.5 0.22 18)' }[r.mode] ?? 'oklch(0.62 0.2 28)'
+  const needle = r.spun ? `<div style="position:absolute;inset:0;animation:cspin .5s linear infinite"><i style="position:absolute;left:50%;top:10px;width:4px;height:42px;margin-left:-2px;background:${tint}"></i></div>`
+    : `<div style="position:absolute;inset:0;transform:rotate(${(r.h ?? 0) - yaw}deg);transition:transform .45s cubic-bezier(.3,1.6,.5,1)"><div style="position:absolute;inset:0;${r.shiver ? 'animation:cwob .07s linear infinite alternate' : ''}"><i style="position:absolute;left:50%;top:10px;width:4px;height:42px;margin-left:-2px;background:${tint};clip-path:polygon(50% 0,100% 100%,0 100%)"></i><i style="position:absolute;left:50%;top:52px;width:4px;height:40px;margin-left:-2px;background:oklch(0.85 0.03 90)"></i></div></div>`
+  const trend = r.spun ? '' : r.trend > 0 ? '<span style="color:oklch(0.8 0.15 145)">warmer</span>' : r.trend < 0 ? '<span style="color:oklch(0.72 0.15 40)">colder</span>' : ''
+  const words = r.spun ? (r.w == null && !s.compassOn ? '' : 'the needle spins and will not settle.') : `${r.w}${trend ? ' · ' + trend : ''}`
+  const m = Math.floor((r.left ?? 0) / 60), sec = String((r.left ?? 0) % 60).padStart(2, '0')
+  return `<style>@keyframes cspin{to{transform:rotate(360deg)}}@keyframes cwob{from{transform:rotate(-7deg)}to{transform:rotate(7deg)}}</style>
+  <div style="position:absolute;left:0;right:0;top:12%;display:flex;justify-content:center;pointer-events:none">
     <div class="hud-card" style="display:flex;gap:14px;align-items:center;padding:10px 16px">
       <div style="position:relative;width:104px;height:104px;border-radius:50%;background:radial-gradient(oklch(0.93 0.04 90),oklch(0.78 0.06 85));box-shadow:0 0 0 5px oklch(0.55 0.09 70),0 0 0 7px oklch(0.25 0.04 60)">
-        <span style="position:absolute;left:0;right:0;top:3px;text-align:center;font-size:11px;color:oklch(0.3 0.05 60)">▲</span>${needles}
+        <div style="position:absolute;inset:0;transform:rotate(${-yaw}deg)"><span style="position:absolute;left:0;right:0;top:3px;text-align:center;font-size:11px;font-weight:700;color:oklch(0.3 0.05 60)">N</span></div>
+        <span style="position:absolute;left:0;right:0;bottom:-2px;text-align:center;font-size:10px;color:oklch(0.3 0.05 60)">▼</span>${needle}
         <b style="position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px;border-radius:50%;background:oklch(0.35 0.05 60)"></b>
       </div>
-      <div style="max-width:260px;font-size:14px;line-height:1.45"><div style="font-size:11px;opacity:.7;letter-spacing:.08em">OLD COMPASS · ${r.left} LEFT</div>${words}</div>
+      <div style="min-width:170px;max-width:260px;font-size:14px;line-height:1.45">
+        <div style="font-size:11px;opacity:.7;letter-spacing:.08em">OLD COMPASS · SEEKING</div>
+        <div style="font-size:20px;font-weight:700;color:${tint}">${LB[r.mode] ?? ''}</div>
+        <div>${words}${r.shiver ? '<br><span style="color:oklch(0.65 0.2 25)">the needle shivers. something is near.</span>' : ''}</div>
+        <div style="font-size:11px;opacity:.65;margin-top:4px">spring ${m}:${sec} · use again to switch</div>
+      </div>
     </div>
   </div>`
 }
