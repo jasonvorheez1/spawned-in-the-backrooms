@@ -3303,6 +3303,15 @@ l178-story-rota:
   scale: 10
   state: {c: {x: 12.4, y: 1.9, z: 4.95}, kind: read, name: Chalkboard rota, page: 1783, verb: Read}
   tags: [l178-story, usable, l178-prop]
+l178-story-rota-slate:
+  feetPosition: {x: 12.424824888373616, y: 1.33, z: 4.95}
+  id: l178-story-rota-slate
+  material: {color: oklch(0.26 0.02 160), roughness: 0.95}
+  primitive: {depth: 0.01, height: 0.5138788503408432, kind: box, width: 0.440000005968012}
+  rotation: {yaw: 90}
+  state: {kind: read, name: Chalkboard rota, page: 1783, verb: Read}
+  tags: [l178-story]
+  ui: "<div face=\"front\" style=\"width:440px;height:514px;color:#e8e6dc;font-family:serif;padding:24px;font-size:34px;line-height:1.35\"><div style=\"font-size:40px;border-bottom:2px solid #cfcab8;margin-bottom:10px\">当番 · chores</div>rice ... Irawan<br>baths ... Mei<br>sweep porch ... ?<br>wanderer beds ... Sato<br><span style=\"opacity:.6\">fish delivery ??</span></div>"
 l178-story-rumpled:
   behavior: [scripts/l178-prop.js]
   castShadow: true
