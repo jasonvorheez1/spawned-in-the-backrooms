@@ -5,9 +5,8 @@ import { animate } from "builtin/tween"
 import D from "./lib/data/l132-duke.yml"
 const MAX = 100
 const SHADOW = `fx
-pop hem rate=?low:5|mobile:7|12 on=disc(.42).c(.15) life=2.4..3.8 v=up(.12..0.28)+sdir()*(.08..0.2) size=.35..0.6 acc=buoy(.08)+curl(.25)*.35+drag(.9) sz=$size*(.6>1.7) col=<.02,.015,.03> a=0>.15:.72>.6:.4>0 rot=spin(.08) r=sprite(smoke-puff,alpha)
-pop shoulders rate=?low:1|mobile:2|3.5 on=box(.32,.06,.12).c(1.95) life=2..3.2 v=up(.15..0.3)+sdir()*.06 size=.18..0.3 acc=buoy(.12)+curl(.3)*.3+drag(1) sz=$size*(.6>1.8) col=<.03,.02,.04> a=0>.2:.4>.6:.2>0 rot=spin(.1) r=sprite(smoke-puff,alpha)
-pop wisps rate=?low:2|mobile:3|6 on=disc(.3).c(.05) life=1.5..2.6 v=sdir()*(.2..0.45)+up(.05) size=.12..0.22 acc=curl(.6)*.5+drag(1.4) sz=$size*(1>.4) col=<.01,.01,.02> a=0>.2:.65>.7:.3>0 r=sprite(flame-wisp,alpha)`
+pop hem rate=?low:4|mobile:6|9 on=disc(.26).c(.08) life=1.2..2 v=up(.06..0.16)+sdir()*(.04..0.1) size=.16..0.3 acc=buoy(.05)+curl(.25)*.3+drag(1.2) sz=$size*(.7>1.3) col=<.03,.01,.05> a=0>.15:.5>.6:.25>0 rot=spin(.08) r=sprite(smoke-puff,alpha)
+pop wisps rate=?low:3|mobile:4|7 on=disc(.22).c(.1) life=1..1.8 v=sdir()*(.15..0.35)+up(.08) size=.08..0.15 acc=curl(.6)*.5+drag(1.4) sz=$size*(1>.3) col=<.04,.01,.07> a=0>.2:.75>.7:.35>0 r=sprite(flame-wisp,alpha)`
 export function onSpawn(ctx) {
   const s = ctx.self.state
   s.hp = MAX; s.maxHp = MAX; s.dead = false; s.invulnerable = true; delete s.hitBy; delete s.hostile
