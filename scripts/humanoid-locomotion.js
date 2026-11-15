@@ -328,7 +328,7 @@ export function update(ctx, dt) {
   // HOLD_SECONDS, so a wandering speed never flickers and a speed that settles in the hold band (Shift let go) hands over.
   // Shelly Nov 15 'completely revamp 3rd person gun holding': a gun drawn turns the body to the look (turnTo 'camera', scripts/critter.js), so a
   // sidestep or a back-step wears its own legs instead of a forward walk sliding sideways
-  const sd = mode === 'camera' && steered0 ? strafeOf(gait) : null
+  const sd = mode === 'camera' && steeredBody(ctx) ? strafeOf(gait) : null
   const walkClip = sd ? STRAFE[sd] : clips.walk || 'Walk'
   const runClip = sd ? STRAFE[sd] : clips.run || 'Run'
   const sprintClip = sd ? STRAFE[sd] : clips.sprint || 'Sprint'
