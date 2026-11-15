@@ -4,7 +4,7 @@
 // The title theme plays on this machine alone through the title and the intake room, and fades when you step out.
 import { screen } from "./lib/screen.js"
 import { animate } from "builtin/tween";
-import { cleanPick, PRESETS, KEEP, SKIP, noStory } from "./lib/run-opts.js"
+import { cleanPick, PRESETS, KEEP, SKIP, noStory, isMulti, isStoryKey, MODE_SLOT } from "./lib/run-opts.js"
 import { wakePlace } from "./lib/save.js"
 const MUSIC = "/cdn/moodboard-lowpoly-cozy/music-soft-mellow-fingerpicked-acoustic-guitar-and-warm-rhodes-early-2000s-bedroom-calm-loop.mp3"; // the drone was exhausting (johnadams2): soft and quiet instead
 const CLICK = "/cdn/moodboard-realistic-gritty/sfx-old-crt-tv-power-on-click-thunk.mp3";
@@ -43,7 +43,7 @@ export function update(ctx) {
   if (place === "intake") {
     if (!ses.inIntake) { ses.inIntake = true; ses.leftIntake = false; if (st.cut) { st.cut = null; ses.cut = null; ctx.view.camera = null }; st.menuOpen = false; st.wardrobeOpen = true; st.wrMenu = true; st.wrTab = "body" }
     else if (!st.wardrobeOpen && !ses.leftIntake && !st.cut) { ses.leftIntake = true; st.madeChar = true; st.cut = ctx.now(); ses.cut = null } // the intro plays first (scripts/lib/intro-cut.js)
-    if (st.cut && lazy("intro", () => import("./lib/intro-cut.js"))?.cutTick?.(ctx, ses, st)) { music(ctx, false); ctx.cross(ctx.self, st.t0Done ? "main" : "tutorial0"); return } // the intro lands you in the tutorial Level 0 the first time, the real one after
+    if (st.cut && lazy("intro", () => import("./lib/intro-cut.js"))?.cutTick?.(ctx, ses, st)) { music(ctx, false); if (isMulti(st)) { st.t0Done = true; import("./lib/hub.js").then((m) => m.toHub(ctx)); return } ctx.cross(ctx.self, st.t0Done ? "main" : "tutorial0"); return } // the intro lands you in the tutorial Level 0 the first time, the real one after
   } else ses.inIntake = false
   // Level 0 after the intro: the ceiling drop, then the opening route.
   const story = !noStory(st) // Shelly Nov 14: a run with the main story off skips its cutscenes and trail
@@ -124,6 +124,7 @@ export function onInput(ctx, input) {
     ctx.emit("playSound", { clip: CLICK, volume: 0.5 }, { audience: { player: ctx.self.id } })
     if (st.bodyStyle !== "furry") st.bodyStyle = "furry"; if (ctx.world.state.bodyStyle !== "furry") ctx.world.state.bodyStyle = "furry" // locked to furry (Shelly, Nov 15) // their saved pick rides into whichever room they wake in
     if (d.k === "start") { st.menuOpen = false; st.menuView = ""; if (!st.run && !st.madeChar) st.run = cleanPick(null); if (st.t0Done && st.madeChar && ctx.self.place !== "bonus") (lazy("hub", () => import("./lib/hub.js"))?.toHub?.(ctx) ?? import("./lib/hub.js").then((m) => { MODS.hub = m; m.toHub(ctx) })); else if (ctx.self.place !== "bonus") { st.introFrom = ctx.self.place; ctx.cross(ctx.self, "intake") } } // after the tutorial, launch lands in the Bonus Room (johnadams2)
+    if (d.k === "mode" && (d.v === "solo" || d.v === "multi")) switchMode(ctx, d.v)
     if (d.k === "resume") { st.menuOpen = false; st.menuView = "" }
     if (d.k === "tobonus") { st.menuOpen = false; st.menuView = ""; st.menuKind = ""; if (ctx.self.place !== "bonus") (lazy("hub", () => import("./lib/hub.js"))?.toHub?.(ctx) ?? import("./lib/hub.js").then((m) => { MODS.hub = m; m.toHub(ctx) })) } // pause > Return to Bonus Rooms (Shelly, Nov 15)
     if (d.k === "title") { st.menuKind = "title"; st.menuView = "" }
@@ -179,7 +180,7 @@ function owner(ctx) { return ctx.self.userId ?? ctx.self.id }
 function note(me, text) { me.state.saveMsg = { text, at: Date.now() } }
 function listSaves(ctx) {
   const me = ctx.self, who = owner(ctx)
-  ctx.sql`SELECT slot, name, place, level, at FROM saves WHERE owner = ${who} ORDER BY slot`.then((r) => {
+  ctx.sql`SELECT slot, name, place, level, at FROM saves WHERE owner = ${who} AND slot <= ${SLOTS} ORDER BY slot`.then((r) => {
     me.state.saveList = (r?.rows ?? []).map((x) => ({ slot: x.slot, name: x.name, place: x.place, level: x.level, at: x.at }))
   }).catch(() => note(me, "Couldn't read your saves."))
 }
@@ -210,3 +211,27 @@ function delSlot(ctx, slot) {
   ctx.sql`DELETE FROM saves WHERE owner = ${who} AND slot = ${slot}`.then(() => { note(me, `Slot ${slot} cleared.`); listSaves(ctx) }).catch(() => note(me, "Couldn't clear that slot."))
 }
 export { SLOTS }
+
+// ---- Solo / Multiplayer (Shelly Nov 15): one character, two runs. Level, gear, cash and look ride along;
+// story, quests and where you stood stay with their mode (SQL slots MODE_SLOT, hidden from the Save Manager).
+// Multiplayer: no story, no tutorial, straight to the Bonus Rooms; leaving the mall opens your party's shared room.
+function switchMode(ctx, to) {
+  const me = ctx.self, st = me.state, who = owner(ctx), from = isMulti(st) ? "multi" : "solo"
+  st.menuOpen = false; st.menuView = ""
+  const go = () => {
+    if (to === "multi") { st.run = { ...cleanPick(st.run), story: "off", tutorial: "skip", mode: "multi" }; st.t0Done = true }
+    else if (isMulti(st)) { const r = { ...st.run }; delete r.mode; st.run = r }
+    if (!st.madeChar) { st.introFrom = me.place; ctx.cross(me, "intake"); return } // a first character is made in the bedroom, then the mall
+    if (to === "multi") { if (me.place !== "bonus") import("./lib/hub.js").then((m) => m.toHub(ctx)) }
+    else { const pl = wakePlace(ctx, st) ?? (st.t0Done ? "main" : "tutorial0"); import("./lib/hub.js").then((m) => m.toSolo(ctx, pl, me, true)) }
+  }
+  if (from === to) return go()
+  const data = snapshot(st), at = new Date().toISOString()
+  ctx.sql`INSERT INTO saves (owner, slot, name, place, level, at, data) VALUES (${who}, ${MODE_SLOT[from]}, ${from}, ${st.savePlace ?? null}, ${st.level ?? 1}, ${at}, ${JSON.stringify(data)}) ON CONFLICT (owner, slot) DO UPDATE SET place = excluded.place, level = excluded.level, at = excluded.at, data = excluded.data; SELECT data FROM saves WHERE owner = ${who} AND slot = ${MODE_SLOT[to]}`
+    .then((r) => {
+      let other = null; try { other = JSON.parse(r?.rows?.[0]?.data ?? "null") } catch {}
+      for (const k of Object.keys(st)) if (isStoryKey(k)) delete st[k] // this mode's run steps aside
+      if (other) for (const [k, v] of Object.entries(other)) if (isStoryKey(k)) st[k] = v // the other mode's run comes back, the character stays as it is now
+      go()
+    }).catch(() => { note(me, "Couldn't switch modes. Try again."); st.menuOpen = true })
+}

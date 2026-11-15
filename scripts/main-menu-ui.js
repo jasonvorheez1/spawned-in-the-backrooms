@@ -202,6 +202,9 @@ export function mainMenu(ctx, player, launch = false) {
       ${pause ? `<div class="mm-subline">${esc(placeName)} · Level ${esc(s.level ?? 1)}</div>` : ''}
       <nav class="mm-nav" aria-label="${pause ? 'Pause menu' : 'Main menu'}">
         <button class="mm-primary" onclick="sendAction('mmenu',{k:'${k}'},{relockPointer:true})"><span class="mm-number">01</span>${primaryLabel}<span class="mm-arrow" aria-hidden="true">→</span></button>
+        ${pause ? '' : (s.run?.mode === 'multi'
+          ? `<button onclick="sendAction('mmenu',{k:'mode',v:'solo'},{relockPointer:true})"><span class="mm-number">↔</span>Play Solo<small style="display:block;opacity:.6;font-size:.7em">your own run, story and all</small><span class="mm-arrow" aria-hidden="true">›</span></button>`
+          : `<button onclick="sendAction('mmenu',{k:'mode',v:'multi'},{relockPointer:true})"><span class="mm-number">↔</span>Multiplayer<small style="display:block;opacity:.6;font-size:.7em">no story, starts in the Bonus Rooms, explore with friends</small><span class="mm-arrow" aria-hidden="true">›</span></button>`)}
         ${pause ? '' : `<button onclick="sendAction('mmenu',{k:'view',v:'newgame'})"><span class="mm-number">02</span>${returning ? 'New Expedition' : 'Custom Expedition'}<span class="mm-arrow" aria-hidden="true">›</span></button>`}
         <button onclick="sendAction('mmenu',{k:'view',v:'saves'})"><span class="mm-number">${pause ? '02' : '03'}</span>Save Manager<span class="mm-arrow" aria-hidden="true">›</span></button>
         <button onclick="sendAction('mmenu',{k:'view',v:'settings'})"><span class="mm-number">${pause ? '03' : '04'}</span>Settings<span class="mm-arrow" aria-hidden="true">›</span></button>

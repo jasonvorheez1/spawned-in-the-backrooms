@@ -21,7 +21,7 @@ export const PRESETS = { // one press sets the row
 export const runOf = (s) => ({ ...DEFAULTS, ...(s?.run ?? {}) });
 export const needsMul = (s) => RATE[runOf(s).needs] ?? 1;
 export const sanityMul = (s) => RATE[runOf(s).sanity] ?? 1;
-export const noStory = (s) => runOf(s).story === "off";
+export const noStory = (s) => runOf(s).story === "off" || s?.run?.mode === "multi"; // multiplayer has no story (Shelly Nov 15)
 export const noNpcs = (s) => runOf(s).npcs === "off";
 export function cleanPick(p) {
   const out = { ...PICK_DEFAULTS };
