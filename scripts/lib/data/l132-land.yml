@@ -1,5 +1,5 @@
 # Level 132 · countryside and the town's edge (scripts/lib/l132-land.js). Metres, north = -Z. Kit built by art/l132-land/build.py (Tripo sources).
-v: 1
+v: 2
 models:
   c1: /cdn/value.46109691f0ff97c438f25a88be4b1a0ec8b9132280a221ddd4da217b9858521f.glb
   c2: /cdn/value.d1a3e618f3c084c51b929f31da3a42554d0fef1b3633d8dbb1a8b579fc7d042d.glb
