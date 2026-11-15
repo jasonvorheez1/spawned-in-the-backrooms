@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 import kit
 from kit import *
 kit.OUT = "/workspace/kyoto/shell2/glb"; kit.PROOF = "/workspace/kyoto/shell2/proof"; kit.KIT = "/workspace/kyoto/shell2/kit.json"
-kit.M["fusuma_paper"] = ("fusuma_karakami", .3, .85, 0, None, None, 1)
+kit.M["fusuma_paper"] = ("fusuma_karakami", .42, .85, 0, None, None, 1)
 kit.M["lacquer"] = (None, 1, .18, 0, (.018, .014, .012), None, 1)
 ONLY = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 random.seed(178)
@@ -138,9 +138,9 @@ def transom(xa, xb, y0=1.972, y1=H - .14):
     for x in (xa + .011, xb - .011): prism(rect(x - .011, x + .011, -.014, .014, .002), "y", y0, y1, "wood_light")
     prism(rect(-.014, .014, y0, y0 + .02, .002), "x", xa + .022, xb - .022, "wood_light")
     n = round((xb - xa) / .14)
-    for i in range(1, n): x = xa + (xb - xa) * i / n; prism(rect(x - .004, x + .004, -.008, .004, .001), "y", y0 + .02, y1, "wood_light")
-    for k in (1, 2): y = y0 + .02 + (y1 - y0 - .02) * k / 3; prism(rect(-.008, .004, y - .004, y + .004, .001), "x", xa + .022, xb - .022, "wood_light")
-    box(xb - xa - .044, y1 - y0 - .02, .0015, ((xa + xb) / 2, y0 + .02, .0055), "washi", bevel=0)
+    for i in range(1, n): x = xa + (xb - xa) * i / n; prism(rect(x - .004, x + .004, -.006, .006, .001), "y", y0 + .02, y1, "wood_light")
+    for k in (1, 2): y = y0 + .02 + (y1 - y0 - .02) * k / 3; prism(rect(-.006, .006, y - .004, y + .004, .001), "x", xa + .022, xb - .022, "wood_light")
+    box(xb - xa - .044, y1 - y0 - .02, .0015, ((xa + xb) / 2, y0 + .02, -.00075), "washi", bevel=0)
 def osa(xa, xb, y0=1.972, y1=H - .14):
     for yy in ((y0, y0 + .025), (y1 - .025, y1)): prism(rect(-.016, .016, yy[0], yy[1], .003), "x", xa, xb, "wood_dark")
     n = round((xb - xa) / .032)
@@ -167,10 +167,10 @@ def shoji_leaf(koshi=True):
             x1 = x + (LW - .06) * wv / t; prism(rect(x + .0006, x1 - .0006, -.004, .004, .0012), "y", .05, .41, "wood_mid"); x = x1
         prism(rect(-.014, .014, .41, .435, .003), "x", .03, LW - .03, "wood_light"); y0 = .435
     y1 = LH - .035; hh = y1 - y0
-    for i in range(1, 4): x = .03 + (LW - .06) * i / 4; prism(rect(x - .004, x + .004, -.008, .004, .001), "y", y0, y1, "wood_light")
+    for i in range(1, 4): x = .03 + (LW - .06) * i / 4; prism(rect(x - .004, x + .004, -.006, .006, .001), "y", y0, y1, "wood_light")
     rows = 6 if koshi else 8
-    for i in range(1, rows): y = y0 + hh * i / rows; prism(rect(-.008, .004, y - .004, y + .004, .001), "x", .03, LW - .03, "wood_light")
-    box(LW - .06, hh, .0015, (LW / 2, y0, .0055), "washi", bevel=0)
+    for i in range(1, rows): y = y0 + hh * i / rows; prism(rect(-.006, .006, y - .004, y + .004, .001), "x", .03, LW - .03, "wood_light")
+    box(LW - .06, hh, .0015, (LW / 2, y0, -.00075), "washi", bevel=0)
     for s in (1, -1):   # hikite: small brass finger plate on the pulling stile
         disc_z(LW - .015, .9, s * .014, s, [(.011, 0), (.011, .0015), (.007, .0015), (.007, .0005), (0, .0005)], "brass", 16)
 def fusuma_leaf():
@@ -182,6 +182,8 @@ def fusuma_leaf():
     bpy.ops.mesh.primitive_cylinder_add(radius=.024, depth=.05, vertices=24, location=B((hx, hy, 0)), rotation=(math.pi / 2, 0, 0))
     cut = bpy.context.active_object; md = core.modifiers.new("b", "BOOLEAN"); md.operation = "DIFFERENCE"; md.object = cut
     bpy.context.view_layer.objects.active = core; bpy.ops.object.modifier_apply(modifier="b"); bpy.data.objects.remove(cut, do_unlink=True)
+    for pl in core.data.polygons: pl.use_smooth = False
+    core["smooth"] = 0
     for s in (1, -1):   # recessed round hikite: brass rim, dished well, lacquer floor
         disc_z(hx, hy, s * .009, s, [(.032, -.001), (.032, .0012), (.027, .0016), (.024, .0006), (.024, -.006), (.019, -.0075), (.0, -.0075)], "brass", 28)
         disc_z(hx, hy, s * .009, s, [(.0185, -.0072), (0, -.0072)], "lacquer", 20)
@@ -189,19 +191,35 @@ def fusuma_leaf():
 def put_leaf(fn, u0, t0, *a):
     before = objs(); fn(*a); place(objs() - before, Matrix.Translation(B((u0, 0, t0))))
 
+def exp(name):
+    sc = bpy.context.scene; obs = [o for o in sc.objects if o.type == "MESH"]
+    bpy.ops.object.select_all(action="DESELECT")
+    for o in obs: o.data.set_sharp_from_angle(angle=math.radians(80 if o["smooth"] else 32)); o.select_set(True)
+    bpy.context.view_layer.objects.active = obs[0]; bpy.ops.object.join(); ob = bpy.context.view_layer.objects.active; ob.name = name
+    md = ob.modifiers.new("wn", "WEIGHTED_NORMAL"); md.keep_sharp = True; bpy.ops.object.modifier_apply(modifier="wn")
+    ob.data.calc_loop_triangles(); vs = [v.co for v in ob.data.vertices]
+    lo = [round(min(v[i] for v in vs), 3) for i in range(3)]; hi = [round(max(v[i] for v in vs), 3) for i in range(3)]
+    bpy.ops.export_scene.gltf(filepath=f"{kit.OUT}/{name}.glb", use_selection=True, export_apply=True, export_yup=True, export_image_format="JPEG", export_jpeg_quality=80,
+        export_draco_mesh_compression_enable=True, export_draco_mesh_compression_level=7, export_draco_position_quantization=14, export_draco_normal_quantization=10, export_draco_texcoord_quantization=12)
+    for o in list(sc.objects): bpy.data.objects.remove(o, do_unlink=True)
+    print("KIT", name, len(ob.data.loop_triangles) if False else "", "engine min", (lo[0], lo[2], -hi[1]), "max", (hi[0], hi[2], -lo[1]))
 # ---------- export: textures on scene-skinned slots are stripped (the scene's skin table mounts them) ----------
 OVR = {"wood_dark", "wood_mid", "wood_light", "washi", "plaster", "ochre"}
 def ship(name):
     if ONLY and name not in ONLY:
         for o in list(bpy.context.scene.objects): bpy.data.objects.remove(o, do_unlink=True)
         return
-    shoot(name, [o for o in bpy.context.scene.objects if o.type == "MESH"])
+    obs = [o for o in bpy.context.scene.objects if o.type == "MESH"]; shoot(name, obs)
+    R = Matrix.Rotation(math.pi, 4, "Z")
+    for o in obs: o.data.transform(R)
+    shoot(name + "_b", obs)
+    for o in obs: o.data.transform(R)
     cut = []
     for k, m in MATS.items():
         if k in OVR:
             for l in list(m.node_tree.links):
                 if l.from_node.type == "TEX_IMAGE": cut.append((m, l.from_socket, l.to_socket)); m.node_tree.links.remove(l)
-    export(name, proof=False)
+    exp(name)
     for m, a, b in cut: m.node_tree.links.new(a, b)
 
 reset(); bpy.context.scene.render.resolution_x = bpy.context.scene.render.resolution_y = 720
