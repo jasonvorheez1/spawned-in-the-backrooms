@@ -533,11 +533,11 @@ export function finishFishingCatch(ctx, s, fs, manualHook = false) {
 function extraLoot(ctx, s, fs) {
   const r = ctx.random() + (fs.fish?.rare ? 0.2 : 0);
   const JUNK = {
-    pool: [['almond', 'a sealed bottle of Almond Water from the drain', 14], ['bobbypin', 'a hair clip off the pool floor', 10], ['balloon', 'a deflated party balloon', 8]],
-    fountain: [['coin', 'a wish coin someone threw in', 12], ['bobbypin', 'a lost hairpin', 10], ['almond', 'a bottle of Almond Water wedged by the jets', 14]],
+    pool: [['almond', 'a sealed bottle of Almond Water from the drain', 14], ['bobbypin', 'a hair clip off the pool floor', 10], ['ration', 'a sealed ration someone dropped in', 10]],
+    fountain: [['cash:25', 'a handful of wish coins (25¢)', 12], ['bobbypin', 'a lost hairpin', 10], ['almond', 'a bottle of Almond Water wedged by the jets', 14]],
     spring: [['almond', 'a warm bottle of Almond Water', 14], ['bobbypin', 'a kanzashi pin from the bathhouse', 12]],
     ocean: [['shells', 'a waxed pouch of Shotgun Shells off a sunk crate', 22], ['battery', 'a sealed Battery from a drowned locker', 20], ['wire', 'a tangle of mooring wire', 12]],
-    chalksea: [['gear', 'a brass gear the tide polished', 18], ['wire', 'a coil of copper cable from a sunk relay', 16], ['almond', 'a corked bottle of Almond Water', 14]],
+    chalksea: [['scrap_metal', 'a brass gear the tide polished', 18], ['wire', 'a coil of copper cable from a sunk relay', 16], ['almond', 'a corked bottle of Almond Water', 14]],
   }[fs.waterKind] ?? [['almond', 'a bottle of Almond Water', 14], ['scrap_metal', 'a piece of rusted scrap', 12]];
   const fishShare = { pool: 0.35, fountain: 0.3 }[fs.waterKind] ?? 0.72;
   if (r < fishShare || fs.fish?.rare) return { tok: 'meat:fish', label: fs.fish?.name ?? 'a fish', xp: 14 };
