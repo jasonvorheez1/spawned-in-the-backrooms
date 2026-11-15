@@ -1,0 +1,34 @@
+# Lumiria's square (scripts/lib/l132-square.js). Metres; angles in degrees clockwise from north (x = r sin a, z = -r cos a).
+v: 1
+models:   # Tripo, Nov 15. s = scale to a 1.7 m body, yaw = turn added so the piece faces the centre
+  tree:     { id: /cdn/value.cf5b6cf6844d4e91b0dd364b673d86656fbc81d2884226b8b8d03467607cd2b1.glb, s: 1, yaw: 0 }
+  bench:    { id: /cdn/value.1d9d604c2f50e7ba25207efcd0b367cc3e801f8253ae9975869ad55ea541a473.glb, s: 1.25, yaw: 0 }
+  cafeset:  { id: /cdn/value.a98d125e45fef967271e007a0ee93e6e9383b7adfc21675d13f135a323f56d36.glb, s: 1.25, yaw: 0 }
+  planter:  { id: /cdn/value.5d4e2e7ea407103c515f950f93341738a41c84de45174ad313c5e0a3f560e71e.glb, s: 5, yaw: 0 }
+  lamp:     { id: /cdn/value.4590b80513d6163ba19d9b8e5c5dbace386c72f24c11fe7bdbfb605b0262cfb7.glb, s: 2.45, yaw: 0 }
+  bunting:  { id: /cdn/value.96b745489d7be94b11a15edd6bbfe673c4f6f3817a3935ddb2ded984507bb2c1.glb, s: 2.27, yaw: 0 }
+  fountain: { id: /cdn/value.2d4d855f9bb872166b2655657cd810b5f56f3135ca7fd10383b3b06e57d0453e.glb, s: 1.9, yaw: 0 }
+  board:    { id: /cdn/value.c55d182edeb1a762ae9c82769e0ff6846daa83d84efcf1d2f52cfd238d1fa099.glb, s: 1.33, yaw: 90 }
+  phonebox: { id: /cdn/value.71c0b85c1b8ec42b27ca1d178e16f5cfbbd9cf704f607ae2e5fd97f832fc5f36.glb, s: 4.17, yaw: 0 }
+  kiosk:    { id: /cdn/value.dd203c2625b78bbfd9f82036f46f3b6441b7149a8697bde5ba882b4011424793.glb, s: 1.17, yaw: 0 }
+tree: { col: [[0, -1, 5.2, 3.2], [-1.6, 1.6, 2, 2], [1.6, 1.6, 2, 2]], colH: 7, exit: [0, 0, 1.2], exitBox: [1.2, 2.2, 1.6], glow: { at: [0.9, 2.7, 3.5], intensity: 1, distance: 6 } }   # col: [x, z, width, depth] invisible walls; the hollow is the gap x -0.6..0.6 south of z 0.6
+lamps:    { r: 21, a0: 22.5, n: 8, lightY: 4.05, intensity: 1.5, distance: 9, color: "oklch(0.86 0.12 75)" }
+benches:  { r: 9, a0: 30, n: 6, seat: { w: 2, gap: 0.6, d: 0.05 } }
+tables:   { r: 19, a0: 45, n: 4, chair: 0.6 }
+planters: { r: 24, at: [10, 100, 135, 225, 285, 315] }
+bunting:  { segs: 3, lampY: 4.3, treeY: 7.6, treeR: 3.4, len: 5.86, h: 2.27 }
+fountain: { x: -7, z: 22, spoutY: 1.06, thirst: 25, gain: 0.5, maxDistance: 14 }
+board:    { x: 3, z: 25, page: 1321 }
+phone:    { x: 8, z: 23 }
+kiosk:    { x: 9.7, z: 22.4, radioGain: 0.12, radioMax: 9 }
+bed:      { clip: cdn/ambience-quiet-old-town-square-distant-chatter-bicycle-bell-birdsong-loop.mp3, gain: 0.15 }
+sounds:
+  water: cdn/sfx-stone-drinking-fountain-water-trickle-loop.mp3
+  radio: cdn/sfx-faint-tinny-transistor-radio-old-dance-tune-loop.mp3
+  phone: cdn/sfx-old-payphone-receiver-lift-dial-tone.mp3
+  kiosk: cdn/sfx-soft-electronic-charge-chime.mp3
+  page: cdn/sfx-paper-page-turn-soft.mp3
+lines:
+  phone: "A dial tone, then a cheerful recorded voice: \"Lumiria exchange. All lines are out window-shopping. Do try again.\""
+  kiosk: "The screen wakes: one bar of Wi-Fi, a half-loaded M.E.G. database page, and a slot for every charger ever made."
+  fountain: "Cold and sweet. Somebody has left a tin cup on the rim for whoever comes next."
