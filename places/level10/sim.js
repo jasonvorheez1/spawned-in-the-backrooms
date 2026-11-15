@@ -33,6 +33,81 @@ const tree = (kind, h, seed) => ({ primitive: { kind: "scripted", script: "scrip
 const AMB = "cdn/ambience-wind-through-ripe-wheat-field-overcast-countryside-distant-crows-loop.mp3";
 const WIND_CREAK = "cdn/moodboard-realistic-gritty/sfx-wood-creak-heavy-timber-settling.mp3";
 
+
+// Level 10 interiors (Savi, Nov 15): every room furnished from the game's own textured models, the searchables are containers.
+const FURN = {
+  sofa: ["/cdn/value.ff13bc205536a957826e2f7fed75554c07ffe7848198e50e1d65f257cabacdd9.glb", "+x", [2.1, 1.05, 1.01]],
+  armchair: ["/cdn/value.3e7196a1233581476ede9bfcb0b38934ec50b62b9174954d055d379c63fd73b6.glb", "+x", [1.04, 1.05, 0.95]],
+  coffee: ["/cdn/value.b59b6a4d3115b48b5e3e42462530bbb5364e66607ba416592c80166a6cdd6483.glb", null, [1.15, 0.46, 0.59]],
+  lamp: ["/cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb", "+x", [0.51, 1.8, 0.51]],
+  books: ["/cdn/value.918584eed8336eda888580753019763471fcce0adcaf2bc66def78f53ae3fad0.glb", "+x", [0.93, 1.85, 0.45]],
+  bed: ["/cdn/value.b0a66618043549ab8c909dcd3ba2010c3e5134b8e1434a324b78d78a7a043411.glb", "+x", [1.98, 1.03, 2.0]],
+  table: ["/cdn/value.52a1863ca5a85c8cd9d66d3e9784b94278c2ca0be65df889f4c8f8d817f87d87.glb", "-z", [1.1, 0.76, 1.1]],
+  chair: ["/cdn/value.1c61a9601443996e02b2b539989094cb02237777223d710cc63c3b508e9ec32f.glb", "-z", [0.46, 0.95, 0.5]],
+  dresser: ["/cdn/value.e231c093c2aceb9bfda1e65b5a29ffad0b450c23783d96cfe12892823a42a328.glb", "-z", [1.4, 0.82, 0.5]],
+  kcab: ["/cdn/value.3d2b075c4622c89133ab2726585281af22473bfde21df073487ef927497abf91.glb", "-z", [1.2, 0.92, 0.62]],
+  tv: ["/cdn/value.4c570251140bfbed049625aef04ac6cf184605067f493f9d0ce0b3c0a29588c4.glb", null, [0.82, 0.9, 0.62]],
+  fridge: ["/cdn/value.b433b7c0ca2ad5ac90162ee72b928408ed1b68d89a2b24007afff2a7058ab6a0.glb", "+z", [0.83, 1.75, 0.53]],
+  range: ["/cdn/value.ebd02a7f9361940a5f20af8cee9920ead70988d5cef41f15fde3c2d4803bd4fd.glb", "+z", [0.76, 0.95, 0.86]],
+  wing: ["/cdn/value.32d35a93b40db9fee97ce56213312f8fe257337cc48801b8e7880f3246988dec.glb", "+z", [0.68, 0.95, 0.58]],
+  ptable: ["/cdn/value.e9f7840a7c258a02a184a57ee3e04ad1548e3915df342de6dde49271013f4640.glb", "+z", [0.9, 0.76, 0.9]],
+  colacrate: ["/cdn/value.c65f1bf3fb1305109ac73110e57b3a2db7ad85f0d15f4453f6cfdf6a959dc4e3.glb", "+z", [0.35, 0.27, 0.51]],
+  rug: ["/cdn/value.54d55c312978863b7bd69030a8c670f4e2d3313700e01b64ca90bc35a3cae46c.glb", "+z", [2.6, 0.04, 1.8]],
+  shelf: ["/cdn/value.d86244329c78a1af95aa40497523939bd9cc0e9d77b353d36202157ac9073d3e.glb", "+x", [1.4, 1.9, 0.45]],
+  cabinet: ["/cdn/value.c7871eb32277ddeef6c32064d3e1ef1ba141d383958ab4e7e37894b3be67e08b.glb", "+x", [0.9, 1.1, 0.42]],
+  toolbox: ["/cdn/value.9d8c68159e95179d0e7e42aa72a680c2c66ff482b0faffd34bd4477c591226f6.glb", "+x", [0.55, 0.3, 0.25]],
+  lantern: ["/cdn/value.c10572b2de804fd98cf1690adb38d1337fc5d9a43e100401319716ff9611058b.glb", null, [0.2, 0.34, 0.2]],
+};
+const ROOMS = [ // [id, piece, x, y, z, yaw, container name, loot]; yaw 0 faces -z
+  // farmhouse: one long room, sitting end west, kitchen east, Cooper and Maeve's bed on the back wall (floor y 1.11)
+  ["fh-rug", "rug", -28.1, 1.115, -38, 90],
+  ["fh-sofa", "sofa", -29.6, 1.11, -38, -90],
+  ["fh-coffee", "coffee", -28.1, 1.11, -38, 90],
+  ["fh-chair", "armchair", -26.4, 1.11, -36.4, 120],
+  ["fh-tv", "tv", -27.4, 1.11, -41.4, 180],
+  ["fh-lamp", "lamp", -29.8, 1.11, -34.5, 0],
+  ["fh-books", "books", -27.8, 1.11, -34.35, 0, "Farmhouse bookshelf", "page:l10_diary_2,tape,battery,compass"],
+  ["fh-bed", "bed", -24.6, 1.11, -35.1, 0],
+  ["fh-dresser", "dresser", -22.4, 1.11, -34.35, 0, "Maeve's dresser", "cloth:topw:jacket:6b5a3c,bandage,bobbypin,cash:60"],
+  ["fh-range", "range", -21.1, 1.11, -34.55, 0],
+  ["fh-kcab1", "kcab", -19.95, 1.11, -34.42, 0, "Kitchen cupboard", "ration,ration,almond,wheat_sheaf"],
+  ["fh-fridge", "fridge", -18.35, 1.11, -36.6, 90, "Farmhouse fridge", "almond,almond,ration,meat:fish"],
+  ["fh-table", "table", -21, 1.11, -39.2, 0],
+  ["fh-chair-a", "chair", -21.8, 1.11, -39.2, 90],
+  ["fh-chair-b", "chair", -20.2, 1.11, -39.2, -90],
+  // barn (floor y 0.62): feed and tool store along the back wall, a vet cabinet, bottle crates
+  ["barn-shelf-a", "shelf", -51, 0.62, -59.05, 180, "Feed store shelf", "wheat_sheaf,wheat_sheaf,wire,tape"],
+  ["barn-shelf-b", "shelf", -46.4, 0.62, -59.05, 180, "Hardware shelf", "scrap_metal,wire,battery,bobbypin"],
+  ["barn-cab", "cabinet", -56.6, 0.62, -55.2, -90, "Vet cabinet", "bandage,bandage,kit"],
+  ["barn-tools", "toolbox", -44.2, 0.62, -58.6, 180, "Red toolbox", "weapon:crowbar,tape,wire"],
+  ["barn-crate-a", "colacrate", -40, 0.62, -58.8, 10, "Crate of bottles", "almond,almond"],
+  ["barn-crate-b", "colacrate", -40, 0.89, -58.75, -6],
+  ["barn-lantern", "lantern", -46.4, 2.52, -59.05, 0],
+  // the family's stable home (floor y 1.79): the table they ate at, her chair, their cupboard
+  ["st-rug", "rug", -57.6, 1.795, -107.6, 0],
+  ["st-table", "ptable", -57.6, 1.79, -107.6, 0],
+  ["st-chair", "chair", -57.6, 1.79, -106.7, 180],
+  ["st-wing", "wing", -60.6, 1.79, -109.8, 45],
+  ["st-cab", "cabinet", -54.95, 1.79, -109.6, 90, "Family cupboard", "ration,almond,page:l10_diary_3,bobbypin"],
+  ["st-lantern", "lantern", -57.6, 2.55, -107.6, 0],
+  // sheds: a nail crate in A, and what the Stealer hoards in B
+  ["sha-crate", "colacrate", 37.3, null, -149.2, 20, "Seed crate", "wheat_sheaf,scrap_wood,cash:25"],
+  ["shb-hoard", "toolbox", 95.6, null, -60.8, 200, "The Stealer's hoard", "battery,battery,ammo,cash:150,compass"],
+];
+const GLOW = { "fh-lamp": [1.75, 2.4, 8], "barn-lantern": [0.3, 2.2, 10], "st-lantern": [0.3, 1.8, 8] };
+function layInteriors(ctx) {
+  for (const [id0, k, x, y, z, yaw, name, items] of ROOMS) {
+    const id = "l10-in-" + id0, [m, fw, [w, h, d]] = FURN[k], old = ctx.getObject(id);
+    const spec = { feetPosition: y == null ? T(x, z, 0.02) : { x, y, z }, rotation: { yaw }, model: { id: m, ...(fw ? { forward: fw } : {}) },
+      layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, castShadow: h > 0.5, visibleRange: { max: 70 } };
+    if (k !== "rug" && k !== "lantern") spec.physics = { body: "static", collider: "box" };
+    if (name) { spec.tags = ["container"]; spec.state = { name, items }; if (old) for (const key of ["items", "scavved", "refillAt"]) if (old.state?.[key] !== undefined) spec.state[key] = old.state[key]; }
+    if (GLOW[id0]) { const [ly, li, ld] = GLOW[id0]; spec.children = [{ feetPosition: { x: 0, y: ly, z: 0 }, light: { kind: "point", color: "oklch(0.88 0.12 75)", intensity: li, distance: ld, shadow: { enabled: false }, visibleRange: { max: 40 } } }]; }
+    if (old) ctx.destroy(id);
+    ctx.spawn(id, spec);
+  }
+}
+
 function lay(ctx) {
   const BIG = /farmhouse|barn|stable|shed|silo$|windmill|tree|hedge|scarecrow|fence|flagpole|sign-city|outpost-sign/;
   const SMALL = /stone|log|stump|lamp|radio|hopper|crate|flag$|patch|oven|well|bin|fire$|sign-post|cellar/;
@@ -526,6 +601,7 @@ export function tick(ctx) {
     s.fieldFixtureV = 0;
   }
   if ((s.towerV ?? 0) < TW.v) { layTower(ctx); s.towerV = TW.v; }
+  if ((s.interiorsV ?? 0) < 1) { layInteriors(ctx); s.interiorsV = 1; }
   if ((s.campBenchV ?? 0) < 1) {
     s.campBenchV = 1;
     ensureBenches(ctx, [
