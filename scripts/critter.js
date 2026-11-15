@@ -175,8 +175,9 @@ export function onInput(ctx, input) {
       st.look = { ...lookOf(ctx), [key]: Math.round(Math.min(row[3], Math.max(row[2], v)) * 100) / 100 }
       return
     }
-    if (d.k === 'model') { if (d.v && !C.models?.[d.v]) return; st.look = { ...lookOf(ctx), model: d.v || '', modelUrl: '' }; return }
-    if (d.k === 'modelUrl') { const m = String(d.v || '').match(/\/cdn\/[\w.\-]+\.glb$/); st.look = { ...lookOf(ctx), modelUrl: m ? m[0] : '', model: '' }; return } // a player's own uploaded .plymodel
+    if (d.k === 'model') { if (d.v && !C.models?.[d.v]) return; st.look = { ...lookOf(ctx), model: d.v || '', modelUrl: '', spawnAv: false }; return }
+    if (d.k === 'spawnav') { if (!ctx.self.avatarUrl) return; st.look = { ...lookOf(ctx), spawnAv: true, model: '', modelUrl: '' }; return } // Shelly Nov 15: wear your own Spawn avatar
+    if (d.k === 'modelUrl') { const m = String(d.v || '').match(/\/cdn\/[\w.\-]+\.glb$/); st.look = { ...lookOf(ctx), modelUrl: m ? m[0] : '', model: '', spawnAv: false }; return } // a player's own uploaded .plymodel
     // the cat creator (Shelly: cats are the one species now): head shape, tail, tufts, cat hair and the bust slider
     if (d.k === 'snout' || d.k === 'ears' || d.k === 'tail') { const list = { snout: SNOUTS, ears: EARS, tail: TAILS }[d.k]; if (!list.includes(d.v)) return; dress(st, lookOf(ctx), { ...lookOf(ctx), species: 'cat', [d.k]: d.v }); return }
     if (d.k === 'cathair') { const cur = lookOf(ctx), sx = cur.sex === 'f' ? 'f' : 'm'; if (d.v !== 'none' && !CW.hair?.[d.v]?.[sx]) return; dress(st, cur, { ...cur, species: 'cat', hair: d.v }); return }
@@ -282,7 +283,7 @@ export function update(ctx) {
   }
   { const h = Number(l.heightS) || 1, w = Number(l.buildS) || 1, k = h + ':' + w // height and build: the whole body, everyone sees it
     if (ses.hw !== k) { ses.hw = k; ctx.self.scale = { x: w, y: h, z: w } } }
-  const wornNow = !!(l.modelUrl || (l.model && C.models?.[l.model]))
+  const wornNow = !!((l.spawnAv && ctx.self.avatarUrl) || l.modelUrl || (l.model && C.models?.[l.model]))
   if (wornNow) {
     // an imported body has its own skeleton (pelvis, spine_01 …): no tail, ears or lids to act on, and the gait plays library clips on its bones
     if (ses.flair !== 'worn') { ses.flair = 'worn'; ctx.self.anim.flair = null; ctx.self.bones = {}; ses.lids = false; ses.twitch = null }
@@ -302,7 +303,7 @@ export function update(ctx) {
     const params = { species: l.species, sex: l.sex, ftype: l.ftype || 'oval', trait: l.trait || 'placid', blush: l.blush, nose: l.nose || undefined, eye: l.eye, topw: l.topw, botw: l.botw, shoes: l.shoes, hat: l.hat, eyew: l.eyew, neck: l.neck, top: l.top, bottom: l.bottom, shoec: l.shoec, hatc: l.hatc, neckc: l.neckc, expr: face, eyes: l.eyes, etype: l.etype, mtype: l.mtype, marks: l.marks, hair: l.hair, hairc: l.hairc, skin: l.skin || undefined, beard: l.beard, beardc: l.beardc } // skin rides the body key: without it a salon skin pick never rebuilt the body (Shelly, Nov 9)
     if (l.fur) params.fur = l.fur
     for (const k of ['snout', 'ears', 'tail', 'shadow', 'inner', 'fluffc', 'fluff', 'chest', 'topp', 'botp', 'shoep', 'hatp', 'neckp']) if (l[k] != null && l[k] !== '') params[k] = l[k] // Nov 12 (Shelly: 'eyeshadow doesnt work, snout doesnt work'): these salon picks never reached the body or its rebuild key
-    const worn = l.modelUrl ? { url: l.modelUrl } : l.model && C.models?.[l.model] // an imported model worn instead of the critter
+    const worn = l.spawnAv && ctx.self.avatarUrl ? { url: ctx.self.avatarUrl, spawn: true } : l.modelUrl ? { url: l.modelUrl } : l.model && C.models?.[l.model] // an imported model worn instead of the critter
     for (const [k] of C.sliders) if (k !== 'headS' && k !== 'tailS' && (l.sex === 'f' || (k !== 'hipS' && k !== 'bustS')) && Number(l[k]) && Number(l[k]) !== 1) params[k] = Number(l[k])
     ses.cachedParams = params
     ses.cachedWorn = worn
@@ -424,7 +425,7 @@ export function update(ctx) {
   }
 }
 
-function wornModel(w) { return w.name ? w.url : { id: w.url, forward: '+x' } } // a player's own .plymodel upload faces +X once clips play on it (Nov 11 test: bare and +z stood sideways, -x backwards, +x forward); catalog models already face -Z
+function wornModel(w) { return w.spawn ? { id: w.url } : w.name ? w.url : { id: w.url, forward: '+x' } } // a player's own .plymodel upload faces +X once clips play on it (Nov 11 test: bare and +z stood sideways, -x backwards, +x forward); catalog models already face -Z
 function dropHead(ctx, o) { clearAppearance(ctx,o) }
 // the species head (face, ears, tail) rides the body's rig as a skinned child; restyled when the look changes
 function wearHead(ctx, o, l) { seatHead(ctx,o,{...l,vary:false}) }
