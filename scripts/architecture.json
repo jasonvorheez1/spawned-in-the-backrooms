@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9273,
-  "updatedAt": "2026-11-15T19:57:06.776Z",
+  "basedOnSpecVersion": 9275,
+  "updatedAt": "2026-11-15T20:19:02.861Z",
   "summary": "Spawned in the Backrooms is a multiplayer survival RPG spanning Level 0, the Bonus mall, The Hub and authored destinations. Character progress lives in player.state, while Solo and Multiplayer keep separate run/story state; global scripts and shared registries coordinate play and place scenes/sims compose local worlds. The Bonus Teleport Station presents the character's explored-level atlas for travel.",
   "scriptPaths": [],
   "places": [
@@ -51,11 +51,11 @@
     "scripts/lib/manuals.js + scripts/player.js - player.state.recipes learned IDs; legacy manuals grants recipe kinds; reading a manual learns one recipe.",
     "scripts/lib/run-opts.js + scripts/main-menu.js - mode and run picks; run/quest/story/resume keys are swapped per mode through SQL save slots 91/92, while character, level, gear, cash and look remain on player.state.",
     "scripts/db.js + scripts/main-menu.js - SQL saves table owns named save-slot snapshots and hidden Solo/Multiplayer mode snapshots; live character state remains player.state.",
-    "scripts/main-menu.js + tut0-cut.js + tutorial.js - tutorial beat and Field Guide state/preferences; barter.js and phone.js own their player-state panels/apps.",
+    "scripts/main-menu.js + tut0-cut.js + scripts/lib/tutorial.js - tutorial beat and Field Guide state/preferences; the phone lesson is eligible only after t0Done, when s.phone or s.l132.bag.phones indicates ownership, and hasHalogen passes. barter.js and phone.js own their player-state panels/apps.",
     "scripts/lib/hub.js noteAtlas, called by scripts/player.js on place arrival - player.state.atlas maps canonical destination to first-seen date and visit count; unlike run/story keys it persists across modes."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused interactions.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused i…",
     "templates/player.js runs scripts/fall-guard.js before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; player.js builds local first-person viewmodel and avatar setup.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
@@ -65,9 +65,8 @@
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold handlers call carryAcross for held props/followers; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone (Level 1.1 sectors, Level 178 house, Level 132 Lumiria); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass.",
     "scripts/player.js update detects place arrival → scripts/lib/hub.js noteAtlas writes player.state.atlas once per arrival (tutorial0 aliases main); old saved place is backfilled when absent.",
-    "Bonus Teleport Station in scripts/hub-ui.js renders ATLAS_ORDER as visited travel cards and locked unexplored slots; choice → scripts/hub.js validates atlasable(destination) and discovery before routing, with last-level, Test Range and unlocked homes as quick stops.",
-    "scripts/player.js update → preloadTick(ctx) every tick; scripts/lib/body3.js reads combat-anims.yml and held weapon/session/camera aim → shared third-person pose for player and NPC bodies.",
-    "scripts/hounds.js and scripts/stealers.js updates → one elected manager per place processes each pack; hounds cache perception between ~5 Hz checks and idle without AI beyond 90 m. Level ! sim's hound/partygoer models are included in scripts/lib/data/preload.yml."
+    "Bonus Teleport Station in scripts/hub-ui.js renders ATLAS_ORDER as visited travel cards and locked unexplored slots; choice → scripts/lib/hub.js validates atlasable(destination) and discovery before routing, with last-level, Test Range and unl…",
+    "scripts/player.js update → preloadTick(ctx) every tick; scripts/lib/body3.js reads combat-anims.yml and held weapon/session/camera aim → shared third-person pose for player and NPC bodies."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
@@ -92,7 +91,7 @@
     "Multiplayer room ID is mp- plus sanitized party ID (or user ID); hub.js selects it only when leaving Bonus in multiplayer. Continue must not wake a multiplayer save into a solo room.",
     "scripts/lib/mp-guard.js only spares NPC-tagged, non-overboard targets in rooms with a multiplayer player; shootable includes attackOnSight, killable, l8-hostile, born-hostile Ezra/Tobit and Lightless faction.",
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with sim-created hub-from-l178.",
-    "Level 169 uses x/z, north = -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth align with level169.yml. Level 1.1 hall distance is +X (0–620 m), north at -Z; sector boundaries and doorway/seam returns share that coordinate frame.",
-    "Atlas state is character-level player.state.atlas keyed by places.js IDs; tutorial0 counts as main, atlas skips scripted/non-destination places, and kiosk travel requires an existing entry. Keep discovery on arrival and destination validation aligned."
+    "Level 169 uses x/z, north = -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth align with level169.yml. Level 1.1 hall distance is +X (0–620 m), north at -Z; sector boundaries and doorway/seam ret…",
+    "Atlas state is character-level player.state.atlas keyed by places.js IDs; tutorial0 counts as main, atlas skips scripted/non-destination places, and kiosk travel requires an existing entry. Keep discovery on arrival and destination validation paired."
   ]
 }
