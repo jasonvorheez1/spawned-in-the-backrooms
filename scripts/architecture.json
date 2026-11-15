@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9231,
-  "updatedAt": "2026-11-15T18:42:58.869Z",
+  "basedOnSpecVersion": 9236,
+  "updatedAt": "2026-11-15T18:59:30.440Z",
   "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state holds the character while solo and multiplayer runs retain separate story, quest and resume state. Global scripts and shared registries coordinate play, while place scenes and simulations compose local spaces and stories. Multiplayer mode starts without story in the Bonus Rooms and uses party-shared rooms beyond the mall.",
   "scriptPaths": [],
   "places": [
@@ -21,8 +21,8 @@
     "places/level169/sim.js + scripts/lib/data/level169.yml + house/Ferry/Friends/road/Robotics helpers - desert setpieces, schedules, routes, quests and units.",
     "places/level132/sim.js + scripts/lib/data/level132.yml + scripts/lib/l132-*.js - town/countryside lay and tick orchestration for stalls, shops, land, people, Duke, quests and barter.",
     "places/level178/config.yaml + scripts/terrain178.js + x0z0.scene + sim.js - Kyoto terrain, house, residents, arrival quest, finds, containers and breakable sweep.",
-    "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js + scripts/ui.js - title/save lifecycle, Solo/Multiplayer switch, expedition choices and HUD; the Game Rules button is outside the HUD (retained in god-mode tabs).",
-    "mods/director-savi/commands/director-savi.md → skills/director-savi.md - separate trailer planning, filming and delivery workflow."
+    "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js + scripts/ui.js - title/save lifecycle, Solo/Multiplayer switch, expedition choices and HUD; Game Rules button is outside the HUD.",
+    "scripts/player.js + scripts/critter.js - local first-person viewmodel/avatar setup and player-look body scaling; scripts/lib/vmpose.js supplies viewmodel pose policy."
   ],
   "shared": [
     "scripts/lib/places.js - canonical place names/labels/HUD titles; consumed by feed, quest names and scripts/ui.js.",
@@ -42,7 +42,7 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - journal/advancement/reward helpers; scripts/lib/containment.js - pen/door operations; scripts/lib/run-opts.js - OPTS, DEFAULTS, RATE, PRESETS, runOf, noStory, noNpcs, isMulti, mpRoom, MODE_SLOT, isStoryKey.",
     "scripts/lib/mp-guard.js - shootable, multiRoom, spared; scripts/lib/dialogue.js - DLG, dlgReady, warmDialogue, archOf, entryOf, BYE_CHOICE, rootChoices, childChoices, nodeOf, greetingOf, lineOf, barkOf.",
-    "scripts/lib/l132-shops.js - RANGE, ears, lay, tick; scripts/lib/level169-quest.js - questTick, useThing; scripts/lib/voices.js - warmVoices, hasVoice, voiceKey; places/thehub/sim.js - cadence, tick."
+    "scripts/lib/l132-shops.js - RANGE, ears, lay, tick; scripts/lib/level169-quest.js - questTick, useThing; scripts/lib/voices.js - warmVoices, hasVoice, voiceKey; scripts/critter.js - updateSchedule, blinkEnd, blinkNow, twitchEnd, onInput, update; scripts/lib/vmpose.js - VM_FOV, poseViewmodel."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable character player.state: progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance/look, currency and gear shared across Solo/Multiplayer.",
@@ -57,7 +57,7 @@
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused interactions.",
     "templates/player.js runs scripts/fall-guard.js before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
-    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; camera derives eye height from worn body/model and critter-head; scripts/player.js builds the local first-person arm rig; body3 uses camera aim + combat-anims.yml for third-person pose.",
+    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; camera derives eye height from worn body/model and critter-head; scripts/player.js builds the local first-person viewmodel.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
     "scripts/main-menu-ui.js mode action → scripts/main-menu.js switchMode → SQL MODE_SLOT snapshots; isStoryKey fields swap while character/gear/look persist, then Multiplayer routes to Bonus and Solo to its saved place.",
     "scripts/main-menu.js Multiplayer start → skips tutorial/story and goes to The Bonus Rooms; scripts/lib/run-opts.js noStory treats multiplayer as story-off and isMulti identifies its run.",
@@ -66,7 +66,7 @@
     "scripts/main-menu.js requests furry bodyStyle; scripts/lib/critter-model.js setStyle clears HUMAN for the critter body, while scripts/critter.js can instead render the avatar selected by player.state.look.spawnAv.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold handlers call carryAcross for held props/followers; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone (Level 1.1 sectors, Level 178 house, Level 132 Lumiria); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass.",
-    "places/level1c/sim.js tick lays versioned geometry/cast, then xV lays supplies, payphone note/audio and seams; xV is separate from builtV. Salon/creator model tab → scripts/ui.js plyUpload → scripts/lib/plyimport.js converts and uploads GLB."
+    "player.state.look.heightS/buildS → scripts/critter.js entity scale, rechecked against current scale after body/model swaps; scripts/player.js builds plymodel first-person arms and scripts/lib/vmpose.js enables them in Bonus but hides them in intake and modal screens."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
@@ -92,6 +92,6 @@
     "scripts/lib/mp-guard.js only spares NPC-tagged, non-overboard targets in rooms with a multiplayer player; shootable includes attackOnSight, killable, l8-hostile, born-hostile Ezra/Tobit and Lightless faction.",
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with sim-created hub-from-l178.",
     "Level 169 uses x/z, north = -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth align with level169.yml. Sim layout and well versions are separate.",
-    "Level 1.1 geometry uses hall distance along +X (0–620 m), north at -Z, with sector boundaries in level1c.js; xV gates extra props independently of builtV, and the doorway/seam-return markers stay paired. Third-person animation channels can outlive session state on reload: body3 seeds its channel sentinels before replacing/clearing aim and ready; arcade-play likewise checks its anim channel, not only session.arcOn. First-person plyarm is a local camera-attached model; its rotation/offset and model-keyed rig rebuild are deliberate view alignment."
+    "Level 1.1 geometry uses hall distance along +X (0–620 m), north at -Z, with sector boundaries in level1c.js; xV gates extra props independently of builtV and doorway/seam-return markers stay paired. Height/build look scaling must be reapplied if a worn body/avatar is re-dressed at unit scale; first-person plymodel arm offsets and viewmodel key version are coupled."
   ]
 }
