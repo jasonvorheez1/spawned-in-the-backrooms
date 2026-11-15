@@ -6,6 +6,7 @@
 export const CATS = ["pottery", "phones", "remedies", "records", "spices", "computers", "hats", "fruit"];
 export const WANTS = { fruit: "records", records: "hats", hats: "fruit", pottery: "spices", spices: "remedies", remedies: "pottery", phones: "computers", computers: "phones" };
 export const NAMES = { pottery: "an urn", phones: "a phone", remedies: "a tonic", records: "a record", spices: "a pouch of spice", computers: "a cartridge", hats: "a hat", fruit: "an apple" };
+import { open as openTable } from "./barter-deal.js";
 const RESTOCK_MS = 90000; // stores restock by themselves
 export const bookOf = (s) => (s.l132 ??= { bag: {}, col: [] });
 const tell = (ctx, p, text) => { p.state.notice = { text, at: ctx.now() }; };
@@ -13,16 +14,13 @@ const put = (b, cat, n) => ({ ...b, bag: { ...b.bag, [cat]: Math.max(0, (b.bag?.
 export const holds = (s, cat) => (s.l132?.bag?.[cat] ?? 0) > 0;
 export const pieces = (s) => (s.l132?.col ?? []).length;
 function takeWare(ctx, w) { w.visible = false; w.state = { ...w.state, goneAt: ctx.now() }; }
-export function barter(ctx, { by, ware }) {
+export function barter(ctx, { by, ware }) { // a ware pressed on a stall: the gift once, then the barter table (Shelly, Nov 15)
   const p = ctx.place.players.find((q) => q.id === by), w = ctx.getObject(ware);
   if (!p || !w || w.state?.goneAt) return;
   const cat = w.state?.l132ware?.cat; if (!CATS.includes(cat)) return;
-  let b = bookOf(p.state); const want = WANTS[cat];
-  if (!b.gift) { b = { ...put(b, cat, 1), gift: true }; p.state.l132 = b; takeWare(ctx, w); return tell(ctx, p, `"First time in Lumiria? Take it. Everyone's first piece is a gift." You have ${NAMES[cat]}.`); }
-  if (!holds(p.state, want)) return tell(ctx, p, `"Lovely, isn't it? My shelf is missing ${NAMES[want]}. Bring me one and it's yours."`);
-  b = put(put(b, want, -1), cat, 1); p.state.l132 = b; takeWare(ctx, w);
-  ctx.emit("playSound", { clip: "cdn/sfx-small-wooden-object-set-down-on-market-counter.mp3", position: w.feetPosition, volume: 0.6 });
-  tell(ctx, p, `Traded ${NAMES[want]} for ${NAMES[cat]}.`);
+  const b = bookOf(p.state);
+  if (!b.gift) { p.state.l132 = { ...put(b, cat, 1), gift: true }; takeWare(ctx, w); return tell(ctx, p, `"First time in Lumiria? Take it. Everyone's first piece is a gift." You have ${NAMES[cat]}.`); }
+  p.state.bt = openTable(p.state, ctx.now(), { npc: "stall:" + cat, who: "the stallkeeper", cat, ware });
 }
 // keep one piece of a category for good: it leaves the bag and joins the player's own collection
 export function keep(ctx, p, cat) {
@@ -44,12 +42,12 @@ export function tick(ctx) { // restock
 }
 // a townsfolk keeper's offer in talk: they part with one piece of their own stall's kind for the one kind their shelf lacks
 const KEEPER = { "l132-gus": "fruit", "l132-rosalind": "hats", "l132-teodora": "pottery", "l132-benny": "phones", "l132-margo": "remedies", "l132-silas": "records", "l132-anouk": "spices", "l132-dex": "computers", "l132-wendell": "phones", "l132-del": "fruit", "l132-mateo": "spices", "l132-odalys": "computers" }; // every keeper with a trade option in dlg-level132.yml
-export function offer(ctx, { by, npc }) {
+export function offer(ctx, { by, npc }) { // a keeper's "let's trade" in talk opens their barter table
   const p = ctx.place.players.find((q) => q.id === by), cat = KEEPER[npc];
   if (!p || !cat) return;
-  let b = bookOf(p.state); const want = WANTS[cat];
-  if (!b.gift) { p.state.l132 = { ...put(b, cat, 1), gift: true }; return tell(ctx, p, `"First piece is a gift. Welcome to Lumiria." You have ${NAMES[cat]}.`); }
-  if (!holds(p.state, want)) return tell(ctx, p, `"Bring me ${NAMES[want]} and ${NAMES[cat]} is yours."`);
-  p.state.l132 = put(put(b, want, -1), cat, 1);
-  tell(ctx, p, `Traded ${NAMES[want]} for ${NAMES[cat]}.`);
+  const b = bookOf(p.state);
+  if (!b.gift) { p.state.l132 = { ...put(b, cat, 1), gift: true }; tell(ctx, p, `"First piece is a gift. Welcome to Lumiria." You have ${NAMES[cat]}.`); }
+  const who = String(getName(ctx, npc));
+  p.state.bt = openTable(p.state, ctx.now(), { npc, who, cat });
 }
+const getName = (ctx, id) => ctx.getObject(id)?.state?.name ?? id.replace("l132-", "").replace(/^./, (c) => c.toUpperCase());

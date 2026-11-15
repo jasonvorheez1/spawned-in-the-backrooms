@@ -18,7 +18,7 @@
 //
 // Rule: a panel opens only from "play", or from another wrist panel (it replaces it). Closing is always allowed.
 // Nothing here is written to state: it is read fresh from the flags, so no save or network cost and no drift.
-export const WRIST = { sheet: "sheetOpen", inventory: "invOpen", craft: "craftOpen", rest: "waitOpen", journal: "jrnOpen", radio: "radioOpen" }
+export const WRIST = { sheet: "sheetOpen", inventory: "invOpen", craft: "craftOpen", rest: "waitOpen", journal: "jrnOpen", radio: "radioOpen", phone: "phoneOpen" }
 
 export function screen(s, place) {
   if (!s) return "play"
@@ -34,6 +34,7 @@ export function screen(s, place) {
   if (s.waitOpen) return "rest"
   if (s.jrnOpen) return "journal"
   if (s.radioOpen) return "radio"
+  if (s.phoneOpen) return "phone"
   return "play"
 }
 
