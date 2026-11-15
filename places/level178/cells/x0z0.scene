@@ -50,7 +50,7 @@ l178-basin-col-w:
 l178-bay-0:
   feetPosition: {x: -8.28, y: 0.45, z: 9.2}
   id: l178-bay-0
-  model: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb
+  model: {id: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -58,7 +58,7 @@ l178-bay-0:
 l178-bay-1:
   feetPosition: {x: -4.6, y: 0.45, z: 9.2}
   id: l178-bay-1
-  model: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb
+  model: {id: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -66,7 +66,7 @@ l178-bay-1:
 l178-bay-10:
   feetPosition: {x: 0, y: 0.45, z: -9.2}
   id: l178-bay-10
-  model: /cdn/value.d2ff2cd59052905890d08b55b45abb71f777d172328ed7ae9a8cbedc42c5556b.glb
+  model: {id: /cdn/value.d2ff2cd59052905890d08b55b45abb71f777d172328ed7ae9a8cbedc42c5556b.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -74,7 +74,7 @@ l178-bay-10:
 l178-bay-11:
   feetPosition: {x: 2.76, y: 0.45, z: -9.2}
   id: l178-bay-11
-  model: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb
+  model: {id: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -82,7 +82,7 @@ l178-bay-11:
 l178-bay-12:
   feetPosition: {x: 4.6, y: 0.45, z: -9.2}
   id: l178-bay-12
-  model: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb
+  model: {id: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -90,7 +90,7 @@ l178-bay-12:
 l178-bay-13:
   feetPosition: {x: 8.28, y: 0.45, z: -9.2}
   id: l178-bay-13
-  model: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb
+  model: {id: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -98,7 +98,7 @@ l178-bay-13:
 l178-bay-14:
   feetPosition: {x: 9.2, y: 0.45, z: -8.28}
   id: l178-bay-14
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -106,7 +106,7 @@ l178-bay-14:
 l178-bay-15:
   feetPosition: {x: 9.2, y: 0.45, z: -4.6}
   id: l178-bay-15
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -114,7 +114,7 @@ l178-bay-15:
 l178-bay-16:
   feetPosition: {x: 9.2, y: 0.45, z: -2.76}
   id: l178-bay-16
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -122,7 +122,7 @@ l178-bay-16:
 l178-bay-17:
   feetPosition: {x: 9.2, y: 0.45, z: 0}
   id: l178-bay-17
-  model: /cdn/value.d2ff2cd59052905890d08b55b45abb71f777d172328ed7ae9a8cbedc42c5556b.glb
+  model: {id: /cdn/value.d2ff2cd59052905890d08b55b45abb71f777d172328ed7ae9a8cbedc42c5556b.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -130,7 +130,7 @@ l178-bay-17:
 l178-bay-18:
   feetPosition: {x: 9.2, y: 0.45, z: 2.76}
   id: l178-bay-18
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -138,7 +138,7 @@ l178-bay-18:
 l178-bay-19:
   feetPosition: {x: 9.2, y: 0.45, z: 4.6}
   id: l178-bay-19
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -146,7 +146,7 @@ l178-bay-19:
 l178-bay-2:
   feetPosition: {x: -2.76, y: 0.45, z: 9.2}
   id: l178-bay-2
-  model: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb
+  model: {id: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -154,7 +154,7 @@ l178-bay-2:
 l178-bay-20:
   feetPosition: {x: 9.2, y: 0.45, z: 8.28}
   id: l178-bay-20
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -162,7 +162,7 @@ l178-bay-20:
 l178-bay-21:
   feetPosition: {x: -9.2, y: 0.45, z: -8.28}
   id: l178-bay-21
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -170,7 +170,7 @@ l178-bay-21:
 l178-bay-22:
   feetPosition: {x: -9.2, y: 0.45, z: -4.6}
   id: l178-bay-22
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -178,7 +178,7 @@ l178-bay-22:
 l178-bay-23:
   feetPosition: {x: -9.2, y: 0.45, z: -2.76}
   id: l178-bay-23
-  model: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb
+  model: {id: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -186,7 +186,7 @@ l178-bay-23:
 l178-bay-24:
   feetPosition: {x: -9.2, y: 0.45, z: 0}
   id: l178-bay-24
-  model: /cdn/value.d2ff2cd59052905890d08b55b45abb71f777d172328ed7ae9a8cbedc42c5556b.glb
+  model: {id: /cdn/value.d2ff2cd59052905890d08b55b45abb71f777d172328ed7ae9a8cbedc42c5556b.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -194,7 +194,7 @@ l178-bay-24:
 l178-bay-25:
   feetPosition: {x: -9.2, y: 0.45, z: 2.76}
   id: l178-bay-25
-  model: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb
+  model: {id: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -202,7 +202,7 @@ l178-bay-25:
 l178-bay-26:
   feetPosition: {x: -9.2, y: 0.45, z: 4.6}
   id: l178-bay-26
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -210,7 +210,7 @@ l178-bay-26:
 l178-bay-27:
   feetPosition: {x: -9.2, y: 0.45, z: 8.28}
   id: l178-bay-27
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -218,7 +218,7 @@ l178-bay-27:
 l178-bay-28:
   feetPosition: {x: -3.74, y: 0.45, z: 10.175}
   id: l178-bay-28
-  model: /cdn/value.5143aed3f64cefa7e8828487bbba747ed6f3485038da57b19fed71e6a91ceee1.glb
+  model: {id: /cdn/value.5143aed3f64cefa7e8828487bbba747ed6f3485038da57b19fed71e6a91ceee1.glb, materials: {ochre: {pbr: true, roughness: 0.94, texture: cdn/texture-ochre-japanese-tsuchikabe-clay-plaster-straw.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -226,7 +226,7 @@ l178-bay-28:
 l178-bay-29:
   feetPosition: {x: -3.74, y: 0.45, z: 14.075}
   id: l178-bay-29
-  model: /cdn/value.0797fef872f4cf28f64dccf77a539bd7dd6a426fe87cbef51abf4922b9d68c3e.glb
+  model: {id: /cdn/value.0797fef872f4cf28f64dccf77a539bd7dd6a426fe87cbef51abf4922b9d68c3e.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -234,7 +234,7 @@ l178-bay-29:
 l178-bay-3:
   feetPosition: {x: 0, y: 0.45, z: 9.2}
   id: l178-bay-3
-  model: /cdn/value.d2ff2cd59052905890d08b55b45abb71f777d172328ed7ae9a8cbedc42c5556b.glb
+  model: {id: /cdn/value.d2ff2cd59052905890d08b55b45abb71f777d172328ed7ae9a8cbedc42c5556b.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -242,7 +242,7 @@ l178-bay-3:
 l178-bay-30:
   feetPosition: {x: -3.74, y: 0.45, z: 16.025}
   id: l178-bay-30
-  model: /cdn/value.5143aed3f64cefa7e8828487bbba747ed6f3485038da57b19fed71e6a91ceee1.glb
+  model: {id: /cdn/value.5143aed3f64cefa7e8828487bbba747ed6f3485038da57b19fed71e6a91ceee1.glb, materials: {ochre: {pbr: true, roughness: 0.94, texture: cdn/texture-ochre-japanese-tsuchikabe-clay-plaster-straw.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -250,7 +250,7 @@ l178-bay-30:
 l178-bay-31:
   feetPosition: {x: 3.74, y: 0.45, z: 10.175}
   id: l178-bay-31
-  model: /cdn/value.5143aed3f64cefa7e8828487bbba747ed6f3485038da57b19fed71e6a91ceee1.glb
+  model: {id: /cdn/value.5143aed3f64cefa7e8828487bbba747ed6f3485038da57b19fed71e6a91ceee1.glb, materials: {ochre: {pbr: true, roughness: 0.94, texture: cdn/texture-ochre-japanese-tsuchikabe-clay-plaster-straw.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -258,7 +258,7 @@ l178-bay-31:
 l178-bay-32:
   feetPosition: {x: 3.74, y: 0.45, z: 14.075}
   id: l178-bay-32
-  model: /cdn/value.0797fef872f4cf28f64dccf77a539bd7dd6a426fe87cbef51abf4922b9d68c3e.glb
+  model: {id: /cdn/value.0797fef872f4cf28f64dccf77a539bd7dd6a426fe87cbef51abf4922b9d68c3e.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -266,7 +266,7 @@ l178-bay-32:
 l178-bay-33:
   feetPosition: {x: 3.74, y: 0.45, z: 16.025}
   id: l178-bay-33
-  model: /cdn/value.5143aed3f64cefa7e8828487bbba747ed6f3485038da57b19fed71e6a91ceee1.glb
+  model: {id: /cdn/value.5143aed3f64cefa7e8828487bbba747ed6f3485038da57b19fed71e6a91ceee1.glb, materials: {ochre: {pbr: true, roughness: 0.94, texture: cdn/texture-ochre-japanese-tsuchikabe-clay-plaster-straw.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -274,7 +274,7 @@ l178-bay-33:
 l178-bay-34:
   feetPosition: {x: 12.4, y: 0.45, z: -5}
   id: l178-bay-34
-  model: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb
+  model: {id: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.099, y: 1, z: 1}
@@ -282,7 +282,7 @@ l178-bay-34:
 l178-bay-35:
   feetPosition: {x: 12.4, y: 0.45, z: -1}
   id: l178-bay-35
-  model: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb
+  model: {id: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.099, y: 1, z: 1}
@@ -290,7 +290,7 @@ l178-bay-35:
 l178-bay-36:
   feetPosition: {x: 12.4, y: 0.45, z: 1}
   id: l178-bay-36
-  model: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb
+  model: {id: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.099, y: 1, z: 1}
@@ -298,7 +298,7 @@ l178-bay-36:
 l178-bay-37:
   feetPosition: {x: 12.4, y: 0.45, z: 5}
   id: l178-bay-37
-  model: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb
+  model: {id: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.099, y: 1, z: 1}
@@ -306,7 +306,7 @@ l178-bay-37:
 l178-bay-38:
   feetPosition: {x: 10.175, y: 0.45, z: 6}
   id: l178-bay-38
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -314,7 +314,7 @@ l178-bay-38:
 l178-bay-39:
   feetPosition: {x: 10.175, y: 0.45, z: -6}
   id: l178-bay-39
-  model: /cdn/value.74239bbcaa742bb68ec4647557bbcb4af699aa2d13320822a44e04cc8dc3854a.glb
+  model: {id: /cdn/value.74239bbcaa742bb68ec4647557bbcb4af699aa2d13320822a44e04cc8dc3854a.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -322,7 +322,7 @@ l178-bay-39:
 l178-bay-4:
   feetPosition: {x: 2.76, y: 0.45, z: 9.2}
   id: l178-bay-4
-  model: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb
+  model: {id: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -330,7 +330,7 @@ l178-bay-4:
 l178-bay-40:
   feetPosition: {x: -3.07, y: 0.45, z: -10.175}
   id: l178-bay-40
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -338,7 +338,7 @@ l178-bay-40:
 l178-bay-41:
   feetPosition: {x: 3.07, y: 0.45, z: -10.175}
   id: l178-bay-41
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -346,7 +346,7 @@ l178-bay-41:
 l178-bay-42:
   feetPosition: {x: -9.2, y: 0.45, z: -10.175}
   id: l178-bay-42
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -354,7 +354,7 @@ l178-bay-42:
 l178-bay-43:
   feetPosition: {x: 9.2, y: 0.45, z: -10.175}
   id: l178-bay-43
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -362,7 +362,7 @@ l178-bay-43:
 l178-bay-44:
   feetPosition: {x: 10.175, y: 0.45, z: 9.2}
   id: l178-bay-44
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -370,7 +370,7 @@ l178-bay-44:
 l178-bay-45:
   feetPosition: {x: -10.175, y: 0.45, z: 9.2}
   id: l178-bay-45
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -378,7 +378,7 @@ l178-bay-45:
 l178-bay-46:
   feetPosition: {x: -10.175, y: 0.45, z: -9.2}
   id: l178-bay-46
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -386,7 +386,7 @@ l178-bay-46:
 l178-bay-47:
   feetPosition: {x: 12.125, y: 0.45, z: 6}
   id: l178-bay-47
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -394,7 +394,7 @@ l178-bay-47:
 l178-bay-48:
   feetPosition: {x: 12.125, y: 0.45, z: -6}
   id: l178-bay-48
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -402,7 +402,7 @@ l178-bay-48:
 l178-bay-49:
   feetPosition: {x: -3.07, y: 0.45, z: -12.125}
   id: l178-bay-49
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -410,7 +410,7 @@ l178-bay-49:
 l178-bay-5:
   feetPosition: {x: 4.6, y: 0.45, z: 9.2}
   id: l178-bay-5
-  model: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb
+  model: {id: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -418,7 +418,7 @@ l178-bay-5:
 l178-bay-50:
   feetPosition: {x: 3.07, y: 0.45, z: -12.125}
   id: l178-bay-50
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -426,7 +426,7 @@ l178-bay-50:
 l178-bay-51:
   feetPosition: {x: -9.2, y: 0.45, z: -12.125}
   id: l178-bay-51
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -434,7 +434,7 @@ l178-bay-51:
 l178-bay-52:
   feetPosition: {x: 9.2, y: 0.45, z: -12.125}
   id: l178-bay-52
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -442,7 +442,7 @@ l178-bay-52:
 l178-bay-53:
   feetPosition: {x: 12.125, y: 0.45, z: 9.2}
   id: l178-bay-53
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -450,7 +450,7 @@ l178-bay-53:
 l178-bay-54:
   feetPosition: {x: -12.125, y: 0.45, z: 9.2}
   id: l178-bay-54
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -458,7 +458,7 @@ l178-bay-54:
 l178-bay-55:
   feetPosition: {x: -12.125, y: 0.45, z: -9.2}
   id: l178-bay-55
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -466,7 +466,7 @@ l178-bay-55:
 l178-bay-56:
   feetPosition: {x: 14.075, y: 0.45, z: 6}
   id: l178-bay-56
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -474,7 +474,7 @@ l178-bay-56:
 l178-bay-57:
   feetPosition: {x: 14.075, y: 0.45, z: -6}
   id: l178-bay-57
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -482,7 +482,7 @@ l178-bay-57:
 l178-bay-58:
   feetPosition: {x: -3.07, y: 0.45, z: -14.075}
   id: l178-bay-58
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -490,7 +490,7 @@ l178-bay-58:
 l178-bay-59:
   feetPosition: {x: 3.07, y: 0.45, z: -14.075}
   id: l178-bay-59
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -498,7 +498,7 @@ l178-bay-59:
 l178-bay-6:
   feetPosition: {x: 8.28, y: 0.45, z: 9.2}
   id: l178-bay-6
-  model: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb
+  model: {id: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -506,7 +506,7 @@ l178-bay-6:
 l178-bay-60:
   feetPosition: {x: -9.2, y: 0.45, z: -14.075}
   id: l178-bay-60
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -514,7 +514,7 @@ l178-bay-60:
 l178-bay-61:
   feetPosition: {x: 9.2, y: 0.45, z: -14.075}
   id: l178-bay-61
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -522,7 +522,7 @@ l178-bay-61:
 l178-bay-62:
   feetPosition: {x: 14.075, y: 0.45, z: 9.2}
   id: l178-bay-62
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -530,7 +530,7 @@ l178-bay-62:
 l178-bay-63:
   feetPosition: {x: -14.075, y: 0.45, z: 9.2}
   id: l178-bay-63
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -538,7 +538,7 @@ l178-bay-63:
 l178-bay-64:
   feetPosition: {x: -14.075, y: 0.45, z: -9.2}
   id: l178-bay-64
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -546,7 +546,7 @@ l178-bay-64:
 l178-bay-65:
   feetPosition: {x: 16.025, y: 0.45, z: 6}
   id: l178-bay-65
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -554,7 +554,7 @@ l178-bay-65:
 l178-bay-66:
   feetPosition: {x: 16.025, y: 0.45, z: -6}
   id: l178-bay-66
-  model: /cdn/value.74239bbcaa742bb68ec4647557bbcb4af699aa2d13320822a44e04cc8dc3854a.glb
+  model: {id: /cdn/value.74239bbcaa742bb68ec4647557bbcb4af699aa2d13320822a44e04cc8dc3854a.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -562,7 +562,7 @@ l178-bay-66:
 l178-bay-67:
   feetPosition: {x: -3.07, y: 0.45, z: -16.025}
   id: l178-bay-67
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -570,7 +570,7 @@ l178-bay-67:
 l178-bay-68:
   feetPosition: {x: 3.07, y: 0.45, z: -16.025}
   id: l178-bay-68
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -578,7 +578,7 @@ l178-bay-68:
 l178-bay-69:
   feetPosition: {x: -9.2, y: 0.45, z: -16.025}
   id: l178-bay-69
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -586,7 +586,7 @@ l178-bay-69:
 l178-bay-7:
   feetPosition: {x: -8.28, y: 0.45, z: -9.2}
   id: l178-bay-7
-  model: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb
+  model: {id: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -594,7 +594,7 @@ l178-bay-7:
 l178-bay-70:
   feetPosition: {x: 9.2, y: 0.45, z: -16.025}
   id: l178-bay-70
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -602,7 +602,7 @@ l178-bay-70:
 l178-bay-71:
   feetPosition: {x: 16.025, y: 0.45, z: 9.2}
   id: l178-bay-71
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -610,7 +610,7 @@ l178-bay-71:
 l178-bay-72:
   feetPosition: {x: -16.025, y: 0.45, z: 9.2}
   id: l178-bay-72
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -618,7 +618,7 @@ l178-bay-72:
 l178-bay-73:
   feetPosition: {x: -16.025, y: 0.45, z: -9.2}
   id: l178-bay-73
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.071, y: 1, z: 1}
@@ -626,7 +626,7 @@ l178-bay-73:
 l178-bay-74:
   feetPosition: {x: -16.05, y: 0.45, z: -4}
   id: l178-bay-74
-  model: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb
+  model: {id: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.04, y: 1, z: 1}
@@ -634,7 +634,7 @@ l178-bay-74:
 l178-bay-75:
   feetPosition: {x: -14.15, y: 0.45, z: -4}
   id: l178-bay-75
-  model: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb
+  model: {id: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.04, y: 1, z: 1}
@@ -642,7 +642,7 @@ l178-bay-75:
 l178-bay-76:
   feetPosition: {x: -16.05, y: 0.45, z: -1}
   id: l178-bay-76
-  model: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb
+  model: {id: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.04, y: 1, z: 1}
@@ -650,7 +650,7 @@ l178-bay-76:
 l178-bay-77:
   feetPosition: {x: -14.15, y: 0.45, z: -1}
   id: l178-bay-77
-  model: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb
+  model: {id: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.04, y: 1, z: 1}
@@ -658,7 +658,7 @@ l178-bay-77:
 l178-bay-78:
   feetPosition: {x: -16.05, y: 0.45, z: 2}
   id: l178-bay-78
-  model: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb
+  model: {id: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.04, y: 1, z: 1}
@@ -666,7 +666,7 @@ l178-bay-78:
 l178-bay-79:
   feetPosition: {x: -14.15, y: 0.45, z: 2}
   id: l178-bay-79
-  model: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb
+  model: {id: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.04, y: 1, z: 1}
@@ -674,7 +674,7 @@ l178-bay-79:
 l178-bay-8:
   feetPosition: {x: -4.6, y: 0.45, z: -9.2}
   id: l178-bay-8
-  model: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb
+  model: {id: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -682,7 +682,7 @@ l178-bay-8:
 l178-bay-80:
   feetPosition: {x: -16.05, y: 0.45, z: 5}
   id: l178-bay-80
-  model: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb
+  model: {id: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.04, y: 1, z: 1}
@@ -690,7 +690,7 @@ l178-bay-80:
 l178-bay-81:
   feetPosition: {x: -14.15, y: 0.45, z: 5}
   id: l178-bay-81
-  model: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb
+  model: {id: /cdn/value.dd7b299695d07050c6a3f51a4b3432b7583db54e708bd78474f172890ccdf6ce.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.04, y: 1, z: 1}
@@ -698,7 +698,7 @@ l178-bay-81:
 l178-bay-9:
   feetPosition: {x: -2.76, y: 0.45, z: -9.2}
   id: l178-bay-9
-  model: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb
+  model: {id: /cdn/value.e637fd425ad4342d45cfee130a8d9791d69a41c87cfcbc818ce8313ba6c59f9b.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -763,210 +763,210 @@ l178-cabinet-swords:
 l178-ceil-e0:
   feetPosition: {x: 13.1, y: 2.95, z: -7.359999999999999}
   id: l178-ceil-e0
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-e1:
   feetPosition: {x: 13.1, y: 2.95, z: -3.679999999999999}
   id: l178-ceil-e1
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-e2:
   feetPosition: {x: 13.1, y: 2.95, z: 1.7763568394002505e-15}
   id: l178-ceil-e2
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-e3:
   feetPosition: {x: 13.1, y: 2.95, z: 3.6800000000000015}
   id: l178-ceil-e3
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-e4:
   feetPosition: {x: 13.1, y: 2.95, z: 7.360000000000003}
   id: l178-ceil-e4
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n0:
   feetPosition: {x: -15.3, y: 2.95, z: -13.1}
   id: l178-ceil-n0
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n1:
   feetPosition: {x: -11.9, y: 2.95, z: -13.1}
   id: l178-ceil-n1
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n2:
   feetPosition: {x: -8.5, y: 2.95, z: -13.1}
   id: l178-ceil-n2
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n3:
   feetPosition: {x: -5.1, y: 2.95, z: -13.1}
   id: l178-ceil-n3
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n4:
   feetPosition: {x: -1.700000000000001, y: 2.95, z: -13.1}
   id: l178-ceil-n4
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n5:
   feetPosition: {x: 1.6999999999999993, y: 2.95, z: -13.1}
   id: l178-ceil-n5
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n6:
   feetPosition: {x: 5.099999999999998, y: 2.95, z: -13.1}
   id: l178-ceil-n6
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n7:
   feetPosition: {x: 8.5, y: 2.95, z: -13.1}
   id: l178-ceil-n7
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n8:
   feetPosition: {x: 11.899999999999999, y: 2.95, z: -13.1}
   id: l178-ceil-n8
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-n9:
   feetPosition: {x: 15.299999999999997, y: 2.95, z: -13.1}
   id: l178-ceil-n9
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s0:
   feetPosition: {x: -15.3, y: 2.95, z: 13.1}
   id: l178-ceil-s0
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s1:
   feetPosition: {x: -11.9, y: 2.95, z: 13.1}
   id: l178-ceil-s1
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s2:
   feetPosition: {x: -8.5, y: 2.95, z: 13.1}
   id: l178-ceil-s2
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s3:
   feetPosition: {x: -5.1, y: 2.95, z: 13.1}
   id: l178-ceil-s3
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s4:
   feetPosition: {x: -1.700000000000001, y: 2.95, z: 13.1}
   id: l178-ceil-s4
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s5:
   feetPosition: {x: 1.6999999999999993, y: 2.95, z: 13.1}
   id: l178-ceil-s5
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s6:
   feetPosition: {x: 5.099999999999998, y: 2.95, z: 13.1}
   id: l178-ceil-s6
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s7:
   feetPosition: {x: 8.5, y: 2.95, z: 13.1}
   id: l178-ceil-s7
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s8:
   feetPosition: {x: 11.899999999999999, y: 2.95, z: 13.1}
   id: l178-ceil-s8
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-s9:
   feetPosition: {x: 15.299999999999997, y: 2.95, z: 13.1}
   id: l178-ceil-s9
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 0}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-ceil-w0:
   feetPosition: {x: -13.1, y: 2.95, z: -7.359999999999999}
   id: l178-ceil-w0
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-w1:
   feetPosition: {x: -13.1, y: 2.95, z: -3.679999999999999}
   id: l178-ceil-w1
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-w2:
   feetPosition: {x: -13.1, y: 2.95, z: 1.7763568394002505e-15}
   id: l178-ceil-w2
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-w3:
   feetPosition: {x: -13.1, y: 2.95, z: 3.6800000000000015}
   id: l178-ceil-w3
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
 l178-ceil-w4:
   feetPosition: {x: -13.1, y: 2.95, z: 7.360000000000003}
   id: l178-ceil-w4
-  model: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb
+  model: {id: /cdn/value.ae465a2141b9b55234611a930e8e9f6408c0c1825475cecd8197c865d0bea7d3.glb, materials: {wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
   tags: [l178]
@@ -1019,7 +1019,7 @@ l178-dew:
 l178-door-hub:
   feetPosition: {x: -0.455, y: 0.47, z: 17}
   id: l178-door-hub
-  model: /cdn/value.c6ee8b60927a8849a2731a3e2e6fb9ed6b43cc13e0feb371e7d9366c7b391a69.glb
+  model: {id: /cdn/value.c6ee8b60927a8849a2731a3e2e6fb9ed6b43cc13e0feb371e7d9366c7b391a69.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   state: {to: thehub}
@@ -1069,49 +1069,49 @@ l178-drawer-6:
 l178-engawa-e0:
   feetPosition: {x: 8.1, y: 0, z: -6}
   id: l178-engawa-e0
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   tags: [l178]
 l178-engawa-e1:
   feetPosition: {x: 8.1, y: 0, z: -3.6}
   id: l178-engawa-e1
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   tags: [l178]
 l178-engawa-e2:
   feetPosition: {x: 8.1, y: 0, z: -1.2}
   id: l178-engawa-e2
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   tags: [l178]
 l178-engawa-e3:
   feetPosition: {x: 8.1, y: 0, z: 1.2}
   id: l178-engawa-e3
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   tags: [l178]
 l178-engawa-e4:
   feetPosition: {x: 8.1, y: 0, z: 3.6}
   id: l178-engawa-e4
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   tags: [l178]
 l178-engawa-e5:
   feetPosition: {x: 8.1, y: 0, z: 6}
   id: l178-engawa-e5
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   tags: [l178]
 l178-engawa-n0:
   feetPosition: {x: -8.2, y: 0, z: -8.1}
   id: l178-engawa-n0
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 180}
   scale: {x: 0.833, y: 1, z: 1}
@@ -1119,7 +1119,7 @@ l178-engawa-n0:
 l178-engawa-n1:
   feetPosition: {x: -6, y: 0, z: -8.1}
   id: l178-engawa-n1
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 180}
   scale: {x: 1, y: 1, z: 1}
@@ -1127,7 +1127,7 @@ l178-engawa-n1:
 l178-engawa-n2:
   feetPosition: {x: -3.6, y: 0, z: -8.1}
   id: l178-engawa-n2
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 180}
   scale: {x: 1, y: 1, z: 1}
@@ -1135,7 +1135,7 @@ l178-engawa-n2:
 l178-engawa-n3:
   feetPosition: {x: -1.2, y: 0, z: -8.1}
   id: l178-engawa-n3
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 180}
   scale: {x: 1, y: 1, z: 1}
@@ -1143,7 +1143,7 @@ l178-engawa-n3:
 l178-engawa-n4:
   feetPosition: {x: 1.2, y: 0, z: -8.1}
   id: l178-engawa-n4
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 180}
   scale: {x: 1, y: 1, z: 1}
@@ -1151,7 +1151,7 @@ l178-engawa-n4:
 l178-engawa-n5:
   feetPosition: {x: 3.6, y: 0, z: -8.1}
   id: l178-engawa-n5
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 180}
   scale: {x: 1, y: 1, z: 1}
@@ -1159,7 +1159,7 @@ l178-engawa-n5:
 l178-engawa-n6:
   feetPosition: {x: 6, y: 0, z: -8.1}
   id: l178-engawa-n6
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 180}
   scale: {x: 1, y: 1, z: 1}
@@ -1167,7 +1167,7 @@ l178-engawa-n6:
 l178-engawa-n7:
   feetPosition: {x: 8.2, y: 0, z: -8.1}
   id: l178-engawa-n7
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 180}
   scale: {x: 0.833, y: 1, z: 1}
@@ -1175,98 +1175,98 @@ l178-engawa-n7:
 l178-engawa-s0:
   feetPosition: {x: -8.2, y: 0, z: 8.1}
   id: l178-engawa-s0
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.833, y: 1, z: 1}
   tags: [l178]
 l178-engawa-s1:
   feetPosition: {x: -6, y: 0, z: 8.1}
   id: l178-engawa-s1
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 1, y: 1, z: 1}
   tags: [l178]
 l178-engawa-s2:
   feetPosition: {x: -3.6, y: 0, z: 8.1}
   id: l178-engawa-s2
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 1, y: 1, z: 1}
   tags: [l178]
 l178-engawa-s3:
   feetPosition: {x: -1.2, y: 0, z: 8.1}
   id: l178-engawa-s3
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 1, y: 1, z: 1}
   tags: [l178]
 l178-engawa-s4:
   feetPosition: {x: 1.2, y: 0, z: 8.1}
   id: l178-engawa-s4
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 1, y: 1, z: 1}
   tags: [l178]
 l178-engawa-s5:
   feetPosition: {x: 3.6, y: 0, z: 8.1}
   id: l178-engawa-s5
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 1, y: 1, z: 1}
   tags: [l178]
 l178-engawa-s6:
   feetPosition: {x: 6, y: 0, z: 8.1}
   id: l178-engawa-s6
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 1, y: 1, z: 1}
   tags: [l178]
 l178-engawa-s7:
   feetPosition: {x: 8.2, y: 0, z: 8.1}
   id: l178-engawa-s7
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.833, y: 1, z: 1}
   tags: [l178]
 l178-engawa-w0:
   feetPosition: {x: -8.1, y: 0, z: -6}
   id: l178-engawa-w0
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: -90}
   tags: [l178]
 l178-engawa-w1:
   feetPosition: {x: -8.1, y: 0, z: -3.6}
   id: l178-engawa-w1
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: -90}
   tags: [l178]
 l178-engawa-w2:
   feetPosition: {x: -8.1, y: 0, z: -1.2}
   id: l178-engawa-w2
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: -90}
   tags: [l178]
 l178-engawa-w3:
   feetPosition: {x: -8.1, y: 0, z: 1.2}
   id: l178-engawa-w3
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: -90}
   tags: [l178]
 l178-engawa-w4:
   feetPosition: {x: -8.1, y: 0, z: 3.6}
   id: l178-engawa-w4
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: -90}
   tags: [l178]
 l178-engawa-w5:
   feetPosition: {x: -8.1, y: 0, z: 6}
   id: l178-engawa-w5
-  model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
+  model: {id: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}, wood_wet: {pbr: true, roughness: 0.25, texture: cdn/texture-polished-dark-engawa-cedar-wood-grain.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: -90}
   tags: [l178]
@@ -1288,7 +1288,7 @@ l178-fall-2:
 l178-floor-e0:
   feetPosition: {x: 13.1, y: 0, z: -7.359999999999999}
   id: l178-floor-e0
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1296,7 +1296,7 @@ l178-floor-e0:
 l178-floor-e1:
   feetPosition: {x: 13.1, y: 0, z: -3.679999999999999}
   id: l178-floor-e1
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1304,7 +1304,7 @@ l178-floor-e1:
 l178-floor-e2:
   feetPosition: {x: 13.1, y: 0, z: 1.7763568394002505e-15}
   id: l178-floor-e2
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1312,7 +1312,7 @@ l178-floor-e2:
 l178-floor-e3:
   feetPosition: {x: 13.1, y: 0, z: 3.6800000000000015}
   id: l178-floor-e3
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1320,7 +1320,7 @@ l178-floor-e3:
 l178-floor-e4:
   feetPosition: {x: 13.1, y: 0, z: 7.360000000000003}
   id: l178-floor-e4
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1328,147 +1328,147 @@ l178-floor-e4:
 l178-floor-n0:
   feetPosition: {x: -15.3, y: 0, z: -13.1}
   id: l178-floor-n0
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n1:
   feetPosition: {x: -11.9, y: 0, z: -13.1}
   id: l178-floor-n1
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n2:
   feetPosition: {x: -8.5, y: 0, z: -13.1}
   id: l178-floor-n2
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n3:
   feetPosition: {x: -5.1, y: 0, z: -13.1}
   id: l178-floor-n3
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n4:
   feetPosition: {x: -1.700000000000001, y: 0, z: -13.1}
   id: l178-floor-n4
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n5:
   feetPosition: {x: 1.6999999999999993, y: 0, z: -13.1}
   id: l178-floor-n5
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n6:
   feetPosition: {x: 5.099999999999998, y: 0, z: -13.1}
   id: l178-floor-n6
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n7:
   feetPosition: {x: 8.5, y: 0, z: -13.1}
   id: l178-floor-n7
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n8:
   feetPosition: {x: 11.899999999999999, y: 0, z: -13.1}
   id: l178-floor-n8
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-n9:
   feetPosition: {x: 15.299999999999997, y: 0, z: -13.1}
   id: l178-floor-n9
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s0:
   feetPosition: {x: -15.3, y: 0, z: 13.1}
   id: l178-floor-s0
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s1:
   feetPosition: {x: -11.9, y: 0, z: 13.1}
   id: l178-floor-s1
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s2:
   feetPosition: {x: -8.5, y: 0, z: 13.1}
   id: l178-floor-s2
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s3:
   feetPosition: {x: -5.1, y: 0, z: 13.1}
   id: l178-floor-s3
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s4:
   feetPosition: {x: -1.700000000000001, y: 0, z: 13.1}
   id: l178-floor-s4
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s5:
   feetPosition: {x: 1.6999999999999993, y: 0, z: 13.1}
   id: l178-floor-s5
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s6:
   feetPosition: {x: 5.099999999999998, y: 0, z: 13.1}
   id: l178-floor-s6
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s7:
   feetPosition: {x: 8.5, y: 0, z: 13.1}
   id: l178-floor-s7
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s8:
   feetPosition: {x: 11.899999999999999, y: 0, z: 13.1}
   id: l178-floor-s8
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-s9:
   feetPosition: {x: 15.299999999999997, y: 0, z: 13.1}
   id: l178-floor-s9
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   scale: {x: 0.934, y: 1, z: 1}
   tags: [l178]
 l178-floor-w0:
   feetPosition: {x: -13.1, y: 0, z: -7.359999999999999}
   id: l178-floor-w0
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1476,7 +1476,7 @@ l178-floor-w0:
 l178-floor-w1:
   feetPosition: {x: -13.1, y: 0, z: -3.679999999999999}
   id: l178-floor-w1
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1484,7 +1484,7 @@ l178-floor-w1:
 l178-floor-w2:
   feetPosition: {x: -13.1, y: 0, z: 1.7763568394002505e-15}
   id: l178-floor-w2
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1492,7 +1492,7 @@ l178-floor-w2:
 l178-floor-w3:
   feetPosition: {x: -13.1, y: 0, z: 3.6800000000000015}
   id: l178-floor-w3
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1500,7 +1500,7 @@ l178-floor-w3:
 l178-floor-w4:
   feetPosition: {x: -13.1, y: 0, z: 7.360000000000003}
   id: l178-floor-w4
-  model: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb
+  model: {id: /cdn/value.b2786c36f38316c9240e90d13286fa1a986b277db6cb3d3093feb8362a56cac6.glb, materials: {stone: {pbr: true, roughness: 0.85, texture: cdn/texture-grey-granite-foundation-stone-weathered.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -1660,7 +1660,7 @@ l178-maple:
 l178-out-e0:
   feetPosition: {x: 17, y: 0.45, z: -16.105263157894736}
   id: l178-out-e0
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1668,7 +1668,7 @@ l178-out-e0:
 l178-out-e1:
   feetPosition: {x: 17, y: 0.45, z: -14.31578947368421}
   id: l178-out-e1
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1676,7 +1676,7 @@ l178-out-e1:
 l178-out-e10:
   feetPosition: {x: 17, y: 0.45, z: 1.7894736842105274}
   id: l178-out-e10
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1684,7 +1684,7 @@ l178-out-e10:
 l178-out-e11:
   feetPosition: {x: 17, y: 0.45, z: 3.5789473684210513}
   id: l178-out-e11
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1692,7 +1692,7 @@ l178-out-e11:
 l178-out-e12:
   feetPosition: {x: 17, y: 0.45, z: 5.368421052631579}
   id: l178-out-e12
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1700,7 +1700,7 @@ l178-out-e12:
 l178-out-e13:
   feetPosition: {x: 17, y: 0.45, z: 7.157894736842106}
   id: l178-out-e13
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1708,7 +1708,7 @@ l178-out-e13:
 l178-out-e14:
   feetPosition: {x: 17, y: 0.45, z: 8.94736842105263}
   id: l178-out-e14
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1716,7 +1716,7 @@ l178-out-e14:
 l178-out-e15:
   feetPosition: {x: 17, y: 0.45, z: 10.736842105263158}
   id: l178-out-e15
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1724,7 +1724,7 @@ l178-out-e15:
 l178-out-e16:
   feetPosition: {x: 17, y: 0.45, z: 12.526315789473685}
   id: l178-out-e16
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1732,7 +1732,7 @@ l178-out-e16:
 l178-out-e17:
   feetPosition: {x: 17, y: 0.45, z: 14.315789473684212}
   id: l178-out-e17
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1740,7 +1740,7 @@ l178-out-e17:
 l178-out-e18:
   feetPosition: {x: 17, y: 0.45, z: 16.10526315789474}
   id: l178-out-e18
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1748,7 +1748,7 @@ l178-out-e18:
 l178-out-e2:
   feetPosition: {x: 17, y: 0.45, z: -12.526315789473685}
   id: l178-out-e2
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1756,7 +1756,7 @@ l178-out-e2:
 l178-out-e3:
   feetPosition: {x: 17, y: 0.45, z: -10.736842105263158}
   id: l178-out-e3
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1764,7 +1764,7 @@ l178-out-e3:
 l178-out-e4:
   feetPosition: {x: 17, y: 0.45, z: -8.947368421052632}
   id: l178-out-e4
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1772,7 +1772,7 @@ l178-out-e4:
 l178-out-e5:
   feetPosition: {x: 17, y: 0.45, z: -7.157894736842104}
   id: l178-out-e5
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1780,7 +1780,7 @@ l178-out-e5:
 l178-out-e6:
   feetPosition: {x: 17, y: 0.45, z: -5.368421052631579}
   id: l178-out-e6
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1788,7 +1788,7 @@ l178-out-e6:
 l178-out-e7:
   feetPosition: {x: 17, y: 0.45, z: -3.578947368421053}
   id: l178-out-e7
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1796,7 +1796,7 @@ l178-out-e7:
 l178-out-e8:
   feetPosition: {x: 17, y: 0.45, z: -1.7894736842105257}
   id: l178-out-e8
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1804,7 +1804,7 @@ l178-out-e8:
 l178-out-e9:
   feetPosition: {x: 17, y: 0.45, z: 0}
   id: l178-out-e9
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1812,7 +1812,7 @@ l178-out-e9:
 l178-out-n0:
   feetPosition: {x: -16.105263157894736, y: 0.45, z: -17}
   id: l178-out-n0
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1820,7 +1820,7 @@ l178-out-n0:
 l178-out-n1:
   feetPosition: {x: -14.31578947368421, y: 0.45, z: -17}
   id: l178-out-n1
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1828,7 +1828,7 @@ l178-out-n1:
 l178-out-n10:
   feetPosition: {x: 1.7894736842105274, y: 0.45, z: -17}
   id: l178-out-n10
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1836,7 +1836,7 @@ l178-out-n10:
 l178-out-n11:
   feetPosition: {x: 3.5789473684210513, y: 0.45, z: -17}
   id: l178-out-n11
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1844,7 +1844,7 @@ l178-out-n11:
 l178-out-n12:
   feetPosition: {x: 5.368421052631579, y: 0.45, z: -17}
   id: l178-out-n12
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1852,7 +1852,7 @@ l178-out-n12:
 l178-out-n13:
   feetPosition: {x: 7.157894736842106, y: 0.45, z: -17}
   id: l178-out-n13
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1860,7 +1860,7 @@ l178-out-n13:
 l178-out-n14:
   feetPosition: {x: 8.94736842105263, y: 0.45, z: -17}
   id: l178-out-n14
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1868,7 +1868,7 @@ l178-out-n14:
 l178-out-n15:
   feetPosition: {x: 10.736842105263158, y: 0.45, z: -17}
   id: l178-out-n15
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1876,7 +1876,7 @@ l178-out-n15:
 l178-out-n16:
   feetPosition: {x: 12.526315789473685, y: 0.45, z: -17}
   id: l178-out-n16
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1884,7 +1884,7 @@ l178-out-n16:
 l178-out-n17:
   feetPosition: {x: 14.315789473684212, y: 0.45, z: -17}
   id: l178-out-n17
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1892,7 +1892,7 @@ l178-out-n17:
 l178-out-n18:
   feetPosition: {x: 16.10526315789474, y: 0.45, z: -17}
   id: l178-out-n18
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1900,7 +1900,7 @@ l178-out-n18:
 l178-out-n2:
   feetPosition: {x: -12.526315789473685, y: 0.45, z: -17}
   id: l178-out-n2
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1908,7 +1908,7 @@ l178-out-n2:
 l178-out-n3:
   feetPosition: {x: -10.736842105263158, y: 0.45, z: -17}
   id: l178-out-n3
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1916,7 +1916,7 @@ l178-out-n3:
 l178-out-n4:
   feetPosition: {x: -8.947368421052632, y: 0.45, z: -17}
   id: l178-out-n4
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1924,7 +1924,7 @@ l178-out-n4:
 l178-out-n5:
   feetPosition: {x: -7.157894736842104, y: 0.45, z: -17}
   id: l178-out-n5
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1932,7 +1932,7 @@ l178-out-n5:
 l178-out-n6:
   feetPosition: {x: -5.368421052631579, y: 0.45, z: -17}
   id: l178-out-n6
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1940,7 +1940,7 @@ l178-out-n6:
 l178-out-n7:
   feetPosition: {x: -3.578947368421053, y: 0.45, z: -17}
   id: l178-out-n7
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1948,7 +1948,7 @@ l178-out-n7:
 l178-out-n8:
   feetPosition: {x: -1.7894736842105257, y: 0.45, z: -17}
   id: l178-out-n8
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1956,7 +1956,7 @@ l178-out-n8:
 l178-out-n9:
   feetPosition: {x: 0, y: 0.45, z: -17}
   id: l178-out-n9
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1964,7 +1964,7 @@ l178-out-n9:
 l178-out-s0:
   feetPosition: {x: -16.105263157894736, y: 0.45, z: 17}
   id: l178-out-s0
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1972,7 +1972,7 @@ l178-out-s0:
 l178-out-s1:
   feetPosition: {x: -14.31578947368421, y: 0.45, z: 17}
   id: l178-out-s1
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1980,7 +1980,7 @@ l178-out-s1:
 l178-out-s10:
   feetPosition: {x: 1.7894736842105274, y: 0.45, z: 17}
   id: l178-out-s10
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1988,7 +1988,7 @@ l178-out-s10:
 l178-out-s11:
   feetPosition: {x: 3.5789473684210513, y: 0.45, z: 17}
   id: l178-out-s11
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -1996,7 +1996,7 @@ l178-out-s11:
 l178-out-s12:
   feetPosition: {x: 5.368421052631579, y: 0.45, z: 17}
   id: l178-out-s12
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2004,7 +2004,7 @@ l178-out-s12:
 l178-out-s13:
   feetPosition: {x: 7.157894736842106, y: 0.45, z: 17}
   id: l178-out-s13
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2012,7 +2012,7 @@ l178-out-s13:
 l178-out-s14:
   feetPosition: {x: 8.94736842105263, y: 0.45, z: 17}
   id: l178-out-s14
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2020,7 +2020,7 @@ l178-out-s14:
 l178-out-s15:
   feetPosition: {x: 10.736842105263158, y: 0.45, z: 17}
   id: l178-out-s15
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2028,7 +2028,7 @@ l178-out-s15:
 l178-out-s16:
   feetPosition: {x: 12.526315789473685, y: 0.45, z: 17}
   id: l178-out-s16
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2036,7 +2036,7 @@ l178-out-s16:
 l178-out-s17:
   feetPosition: {x: 14.315789473684212, y: 0.45, z: 17}
   id: l178-out-s17
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2044,7 +2044,7 @@ l178-out-s17:
 l178-out-s18:
   feetPosition: {x: 16.10526315789474, y: 0.45, z: 17}
   id: l178-out-s18
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2052,7 +2052,7 @@ l178-out-s18:
 l178-out-s2:
   feetPosition: {x: -12.526315789473685, y: 0.45, z: 17}
   id: l178-out-s2
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2060,7 +2060,7 @@ l178-out-s2:
 l178-out-s3:
   feetPosition: {x: -10.736842105263158, y: 0.45, z: 17}
   id: l178-out-s3
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2068,7 +2068,7 @@ l178-out-s3:
 l178-out-s4:
   feetPosition: {x: -8.947368421052632, y: 0.45, z: 17}
   id: l178-out-s4
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2076,7 +2076,7 @@ l178-out-s4:
 l178-out-s5:
   feetPosition: {x: -7.157894736842104, y: 0.45, z: 17}
   id: l178-out-s5
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2084,7 +2084,7 @@ l178-out-s5:
 l178-out-s6:
   feetPosition: {x: -5.368421052631579, y: 0.45, z: 17}
   id: l178-out-s6
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2092,7 +2092,7 @@ l178-out-s6:
 l178-out-s7:
   feetPosition: {x: -3.578947368421053, y: 0.45, z: 17}
   id: l178-out-s7
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2100,7 +2100,7 @@ l178-out-s7:
 l178-out-s8:
   feetPosition: {x: -1.7894736842105257, y: 0.45, z: 17}
   id: l178-out-s8
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2108,7 +2108,7 @@ l178-out-s8:
 l178-out-s9:
   feetPosition: {x: 0, y: 0.45, z: 17}
   id: l178-out-s9
-  model: /cdn/value.e0123855622d23a185de02739bf3eadfc79140f07ae180cb3d73494025dcedf0.glb
+  model: {id: /cdn/value.e0123855622d23a185de02739bf3eadfc79140f07ae180cb3d73494025dcedf0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2116,7 +2116,7 @@ l178-out-s9:
 l178-out-w0:
   feetPosition: {x: -17, y: 0.45, z: -16.105263157894736}
   id: l178-out-w0
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2124,7 +2124,7 @@ l178-out-w0:
 l178-out-w1:
   feetPosition: {x: -17, y: 0.45, z: -14.31578947368421}
   id: l178-out-w1
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2132,7 +2132,7 @@ l178-out-w1:
 l178-out-w10:
   feetPosition: {x: -17, y: 0.45, z: 1.7894736842105274}
   id: l178-out-w10
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2140,7 +2140,7 @@ l178-out-w10:
 l178-out-w11:
   feetPosition: {x: -17, y: 0.45, z: 3.5789473684210513}
   id: l178-out-w11
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2148,7 +2148,7 @@ l178-out-w11:
 l178-out-w12:
   feetPosition: {x: -17, y: 0.45, z: 5.368421052631579}
   id: l178-out-w12
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2156,7 +2156,7 @@ l178-out-w12:
 l178-out-w13:
   feetPosition: {x: -17, y: 0.45, z: 7.157894736842106}
   id: l178-out-w13
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2164,7 +2164,7 @@ l178-out-w13:
 l178-out-w14:
   feetPosition: {x: -17, y: 0.45, z: 8.94736842105263}
   id: l178-out-w14
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2172,7 +2172,7 @@ l178-out-w14:
 l178-out-w15:
   feetPosition: {x: -17, y: 0.45, z: 10.736842105263158}
   id: l178-out-w15
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2180,7 +2180,7 @@ l178-out-w15:
 l178-out-w16:
   feetPosition: {x: -17, y: 0.45, z: 12.526315789473685}
   id: l178-out-w16
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2188,7 +2188,7 @@ l178-out-w16:
 l178-out-w17:
   feetPosition: {x: -17, y: 0.45, z: 14.315789473684212}
   id: l178-out-w17
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2196,7 +2196,7 @@ l178-out-w17:
 l178-out-w18:
   feetPosition: {x: -17, y: 0.45, z: 16.10526315789474}
   id: l178-out-w18
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2204,7 +2204,7 @@ l178-out-w18:
 l178-out-w2:
   feetPosition: {x: -17, y: 0.45, z: -12.526315789473685}
   id: l178-out-w2
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2212,7 +2212,7 @@ l178-out-w2:
 l178-out-w3:
   feetPosition: {x: -17, y: 0.45, z: -10.736842105263158}
   id: l178-out-w3
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2220,7 +2220,7 @@ l178-out-w3:
 l178-out-w4:
   feetPosition: {x: -17, y: 0.45, z: -8.947368421052632}
   id: l178-out-w4
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2228,7 +2228,7 @@ l178-out-w4:
 l178-out-w5:
   feetPosition: {x: -17, y: 0.45, z: -7.157894736842104}
   id: l178-out-w5
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2236,7 +2236,7 @@ l178-out-w5:
 l178-out-w6:
   feetPosition: {x: -17, y: 0.45, z: -5.368421052631579}
   id: l178-out-w6
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2244,7 +2244,7 @@ l178-out-w6:
 l178-out-w7:
   feetPosition: {x: -17, y: 0.45, z: -3.578947368421053}
   id: l178-out-w7
-  model: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb
+  model: {id: /cdn/value.d69093b9ac03b064921ea5f0aee61d1924d67228548aba51b5626d807e64c5c0.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2252,7 +2252,7 @@ l178-out-w7:
 l178-out-w8:
   feetPosition: {x: -17, y: 0.45, z: -1.7894736842105257}
   id: l178-out-w8
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2260,7 +2260,7 @@ l178-out-w8:
 l178-out-w9:
   feetPosition: {x: -17, y: 0.45, z: 0}
   id: l178-out-w9
-  model: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb
+  model: {id: /cdn/value.42532e4b143da01f7801b0d1841b3406df04185de589a380e5120d3b5393a1df.glb, materials: {plaster: {pbr: true, roughness: 0.92, texture: cdn/texture-cream-shikkui-lime-plaster-hand-troweled.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 0.983, y: 1, z: 1}
@@ -2414,33 +2414,33 @@ l178-rock-9:
 l178-roof-0:
   feetPosition: {x: 0, y: 3.25, z: -12.136}
   id: l178-roof-0
-  model: /cdn/value.ce2ff7aaa81353cc33ccf0285d292dcf4017bf6ed6214ab03cb78e0ad5dd54b9.glb
+  model: {id: /cdn/value.ce2ff7aaa81353cc33ccf0285d292dcf4017bf6ed6214ab03cb78e0ad5dd54b9.glb, materials: {kawara: {metalness: 0.15, pbr: true, roughness: 0.4, texture: cdn/texture-dark-silver-grey-kawara-glazed-clay-roof-tiles.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-roof-180:
   feetPosition: {x: 0, y: 3.25, z: 12.136}
   id: l178-roof-180
-  model: /cdn/value.ce2ff7aaa81353cc33ccf0285d292dcf4017bf6ed6214ab03cb78e0ad5dd54b9.glb
+  model: {id: /cdn/value.ce2ff7aaa81353cc33ccf0285d292dcf4017bf6ed6214ab03cb78e0ad5dd54b9.glb, materials: {kawara: {metalness: 0.15, pbr: true, roughness: 0.4, texture: cdn/texture-dark-silver-grey-kawara-glazed-clay-roof-tiles.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   rotation: {yaw: 180}
   tags: [l178]
 l178-roof-270:
   feetPosition: {x: 12.136, y: 3.25, z: 0}
   id: l178-roof-270
-  model: /cdn/value.ce2ff7aaa81353cc33ccf0285d292dcf4017bf6ed6214ab03cb78e0ad5dd54b9.glb
+  model: {id: /cdn/value.ce2ff7aaa81353cc33ccf0285d292dcf4017bf6ed6214ab03cb78e0ad5dd54b9.glb, materials: {kawara: {metalness: 0.15, pbr: true, roughness: 0.4, texture: cdn/texture-dark-silver-grey-kawara-glazed-clay-roof-tiles.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   rotation: {yaw: 270}
   tags: [l178]
 l178-roof-90:
   feetPosition: {x: -12.136, y: 3.25, z: 0}
   id: l178-roof-90
-  model: /cdn/value.ce2ff7aaa81353cc33ccf0285d292dcf4017bf6ed6214ab03cb78e0ad5dd54b9.glb
+  model: {id: /cdn/value.ce2ff7aaa81353cc33ccf0285d292dcf4017bf6ed6214ab03cb78e0ad5dd54b9.glb, materials: {kawara: {metalness: 0.15, pbr: true, roughness: 0.4, texture: cdn/texture-dark-silver-grey-kawara-glazed-clay-roof-tiles.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}}}
   rotation: {yaw: 90}
   tags: [l178]
 l178-shoji-1:
   behavior: scripts/l178-prop.js
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: [l178-break]}]
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: {id: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: [l178-break]}]
   feetPosition: {x: -6.44, y: 0.45, z: 9.2}
   id: l178-shoji-1
-  model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
+  model: {id: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -2448,10 +2448,10 @@ l178-shoji-1:
   tags: [l178, l178-shoji, usable]
 l178-shoji-10:
   behavior: scripts/l178-prop.js
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: {id: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: 12.4, y: 0.45, z: 3}
   id: l178-shoji-10
-  model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
+  model: {id: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.099, y: 1, z: 1}
@@ -2459,10 +2459,10 @@ l178-shoji-10:
   tags: [l178, l178-shoji, usable]
 l178-shoji-11:
   behavior: scripts/l178-prop.js
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: {id: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: 3.74, y: 0.45, z: 12.125}
   id: l178-shoji-11
-  model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
+  model: {id: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -2470,10 +2470,10 @@ l178-shoji-11:
   tags: [l178, l178-shoji, usable]
 l178-shoji-12:
   behavior: scripts/l178-prop.js
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: {id: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: -3.74, y: 0.45, z: 12.125}
   id: l178-shoji-12
-  model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
+  model: {id: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.071, y: 1, z: 1}
@@ -2481,10 +2481,10 @@ l178-shoji-12:
   tags: [l178, l178-shoji, usable]
 l178-shoji-2:
   behavior: scripts/l178-prop.js
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: {id: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: 6.44, y: 0.45, z: 9.2}
   id: l178-shoji-2
-  model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
+  model: {id: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -2492,10 +2492,10 @@ l178-shoji-2:
   tags: [l178, l178-shoji, usable]
 l178-shoji-3:
   behavior: scripts/l178-prop.js
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: {id: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: -6.44, y: 0.45, z: -9.2}
   id: l178-shoji-3
-  model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
+  model: {id: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -2503,10 +2503,10 @@ l178-shoji-3:
   tags: [l178, l178-shoji, usable]
 l178-shoji-4:
   behavior: scripts/l178-prop.js
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: {id: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: 6.44, y: 0.45, z: -9.2}
   id: l178-shoji-4
-  model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
+  model: {id: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
   scale: {x: 1.011, y: 1, z: 1}
@@ -2514,10 +2514,10 @@ l178-shoji-4:
   tags: [l178, l178-shoji, usable]
 l178-shoji-5:
   behavior: scripts/l178-prop.js
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: {id: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: 9.2, y: 0.45, z: -6.44}
   id: l178-shoji-5
-  model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
+  model: {id: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -2525,10 +2525,10 @@ l178-shoji-5:
   tags: [l178, l178-shoji, usable]
 l178-shoji-6:
   behavior: scripts/l178-prop.js
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: {id: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: 9.2, y: 0.45, z: 6.44}
   id: l178-shoji-6
-  model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
+  model: {id: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -2536,10 +2536,10 @@ l178-shoji-6:
   tags: [l178, l178-shoji, usable]
 l178-shoji-7:
   behavior: scripts/l178-prop.js
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: {id: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: -9.2, y: 0.45, z: -6.44}
   id: l178-shoji-7
-  model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
+  model: {id: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -2547,10 +2547,10 @@ l178-shoji-7:
   tags: [l178, l178-shoji, usable]
 l178-shoji-8:
   behavior: scripts/l178-prop.js
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: {id: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: -9.2, y: 0.45, z: 6.44}
   id: l178-shoji-8
-  model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
+  model: {id: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.011, y: 1, z: 1}
@@ -2558,10 +2558,10 @@ l178-shoji-8:
   tags: [l178, l178-shoji, usable]
 l178-shoji-9:
   behavior: scripts/l178-prop.js
-  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
+  children: [{feetPosition: {x: 0, y: 0, z: -0.018}, id: leaf, model: {id: /cdn/value.5bac7e668f4a3cecb5581fd3559261bc1aec8574bb416a81df10acd282442a54.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}, physics: {body: kinematic, collider: box}, rotation: {yaw: 90}, tags: []}]
   feetPosition: {x: 12.4, y: 0.45, z: -3}
   id: l178-shoji-9
-  model: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb
+  model: {id: /cdn/value.48a5baf5d2fdbf44f03bf97eb2b9763d45f20ef3440ffedca28d1e0bb3018500.glb, materials: {washi: {emissive: oklch(0.78 0.04 85), emissiveIntensity: 0.25, pbr: true, roughness: 0.95, texture: cdn/texture-white-washi-paper-long-fibers.png, wrap: repeat}, wood_dark: {pbr: true, roughness: 0.45, texture: cdn/texture-aged-dark-keyaki-wood-grain-oiled.png, wrap: repeat}, wood_light: {pbr: true, roughness: 0.6, texture: cdn/texture-pale-sugi-cedar-wood-grain-fine.png, wrap: repeat}, wood_mid: {pbr: true, roughness: 0.55, texture: cdn/texture-warm-hinoki-cypress-wood-grain-satin.png, wrap: repeat}}}
   physics: {body: static, collider: mesh}
   rotation: {yaw: 90}
   scale: {x: 1.099, y: 1, z: 1}
@@ -2736,67 +2736,67 @@ l178-tap:
 l178-tatami-0:
   feetPosition: {x: -1.82, y: 0.45, z: 11.1}
   id: l178-tatami-0
-  model: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb
+  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-1:
   feetPosition: {x: 1.82, y: 0.45, z: 11.1}
   id: l178-tatami-1
-  model: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb
+  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-10:
   feetPosition: {x: -9, y: 0.45, z: 13.1}
   id: l178-tatami-10
-  model: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb
+  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-2:
   feetPosition: {x: -1.82, y: 0.45, z: 14.85}
   id: l178-tatami-2
-  model: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb
+  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-3:
   feetPosition: {x: 1.82, y: 0.45, z: 14.85}
   id: l178-tatami-3
-  model: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb
+  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-4:
   feetPosition: {x: -6.1, y: 0.45, z: -13.1}
   id: l178-tatami-4
-  model: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb
+  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-5:
   feetPosition: {x: 0, y: 0.45, z: -13.1}
   id: l178-tatami-5
-  model: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb
+  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-6:
   feetPosition: {x: 6.1, y: 0.45, z: -13.1}
   id: l178-tatami-6
-  model: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb
+  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-7:
   feetPosition: {x: 13.1, y: 0.45, z: -12.6}
   id: l178-tatami-7
-  model: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb
+  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-8:
   feetPosition: {x: 9, y: 0.45, z: 13.1}
   id: l178-tatami-8
-  model: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb
+  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-tatami-9:
   feetPosition: {x: 14.7, y: 0.45, z: 0}
   id: l178-tatami-9
-  model: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb
+  model: {id: /cdn/value.9fb25e9aacb9758c10f33888c4fb1e5b84e3159c74ef4e2a0d1add8339b79a9d.glb, materials: {border: {pbr: true, roughness: 0.85, texture: cdn/texture-dark-indigo-woven-cloth-tatami-heri-border.png, wrap: repeat}, tatami: {pbr: true, roughness: 0.9, texture: cdn/texture-igusa-tatami-woven-rush-straw-green-gold.png, wrap: repeat}}}
   rotation: {yaw: 0}
   tags: [l178]
 l178-to-hub:
