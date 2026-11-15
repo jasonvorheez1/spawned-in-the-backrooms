@@ -1559,7 +1559,7 @@ l178-geta:
 l178-gravel:
   feetPosition: {x: 0, y: 0.015, z: 0}
   id: l178-gravel
-  model: /cdn/value.f3fd84525aa5b722b1750ba825384925c82b0d995fc289ac5c2e3d01f4323450.glb
+  model: {id: /cdn/value.f3fd84525aa5b722b1750ba825384925c82b0d995fc289ac5c2e3d01f4323450.glb, materials: {gravel: {pbr: true, repeat: [1.2, 1.2], roughness: 0.95, texture: cdn/texture-raked-zen-garden-gravel-pale-grey-lines.png, wrap: repeat}}}
   receiveShadow: true
   tags: [l178, l178-garden]
 l178-kitchen-light-0:
