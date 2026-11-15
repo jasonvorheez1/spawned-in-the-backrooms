@@ -202,7 +202,7 @@ export function talkUi(ctx, player) {
       `<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'cdismiss'})">Dismiss</button>`,
     ].join('')
     sysActions.push(`<details class="tc-orders" data-interactive><summary class="tc-act-btn">Orders</summary><div class="tc-orders-list">${orderBtns}</div></details>`)
-  } else if (!isTrader(it) && !['smith', 'quarter'].includes(role) && !it.tags?.includes?.('faceling')) {
+  } else if (!isTrader(it) && !['smith', 'quarter', 'duke'].includes(role) && !it.tags?.includes?.('faceling') && it.state?.faction !== 'lumiria' && !it.state?.noRecruit) { // Lumiria's folk and the Duke stay home
     sysActions.push(`<button class="tc-act-btn" data-interactive onclick="sendAction('talkdo',{k:'crecruit'})">Recruit</button>`)
   }
 
