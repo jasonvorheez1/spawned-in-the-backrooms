@@ -2,6 +2,7 @@
 # Stallkeeper k stands behind stall k (angle 22.5 + 45k, radius 16.6) facing the tree. collects / wants / offers use l132-barter.js CATS.
 peopleV: 4
 ground: 0
+strayR: 75 # past this from the tree a Lumirian is sent home
 level: 6
 hp: 60
 tree: { x: 0, z: 0 }

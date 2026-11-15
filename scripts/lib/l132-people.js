@@ -63,8 +63,19 @@ export function lay(ctx, L) {
   if (ctx.place.objects[LAPTOP]) ctx.destroy(LAPTOP);
   odalysProps(ctx);
 }
+// a walker that left town (an old sleep kept its stride) goes back to its own spot
+function strays(ctx) {
+  for (const id of IDS) {
+    if (id === "l132-odalys") continue;
+    const o = ctx.place.objects[id], f = o?.worldFeetPosition; if (!f) continue;
+    if (Math.hypot(f.x - T.x, f.z - T.z) < (P.strayR ?? 75) && f.y > G - 2) continue;
+    const h = o.state?.home ?? { x: 0, y: G, z: 10 };
+    o.velocity = { x: 0, y: 0, z: 0 }; o.feetPosition = { x: h.x, y: G, z: h.z };
+    if (o.state) { o.state.ri = 0; }
+  }
+}
 export function tick(ctx, L) {
-  if (every(ctx, "l132people", 5000)) { keepPeople(ctx, IDS, person); odalysProps(ctx); }
+  if (every(ctx, "l132people", 5000)) { keepPeople(ctx, IDS, person); odalysProps(ctx); strays(ctx); }
   seatOdalys(ctx);
   tickChatter(ctx, CHATTER.level132 ?? [], VOICES);
 }
