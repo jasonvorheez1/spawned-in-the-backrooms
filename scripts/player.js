@@ -549,7 +549,7 @@ function takeToken1(ctx, token, opts) {
     if (W[k].cnd != null && !owned(s).slice(0, -1).includes(k)) s['cnd_' + k] = W[k].cnd // a rusty find comes worn, an M.E.G. one pristine
     if (usable(s, k) && W[k].damage > weaponOf(s).damage) s.equipped = k
     s.pickedAt = now; s.gotWeapon = W[k].name
-    if (baseOf(k) === 'fishing_rod') s.notice = { text: 'Salvaged fishing rod · Cast into Level 10\'s lake, Level 11\'s canal, or Level 7\'s sea to fish!', at: now }
+    if (baseOf(k) === 'fishing_rod') s.notice = { text: 'Salvaged fishing rod · Cast into any water: lakes, canals, seas, pools, fountains. Click when the float dives.', at: now }
     if (opts?.xp !== false) gain(ctx, W[k].xp ?? L.xpAlmond)
     sound(ctx, 'pickup-weapon', 0.7, true)
     return { ok: true }

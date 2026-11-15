@@ -135,7 +135,7 @@ function describe0(token) {
     if (!w) return { name: 'Something', info: '', color: '#cccccc' }
     const r = W.rarities?.[w.rarity] ?? {}
     const rq = w.req ? ` · REQ ${reqText(w)}` : ''
-    const fishHint = k.startsWith('fishing_rod') ? ' · Cast at lakes, canals or sea to fish' : ''
+    const fishHint = k.startsWith('fishing_rod') ? ' · Cast into any water. Click when the float dives' : ''
     return { name: w.name, info: `${r.label ?? ''} · DMG ${w.damage}${w.ranged ? ' · ranged' : ''}${w.two ? ' · two-handed' : ''}${fishHint}${rq}`, color: r.color ?? '#cccccc' }
   }
   return { name: token, info: '', color: '#cccccc' }

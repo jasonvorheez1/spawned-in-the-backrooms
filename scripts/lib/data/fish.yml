@@ -1,0 +1,39 @@
+# Fish species by water kind (Savi's picks, Nov 15). kg: weight range; w: how often it bites; rare: shorter strike window, can get away; hp/food: what eating it gives (shown).
+freshwater:
+  - { id: minnow, name: "Lake Minnow", kg: [0.05, 0.2], w: 30, hp: 8, food: 14 }
+  - { id: perch, name: "Yellow Perch", kg: [0.2, 0.9], w: 22, hp: 12, food: 20 }
+  - { id: trout, name: "Silver-Finned Trout", kg: [0.6, 3.2], w: 16, hp: 14, food: 25 }
+  - { id: bass, name: "Golden Bumper Bass", kg: [0.9, 4.5], w: 12, hp: 18, food: 30 }
+  - { id: pike, name: "Wheatfield Pike", kg: [2, 9], w: 6, hp: 22, food: 36, rare: true }
+  - { id: lungfish, name: "Hum-Gilled Lungfish", kg: [3, 12], w: 2, hp: 30, food: 45, rare: true }
+saltwater:
+  - { id: smelt, name: "Trench Smelt", kg: [0.05, 0.3], w: 28, hp: 8, food: 14 }
+  - { id: cavecarp, name: "Blind Cave-Carp", kg: [0.5, 2.5], w: 20, hp: 14, food: 25 }
+  - { id: mackerel, name: "Static Mackerel", kg: [0.4, 1.6], w: 18, hp: 12, food: 22 }
+  - { id: eel, name: "Lamplight Eel", kg: [1, 5], w: 9, hp: 18, food: 28, rare: true }
+  - { id: anglerfish, name: "Parlor Anglerfish", kg: [2, 8], w: 4, hp: 24, food: 34, rare: true }
+  - { id: leviathan, name: "Pale Leviathan Fry", kg: [20, 60], w: 1, hp: 40, food: 60, rare: true, deep: true }
+canal:
+  - { id: catfish, name: "Canal Catfish", kg: [0.8, 6], w: 22, hp: 14, food: 25 }
+  - { id: koi, name: "Albino Urban Koi", kg: [0.5, 3], w: 16, hp: 16, food: 26 }
+  - { id: gutterdace, name: "Gutter Dace", kg: [0.1, 0.5], w: 28, hp: 8, food: 14 }
+  - { id: neonpleco, name: "Streetlight Pleco", kg: [0.3, 1.2], w: 8, hp: 12, food: 18, rare: true }
+ocean:
+  - { id: herring, name: "Fog Herring", kg: [0.1, 0.5], w: 28, hp: 9, food: 15 }
+  - { id: cod, name: "Deck-Rail Cod", kg: [1, 7], w: 18, hp: 16, food: 28 }
+  - { id: sunfish, name: "Party Sunfish", kg: [2, 20], w: 6, hp: 26, food: 40, rare: true }
+  - { id: balloonfish, name: "Balloonfish", kg: [0.3, 1.5], w: 10, hp: 10, food: 16, rare: true }
+chalksea:
+  - { id: bream, name: "Chalkwater Bream", kg: [0.4, 2.5], w: 24, hp: 13, food: 22 }
+  - { id: seabass, name: "Morigont Sea Bass", kg: [1, 6], w: 16, hp: 18, food: 30 }
+  - { id: dukefish, name: "Duke's Turbot", kg: [3, 14], w: 5, hp: 26, food: 42, rare: true }
+  - { id: clockfish, name: "Gear-Finned Clockfish", kg: [0.5, 2], w: 4, hp: 14, food: 20, rare: true }
+spring:
+  - { id: medaka, name: "Hot-Spring Medaka", kg: [0.02, 0.08], w: 30, hp: 6, food: 8 }
+  - { id: ayu, name: "Sweetfish Ayu", kg: [0.1, 0.4], w: 16, hp: 12, food: 20 }
+  - { id: goldkoi, name: "Golden Dream Koi", kg: [1, 5], w: 3, hp: 20, food: 30, rare: true }
+pool:
+  - { id: goldfish, name: "Escaped Goldfish", kg: [0.02, 0.2], w: 20, hp: 4, food: 6 }
+  - { id: poolfrog, name: "Chlorine Toad", kg: [0.1, 0.3], w: 6, hp: 3, food: 4, rare: true }
+fountain:
+  - { id: mallkoi, name: "Mall Fountain Koi", kg: [0.3, 2], w: 10, hp: 12, food: 18, rare: true }
