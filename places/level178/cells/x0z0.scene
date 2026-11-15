@@ -1,6 +1,6 @@
 # spawn-scene v2 yaml x0z0
 l178-basin:
-  feetPosition: {x: 0, y: 0, z: 0}
+  feetPosition: {x: 0, y: -1.93, z: 0}
   id: l178-basin
   model: /cdn/value.f5ef79c9a264aad2ed5afd716936158eb41fec417a7998827ad2a462350a3177.glb
   physics: none
