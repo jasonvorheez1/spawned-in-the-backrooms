@@ -209,7 +209,7 @@ def build_engawa():
     sweep("wood_mid", circ(.078, 16), (-1.2, .07, -1.0), (-1.2, 2.88, -1.0), up=(0, 0, 1), seg=6, taper=.08, wob=.004, sa=60)   # round post on its footing stone
     sweep("wood_mid", circ(.082, 16, .086), (-1.2, 2.87, -1.0), (1.2, 2.87, -1.0), seg=6, wob=.005, sa=60, tile=1.6)            # keta beam log
     def ry(z): return roofY(z + 8.1)
-    k = .303; nrm = Vector((0, 1, k)).normalized()   # roof rises toward +z here
+    k = .303; nrm = Vector((0, 1, -k)).normalized()   # roof rises toward +z here
     for i in range(8):   # taruki every 0.3 m, tails running out to the eave
         x = -1.05 + .3 * i; z0, z1 = -1.585, 1.1
         p0 = Vector((x, ry(z0) - .074, z0)) - nrm * .03; p1 = Vector((x, ry(z1) - .074, z1)) - nrm * .03
