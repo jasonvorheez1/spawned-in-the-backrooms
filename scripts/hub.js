@@ -84,6 +84,7 @@ export function onInput(ctx, input) {
     if (d.v === "level0") return board(ctx, s, "main", false)
     if (d.v === "testlab") return board(ctx, s, "testlab", false) // the Test Range (Shelly, Nov 10)
     if (d.v === "last") { const l = lastLevel(s); if (l) return board(ctx, s, l, true) }
+    if (typeof d.v === "string" && atlasable(d.v) && s.atlas?.[d.v]) return board(ctx, s, d.v, false) // any level on your atlas
     const h = HOMES.find((x) => x.key === d.v)
     if (h && h.has(s)) return board(ctx, s, typeof h.to === "function" ? h.to(s) : h.to, false)
     ding(ctx, NOPE); tell(ctx, s, "You haven't unlocked that home yet.")

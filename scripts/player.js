@@ -19,6 +19,7 @@ const lazy = (k, load) => {
 const callLazy = (k, load, fn, ...args) => (MODS[k]?.[fn] ? MODS[k][fn](...args) : (MOD_WAIT[k] ??= load().then((m) => (MODS[k] = m))).then((m) => m?.[fn]?.(...args)))
 const loadFish = () => import('./lib/fishing.js')
 import { preloadTick } from './lib/preload-next.js'
+import { noteAtlas, atlasKey } from './lib/hub.js'
 import { powerKnock } from './lib/knock.js'
 import SNK from "./lib/data/sneak.yml"
 import { yawOf } from "./lib/sneak.js"
@@ -1985,6 +1986,7 @@ function tickStats(ctx, t, moving) {
     }
   }
   if (canSaveHere(ctx.self.place) && ctx.self.grounded /* Nov 14: a mid-fall save woke Shelly falling forever in 109 */ && now - (w.savedAt ?? 0) > 4000) { w.savedAt = now; s.savePos = { x: Math.round(p.x * 10) / 10, y: Math.round(p.y * 10) / 10, z: Math.round(p.z * 10) / 10 }; s.savePlace = ctx.self.place }
+  if (ctx.session.atlasP !== ctx.self.place) { ctx.session.atlasP = ctx.self.place; noteAtlas(ctx, ctx.self); if (s.savePlace && !s.atlas?.[atlasKey(s.savePlace)]) { const was = ctx.self.place; noteAtlas(ctx, { place: s.savePlace, state: s }); void was } } // the station's atlas, once per arrival
   // exploring: every new cell is xp
   const { cx, cz } = cellAt(p.x, p.z)
   if (cx >= 0 && cz >= 0 && cx < N && cz < N) {

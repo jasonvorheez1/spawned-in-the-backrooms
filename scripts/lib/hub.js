@@ -1,5 +1,6 @@
 import { PLACARDS as L5NUM } from "./level5.js";
 import { isMulti, mpRoom } from "./run-opts.js";
+import { PLACES } from "./places.js";
 // The Bonus Room's rooms (johnadams2, Nov 8): one shared mall room everyone meets in, a solo room per player for the Backrooms.
 // No yml here: scripts/routing.js imports this file before any world exists.
 export const HUB_ROOM = "bonus"
@@ -35,4 +36,16 @@ export function toSolo(ctx, where, who = ctx.self, keepPos = false) {
   const r = ctx.cross(who, `world:${ctx.world.id}/room:${room}+${where}`)
   if (!r?.crossed) s.roomHop = null
   return r
+}
+
+// The station's atlas (Shelly Nov 15: "every level we explore should save in the kiosk"): player.state.atlas = { <place>: { at: "YYYY-MM-DD", n } },
+// character-level (not a story key), so a level you reached stays on the board in every save and mode. Written on arrival only.
+export const ATLAS_SKIP = new Set(["intake", "bonus", "testlab", "spamton", "levelrun", "home11"]) // scripted events, the mall itself, homes (own rows)
+export const atlasKey = (p) => (p === "tutorial0" ? "main" : p)
+export const atlasable = (p) => !!PLACES[p] && !ATLAS_SKIP.has(p) && p !== "tutorial0"
+export const ATLAS_ORDER = Object.keys(PLACES).filter(atlasable)
+export function noteAtlas(ctx, who) {
+  const p = atlasKey(who.place); if (!atlasable(p)) return
+  const s = who.state, a = s.atlas ?? {}, row = a[p]
+  s.atlas = { ...a, [p]: { at: row?.at ?? ctx.world.date, n: (row?.n ?? 0) + 1 } }
 }
