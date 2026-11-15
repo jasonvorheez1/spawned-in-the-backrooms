@@ -1,0 +1,40 @@
+# Lumiria's people (scripts/lib/l132-people.js). Metres, north = -Z, ground y = 0. post: [x, z, yaw]; rounds: [[x, z, dwell, {sit: seconds, yaw, look}]].
+# Stallkeeper k stands behind stall k (angle 22.5 + 45k, radius 16.6) facing the tree. collects / wants / offers use l132-barter.js CATS.
+peopleV: 3
+ground: 0
+level: 6
+hp: 60
+tree: { x: 0, z: 0 }
+odalysBench: { x: 6, z: 20, sit: 0.3, laptopSide: 0.75, bench: { id: /cdn/value.1d9d604c2f50e7ba25207efcd0b367cc3e801f8253ae9975869ad55ea541a473.glb, s: 1.25 }, laptop: { id: /cdn/value.057f996de00404bf98410b7deabf7d3b9c2fb08d17f7c440de21a7c8fcc8d5a0.glb, s: 0.4, yaw: 180 } }
+named:
+  - { id: l132-teodora, name: "Teodora", sex: f, job: "pottery stall", voice: l132-teodora, look: { hair: f_bob, hairc: "#2b1d14", fur: "#c99a6b", topw: dress, eyew: glasses },
+      post: [6.35, -15.34, 157.5], rounds: [[6.35, -15.34, 70], [8.67, -14.15, 10]], collects: pottery, wants: spices, offers: pottery }
+  - { id: l132-benny, name: "Benny", sex: m, job: "phone stall", voice: l132-benny, look: { hair: m_curtains, hairc: "#1b1b1b", fur: "#8c8c8c", topw: jacket, hat: cap },
+      post: [15.34, -6.35, 112.5], rounds: [[15.34, -6.35, 70], [16.14, -3.88, 10]], collects: phones, wants: computers, offers: phones }
+  - { id: l132-margo, name: "Margo", sex: f, job: "remedy stall", voice: l132-margo, look: { hair: f_curly, hairc: "#9a9a9a", fur: "#e8dccb", topw: apron, neck: scarf },
+      post: [15.34, 6.35, 67.5], rounds: [[15.34, 6.35, 70], [14.15, 8.67, 10]], collects: remedies, wants: pottery, offers: remedies }
+  - { id: l132-silas, name: "Silas", sex: m, job: "record stall", voice: l132-silas, look: { hair: none, fur: "#3a2a20", topw: sweater, eyew: shades, beard: true },
+      post: [6.35, 15.34, 22.5], rounds: [[6.35, 15.34, 70], [3.88, 16.14, 10]], collects: records, wants: hats, offers: records }
+  - { id: l132-anouk, name: "Anouk", sex: f, job: "spice stall", voice: l132-anouk, look: { hair: f_long, hairc: "#4a2210", fur: "#d0742c", topw: tank, hat: flower },
+      post: [-6.35, 15.34, -22.5], rounds: [[-6.35, 15.34, 70], [-8.67, 14.15, 10]], collects: spices, wants: remedies, offers: spices }
+  - { id: l132-dex, name: "Dex", sex: m, job: "game cartridge stall", voice: l132-dex, look: { hair: m_shaggy, hairc: "#2a3a5a", fur: "#f0efe8", topw: hoodie, hat: headphones },
+      post: [-15.34, 6.35, -67.5], rounds: [[-15.34, 6.35, 70], [-16.14, 3.88, 10]], collects: computers, wants: phones, offers: computers }
+  - { id: l132-rosalind, name: "Rosalind", sex: f, job: "hat stall", voice: l132-rosalind, look: { hair: f_ponytail, hairc: "#c8a060", fur: "#2c2c30", topw: longsleeve, hat: tophat, neck: bowtie },
+      post: [-15.34, -6.35, -112.5], rounds: [[-15.34, -6.35, 70], [-14.15, -8.67, 10]], collects: hats, wants: fruit, offers: hats }
+  - { id: l132-gus, name: "Gus", sex: m, job: "fruit stall", voice: l132-gus, look: { hair: none, fur: "#e0a050", topw: tee, botw: overalls, hat: beanie },
+      post: [-6.35, -15.34, -157.5], rounds: [[-6.35, -15.34, 70], [-3.88, -16.14, 10]], collects: fruit, wants: records, offers: fruit }
+  - { id: l132-wendell, name: "Wendell", sex: m, job: "RadioShed clerk", voice: l132-wendell, look: { hair: m_crop, hairc: "#6b4a2a", fur: "#b98a5a", topw: longsleeve, eyew: glasses, neck: bowtie },
+      post: [3.4, -39.4, 180], rounds: [[3.4, -39.4, 50], [0, -36.5, 8], [-1.5, -37.5, 12]], collects: computers, wants: phones, offers: computers }
+  - { id: l132-del, name: "Del", sex: f, job: "Starlite Diner cook", voice: l132-del, look: { hair: f_pixie, hairc: "#b03020", fur: "#f3e6d4", topw: apron },
+      post: [43.0, -1.5, 90], rounds: [[43.0, -1.5, 50], [36.5, 0, 8], [42.0, 2.0, 12]], collects: records, wants: hats, offers: fruit }
+  - { id: l132-mateo, name: "Mateo", sex: m, job: "Dial-Up Cafe owner", voice: l132-mateo, look: { hair: m_fluffy, hairc: "#2a1a10", fur: "#7a5a40", topw: sweater },
+      post: [-37.8, -5.0, -90], rounds: [[-37.8, -5.0, 50], [-36.5, 0, 8], [-39.0, 3.0, 12]], collects: phones, wants: computers, offers: computers }
+  - { id: l132-odalys, name: "Odalys", sex: f, job: "wanderer typing for the M.E.G. database", voice: l132-odalys, look: { hair: f_wolfcut, hairc: "#3a3040", fur: "#a9a4b8", topw: hoodie, botw: shorts },
+      post: [5.91, 19.71, 16.7], rounds: [[5.91, 19.71, 99999, { sit: 99999, yaw: 16.7 }]], collects: computers, wants: phones, offers: remedies }
+strollers:
+  - { id: l132-stroller-1, sex: f, look: { hair: f_twintails, topw: dress }, rounds: [[4.82, -11.64, 12], [8.75, 0, 40, { sit: 30, yaw: 90 }], [11.64, 4.82, 12], [0, -32.5, 6], [0, -36.5, 14], [-4.82, -11.64, 10]] }
+  - { id: l132-stroller-2, sex: m, look: { hair: m_ponytail, topw: jacket }, rounds: [[11.64, -4.82, 12], [32.5, 0, 6], [36.5, 0, 16], [11.64, 4.82, 10], [4.82, 11.64, 12], [-7, 20.5, 8]] }
+  - { id: l132-stroller-3, sex: f, look: { hair: none, topw: sweater, eyew: glasses }, rounds: [[-4.82, 11.64, 12], [-8.75, 0, 40, { sit: 30, yaw: -90 }], [-32.5, 0, 6], [-36.5, 0, 16], [-11.64, -4.82, 12]] }
+  - { id: l132-stroller-4, sex: m, look: { hair: m_crop, topw: tee, hat: cap }, rounds: [[-11.64, 4.82, 12], [-4.82, -11.64, 10], [0, -32.5, 6], [0, -36.5, 12], [4.82, -11.64, 12], [4.38, 7.58, 40, { sit: 30, yaw: 150 }]] }
+  - { id: l132-stroller-5, sex: f, look: { hair: f_curtainmid, topw: longsleeve, neck: scarf }, rounds: [[4.82, 11.64, 12], [11.64, 4.82, 10], [32.5, 0, 6], [36.5, 0, 14], [11.64, -4.82, 12], [-4.38, -7.58, 40, { sit: 30, yaw: -30 }]] }
+  - { id: l132-stroller-6, sex: m, look: { hair: none, topw: hoodie }, rounds: [[-11.64, -4.82, 12], [-32.5, 0, 6], [-36.5, 0, 14], [-4.82, 11.64, 12], [-7, 20.5, 8], [11.64, -4.82, 10]] }
