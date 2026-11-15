@@ -1,5 +1,5 @@
 # Level 132 bazaar: eight stalls round the tree. at = resolved world spot of each ware (raycast onto the stall); regenerate with /workspace/l132s/gen.py
-v: 2
+v: 3
 size: [3.6, 3, 2.6]
 lamp: { intensity: 2.2, distance: 7, y: 2.1, f: 1.0 }
 sign: { h: 0.95, x: -1.55, y: 1.95, f: 1.45 }
@@ -49,7 +49,7 @@ wares:
   - { id: l132-ware-metal-4-3, k: 4, model: /cdn/value.f2f514924cc636d74b25ddf65dac59eaf9e99b817e13e88c2e2c341d72dac275.glb, name: "Tray of spices", kind: spice_tray, h: 0.09, ground: 0, at: [-5.587, 0.746, 13.489] }
   - { id: l132-ware-cloth-4-4, k: 4, model: /cdn/value.d15fe0dcd57ca354fef682b81f31389e47623541ceb5eba23ff059c32156f982.glb, name: "Sack of saffron-gold", kind: turmeric, h: 0.5, ground: 1, at: [-3.623, 0, 14.627] }
   - { id: l132-ware-metal-4-5, k: 4, model: /cdn/value.bf372ff2ea69195ddfd4909b03bf9a5eb264533afb814f77900da766e241eefe.glb, name: "Jewelled brass lamp", kind: brass_lamp, h: 0.26, ground: 0, at: [-5.911, 0.746, 13.355] }
-  - { id: l132-ware-metal-4-6, k: 4, model: /cdn/value.f2f514924cc636d74b25ddf65dac59eaf9e99b817e13e88c2e2c341d72dac275.glb, name: "Tray of spices", kind: spice_tray, h: 0.09, ground: 0, at: null }
+  - { id: l132-ware-metal-4-6, k: 4, model: /cdn/value.f2f514924cc636d74b25ddf65dac59eaf9e99b817e13e88c2e2c341d72dac275.glb, name: "Tray of spices", kind: spice_tray, h: 0.09, ground: 0, at: [-5.839, 0.75, 12.789] }
   - { id: l132-ware-cloth-4-7, k: 4, model: /cdn/value.d15fe0dcd57ca354fef682b81f31389e47623541ceb5eba23ff059c32156f982.glb, name: "Sack of turmeric", kind: turmeric, h: 0.6, ground: 1, at: [-7.551, 0, 12.35] }
   - { id: l132-ware-glass-5-0, k: 5, model: /cdn/value.663a2586de4d3e4fafa0ac6f2d4f9e2c0998193f32e69e9f87811e241237ae4f.glb, name: "Beige home computer", kind: computer, h: 0.45, ground: 0, at: [-12.768, 1, 6.804] }
   - { id: l132-ware-glass-5-1, k: 5, model: /cdn/value.3103622737be313ab28593bafc5a49c31630bc919df1f1ae92e2d2528dff7d44.glb, name: "Case of cartridges", kind: cart_case, h: 0.28, ground: 0, at: [-13.84, 1.001, 4.217] }
@@ -63,8 +63,8 @@ wares:
   - { id: l132-ware-wood-6-2, k: 6, model: /cdn/value.acde3f082caecc0b3443b628c869efeb5a26f5d053eb8b98fb1a68cf68079a03.glb, name: "Spools of ribbon", kind: ribbon, h: 0.14, ground: 0, at: [-13.9, 1.283, -5.379] }
   - { id: l132-ware-glass-6-3, k: 6, model: /cdn/value.dfe84ed7be8449f63225ec19460b84e683da89a64e73376c534bc8903f319bba.glb, name: "Gilded vanity mirror", kind: mirror, h: 0.5, ground: 0, at: [-13.632, 1.28, -6.025] }
   - { id: l132-ware-cloth-6-4, k: 6, model: /cdn/value.2854e2fec3671ac4b04b39370105e76d8f636ffffb0b5d969f2d5a6ce35100f9.glb, name: "Rose cloche hat", kind: cloche, h: 0.33, ground: 0, at: [-13.766, 1.286, -5.702] }
-  - { id: l132-ware-cloth-6-5, k: 6, model: /cdn/value.1c40fc2bd1b32ee0b4f0535aa2bb3b56a5b7ae3799fab7823062a2e958d03cf2.glb, name: "Feathered wide-brim hat", kind: sunhat, h: 0.4, ground: 0, at: null }
-  - { id: l132-ware-wood-6-6, k: 6, model: /cdn/value.acde3f082caecc0b3443b628c869efeb5a26f5d053eb8b98fb1a68cf68079a03.glb, name: "Spools of ribbon", kind: ribbon, h: 0.13, ground: 0, at: null }
+  - { id: l132-ware-cloth-6-5, k: 6, model: /cdn/value.1c40fc2bd1b32ee0b4f0535aa2bb3b56a5b7ae3799fab7823062a2e958d03cf2.glb, name: "Feathered wide-brim hat", kind: sunhat, h: 0.4, ground: 0, at: [-13.898, 1.28, -6.298] }
+  - { id: l132-ware-wood-6-6, k: 6, model: /cdn/value.acde3f082caecc0b3443b628c869efeb5a26f5d053eb8b98fb1a68cf68079a03.glb, name: "Spools of ribbon", kind: ribbon, h: 0.13, ground: 0, at: [-14.281, 1.28, -5.374] }
   - { id: l132-ware-wood-7-0, k: 7, model: /cdn/value.4bc2cbf25fa7c592dc8f2dd167c4bf649f8872bb4f42e130c7e25d928229b94b.glb, name: "Crate of apples", kind: apple, h: 0.34, ground: 0, at: [-6.71, 0.94, -13.456] }
   - { id: l132-ware-wood-7-1, k: 7, model: /cdn/value.017643769fa9fb751bf92e4b2aea2406de2a36684c2d9c899afa63503dfcd17d.glb, name: "Basket of fruit", kind: fruit_basket, h: 0.32, ground: 0, at: [-4.217, 1.028, -13.84] }
   - { id: l132-ware-metal-7-2, k: 7, model: /cdn/value.61418e8aa28b6c553279f17fb7c43d80fa25ecb791173cac08d23769e0a49a90.glb, name: "Bucket of cut flowers", kind: flowers, h: 0.6, ground: 1, at: [-3.623, 0, -14.627] }
