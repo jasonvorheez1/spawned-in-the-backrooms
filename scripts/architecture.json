@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8708,
-  "updatedAt": "2026-11-15T02:25:50.597Z",
+  "basedOnSpecVersion": 8710,
+  "updatedAt": "2026-11-15T02:26:23.394Z",
   "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Shared registries and handlers coordinate global play, while authored cell scenes and local simulations compose spaces and stories. Level 178 is Kyoto Dreams, a fixed-morning machiya with interactive kitchen/shoji props and eight scheduled residents, connected to The Hub in both directions.",
   "scriptPaths": [],
   "places": [
@@ -55,17 +55,17 @@
     "Level 178: places/level178/sim.js owns place.state.layoutV and resident presence; each actor's state.rounds/name/role/voice comes from level178.yml, and scripts/l178-prop.js owns shoji open and tap on/verb state."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focusable tagged props and dispatches handlers.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focusable tagged props and di…",
     "templates/player.js runs scripts/fall-guard.js update before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; periodic saves exclude intake, bonus and tutorial0.",
     "scripts/main-menu-ui.js actions → scripts/main-menu.js → player.state.run or SQL saves; new-run reset uses run-opts KEEP/SKIP and options gate story/tutorial lifecycle; load resolves destination through wakePlace.",
-    "scripts/lib/run-opts.js → main-menu story gates Dina/Chapter 2/cutscenes; global sim.js removes npc-tagged people only when all players in a place choose noNpcs, and Phoebe only when all choose noStory; monster-tagged Robotics units are exempt.",
+    "scripts/lib/run-opts.js → main-menu story gates Dina/Chapter 2/cutscenes; global sim.js removes npc-tagged people only when all players in a place choose noNpcs, and Phoebe only when all choose noStory; monster-tagged Robotics units are exempt from these removals; scripts/meg-agent.js preserves nerve=frenzied while dressing units.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone; scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js place-matched jobs; carried items/kills/world events advance errands and quest dialogue handlers → journal, player.state.errands/qtrack, feed, reputation and rewards.",
     "scripts/lib/data/craft.yml recipes consume raw meat or carried snack IDs and produce IDs defined in snacks.yml; scripts/lib/manuals.js gates recipe learning through player.state.recipes.",
-    "The Hub t5-a2 OPEN entry → scripts/hub-door.js → level178#l178-from-hub; l178-to-hub → scripts/level-door.js pair → thehub#hub-from-l178. The Hub sim places the return marker from level178.yml; threshold handlers carry held props/companions.",
+    "The Hub t5-a2 OPEN entry → scripts/hub-door.js → level178#l178-from-hub; l178-to-hub → scripts/level-door.js pair → thehub#hub-from-l178. The Hub sim places the return marker from level178.yml; threshold handlers carry held props/companion…",
     "places/level178/sim.js creates friendly actors from level178.yml and state.rounds → scripts/meg-agent.js walks their rounds; usable shoji/tap → scripts/interact.js ears.press in scripts/l178-prop.js → leaf animation or spawned water/audio."
   ],
   "behaviorFamilies": [
@@ -87,10 +87,10 @@
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
-    "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with the sim-created hub-from-l178 marker at level178.yml hubReturn.",
+    "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with the sim-created hub-from-l178 marker at l…",
     "Level 13's building shell is authored in cells/x0z0.scene; sim.js returns if l13-floor is absent and no longer regenerates the shell. Preserve matching floor ID and scene wall/threshold geometry; LETH remains in player.state.leth13.",
     "Level 169 uses x/z with north at -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth must align. level169.yml holds tuned positions/rules; sim layout version and well version are separate.",
-    "Level 178 positions in scripts/lib/data/level178.yml use metres, north = -Z, house floor y=0.45; keep scene placements aligned with scripts/terrain178.js ground/pool cut. Its sim layoutV creates missing residents and keepPeople restores them only while players are present.",
-    "Interactive kitchen containers use containerOpen/items/name/propArt state and container tags; keep scene child part IDs aligned with interactive-props.yml and level178.yml. prop-interactions.js falls back safely when a spec lacks size/body/parts."
+    "Level 178 positions in scripts/lib/data/level178.yml use metres, north = -Z, house floor y=0.45; keep scene placements aligned with scripts/terrain178.js ground/pool cut. Its sim layoutV creates missing residents and keepPeople restores th…",
+    "Interactive kitchen containers use containerOpen/items/name/propArt state and container tags; keep scene child part IDs aligned with interactive-props.yml and level178.yml. prop-interactions.js falls back safely when a spec lacks size/body…"
   ]
 }
