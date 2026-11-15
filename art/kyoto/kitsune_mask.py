@@ -50,7 +50,7 @@ for sex in ("f", "m"):
     for nm, loc in (("front", (0, -2.2, hz)), ("side", (-2.2, -0.2, hz))):
         cam = bpy.data.objects.new(nm, bpy.data.cameras.new(nm)); sc.collection.objects.link(cam); cam.location = loc
         e = bpy.data.objects.new("e" + nm, None); sc.collection.objects.link(e); e.location = (0, (mn.y + mx.y) / 2, hz)
-        t = cam.constraints.new("TRACK_TO"); t.target = e; cam.data.lens = 70
+        t = cam.constraints.new("TRACK_TO"); t.target = e; t.track_axis = "TRACK_NEGATIVE_Z"; t.up_axis = "UP_Y"; cam.data.lens = 70
         sc.camera = cam; sc.render.filepath = f"/tmp/mk/kit-{sex}-{nm}.png"; bpy.ops.render.render(write_still=True)
     for o in list(bpy.context.scene.objects):
         if o.type == "MESH" and o != keep: bpy.data.objects.remove(o)
