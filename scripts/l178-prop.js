@@ -1,4 +1,4 @@
-// Level 178 sliding shoji, the kitchen tap, futons, towels, the dining table, the sword cabinet and the kimono closet: E (scripts/interact.js `usable`) rings press; numbers in lib/data/level178.yml.
+// Level 178 sliding shoji, the kitchen tap, futons, towels, the dining table, the sword cabinet and the kimono closet, the house's readables (kind read, state.page): E (scripts/interact.js `usable`) rings press; numbers in lib/data/level178.yml.
 import { animate } from "builtin/tween";
 import L from "./lib/data/level178.yml";
 const STREAM = `fx
@@ -25,6 +25,7 @@ function use(ctx, s, at) {
     if (ps && s.open) say(ps, "Folded kimonos in indigo and plum, a row of geta under them. They smell of cedar.", ctx); return;
   }
   if (!ps) return;
+  if (s.kind === "read") { ps.reading = s.page; ctx.emit("playSound", { clip: "cdn/sfx-paper-page-turn-soft.mp3", position: at, volume: 0.35 }); return; } // a page in scripts/lib/data/pages.yml, drawn by ui.js's reading panel
   if (s.kind === "towels") { ps.sanity = Math.min(100, (ps.sanity ?? 100) + L.towel.sanity); if (ps.wet) ps.wet = 0; ctx.emit("playSound", { clip: "cdn/sfx-soft-cotton-towel-unfolding.mp3", position: at, volume: 0.4 }); say(ps, "A warm towel off the stack. Still smells like sun.", ctx); return; }
   if (s.kind === "table") {
     if (now - (ps.l178meal ?? -1e12) < L.meal.cooldown * 1000) { say(ps, "Your bowl's empty. The Sector will cook again in a bit.", ctx); return; }
@@ -48,7 +49,7 @@ export const ears = {
     if (s.kind === "shoji") {
       s.open = !s.open; s.verb = s.open ? "Close" : "Open"; leaf(ctx, false);
       ctx.emit("playSound", { clip: "cdn/sfx-wooden-shoji-paper-door-sliding-in-wood-track.mp3", position: at, volume: 0.45 });
-    } else if (s.kind === "futon" || s.kind === "towels" || s.kind === "table" || s.kind === "cabinet" || s.kind === "closet") {
+    } else if (s.kind === "futon" || s.kind === "towels" || s.kind === "table" || s.kind === "cabinet" || s.kind === "closet" || s.kind === "read") {
       use(ctx, s, at);
     } else if (s.kind === "tap") {
       s.on = !s.on; s.verb = s.on ? "Turn off" : "Turn on"; tap(ctx);

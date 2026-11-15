@@ -87,3 +87,8 @@ towel: { sanity: 5 }
 kitchenLight: { intensity: 4.2, distance: 8, y: 2.55, at: [[10.8, -4.5], [10.8, 0], [10.8, 4.5]] }
 slate: { x: 10.8, z: 0, w: 3.15, d: 11.9, texture: "cdn/texture-dark-grey-slate-square-floor-tiles.png", repeat: [5, 19], tint: "oklch(0.78 0.012 240)" }
 basin: { curb: 0.14, deep: -1.1, shallow: -0.5, stepZ: 1.1, hx: 3.0, hz: 1.8, wall: 0.3 }
+reads:                                                        # kind read: E opens pages.yml[page] in the reading panel
+  l178-story-guestbook: 1781
+  l178-story-letter: 1782
+  l178-story-rota: 1783
+  l178-story-note: 1784
