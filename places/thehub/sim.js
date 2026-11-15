@@ -56,6 +56,7 @@ export function tick(ctx) {
   }
   s.hubV = V;
   if (!ctx.place.players?.length) return;
+  if (!ctx.place.objects["hub-loosekey-0"]) layThings(ctx); // rooms laid before the loose keys existed
   const key = ctx.place.objects["hub-keytag"];
   if (key && (key.visible === false || !key.tags?.includes("usable"))) { key.visible = true; key.tags = ["usable", "hub-thing"]; }
   keepCrew(ctx); keymaster(ctx);
