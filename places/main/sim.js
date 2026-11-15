@@ -461,7 +461,7 @@ export function tick(ctx) {
   for (const m of ctx.query({ anyTags: ["smiler", "lurker", "hound", "stealer"] })) {
     if (m.state?.dead || (m.state?.owner ?? m.state?.horde)) continue;
     const f = m.feetPosition, o0 = cellCenter(0, 0), cs = L.cellSize ?? 4, cx = Math.round((f.x - o0.x) / cs), cz = Math.round((f.z - o0.z) / cs);
-    if (!inHub(cx, cz) && f.y > -3) continue;
+    if (!inHub(cx, cz) && f.y > -3 && f.y < 1.6) continue; // Shelly Nov 15: "enemies stuck on ceilings": a body above 1.6 m sits on the ceiling slab (y 3.02 read live), so it goes back to floor too
     const c = cell(ctx, m.tags.includes("smiler") ? ["dark", "red", "pillars", "expanse"] : ["halls", "arches", "holes", "offices"]);
     if (!c) continue;
     const o = ctx.getObject(m.id); if (!o) continue;
