@@ -110,7 +110,7 @@ const SWING = {
 }
 const STYLE = { table_leg: 'club', pipe_scrap: 'club', crowbar: 'club', bat: 'club', rebar: 'club', wrench: 'club', stun_baton: 'club', crook: 'club', bobette: 'fists',
   hatchet: 'chop', fire_axe: 'heavy', sledgehammer: 'heavy', knife: 'stab', screwdriver: 'stab', lineman_machete: 'slash', fishing_rod: 'cast',
-  pickaxe: 'heavy', cleaver: 'chop', golf_club: 'slash', tire_iron: 'club', baton: 'club', soup_bowl: 'chop' } // the same families scripts/lib/body3.js gives the third-person body: these five used to swing as plain clubs in first person
+  pickaxe: 'heavy', cleaver: 'chop', golf_club: 'slash', tire_iron: 'club', baton: 'club', soup_bowl: 'chop', l178_bokken: 'slash', l178_kiseru: 'club', l178_tanto: 'stab', l178_katana: 'slash', l178_naginata: 'heavy' } // the same families scripts/lib/body3.js gives the third-person body: these five used to swing as plain clubs in first person
 
 const NV_PACE = 0.55 // NV's takes run long with their recovery: played at 55% of their length so a swing keeps this game's rhythm (my pick)
 const ZERO_POSE = [0, 0, 0, 0, 0, 0]

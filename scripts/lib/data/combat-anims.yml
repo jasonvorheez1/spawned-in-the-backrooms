@@ -7,11 +7,11 @@ families:
   pistol: [pistol, revolver, magnum, flare_gun, laser_pistol]
   long: [shotgun, rifle, smg, hunting_rifle, carbine, sawed_off, lever_action, assault_rifle, laser_rifle]
   fists: [fists]
-  club: [table_leg, pipe_scrap, crowbar, bat, rebar, wrench, stun_baton, golf_club, tire_iron, baton]
-  slash: [lineman_machete, machete, katana, sword]
-  stab: [knife, screwdriver, shiv, switchblade]
+  club: [table_leg, pipe_scrap, crowbar, bat, rebar, wrench, stun_baton, golf_club, tire_iron, baton, l178_kiseru]
+  slash: [lineman_machete, machete, katana, sword, l178_bokken, l178_katana]
+  stab: [knife, screwdriver, shiv, switchblade, l178_tanto]
   chop: [hatchet, cleaver]
-  heavy: [fire_axe, sledgehammer, pickaxe]
+  heavy: [fire_axe, sledgehammer, pickaxe, l178_naginata]
 common:
   # Shelly's Modern Stagger pack (NV .kf, reconverted Nov 10): one picked at random per hit, upper body so the legs keep the gait
   stagger:

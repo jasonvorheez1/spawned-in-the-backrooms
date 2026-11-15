@@ -146,6 +146,8 @@ tools:
   sledgehammer: smash
   stun_baton: mech
   pickaxe: smash
+  l178_katana: chop
+  l178_naginata: chop
 # harvest[material][tool class]: mul scales the base drops (rolled per item, 7dtd-style), rare are [token, chance %, min, max]
 # rolled one by one. A machine smashed with the wrong tool loses its parts; the right one strips them.
 harvest:

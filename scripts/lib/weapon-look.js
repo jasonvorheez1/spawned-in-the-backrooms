@@ -59,6 +59,11 @@ const MESH = { // kind: [model, offset y, scale, the mesh's material slot]
   knife: ["/cdn/value.d3ceae8b13d2230c37d25b11416839251358716ab7090a68ae8479c1c0272b2a.glb", 0.026, 0, "tripo_material_403b10b6-6542-44ed-9dfe-8e21adde4316"], // Tripo remake, fitted by art/weapons/build.py
   laser_rifle: ["/cdn/value.e8c8a1244131da46708f766983742ffb13760b300cef632176a9da4b2ca404b6.glb", -0.052, 0, "tripo_material_344de087-5dc4-481d-99b7-1efaae4434c9"], // Tripo remake, fitted by art/weapons/build.py
   lineman_machete: ["/cdn/value.85fd8395acd018dc2347d60200d473a33486e8160a6df9f332d3eba27750595f.glb", 0.022, 0, "tripo_material_3271d8c5-f092-440d-8dc8-fc02f2f41b72"], // Tripo remake, fitted by art/weapons/build.py
+  l178_bokken: ["/cdn/value.5441d25acf32fd6e641670ce2df4211c17581ac73350d723fa3c6fcf9804a253.glb", 0, 0, "tripo_material_ca174f9f-8ee8-4751-a53e-be9f550bc484"], // Kyoto Dreams, Tripo, fitted by art/weapons/build.py
+  l178_katana: ["/cdn/value.5fa287f3f1e1facd08083a0e0cdf82e987e3349b5523a1261e03fe1ae3d6832a.glb", 0.005, 0, "tripo_material_89a1c119-4ff9-4873-b264-690e488bad41"], // Kyoto Dreams, Tripo, fitted by art/weapons/build.py
+  l178_tanto: ["/cdn/value.5d25f6b15d885d3bda6d4171c9bfabf74d83ca941bb1e63bf19e35a686073d7e.glb", 0.02, 0, "tripo_material_761cefb1-2409-40a3-be4e-b1064fa1019b"], // Kyoto Dreams, Tripo, fitted by art/weapons/build.py
+  l178_naginata: ["/cdn/value.a18088e91f767098716d4310c5c7914225708f9fce71b363bf77f2e65015438c.glb", 0, 0, "tripo_material_e36344ca-489f-4da2-9bce-46287bba0c92"], // Kyoto Dreams, Tripo, fitted by art/weapons/build.py
+  l178_kiseru: ["/cdn/value.9c518f1562d0fb23aa71930548a25fe914281945f770cc63e853c0400e5c84e9.glb", 0, 0, "tripo_material_971702c5-f8d4-451b-8338-e0355f913e85"], // Kyoto Dreams, Tripo, fitted by art/weapons/build.py
   pickaxe: ["/cdn/value.ad9506cffeedcc33dc6d5352089968cbf9932fa4a15e301a5b4b7913f2972407.glb", 0.012, 0, "tripo_material_a2819caa-acc5-415e-80c7-46f021283172"], // Tripo remake, fitted by art/weapons/build.py
   revolver: ["/cdn/value.df7232bf1e310f5b96b0f7479daad03310d40c914c243a6ca82c918d7d12e7ba.glb", -0.057, 0, "tripo_material_b5be0151-d577-463e-b553-92f40dfdb809"], // Tripo remake, fitted by art/weapons/build.py
   screwdriver: ["/cdn/value.6204c5be1e422e3d5547054301386a5efec3bf51e4d02e4b38769563fc8541ad.glb", 0.02, 0, "tripo_material_f9e3059d-8b3b-4fdf-b3da-dcb466a61983"], // Tripo remake, fitted by art/weapons/build.py
@@ -112,6 +117,7 @@ export const SPLIT_FWD = { pocket9: "+z", govt45: "+z", target22: "+z" }
 const SPLIT_MAT = { pocket9: "tripo_material_0a924838-8023-4c3e-a417-fcb5379f1afc", govt45: "tripo_material_085dbb74-0a50-4c2b-bc14-2a1a7eda6b6c", target22: "tripo_material_826773d8-4906-4323-91c4-8de54c5e4054" }
 const splitBody = (kind, tint) => ({ children: SPLIT[kind].map(([id, url, at]) => ({ id, model: { id: url, forward: SPLIT_FWD[kind], ...(tint && SPLIT_MAT[kind] ? { materials: { [SPLIT_MAT[kind]]: { color: tint } } } : {}) }, feetPosition: { x: at[0], y: at[1], z: at[2] }, castShadow: false })) })
 export const HOLD = {
+  l178_bokken: 0.1, l178_kiseru: 0.07, l178_tanto: 0.05, l178_katana: 0.12, l178_naginata: 0.4,
   fists: null, soup_bowl: 0.0, table_leg: 0.16, pipe_scrap: 0.12, crowbar: 0.14, bat: 0.14, hatchet: 0.12, fire_axe: 0.18, pistol: 0.04, pocket9: 0.04, govt45: 0.04, target22: 0.04, shotgun: 0.14, rebar: 0.14, wrench: 0.12, scrapper70: 0.14, icepick70: 0.1, flaregun70: 0.04, screwdriver: 0.05, sledgehammer: 0.14, stun_baton: 0.10, lineman_machete: 0.09, crook: 0.14, knife: 0.05, smg: 0.14, golf_club: 0.14, tire_iron: 0.12, pickaxe: 0.16, baton: 0.1, cleaver: 0.06, revolver: 0.05, laser_pistol: 0.04, raygun: 0.04, laser_rifle: 0.14, coach_gun: 0.14, lever_rifle: 0.14, hunting_rifle: 0.14, carbine: 0.14, fishing_rod: 0.14,
 }
 export function weaponBody(kind) {
