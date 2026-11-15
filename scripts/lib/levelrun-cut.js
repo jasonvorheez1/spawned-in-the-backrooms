@@ -3,6 +3,7 @@
 import { CORRIDOR } from "./levelrun-mechanics.js";
 import { setCh2Step } from "./ch2-quest.js";
 import { spawnPhoebe, dropPhoebe } from "./phoebe.js";
+import { noStory } from "./run-opts.js";
 
 export const LRUN_INTRO_LEN = 8.4;
 export const LRUN_RESCUE_LEN = 9.0;

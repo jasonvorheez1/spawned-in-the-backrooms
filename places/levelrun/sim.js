@@ -10,6 +10,7 @@ import { heard } from "../../scripts/lib/hear.js";
 import { spawnPhoebe } from "../../scripts/lib/phoebe.js";
 
 import { dressWorld } from "../../scripts/lib/levelrun-dress.js";
+import { noStory } from "../../scripts/lib/run-opts.js";
 const CHASE_THEME = "/cdn/music-run-for-your-life-r4zcn4il.mp3"; // the creator's upload
 
 export const cadence = "100ms";
