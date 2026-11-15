@@ -49,3 +49,13 @@ rounds:   # resident stops: [x, z, dwell seconds]; meg-agent walks between them 
   l178-order-1: [[-4, 13, 45], [-2, 11.5, 30]]
   l178-order-2: [[-6, 12, 40], [-8.1, 8.1, 25]]
   l178-order-3: [[4, 13, 45], [5, 11.5, 30]]
+# --- the repair pass: how each kitchen piece moves (local metres, front = -z; travel in degrees or metres)
+parts:
+  fridge: { door: { axis: yaw, travel: -100, pivot: [0.345, 0, -0.32] }, drawer: { axis: slide, travel: -0.35 } }
+  pantry: { door: { axis: yaw, travel: 100, pivot: [-0.42, 0, -0.28] }, drawer: { axis: slide, travel: -0.35 } }
+  cupboard: { door_l: { axis: yaw, travel: 100, pivot: [-0.435, 0, -0.17] }, door_r: { axis: yaw, travel: -100, pivot: [0.435, 0, -0.17] } }
+  oven: { door: { axis: pitch, travel: -80, pivot: [0, 0.14, -0.29] } }
+  drawer: { drawer: { axis: slide, travel: -0.35 } }
+tap: { spout: [0, 1.12, 0.06], gain: 0.2, maxDistance: 8 }
+hubReturn: { x: 192.8, y: 0.2, z: -51.5, yaw: 90 }
+arriveMark: { x: 0, y: 0.5, z: 15.6, yaw: 0 }

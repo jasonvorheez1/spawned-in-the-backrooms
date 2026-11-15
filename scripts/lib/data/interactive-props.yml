@@ -263,5 +263,49 @@
       }
     ],
     "height": 0.9500000178813934
+  },
+  "l178-fridge": {
+    "parts": [
+      {
+        "id": "door"
+      },
+      {
+        "id": "drawer"
+      }
+    ]
+  },
+  "l178-pantry": {
+    "parts": [
+      {
+        "id": "door"
+      },
+      {
+        "id": "drawer"
+      }
+    ]
+  },
+  "l178-cupboard": {
+    "parts": [
+      {
+        "id": "door_l"
+      },
+      {
+        "id": "door_r"
+      }
+    ]
+  },
+  "l178-oven": {
+    "parts": [
+      {
+        "id": "door"
+      }
+    ]
+  },
+  "l178-drawer": {
+    "parts": [
+      {
+        "id": "drawer"
+      }
+    ]
   }
 }
