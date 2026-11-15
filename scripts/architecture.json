@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8739,
-  "updatedAt": "2026-11-15T07:51:44.012Z",
+  "basedOnSpecVersion": 8743,
+  "updatedAt": "2026-11-15T08:06:16.287Z",
   "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Shared registries and handlers coordinate global play, while authored cell scenes and local simulations compose spaces and stories. Level 178 is Kyoto Dreams; Savi True Focus adds a runtime helper controller, and the solo tutorial now teaches through staged beats plus an in-game Field Guide.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0 yellow maze, routes, anomalies and deterministic dressing; momentsV gates fitted wall moments and room-prop regeneration; objects.scene hosts shared controllers including Savi True Focus; scripts/lib/data/level0.yml tunes exploration XP at 1 XP per 10 newly explored cells.",
+    "places/main (3D) - Level 0 yellow maze, routes, anomalies and deterministic dressing; momentsV gates fitted wall moments and room-prop regeneration; objects.scene hosts shared controllers including Savi True Focus; scripts/lib/data/level0.…",
     "places/bonus (3D) - vaporwave mall with shops, simulated staff, arcade, homes and salon; authored placements live in cells. places/testlab is the Test Range with loot/enemy bays and HIT SQUAD pad.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; fixed fixtures/furniture are in cells, sim builds tunnels/doors and staffs camps; t5-a2 leads to Level 178.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; tutorial0 scene owns geometry, sim supplies props/lights and the local-player cutscenes, including the usable HAL…",
@@ -22,7 +22,7 @@
     "places/level178/config.yaml + scripts/terrain178.js + places/level178/cells/x0z0.scene + places/level178/sim.js - terrain and static machiya scene; sim ensures residents, their rounds and the arrival quest.",
     "scripts/lib/data/level178.yml + art/kyoto/build_arch.py + build_props.py - Kyoto layout/tuning source and Blender asset builders; art/kyoto/assets.txt catalogs the kit.",
     "places/level13/cells/x0z0.scene + places/level13/sim.js - cell scene owns apartment shell and permanent architectural fixtures; sim handles lethargy and delegates furnishing, foes, people, dressing and tape.",
-    "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js - title/settings, new-expedition choices, five-slot save manager and story/tutorial lifecycle; scripts/ui.js composes the in-game HUD, orientation overlay and wrist p…"
+    "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js - title/settings, new-expedition choices, five-slot save manager and story/tutorial lifecycle; completed players can Return to Bonus Rooms from pause via the hub; scripts/ui.js composes the in-game HUD, orientation overlay and wrist p…"
   ],
   "shared": [
     "scripts/lib/places.js - canonical per-place names, labels and HUD titles, including Level 178 / Kyoto Dreams; consumed by feed, quest names and scripts/ui.js.",
@@ -59,7 +59,7 @@
     "templates/player.js runs scripts/fall-guard.js update before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; periodic saves exclude intake, bonus and tutorial0.",
-    "scripts/main-menu-ui.js actions → scripts/main-menu.js → player.state.run or SQL saves; new-run reset retains only NEW_KEEP screen/menu/save-list keys, clears character state, then the creator runs afresh; load resolves destination through…",
+    "scripts/main-menu-ui.js actions → scripts/main-menu.js → player.state.run or SQL saves; new-run reset retains only NEW_KEEP screen/menu/save-list keys, clears character state, then the creator runs afresh; after t0Done, pause-menu Return to Bonus Rooms dispatches to hub.toHub(ctx) unless already in Bonus; load resolves destination through…",
     "scripts/main-menu.js forces player/world bodyStyle to furry and ignores style actions; scripts/lib/critter-model.js setStyle always clears HUMAN, so character models are furry-only.",
     "scripts/lib/run-opts.js → main-menu story gates Dina/Chapter 2/cutscenes; global sim.js removes npc-tagged people only when all players in a place choose noNpcs, and Phoebe only when all choose noStory.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded.",
