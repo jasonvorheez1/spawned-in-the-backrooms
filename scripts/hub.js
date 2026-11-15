@@ -1,7 +1,7 @@
 // The Bonus Room (johnadams2, Nov 8): the shared vaporwave mall hub. This behavior rides every player:
 // it offers the mall after a death, opens the mall's counters (Tom's Diner, clothes, furniture, the Teleport Station)
 // and answers their buttons. Food here is just for fun and never leaves the mall.
-import { toHub, toSolo, HOMES, HUB_PLACE, lastLevel } from "./lib/hub.js"
+import { toHub, toSolo, HOMES, HUB_PLACE, lastLevel, atlasable } from "./lib/hub.js"
 import { animate } from "builtin/tween"
 import { actedVoice } from "./lib/voices.js"
 import B from "./lib/data/bonus.yml"
