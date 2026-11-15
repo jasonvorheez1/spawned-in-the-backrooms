@@ -125,6 +125,7 @@ export function onInput(ctx, input) {
     if (st.bodyStyle !== "furry") st.bodyStyle = "furry"; if (ctx.world.state.bodyStyle !== "furry") ctx.world.state.bodyStyle = "furry" // locked to furry (Shelly, Nov 15) // their saved pick rides into whichever room they wake in
     if (d.k === "start") { st.menuOpen = false; st.menuView = ""; if (!st.run && !st.madeChar) st.run = cleanPick(null); if (st.t0Done && st.madeChar && ctx.self.place !== "bonus") (lazy("hub", () => import("./lib/hub.js"))?.toHub?.(ctx) ?? import("./lib/hub.js").then((m) => { MODS.hub = m; m.toHub(ctx) })); else if (ctx.self.place !== "bonus") { st.introFrom = ctx.self.place; ctx.cross(ctx.self, "intake") } } // after the tutorial, launch lands in the Bonus Room (johnadams2)
     if (d.k === "resume") { st.menuOpen = false; st.menuView = "" }
+    if (d.k === "tobonus") { st.menuOpen = false; st.menuView = ""; st.menuKind = ""; if (ctx.self.place !== "bonus") (lazy("hub", () => import("./lib/hub.js"))?.toHub?.(ctx) ?? import("./lib/hub.js").then((m) => { MODS.hub = m; m.toHub(ctx) })) } // pause > Return to Bonus Rooms (Shelly, Nov 15)
     if (d.k === "title") { st.menuKind = "title"; st.menuView = "" }
     if (d.k === "view") { st.menuView = ["settings", "controls", "newgame", "saves"].includes(d.v) ? d.v : ""; if (d.v === "newgame") st.newRun = { ...cleanPick(st.newRun), confirm: false }; if (d.v === "saves") listSaves(ctx) }
     if (d.k === "opt" && d.key) st.newRun = { ...cleanPick({ ...st.newRun, [d.key]: d.v }), confirm: false }

@@ -206,7 +206,8 @@ export function mainMenu(ctx, player, launch = false) {
         <button onclick="sendAction('mmenu',{k:'view',v:'saves'})"><span class="mm-number">${pause ? '02' : '03'}</span>Save Manager<span class="mm-arrow" aria-hidden="true">›</span></button>
         <button onclick="sendAction('mmenu',{k:'view',v:'settings'})"><span class="mm-number">${pause ? '03' : '04'}</span>Settings<span class="mm-arrow" aria-hidden="true">›</span></button>
         <button onclick="sendAction('mmenu',{k:'view',v:'controls'})"><span class="mm-number">${pause ? '04' : '05'}</span>Controls &amp; Guide<span class="mm-arrow" aria-hidden="true">›</span></button>
-        ${pause ? `<button onclick="sendAction('mmenu',{k:'title'})"><span class="mm-number">05</span>Return to Title<span class="mm-arrow" aria-hidden="true">›</span></button>` : ''}
+        ${pause && s.t0Done ? `<button onclick="sendAction('mmenu',{k:'tobonus'},{relockPointer:true})"><span class="mm-number">05</span>Return to Bonus Rooms<span class="mm-arrow" aria-hidden="true">›</span></button>` : ''}
+        ${pause ? `<button onclick="sendAction('mmenu',{k:'title'})"><span class="mm-number">${s.t0Done ? '06' : '05'}</span>Return to Title<span class="mm-arrow" aria-hidden="true">›</span></button>` : ''}
       </nav>
     </div>`
   }
