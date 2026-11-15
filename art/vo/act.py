@@ -41,6 +41,11 @@ def cast_member(who):
 for f in sorted(glob.glob('scripts/lib/data/dlg-*.yml')):
     for who, d in (yaml.safe_load(open(f, encoding='utf-8')) or {}).items():
         if cast_member(who): walk(d, who, '')
+# generic roles (dlg-generic.yml keys with no cast): every generic voice records them (voices.js maps an unnamed npc to one)
+for role, d in (yaml.safe_load(open('scripts/lib/data/dlg-generic.yml', encoding='utf-8')) or {}).items():
+    if role in CAST: continue
+    for g in ('gen-m1', 'gen-m2', 'gen-f1', 'gen-f2'):
+        if cast_member(g): walk(d, g, '')
 for exchanges in yaml.safe_load(open('scripts/lib/data/chatter.yml', encoding='utf-8')).values():
     if not isinstance(exchanges, list): continue
     for exchange in exchanges:

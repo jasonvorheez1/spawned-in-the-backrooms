@@ -56,7 +56,9 @@ const NUM = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eig
 const slug = (line, n = 180) => String(line ?? '').slice(0, n).replace(/\d/g, (d) => ' ' + NUM[d] + ' ').replace(/[^a-z ]/gi, ' ').trim().toLowerCase().replace(/ +/g, '-')
 // a line with no real word in it (empty, "hmm", "...", a stray symbol) makes the voice maker fill in its own test words: those stay silent, the subtitle still shows
 const real = (sl) => sl.split('-').some((w) => w.length >= 3 && /[aeiouy]/.test(w) && !/^(hmm+|mmm*|uhh*|umm*|hm+|ahh*|ohh*|erm*)$/.test(w))
-const actorId = (who) => String(who).split('#')[0]
+// Nov 15: an unnamed npc (no cast key: "<id>#m" / "<id>#f") speaks in one of four generic recorded voices, picked by its id
+const GEN = { m: ['gen-m1', 'gen-m2'], f: ['gen-f1', 'gen-f2'] }
+const actorId = (who) => { const s = String(who), m = /^(.*)#([mf])$/.exec(s); if (m && !Object.hasOwn(CAST, m[1])) return GEN[m[2]][hash(m[1]) % 2]; return s.split('#')[0] }
 const B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
 // voice-acted.yml packs each sha as 43 base64url chars (a quarter smaller on every level's load); a 64-char hex sha still reads as is
 const unpack = (s) => { s = String(s); if (s.length === 64) return s; let bits = 0, n = 0, hex = ''; for (const c of s) { bits = (bits << 6) | B64.indexOf(c); n += 6; while (n >= 4) { n -= 4; hex += ((bits >> n) & 15).toString(16) } bits &= (1 << n) - 1 } return hex.slice(0, 64) }

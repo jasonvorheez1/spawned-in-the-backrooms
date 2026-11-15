@@ -177,3 +177,8 @@ l178-sector-4: [Sara, "warm, motherly, unhurried"]
 l178-order-1: [Andrew, "serene, formal, polite"]
 l178-order-2: [Amelia, "gentle, quiet, kind"]
 l178-order-3: [Brian, "soft-spoken, contemplative"]
+# generic voices (Nov 15): every unnamed survivor, M.E.G., B.N.T.G., TBD, AMOR, hotel, city... person speaks the dlg-generic lines in one of these
+gen-m1: [Roger, "tired, wary, plainspoken survivor"]
+gen-m2: [Bill, "gravelly, worn, cautious"]
+gen-f1: [Bella, "guarded, tired, practical"]
+gen-f2: [Alise, "dry, low, wary"]
