@@ -36,7 +36,7 @@ export function lay(ctx, L) {
   if (ps.dukeV === D.dukeV) return
   ps.dukeV = D.dukeV
   const objs = ctx.place.objects
-  const need = unbuilt(objs["l132-duke"]) || unbuilt(objs["l132-keep"]) || !objs["l132-keep-gate"]
+  const need = unbuilt(objs["l132-duke"]) || unbuilt(objs["l132-keep"]) || !objs["l132-keep-gate"] || !objs["l132-keep-torch-0"]
   if (!need) return
   ctx.commit("The Duke of Morigont and his Palace", () => {
     const K = L.keep, G = D.gate, dk = D.duke
@@ -90,7 +90,7 @@ export function lay(ctx, L) {
     for (const side of [-1, 1]) {
       const id = `l132-keep-torch-${side < 0 ? 0 : 1}`
       if (objs[id]) ctx.destroy(id)
-      const x = G.at[0] + along.x * D.torch.side * side, z = G.at[1] + along.z * D.torch.side * side
+      const ti = D.torch.inset ?? 0, x = G.at[0] + inward.x * ti + along.x * D.torch.side * side, z = G.at[1] + inward.z * ti + along.z * D.torch.side * side
       ctx.spawn(id, {
         tags: ["l132", "l132-palace"],
         feetPosition: { x, y: ctx.place.terrain.heightAt(x, z) ?? gy, z },
