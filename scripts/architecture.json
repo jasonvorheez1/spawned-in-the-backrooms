@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8922,
-  "updatedAt": "2026-11-15T13:35:31.257Z",
-  "summary": "The Backrooms is a multiplayer survival RPG across Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Shared registries and handlers coordinate global play while cell scenes and local simulations compose spaces and stories; Kyoto Dreams (Level 178) now pairs its authored house and residents with a seven-quest chain, found gear and readables, while the tutorial remains solo and ephemeral. The Game Rules Manager presents creator rules from Markdown files in the HUD and god-mode rail, with edits mirrored through world.state.",
+  "basedOnSpecVersion": 8936,
+  "updatedAt": "2026-11-15T13:43:11.754Z",
+  "summary": "The Backrooms is a multiplayer survival RPG across Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Shared registries and handlers coordinate global play while cell scenes and local simulations compose spaces and stories; Kyoto Dreams has its authored house, residents, quests and fitted clothing, and the newly registered Level 132 pairs a peaceful Lumiria terrain with a modular simulation and collection-barter state.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes and anomalies; momentsV gates fitted wall moments and room-prop regeneration, and objects.scene hosts shared controllers.",
@@ -11,26 +11,26 @@
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; scene owns geometry, sim/cutscenes supply route props and local beats.",
     "places/level1 + places/level4 + places/level26 (3D) - M.E.G. camps and office mazes; Level 26's S.S. Fun has cabin 23, Partygoer decks/lockdown and aboard gate; Level 1 includes Dina's radio.",
     "places/level9 + places/level11 + places/level61 + places/level70 (3D) - seeded Suburbs, city/Base Beta/strip mall/clinic and Chapter 2 trail, Snackrooms food court/checkpoint, and Froidetown winter market/civic town.",
-    "places/level169 (3D, Welcome to the Desert) - seeded desert, Ferry's house/trail/pantry/basement, scheduled Friends, checkpoints/ship and Field Office 7 with Backrooms Robotics.",
-    "places/level178 (3D, Kyoto Dreams) - authored machiya/courtyard spring with eight friendly resident rounds; the Hub door is the sole exit, and house props support A Place to Rest plus six follow-on quests, found weapons, clothing, readables and breakables."
+    "places/level169 + places/level132 (3D) - Level 169's seeded desert, Ferry's house/trail/pantry/basement and Field Office 7; Level 132 is peaceful Lumiria in the Duchy of Morigont, with seeded countryside terrain and a town square/shop/stall layout described in level132.yml.",
+    "places/level178 (3D, Kyoto Dreams) - authored machiya/courtyard spring with friendly resident rounds; Hub threshold is its exit, house props support A Place to Rest and six follow-on quests, found gear and readables."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera setup, ordered behaviors and input actions; fall-guard runs before movement and radio is on the player.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, authored placements and generation/tick behavior; selected sims compose shared helpers.",
-    "places/level169/config.yaml + scripts/terrain169.js - seeded height/material generator and desert marks; cell scenes hold placed flora.",
+    "places/level169/config.yaml + scripts/terrain169.js and places/level132/config.yaml + scripts/terrain132.js - seeded height/material generators and place-specific terrain marks.",
     "places/level169/sim.js + scripts/lib/data/level169.yml + house/Ferry/Friends/road/Robotics helpers - dynamic desert setpieces, cast schedules, routes, quests and units.",
+    "places/level132/sim.js + scripts/lib/data/level132.yml + scripts/lib/l132-*.js - local component lay/tick orchestration and barter event ear; component modules currently provide mostly empty lay/tick hooks.",
     "places/level178/config.yaml + scripts/terrain178.js + x0z0.scene + sim.js - terrain and authored Kyoto house, resident rounds, arrival quest, one-time weapon/find and quest-spot placement, plus breakable sweep.",
     "scripts/lib/level178-quests.js - Kyoto quest registry/steps; entry points are sim tick, npc-starters dialogue choices, talk.js reply handler and l178-prop.js prop-use handler.",
-    "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js - title/settings, new-expedition choices, five-slot save manager and story/tutorial lifecycle; completed players can return to Bonus Rooms.",
-    "world.config.yaml + scripts/ui.js - shared HUD/menu surface and global actions; UI embeds mods/game-rules-manager/lib/panel.js; keep its import/render splice and rulesSave/rulesLoad actions coordinated, and unwire before removing the mod."
+    "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js + scripts/ui.js - title/save lifecycle, expedition choices and shared HUD/menu surface, including the Game Rules Manager panel splice and rules actions."
   ],
   "shared": [
-    "scripts/lib/places.js - canonical per-place names, labels and HUD titles; consumed by feed, quest names and scripts/ui.js.",
+    "scripts/lib/places.js - canonical per-place names, labels and HUD titles; consumed by feed, quest names and scripts/ui.js; now registers Level 132 as The Duchy of Morigont.",
     "scripts/lib/grid-path.js - configurable 4-neighbor grid BFS/cache/cell selection shared by Level 0, 1, 2, 2.1, 3, Boiler and 6 adapters.",
     "scripts/lib/ambush-smiler.js - common pursuit/lurk/wake/retreat/bite behavior configured by l34-smiler.js and l9-smiler.js; companion.js/carry.js handle followers and held-prop transfers.",
     "scripts/lib/hub.js + scripts/lib/thehub.js + scripts/lib/hubkeys.js - separate Bonus shared-room routing and Hub tunnel/door/key registry; t5-a2 maps to Level 178.",
     "scripts/lib/containment.js - Level 109 persistent pen/loose-foe, open-door and remembered-door-position books; sim supplies room IDs/boxes and spawnFoe adapter.",
-    "scripts/lib/pg-society.js + scripts/lib/data/pg-society.yml - Level 26 Partygoer roles/routes, sight-bound relay and deck alert/search/recovery; partygoers.js owns actor behavior/traps. scripts/lib/npc-gear.js + fresh-aura.js provide shared NPC gear/aura helpers.",
+    "scripts/lib/pg-society.js + scripts/lib/data/pg-society.yml - Level 26 Partygoer roles/routes, sight-bound relay and deck alert/search/recovery; partygoers.js owns actor behavior/traps.",
     "scripts/lib/prop-interactions.js + interactive-props data - shared usable-prop/container migration and geometry specs; scripts/interact.js dispatches interactions. scripts/lib/voices.js resolves NPC voice IDs/cast pools and recorded takes.",
     "scripts/lib/breakables.js + scripts/lib/data/breakables.yml - shared prop/wall damage, materials, salvage and regrowth; local sims call sweepProps and idMat rules classify placed props including Kyoto washi, ceramic and bamboo."
   ],
@@ -42,7 +42,7 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - journal/advancement/reward helpers; containment.js - pen/door operations; ch2-quest.js - Chapter 2 stages/dialogue helpers.",
     "scripts/lib/run-opts.js - OPTS, DEFAULTS, PICK_DEFAULTS, RATE, PRESETS, runOf, needsMul, sanityMul, noStory, noNpcs, cleanPick, KEEP, SKIP; scripts/main-menu.js - SLOTS.",
-    "scripts/lib/breakables.js - sweepProps, tickWalls, REGROW_MS; scripts/lib/weapon-look.js - HOLD; scripts/lib/level178-quests.js - SPOTS, QUESTS178, REWARDS, touch178, questTick178, l178Choices, handleDialogueQuest178."
+    "scripts/lib/l132-barter.js - CATS, WANTS, NAMES, bookOf, holds, pieces, barter, keep, dukeOffer, tick; places/level132/sim.js - ears, cadence, tick; level178-quests.js - SPOTS, QUESTS178, REWARDS and quest handlers."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable player.state progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, saved place/position, currency and related progress.",
@@ -52,31 +52,32 @@
     "scripts/lib/run-opts.js + scripts/main-menu.js - player.state.run owns expedition picks; run options determine story/NPC presence and hunger/thirst/sanity drain multipliers.",
     "scripts/db.js + scripts/main-menu.js - SQL saves table owns named save-slot snapshots by player owner and slot; player.state remains live/current run state.",
     "scripts/main-menu.js + scripts/lib/tut0-cut.js + scripts/lib/tutorial.js - player.state.t0n/t0cut/t0Done/t0fade track tutorial beats; guideSeen/guideTip/guideMuted track Field Guide state/preferences.",
-    "scripts/lib/compass.js + scripts/player.js - player.state.compass charges and compassOn/compassRead dial state; Level 178 quest progress is per-player in l178q/l178k/l178u/l178a/l178l/l178b/l178t and supporting beat keys, paid once at 99; mods/game-rules-manager/rules.js owns world.state.grm sourced from rules/*.md."
+    "scripts/lib/compass.js + scripts/player.js own compass charge/dial state; Level 178 quest keys and Level 132 player.state.l132 (bag, kept collection, first-gift marker) store per-player place progress."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focused tagged props and dispatches their usable handlers.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focused tagged props and dispatches use.",
     "templates/player.js runs scripts/fall-guard.js before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose; camera discards an unparented stray view.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on place arrival to repair implausibly future-dated state timestamps.",
     "scripts/main-menu-ui.js actions → scripts/main-menu.js → player.state.run or SQL saves; new-run reset retains NEW_KEEP screen/menu/save-list keys and clears character state; after t0Done pause Return routes to Bonus Rooms.",
     "scripts/main-menu.js forces player/world bodyStyle to furry and ignores style actions; scripts/lib/critter-model.js setStyle always clears HUMAN, so character models are furry-only.",
     "scripts/lib/run-opts.js → main-menu story gates Dina/Chapter 2/cutscenes; global sim.js removes npc-tagged people only when all players in a place choose noNpcs, and Phoebe only when all choose noStory.",
-    "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded and Bonus train rides set their own destination.",
-    "scripts/player.js zone resolver → player.state.zone (Level 178 maps to l178_house); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names.",
-    "scripts/lib/npc-starters.js adds l178Choices to resident talk cards → scripts/talk.js handleDialogueQuest178 handles chosen reply; sim.js questTick178 advances position beats, while l178-prop.js use → touch178 handles quest spots/taps and dialogue/props → quests.js journal, once-only rewards and player progress.",
-    "places/level178/sim.js auto-starts A Place to Rest and ticks the six follow-on quests; level178.yml finds → sim spawns weaponBody props once, wardrobe/container data grants clothing and weapons, and only the paired Hub threshold routes out.",
-    "Level 178 read-kind props → player.state.reading page ID → scripts/ui.js lazy-loads scripts/lib/data/pages.yml into the reading panel; npc-starters/talk dialogue → scripts/lib/voices.js resolves cast lines through voice-acted2.yml to packed audio hashes."
+    "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded and Bonus train rides set their destination.",
+    "scripts/player.js zone resolver → player.state.zone (Level 178 maps to l178_house; Level 132 to l132_lumiria); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names.",
+    "scripts/lib/npc-starters.js adds l178Choices to resident talk cards → scripts/talk.js handleDialogueQuest178; sim.js questTick178 advances position beats and l178-prop.js use → touch178 handles quest spots/taps.",
+    "places/level178/sim.js ticks quests and one-time finds; level178.yml feeds weaponBody spawns, wardrobe/container data grants gear, and read-kind props → player.state.reading → scripts/ui.js pages panel; dialogue audio resolves via voices.js.",
+    "places/level132/sim.js calls each module's lay(ctx,L), then (with players present) sweepProps and module ticks; scripts/lib/data/level132.yml supplies layout, terrain132.js supplies terrain, and player.js maps the place to safe zone l132_lumiria.",
+    "places/level132/sim.js registers l132:barter {by,ware} → l132-barter.barter updates player.state.l132 and marks a ware gone; the current l132-stalls module is an empty hook, while l132-barter.tick restocks gone wares after 90 seconds."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table with separately fitted chairs.",
-    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon variants share combat; sounds/rack/reload/liquid effects and swing/hold presentation vary by weapon; Kyoto adds bokken and kiseru finds plus quest-reward katana/naginata.",
-    "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters, plus cat-wardrobe fitting and level70-stall parts - fitted GLBs/prop catalogs and body-specific garment/prop fitting; Kyoto adds fitted yukata/haori, tabi/geta, hachimaki and kitsune mask wardrobe mappings.",
+    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon variants share combat; sounds/rack/reload/liquid effects and swing/hold presentation vary by weapon; Kyoto adds bokken and kiseru.",
+    "cat-wardrobe.yml and the art fitting builders - body-specific garment/prop fitting; Kyoto yukata and haori have separate fitted cuts, tabi/geta and hachimaki have dedicated models, with wardrobe slots mapping their item IDs.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "scripts/lib/l169-road.js + scripts/lib/l169-road-geo.js + scripts/lib/l169-travel.js + scripts/lib/l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
-    "art/kyoto/build_arch.py + build_props.py + kit.py + garden/build.py + shell2/build_structure.py + shell2/build_walls.py + fit178.py - shared Blender builders and fitted Kyoto assets; Level 178 scene/data aligns story props, breakable material ID rules and house units."
+    "places/level132/sim.js + scripts/lib/l132-{square,stalls,shops,land,people,duke,quests}.js - componentized one-time lay/tick hooks receive shared level132.yml layout; barter is separate in l132-barter.js."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -91,7 +92,7 @@
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with the sim-created hub-from-l178 marker.",
     "Level 13's building shell is authored in cells/x0z0.scene; sim.js returns if l13-floor is absent and no longer regenerates the shell. Preserve matching floor ID and scene wall/threshold geometry; LETH remains in player.state.leth13.",
     "Level 169 uses x/z with north at -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth must align. level169.yml holds tuned positions/rules; sim layout version and well version are separate.",
-    "Level 178 positions in scripts/lib/data/level178.yml use metres, north = -Z, house floor y=0.45; keep shell2 module frames/pivots and assets.txt hashes aligned with the authored scene, usable target IDs/coordinates and basin collider dimensions. The quest chain's one-time steps/rewards key off per-player state; route beats never create another exit from the Hub door.",
-    "Breakables use data idMat ID regexes for placed-prop classification; preserve IDs/material mapping and tear material slots for shoji. Regrowth timing/near-player avoidance is shared; Kyoto ceramic/washi/bamboo drops are salvage and its story-prop IDs must stay aligned with those rules."
+    "Level 178 positions in level178.yml use metres, north = -Z, house floor y=0.45; preserve shell2 frames/pivots, usable IDs/coordinates and basin collider dimensions. Shoji open/closed X offsets and leaf positions must clear/close the doorway; the stair faces into the room.",
+    "Level 132 layout data and terrain use metres, north = -Z, town ground y=0; keep scripts/lib/data/level132.yml, terrain132.js and scene blueprint anchors aligned. Player zone l132_lumiria is also configured as a no-sanity-drain safe zone."
   ]
 }
