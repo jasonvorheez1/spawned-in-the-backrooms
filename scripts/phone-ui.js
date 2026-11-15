@@ -4,7 +4,7 @@ const esc = (t) => String(t ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 // signal by level: Lumiria and the suburbs have towers; the deep office levels barely hear the network (Savi's picks)
 const BARS = { level132: 4, level9: 4, level10: 3, level11: 4, level61: 3, level70: 3, bonus: 4, thehub: 2, main: 1, level1: 2, level4: 2, level178: 3, level169: 1, level26: 2 };
 const CSS = `<style>
-#phone{position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px);bottom:24px;width:330px;height:560px;pointer-events:auto;
+#phone{position:fixed;right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px);bottom:24px;width:330px;height:min(560px,calc(100vh - 48px));pointer-events:auto;
  background:oklch(.16 .01 80);border:3px solid oklch(.32 .02 80);border-radius:26px;box-shadow:6px 6px 0 oklch(.08 0 0 / .7);padding:14px 12px;display:flex;flex-direction:column;color:oklch(.92 .03 90);font-family:var(--ui-body,inherit)}
 #phone .scr{flex:1;background:oklch(.24 .03 150);border-radius:10px;border:2px solid oklch(.1 0 0);display:flex;flex-direction:column;overflow:hidden;color:oklch(.9 .1 150)}
 #phone .top{display:flex;justify-content:space-between;padding:6px 10px;font-size:12px;background:oklch(.18 .03 150)}
