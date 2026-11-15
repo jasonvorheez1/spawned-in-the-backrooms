@@ -58,8 +58,18 @@ function wood(ctx, L, from, to) {
     ctx.spawn("l132-tree-" + i, { feetPosition: { x: t[1], y: { terrain: -0.15 }, z: t[2] }, rotation: { yaw: t[4] }, scale: t[3], model: { id: M[t[0]] }, castShadow: near, receiveShadow: false, tags: ["l132-land", "l132-landtree"] });
     ctx.spawn("l132-tree-col-land-" + i, { primitive: { kind: "cylinder", radius: (oak ? 0.55 : 0.22) * t[3], height: 3 }, visible: false, feetPosition: { x: t[1], y: { terrain: -0.2 }, z: t[2] }, physics: "static" }); }
 }
+// the cliff rim: a ring of unseen colliders (nobody walks off), and a run of dry-stone wall at each road's bearing, a lookout over the sea
+function edge(ctx, L) {
+  const E = D.edge, M = D.models, put = (id, spec) => ctx.spawn(id, spec);
+  for (let i = 0; i < E.ring; i++) { const t = (i / E.ring) * 2 * Math.PI, p = { x: +(E.r * Math.sin(t)).toFixed(2), z: +(E.r * Math.cos(t)).toFixed(2) }, w = 2 * (E.r + 0.6) * Math.sin(Math.PI / E.ring) + 0.6;
+    put("l132-rim-col-" + i, { ...hid(+w.toFixed(2), E.height, 1), feetPosition: { x: p.x, y: { terrain: -1 }, z: p.z }, rotation: { yaw: toC(p) }, physics: "static", tags: ["l132-land"] }); }
+  Object.keys(L.roads).forEach((k) => { const e = L.roads[k][L.roads[k].length - 1], a0 = Math.atan2(e[0], e[1]), step = E.seg / E.r;
+    for (let j = 0; j < E.perLookout; j++) { const t = a0 + (j - (E.perLookout - 1) / 2) * step, p = { x: +(E.r * Math.sin(t)).toFixed(2), z: +(E.r * Math.cos(t)).toFixed(2) };
+      put(`l132-rim-${k}-${j}`, { feetPosition: { x: p.x, y: { terrain: -E.sink }, z: p.z }, rotation: { yaw: toC(p) + (j % 3) - 1 }, model: { id: M.wall }, physics: BOX, castShadow: true, receiveShadow: true, tags: ["l132-land", "l132-rim"] }); } });
+}
 export function lay(ctx, L) {
   const st = ctx.place.state;
+  if (st.landEdgeV !== D.edge.v) { edge(ctx, L); st.landEdgeV = D.edge.v; }
   if (st.landV === D.v) return;
   const s = st.landStage ?? 0, n = trees(L).length, C = D.trees.chunk;
   if (s === 0) town(ctx, L); else if (s === 1) fields(ctx, L); else wood(ctx, L, (s - 2) * C, (s - 1) * C);

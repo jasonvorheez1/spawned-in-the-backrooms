@@ -21,6 +21,7 @@ terrain:
     road-east: { kind: path, points: [[44, -10.9], [90, -24], [180, -16]], width: 3.5, material: dirt, edgeMaterial: grass, noise: 0.25, grade: true }
     road-north-town: { kind: path, points: [[-10, -27], [-15, -42.75]], width: 3.5, material: cobble, grade: true }
     road-north: { kind: path, points: [[-15, -42.75], [-30, -90], [-20, -180]], width: 3.5, material: dirt, edgeMaterial: grass, noise: 0.25, grade: true }
+    sea: { kind: sea, level: -24, floorMaterial: chalk }   # the sea under the chalk cliffs at the duchy's edge (scripts/terrain132.js)
     mill-pad: { kind: flatten, center: { x: -150, z: 60 }, height: { terrain: 0 }, shape: { kind: circle, radius: 9 }, falloff: 9 }
   decorations:
     layers:
