@@ -101,4 +101,4 @@ bpy.ops.object.light_add(type="POINT", location=(0, 0, 2.8)); bpy.context.active
 cam = bpy.data.objects.new("c", bpy.data.cameras.new("c")); bpy.context.collection.objects.link(cam); sc.camera = cam; cam.data.lens = 22
 def shot(p, t, name):
     cam.location = p; cam.rotation_euler = (Vector(t) - Vector(p)).to_track_quat("-Z", "Y").to_euler(); sc.render.filepath = f"{OUT}-{name}.png"; bpy.ops.render.render(write_still=True)
-shot((7, -20, 4), (0, 0, 3), "front"); shot((4.5, 3, 1.6), (-1, -ryf, 1.3), "in"); shot((-12, -9, 1.6), (0, -5, 1.5), "door")
+shot((5, -21, 3.5), (0, 0, 2.6), "front"); shot((4.5, 3, 1.6), (-1, -ryf, 1.3), "in"); shot((-5, 21, 3.5), (0, 0, 2.6), "back")
