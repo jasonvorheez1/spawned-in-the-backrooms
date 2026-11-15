@@ -89,7 +89,7 @@ function shapeTemper(me) {
     me.state.attr = packAttrs(a); me.state.temper = tp; me.state.temperV = 1;
     const hp = Math.max(1, Math.round(G.hp * npcMul(me.state).hp * (0.85 + a.e * 0.03))); const f = (me.state.hp ?? hp) / (me.state.maxHp ?? hp);
     me.state.maxHp = hp; me.state.hp = Math.max(1, Math.round(hp * Math.min(1, f)));
-    if (TEMPER_NERVE[tp] && hashN(me.id, 91) < 0.6) me.state.nerve = TEMPER_NERVE[tp];
+    if (TEMPER_NERVE[tp] && me.state.nerve !== "frenzied" && hashN(me.id, 91) < 0.6) me.state.nerve = TEMPER_NERVE[tp];
   }
 }
 export function onSpawn(ctx) {
