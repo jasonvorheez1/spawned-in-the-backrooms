@@ -58,11 +58,12 @@ gun:
   long: # Shelly's Commando KF rifle pack (art/rifle-clips/retarget3.py): ready is the low carry, aim the iron-sight hold, up/down blend the look pitch; the legs keep the gait under the upper mask
     readyPitch: 0 # Nov 15 revamp: the ready is its own carry take now (ash rifle idle: stock in, muzzle low across the body), no dipped aim
     ready: { clip: cdn/clip-ash-rifle-idle-17015494-loop.glb, weight: 4, mask: upper, blendIn: 0.25, blendOut: 0.3, loop: true }
-    aim: { clip: /cdn/clip-rifle-2hraimis-c6be86ad.glb, weight: 4, mask: upper, blendIn: 0.15, blendOut: 0.3, loop: true }
-    aimWalk: { clip: /cdn/clip-rifle-2hraimis-c6be86ad.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true }
-    aimJog: { clip: /cdn/clip-rifle-2hraimis-c6be86ad.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true }
-    aimCrouch: { clip: /cdn/clip-rifle-2hraimis-c6be86ad.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true }
-    aimCrouchWalk: { clip: /cdn/clip-rifle-2hraimis-c6be86ad.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true }
+    # Nov 15 revamp: the iron-sight take pushed the stock into a snout and hunched the back (Shelly: yea); the ash shoulder-aim matches the carry
+    aim: { clip: cdn/clip-ash-rifle-aim-idle-52df6ff4-loop.glb, weight: 4, mask: upper, blendIn: 0.15, blendOut: 0.3, loop: true }
+    aimWalk: { clip: cdn/clip-ash-rifle-aim-idle-52df6ff4-loop.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true }
+    aimJog: { clip: cdn/clip-ash-rifle-aim-idle-52df6ff4-loop.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true }
+    aimCrouch: { clip: cdn/clip-ash-rifle-aim-idle-52df6ff4-loop.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true }
+    aimCrouchWalk: { clip: cdn/clip-ash-rifle-aim-idle-52df6ff4-loop.glb, weight: 4, mask: upper, blendIn: 0.2, blendOut: 0.3, loop: true }
     up: { clip: /cdn/clip-rifle-2hraimisup-48ec984a.glb, mask: upper, loop: true }
     down: { clip: /cdn/clip-rifle-2hraimisdown-b98450f8.glb, mask: upper, loop: true }
     upCrouch: { clip: /cdn/clip-rifle-2hraimisup-48ec984a.glb, mask: upper, loop: true }
