@@ -102,6 +102,7 @@ def shoot(name, views):
         cam.data.lens = lens; cam.location = B(eye); cam.rotation_euler = (B(tgt) - B(eye)).to_track_quat("-Z", "Y").to_euler()
         sc.render.filepath = f"{PROOF}/{name}_{i}.png"; bpy.ops.render.render(write_still=True)
     bpy.data.objects.remove(cam, do_unlink=True); bpy.data.objects.remove(sun, do_unlink=True)
+QP = {"roof_side": 13}; QN = {"roof_side": 8}
 def export(name, views, embed=False):
     sc = bpy.context.scene; obs = [o for o in sc.objects if o.type == "MESH"]
     for o in obs: o.data.set_sharp_from_angle(angle=math.radians(o.get("sa", 40)))
@@ -118,8 +119,8 @@ def export(name, views, embed=False):
     lo = [min(v[i] for v in vs) for i in range(3)]; hi = [max(v[i] for v in vs) for i in range(3)]
     path = f"{OUT}/{name}.glb"
     bpy.ops.export_scene.gltf(filepath=path, use_selection=True, export_apply=True, export_yup=True, export_image_format="JPEG", export_jpeg_quality=80,
-        export_draco_mesh_compression_enable=True, export_draco_mesh_compression_level=7, export_draco_position_quantization=14,
-        export_draco_normal_quantization=10, export_draco_texcoord_quantization=12)
+        export_draco_mesh_compression_enable=True, export_draco_mesh_compression_level=7, export_draco_position_quantization=QP.get(name, 14),
+        export_draco_normal_quantization=QN.get(name, 10), export_draco_texcoord_quantization=12)
     print("MOD", name, "tris", len(ob.data.loop_triangles), "min", [round(lo[0], 3), round(lo[2], 3), round(-hi[1], 3)], "max", [round(hi[0], 3), round(hi[2], 3), round(-lo[1], 3)], "kb", os.path.getsize(path) // 1024, "slots", [m.name for m in ob.data.materials])
 # ---------------------------------------------------------------- modules
 def roofY(d): return 2.9 + (d - 6.5) * 0.303 if d <= 13.1 else 4.9 - (d - 13.1) * 0.303
@@ -251,7 +252,7 @@ def build_roof():
     reset(); L = 18.2; P = .3
     def f(x): t = 2 * math.pi * x / P; return .03 * math.sin(t) + .009 * math.sin(2 * t)
     sheets = []
-    for (eave, ridge, sp, dsign) in (((2.9, -6.5), (4.9, -13.1), .3, 1), ((roofY(17.7), -17.7), (4.9, -13.1), .42, -1)):
+    for (eave, ridge, sp, dsign) in (((2.9, -6.5), (4.9, -13.1), .34, 1), ((roofY(17.7), -17.7), (4.9, -13.1), .42, -1)):
         E = Vector((0, eave[0], eave[1])); R = Vector((0, ridge[0], ridge[1])); S = (R - E); sl = S.length; S.normalize()
         Nn = Vector((0, abs(S.z), abs(S.y) * (1 if dsign > 0 else -1))).normalized()
         if Nn.y < 0: Nn = -Nn
