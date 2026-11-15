@@ -1,0 +1,103 @@
+# Platform → frame, size, length and how it converts. Starting points, not laws:
+# platform rules change, so re-check a platform's current specs before a paid or important upload.
+# safe: margins (px at the listed size) that platform UI covers; keep cards and key action inside.
+
+tiktok:
+  aspect: "9:16"
+  size: [1080, 1920]
+  fps: 30
+  length: { best: "9–15 s", max: "10 min" }
+  safe: { top: 150, bottom: 420, left: 60, right: 140 }
+  practices:
+    - hook in the first 1–2 s: action or a bold text line, never a logo or a slow fade
+    - one message only; cut every 1–2 s; sound on (most watch with it)
+    - native feel beats polish: real play, clear moments, captions short and big
+    - call to action around 10–13 s, endcard last
+    - loops well: an ending that leads back into the start gets rewatches
+
+youtube-shorts:
+  aspect: "9:16"
+  size: [1080, 1920]
+  fps: 30
+  length: { best: "15–30 s", max: "3 min" }
+  safe: { top: 120, bottom: 380, left: 60, right: 140 }
+  practices:
+    - hook in the first 2 s; the title line can carry the hook
+    - a seamless loop helps watch time
+    - slightly more room to show the loop than TikTok, still one idea
+
+instagram-reels:
+  aspect: "9:16"
+  size: [1080, 1920]
+  fps: 30
+  length: { best: "7–15 s", max: "3 min" }
+  safe: { top: 220, bottom: 450, left: 60, right: 140 }
+  practices:
+    - the grid shows a 4:5 crop (1080x1350) of the middle: the cover frame and key card must read inside it
+    - visual hook first, highly polished art does well here
+    - text cards readable muted; many watch without sound
+
+instagram-feed:
+  aspect: "4:5"
+  size: [1080, 1350]
+  fps: 30
+  length: { best: "15–30 s", max: "60 min" }
+  safe: { top: 60, bottom: 120, left: 60, right: 60 }
+  practices:
+    - autoplays muted: captions and cards must tell the story without sound
+    - first frame doubles as the thumbnail
+
+youtube:
+  aspect: "16:9"
+  size: [1920, 1080]
+  alt-size: [3840, 2160]
+  fps: 60
+  length: { best: "45–90 s", max: "none in practice" }
+  safe: { top: 54, bottom: 100, left: 96, right: 96 }
+  practices:
+    - first 5 s before the skip button: show the best moment, then build
+    - a gameplay trailer can breathe: show the loop clearly, then escalate to highlights
+    - custom thumbnail and title matter as much as the video
+
+x:
+  aspect: "16:9"
+  alt-aspect: "1:1"
+  size: [1920, 1080]
+  alt-size: [1080, 1080]
+  fps: 30
+  length: { best: "15–45 s", max: "2:20" }
+  safe: { top: 40, bottom: 80, left: 40, right: 40 }
+  practices:
+    - autoplays muted in the feed: open on motion and a readable card
+    - 1:1 takes more of the phone screen in the feed; 16:9 for a straight game reel
+
+steam:
+  aspect: "16:9"
+  size: [1920, 1080]
+  fps: 60
+  length: { best: "30–90 s", max: "none" }
+  safe: { top: 54, bottom: 54, left: 96, right: 96 }
+  practices:
+    - the store autoplays muted: gameplay in the first seconds, no long logo intro
+    - show what the player does; text cards for the key features
+
+discord:
+  aspect: "16:9"
+  size: [1920, 1080]
+  fps: 30
+  length: { best: "15–45 s", max: "file size bound" }
+  file-limit: "10 MB on free accounts: lower the bitrate or size to fit"
+  safe: { top: 40, bottom: 40, left: 40, right: 40 }
+  practices:
+    - community audience: lead with what is new; patch notes go in the post text
+
+spawn-page:
+  aspect: "16:9"
+  size: [1920, 1080]
+  fps: 30
+  length: { best: "15–30 s loop", max: "short" }
+  safe: { top: 40, bottom: 40, left: 40, right: 40 }
+  practices:
+    - plays silent and looping on the game's page and box: no story that needs sound
+    - set with `spawn publish set_trailer --video <file>`, only when the creator says so
+    - an ending that cuts cleanly back into the opening

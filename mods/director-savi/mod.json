@@ -1,0 +1,12 @@
+{
+  "name": "director-savi",
+  "displayName": "Director Savi",
+  "description": "Adds a skill and a /director-savi command for planning, filming, cutting and delivering a game trailer: four setup questions, a shot plan, platform specs, title cards and on-set capture checks.",
+  "tags": [
+    "trailer",
+    "video",
+    "skills"
+  ],
+  "visibility": "public",
+  "version": "1.3.0"
+}
