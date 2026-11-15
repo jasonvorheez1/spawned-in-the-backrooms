@@ -196,6 +196,18 @@ level11:
     - ["l11-walker-3", "Think she made it out? Beta called her dead."]
     - ["l11-trader-kael", "No body, no funeral. Still wouldn't bet on it."]
 # combat barks: what anyone in a camp shouts mid-fight, picked at random per moment
+level178:   # Kyoto Dreams: the Sector of Amaterasu cooks, the Order keeps the house; a peaceful morning that never ends (places/level178/sim.js)
+  - [[l178-irawan, "who put miso in the tea kettle."], [l178-sector-1, "it was a pot. it looked like a pot."], [l178-irawan, "it has a spout."], [l178-sector-1, "...a pot with a spout."]]
+  - [[l178-sector-2, "rice is done. someone wake the new one up."], [l178-sector-1, "let them sleep. the morning's not going anywhere."], [l178-sector-2, "it never does, does it."]]
+  - [[l178-irawan, "how many bowls today?"], [l178-sector-3, "three travellers came through the porch. maybe four."], [l178-irawan, "make six. somebody always shows up hungry."]]
+  - [[l178-sector-1, "the grill's acting up again."], [l178-irawan, "hit it on the left side."], [l178-sector-1, "that worked. why does that work."], [l178-irawan, "don't ask the house questions. it gets shy."]]
+  - [[l178-sector-2, "dew's on the moss again."], [l178-sector-3, "it's always on the moss."], [l178-sector-2, "i know. i still like checking."]]
+  - [[l178-irawan, "you hear the flute this morning?"], [l178-sector-1, "north side. near the bedrooms."], [l178-irawan, "nobody up there plays."], [l178-sector-1, "mm. pretty, though."]]
+  - [[l178-sector-3, "the order swept the porch twice already."], [l178-irawan, "let them. they like it."], [l178-sector-3, "they asked if we needed anything."], [l178-irawan, "tell them more ginger. always more ginger."]]
+  - [[l178-sector-4, "table's set for whoever comes in."], [l178-irawan, "zabuton out?"], [l178-sector-4, "all of them. and the good teapot."], [l178-irawan, "the good one. fancy."]]
+  - [[l178-sector-2, "i tried counting the rooms again."], [l178-sector-1, "and?"], [l178-sector-2, "lost count at the bath. came out by the kitchen."], [l178-sector-1, "yeah. it does that loop."]]
+  - [[l178-order-3, "the spring is warm this morning."], [l178-sector-4, "it's warm every morning."], [l178-order-3, "then every morning is a good one."]]
+  - [[l178-order-1, "the lanterns on the east porch are lit."], [l178-order-2, "thank you. i'll leave the west ones."], [l178-order-1, "the sun will come soon."], [l178-order-2, "it always nearly does."]]
 barks:
   move: ["right. back to it.", "where was i.", "okay. next thing.", "legs, don't fail me now.", "one more lap.", "hm. what was i doing.", "coffee would be nice.", "that's a lap.", "feet hurt.", "next stop.", "where'd i leave that wrench."]
   spot: ["contact! over there!", "hound, on the left!", "something's coming in!", "eyes up, we got company.", "there! by the shelves!", "oh, not again.", "movement! eleven o'clock!", "it's in the walls!", "don't run, don't run, don't run.", "everybody see that?", "weapons up!"]

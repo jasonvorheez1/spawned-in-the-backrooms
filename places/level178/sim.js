@@ -5,6 +5,7 @@ import { keepPeople, every } from "../../scripts/lib/level-kit.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
+import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 const IDS = Object.keys(L.residents);
 function person(ctx, id) {
   const r = L.residents[id], g = L.people[id] ?? {}, look = { species: "cat", sex: g.sex ?? "f", expr: g.expr, ...(g.hairc ? { hairc: g.hairc } : {}) };
@@ -19,4 +20,5 @@ export function tick(ctx) {
   if ((s.layoutV ?? 0) < L.layoutV + 1) { s.layoutV = L.layoutV + 1; for (const id of IDS) if (!ctx.place.objects[id]) person(ctx, id); }
   if (!ctx.place.players.length) return;
   if (every(ctx, "l178people", 5000)) keepPeople(ctx, IDS, person);
+  tickChatter(ctx, CHATTER.level178 ?? [], Object.fromEntries(IDS.map((id) => [id, L.people[id]?.voice ?? id]))); // the house talks in its own words, never the Backrooms pool
 }
