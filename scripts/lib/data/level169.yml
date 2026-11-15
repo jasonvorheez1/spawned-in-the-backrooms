@@ -25,6 +25,7 @@ checkpoints:                    # id, the article's km, where it stands
   bh: { km: 190, x: 0, z: -19000, name: "Checkpoint B½" }   # the furnished house with a bed
   c:  { km: 230, x: 0, z: -23000, name: "Checkpoint C" }
 edge: 25000                     # the boundary cliffs (250 km); past them the land drops into the void; jumping wakes you in Level 11
+robotics: { x: 130, z: -260 }  # Field Office 7, the self-styled Backrooms Robotics outpost (Shelly #386655), east of the track between the well and the house
 ship: { x: -170, z: -300, yaw: 20 }   # where the S.S. Fun grounds in the dry lakebed when it appears here
 day:
   periodMs: 5760000             # one 48-hour day = 96 real minutes (Savi's pick); 1 desert hour = 2 real minutes

@@ -75,8 +75,6 @@ function run(ctx, col) {
   const hi = (ctx.lod ?? 0) <= 2;
   if (col) { bx(ctx, -7.5, 7.5, -0.4, 0.15, -6.5, 6.5, 0); bx(ctx, -HL, HL, 0.15, 2.2, -R + 0.3, R - 0.3, 0); bx(ctx, 2.4, 4.2, 0.15, 1.15, 3.9, 5.1, 0); bx(ctx, -HL - 4.2, -HL - 2.0, 0.15, 0.92, -0.45, 0.45, 0); return; }
   ctx.albedo("cdn/texture-cracked-weathered-concrete-slab.png"); ctx.color(CONC); bx(ctx, -7.5, 7.5, -0.4, 0.15, -6.5, 6.5, 0.04); ctx.albedo(null);
-  ctx.translate?.(0, 0.15, 0);
-  const lift = (f) => { const q = ctx.quad, t = ctx.tri; return f; };
   hut(ctx, hi); mast(ctx, 4.5, -3.8, 8); generator(ctx, 3.3, 4.5); bench(ctx, -HL - 3.1, 0); fence(ctx, hi); awning(ctx); crates(ctx);
   ctx.color(DARK); for (const [x, z] of [[-6.6, -5.6], [6.6, 5.6]]) { tube(ctx, [[x, 0, z], [x, 4.2, z]], [0.06, 0.045], 6, [1, 1], 0, 1, 1); ctx.emissive("oklch(0.95 0.06 90)"); ctx.color("oklch(0.95 0.04 90)"); sphere(ctx, [x, 4.25, z], 0.18, 10, [1.4, 0.6, 1]); ctx.emissive(null); ctx.color(DARK); }
 }
