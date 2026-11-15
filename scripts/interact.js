@@ -125,6 +125,7 @@ function refocus(ctx, force = false) {
         else if (lk) { const [sk, lv] = lk.split(':'), ok = (skillsOf(ctx.self.state)[sk] ?? 0) >= Number(lv); info.info = `Locked · ${SKN[sk]} ${lv}`; info.verb = sk === 'lockpick' ? 'Pick Lock' : (ok ? 'Unlock' : 'Locked:'); info.color = ok ? '#f2c14e' : '#e0644f' }
       } else if (f.tag === 'usable') {
         info = { id: f.id, name: it.state?.name ?? 'Thing', info: it.state?.info ?? '', verb: it.state?.verb ?? 'Use', color: it.state?.tint ?? '#d9d3b8' }
+        if (it.state?.owner && it.state?.steal) { info.name = `${it.state.ownerName ?? 'Someone'}'s ${it.state?.name ?? 'thing'}`; info.verb = 'Steal'; info.color = '#e0644f' }
         const hl = hingeLock(ctx, it); if (hl) { const lv = Number(hl.lock.split(':')[1]), ok = (skillsOf(ctx.self.state).lockpick ?? 0) >= lv; info.info = `Locked · Lockpick ${lv}`; info.verb = ok ? 'Pick Lock' : 'Locked:'; info.color = ok ? '#f2c14e' : '#e0644f' }
       } else if (f.tag === 'seat') {
         const full = spotsOf(it).every((sp) => { const h = holder(ctx, it, sp.i); return h && h !== ctx.self.id })
@@ -408,6 +409,13 @@ function press(ctx) {
     const h = hingeLock(ctx, it), lv = Number(h.lock.split(':')[1]), have = skillsOf(s).lockpick ?? 0
     if (have < lv) { note(ctx, `Locked · needs Lockpick ${lv} (you have ${Math.floor(have)})`); snd(ctx, 'door-handle-locked-rattle', 0.5) } else startPick(ctx, h.obj, lv, 'hinge')
     m.key = ''; return
+  }
+  if (f.tag === 'usable' && it.state?.owner && it.state?.steal) { // a thing someone owns (Shelly, Nov 15: Ferry's Friends' house): taken in their sight, the same snatch-back rule as their containers
+    const own = ownerOf(ctx, it), who = it.state.ownerName ?? 'Someone'
+    if (own && watching(ctx, own) && !hostileReason(ctx, own, ctx.self)) {
+      if (!warnedRecently(ctx, own)) { note(ctx, `${who} snatches it back out of your hands.`); caught(ctx, own, who); m.key = ''; return }
+      caught(ctx, own, who)
+    }
   }
   if (f.tag === 'usable') { ctx.emit('press', { by: ctx.self.id }, { to: f.id }); if (it.tags?.includes?.('l5-elev-panel')) s.elevPanel = f.id; m.key = ''; return } // an elevator plate opens a clickable floor list (ui.js)
   if (f.tag === 'seat' && it.state?.salon) { if (spotsOf(it).every((sp) => { const h = holder(ctx, it, sp.i); return h && h !== ctx.self.id })) { note(ctx, 'That chair is taken'); m.key = ''; return } if (sitDown(ctx, it)) { s.salonOpen = true; s.salonTab = s.salonTab || 'hair'; s.wrMenu = false; s.wardrobeOpen = true } m.key = ''; return } // a salon chair at the mirrors: sit and the stylist comes over (scripts/salon-stylist.js)
