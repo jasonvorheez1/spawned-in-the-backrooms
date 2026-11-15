@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8737,
-  "updatedAt": "2026-11-15T07:40:30.369Z",
+  "basedOnSpecVersion": 8739,
+  "updatedAt": "2026-11-15T07:51:44.012Z",
   "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Shared registries and handlers coordinate global play, while authored cell scenes and local simulations compose spaces and stories. Level 178 is Kyoto Dreams; Savi True Focus adds a runtime helper controller, and the solo tutorial now teaches through staged beats plus an in-game Field Guide.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0 yellow maze, routes, anomalies and deterministic dressing; momentsV gates fitted wall moments and room-prop regeneration; objects.scene hosts shared controllers including Savi True Focus.",
+    "places/main (3D) - Level 0 yellow maze, routes, anomalies and deterministic dressing; momentsV gates fitted wall moments and room-prop regeneration; objects.scene hosts shared controllers including Savi True Focus; scripts/lib/data/level0.yml tunes exploration XP at 1 XP per 10 newly explored cells.",
     "places/bonus (3D) - vaporwave mall with shops, simulated staff, arcade, homes and salon; authored placements live in cells. places/testlab is the Test Range with loot/enemy bays and HIT SQUAD pad.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; fixed fixtures/furniture are in cells, sim builds tunnels/doors and staffs camps; t5-a2 leads to Level 178.",
-    "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; tutorial0 scene owns geometry, sim supplies props/lights and the local-player cutscenes, including the usable HALOGEN terminal.",
+    "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; tutorial0 scene owns geometry, sim supplies props/lights and the local-player cutscenes, including the usable HAL…",
     "places/level1 + places/level4 + places/level26 (3D) - M.E.G. camps and authored office mazes; Level 26's S.S. Fun has cabin 23, Partygoer decks/lockdown and aboard gate; Level 1 includes Dina's radio.",
     "places/level9 + places/level11 + places/level61 + places/level70 (3D) - seeded Suburbs, Level 11 city/Base Beta/strip mall/clinic and Chapter 2 trail, Snackrooms food court/checkpoint and Froidetown winter market/civic town.",
     "places/level169 (3D, 'Welcome to the Desert') - seeded desert, Ferry's house/trail/pantry/basement, scheduled Friends, checkpoints/ship and Field Office 7 with Backrooms Robotics.",
@@ -22,7 +22,7 @@
     "places/level178/config.yaml + scripts/terrain178.js + places/level178/cells/x0z0.scene + places/level178/sim.js - terrain and static machiya scene; sim ensures residents, their rounds and the arrival quest.",
     "scripts/lib/data/level178.yml + art/kyoto/build_arch.py + build_props.py - Kyoto layout/tuning source and Blender asset builders; art/kyoto/assets.txt catalogs the kit.",
     "places/level13/cells/x0z0.scene + places/level13/sim.js - cell scene owns apartment shell and permanent architectural fixtures; sim handles lethargy and delegates furnishing, foes, people, dressing and tape.",
-    "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js - title/settings, new-expedition choices, five-slot save manager and story/tutorial lifecycle; scripts/ui.js composes the in-game HUD, orientation overlay and wrist panels."
+    "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js - title/settings, new-expedition choices, five-slot save manager and story/tutorial lifecycle; scripts/ui.js composes the in-game HUD, orientation overlay and wrist p…"
   ],
   "shared": [
     "scripts/lib/places.js - canonical per-place names, labels and HUD titles, including Level 178 / Kyoto Dreams; consumed by feed, quest names and scripts/ui.js.",
@@ -52,28 +52,27 @@
     "scripts/lib/run-opts.js + scripts/main-menu.js - player.state.run owns expedition picks; run options determine story/NPC presence and hunger/thirst/sanity drain multipliers.",
     "scripts/db.js + scripts/main-menu.js - SQL saves table owns named save-slot snapshots by player owner and slot; player.state remains the live/current run state.",
     "scripts/main-menu.js + scripts/lib/tut0-cut.js + scripts/lib/tutorial.js - player.state.t0n/t0cut/t0Done/t0fade track tutorial beats; guideSeen/guideTip/guideMuted track Field Guide tips and preference.",
-    "Level 178: places/level178/sim.js owns place.state.layoutV and resident presence; scripts/l178-prop.js writes player.state rest/meal timestamps, sanity, wetness, hunger/thirst and notice; sim advances player.state.l178q quest stages from the authored interaction stamps."
+    "Level 178: places/level178/sim.js owns place.state.layoutV and resident presence; scripts/l178-prop.js writes player.state rest/meal timestamps, sanity, wetness, hunger/thirst and notice; sim advances player.state.l178q quest stages from t…"
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focusable tagged props and dispatches their interaction handlers.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focusable tagged props and di…",
     "templates/player.js runs scripts/fall-guard.js update before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; periodic saves exclude intake, bonus and tutorial0.",
-    "scripts/main-menu-ui.js actions → scripts/main-menu.js → player.state.run or SQL saves; new-run reset retains only NEW_KEEP screen/menu/save-list keys, clears character state, then the creator runs afresh; load resolves destination through saved place.",
+    "scripts/main-menu-ui.js actions → scripts/main-menu.js → player.state.run or SQL saves; new-run reset retains only NEW_KEEP screen/menu/save-list keys, clears character state, then the creator runs afresh; load resolves destination through…",
     "scripts/main-menu.js forces player/world bodyStyle to furry and ignores style actions; scripts/lib/critter-model.js setStyle always clears HUMAN, so character models are furry-only.",
     "scripts/lib/run-opts.js → main-menu story gates Dina/Chapter 2/cutscenes; global sim.js removes npc-tagged people only when all players in a place choose noNpcs, and Phoebe only when all choose noStory.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone (Level 178 maps to l178_house); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js place-matched jobs; carried items/kills/world events advance errands and quest dialogue handlers → journal, player.state.errands/qtrack, feed, reputation and rewards.",
-    "places/tutorial0/sim.js builds route props/lights from scripts/lib/tut0.js; scripts/main-menu.js ticks scripts/lib/tut0-cut.js locally against player position/state, with scripts/tut0-panel.js activating the HALOGEN beat; t0Done crosses to Level 1.",
-    "scripts/lib/tutorial.js guideTick/guideInput (called by scripts/main-menu.js) owns contextual tips and J Field Guide state; scripts/ui.js calls scripts/tutorial-ui.js to render orientation/tutorial, guide and journal views, while lessons read player state and run settings.",
-    "places/level178/sim.js creates friendly actors from level178.yml and state.rounds → scripts/meg-agent.js walks rounds; usable shoji/tap and futon/towels/table/cabinet/closet → scripts/l178-prop.js updates needs/rest and quest stamps."
+    "places/tutorial0/sim.js builds route props/lights from scripts/lib/tut0.js; scripts/main-menu.js ticks scripts/lib/tut0-cut.js locally against player position/state, with scripts/tut0-panel.js activating the HALOGEN beat; t0Done crosses to…",
+    "scripts/lib/tutorial.js guideTick/guideInput (called by scripts/main-menu.js) owns contextual tips and J Field Guide state; scripts/ui.js calls scripts/tutorial-ui.js to render orientation/tutorial, guide and journal views, while lessons r…"
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table with separately fitted chairs.",
     "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon stats/variants share combat; per-weapon sound/rack/reload fields resolve through sounds.yml, with weapon-specific liquid effects.",
-    "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters, plus art/cat-wardrobe/fit.py + tailclear.py + art/level70-stall/parts.py - fitted GLBs/prop catalogs and body-specific garment/prop fitting; scripts/lib/data/critter.yml and faces.yml supply creator/NPC face palettes (including nose colors).",
+    "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters, plus art/cat-wardrobe/fit.py + tailclear.py + art/level70-stall/parts.py - fitted GLBs/prop catalogs and body-specific garment/prop fitting; scripts/lib/dat…",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "scripts/lib/l169-road.js + scripts/lib/l169-road-geo.js + scripts/lib/l169-travel.js + scripts/lib/l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
@@ -88,10 +87,10 @@
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
-    "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with the sim-created hub-from-l178 marker at the matching threshold.",
+    "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with the sim-created hub-from-l178 marker at t…",
     "Level 13's building shell is authored in cells/x0z0.scene; sim.js returns if l13-floor is absent and no longer regenerates the shell. Preserve matching floor ID and scene wall/threshold geometry; LETH remains in player.state.leth13.",
     "Level 169 uses x/z with north at -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth must align. level169.yml holds tuned positions/rules; sim layout version and well version are separate.",
     "Level 178 positions in scripts/lib/data/level178.yml use metres, north = -Z, house floor y=0.45; align scene placements, usable target IDs/coordinates and basin collider dimensions with terrain/pool cut and level178.yml tuning.",
-    "Tutorial0 is a solo ephemeral copy (tutorial0-<id>): main-menu owns its staged player.state beats and routes completed players to Level 1; preserve tut0.js coordinates across scene, sim and cutscenes, and keep cutscenes local. Savi True Focus is runtime-only and operates only on an eligible helper (never a player)."
+    "Tutorial0 is a solo ephemeral copy (tutorial0-<id>): main-menu owns its staged player.state beats and routes completed players to Level 1; preserve tut0.js coordinates across scene, sim and cutscenes, and keep cutscenes local. Savi True Fo…"
   ]
 }
