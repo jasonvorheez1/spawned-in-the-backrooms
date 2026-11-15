@@ -36,6 +36,10 @@ export function update(ctx, dt) {
 
   // Aiming down sights eases the field of view in (player.state.ads is written by scripts/player.js).
   const ps = ctx.player?.state, sess = (ctx.self.session.cam ??= { t: 0 })
+  { const e = ctx.self.feetPosition, b = ctx.player?.feetPosition // a lost eye (non-finite, or far from its body) is set back on the head and every rig's memory cleared
+    if (e && b && (![e.x, e.y, e.z].every(Number.isFinite) || Math.abs(e.x - b.x) + Math.abs(e.y - b.y) + Math.abs(e.z - b.z) > 500)) {
+      const S = ctx.self.session; S.cam = { t: 0 }; S.tpCam = null; S.sitCam = null; S.deathCam = null; S.talkCam = null; S.dive = null; S.crouchK = 1
+      ctx.self.velocity = { x: 0, y: 0, z: 0 }; ctx.self.feetPosition = { x: b.x, y: b.y + 1.5, z: b.z }; ctx.log('[camera] lost eye reset', e) } }
   const goal = ps?.ads ? 1 : 0
   sess.t += (goal - sess.t) * (1 - Math.exp(-finiteNumber(CAMERA.adsSpeed, 12) * dt))
   if (Math.abs(goal - sess.t) < 0.002) sess.t = goal
