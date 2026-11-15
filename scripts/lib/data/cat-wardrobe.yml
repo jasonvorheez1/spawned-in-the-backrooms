@@ -124,11 +124,11 @@ hair:   # each carries a Hatted key (art/cat-wardrobe/hair-hatted.py): flat to t
   pixie: { f: '/cdn/value.3dfb3ebff3285cea4aa0d1aa2a2994ea63a634853c1de4524f1a2aff36168cb4.glb' }
   shaggy: { m: '/cdn/value.6be6920ce5aee2f2aa5fe2a0f7dc213ae6d0aa755c514f09a64fb0cb492629ba.glb' }
   # Nov 13 unisex five (Shelly #328121 "add 5 unisex hairs"): Tripo, fitted to both bodies by art/cat-wardrobe/hair-newfit.py
-  wolfcut: { f: '/cdn/value.7bcc25a80684fa5bc8297d7e2e8585ed66cd34ad26f73c42ef171a790e2511dc.glb', m: '/cdn/value.d1878fae46d4b8eea7d9141ae0e658811030ddf1dc3ebb4a4905c374af13eadf.glb' }   # turned 180 (was backwards, Nov 13)
-  mullet: { f: '/cdn/value.4c451b5989ca065dfb9a81adbdd8b67798ea1b5e2fce7c7c167cea45627ae216.glb', m: '/cdn/value.8e47163c6b7b4c558dbbcc294aad9c2eff8c5435d287ce29139949270e291a97.glb' }   # turned 180 (bangs had sat on the back, Shelly Nov 13)
+  wolfcut: { f: '/cdn/value.604f8b67369b936ccc4eb31eb4816b2cee4205f6575ce20595070d9437934fac.glb', m: '/cdn/value.97963f92dbaf234db82a4bcc6b5a9f527d79064f735956c633ec087d7894e350.glb' }   # Nov 15 face window (Shelly #410557): hair cleared off eyes and snout by art/cat-wardrobe/hair-facewindow.py, volume pulled 45% toward the skull
+  mullet: { f: '/cdn/value.59b484dccc58998a26191b2b0250da5c96b61aa0fbc47c740709366c9b7d4412.glb', m: '/cdn/value.3a3cc8524e123e4c4c26304ea32070bccaa39009bdb6c250a21fd142a9e35067.glb' }   # Nov 15 face window (Shelly #410557): hair cleared off eyes and snout by art/cat-wardrobe/hair-facewindow.py
   curtains: { f: '/cdn/value.e2a876cb3cb8218f144acb39dd3a37135d91538a4f01f0d567d5a9bbf2a29ce0.glb', m: '/cdn/value.0a95a9c588f2620fb2ec6fa5a0e6037b04e7f2cdff9b3845d4cda44aac9bf7f2.glb' }
-  locs: { f: '/cdn/value.55e4856224e63b1cc59271b50b33a86ed399ec68fa47695318ec4467a3031dce.glb', m: '/cdn/value.bed8a37ef1afbd691cf2bed0c4e5308a4525e94ac912dad55163b73708736f9e.glb' }
-  buzz: { f: '/cdn/value.f2720366a5371419c9c37f7f2f3abb433ac335c677ca0d7cba528a7829649d4d.glb', m: '/cdn/value.43df3412da528b86df89f8137231e41c9ffb91556e94c8d0161f082d55c447b5.glb' }
+  locs: { f: '/cdn/value.ac189cf43b0ec5f3169844bea7e17f4faf4dd3af472b54fa9fbe2307f66c8748.glb', m: '/cdn/value.28a5f285903172e717844c5c0b23687ade069bd4836209789db24ed793cdb925.glb' }   # Nov 15 face window (Shelly #410557): hair cleared off eyes and snout by art/cat-wardrobe/hair-facewindow.py
+  buzz: { f: '/cdn/value.c35946f753aaed325d819a99587a7ebef0de292a5c7c0d9abbd4de750284709a.glb', m: '/cdn/value.2e825a9b26d3b280226c242c7cdb03e9100d0c944d546e9c5fe96a5ba2ce3ad0.glb' }   # Nov 15 face window (Shelly #410557): hair cleared off eyes and snout by art/cat-wardrobe/hair-facewindow.py
   # Nov 13 unisex three (Shelly #333472 "2 or 3 new unisex hairs"): Tripo, prefit + hair-newfit.py on both bodies
   coils: { f: '/cdn/value.703836e7c003069b4b2710eccf2df0676f88f2a42c9fad929e4b42ca8ea6b59f.glb', m: '/cdn/value.505c1478e6707e9fbb421975efd715420fcf033f6484f98caa135562d6c08d5e.glb' }
   slickback: { f: '/cdn/value.606cdbd0f4d14dd3e4707d5eb998dc13a847c731ba29631124089614c8da5a40.glb', m: '/cdn/value.20946c43da471400af8869d4bd48efa58cf5534e146d71dafb5e5a3e30524c0b.glb' }
