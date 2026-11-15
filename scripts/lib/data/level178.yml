@@ -69,9 +69,9 @@ people:   # who lives here: look, name, role (all unarmed, all friendly; Class 0
   l178-sector-2: { name: "Sector Cook", sex: m, expr: "calm", voice: l178-sector-2 }
   l178-sector-3: { name: "Sector Runner", sex: f, expr: "keen", voice: l178-sector-3 }
   l178-sector-4: { name: "Sector Host", sex: m, expr: "calm", voice: l178-sector-4 }
-  l178-order-1: { name: "Order of the Sun Goddess", sex: f, expr: "calm", voice: l178-order-1 }
-  l178-order-2: { name: "Order of the Sun Goddess", sex: m, expr: "calm", voice: l178-order-2 }
-  l178-order-3: { name: "Order of the Sun Goddess", sex: f, expr: "calm", voice: l178-order-3 }
+  l178-order-1: { name: "Order of the Sun Goddess", sex: f, expr: "calm", voice: l178-order-1, look: { hair: topknot, hairc: "#1c1612", topw: l178_yukata, top: "#f4f1ea", botw: pants, bottom: "#2b2b33", hat: none, eyew: none, neck: none } }   # Order robes: white yukata, topknot clear of the face (Shelly #424526 "this person")
+  l178-order-2: { name: "Order of the Sun Goddess", sex: m, expr: "calm", voice: l178-order-2, look: { hair: topknot, hairc: "#1c1612", topw: l178_yukata, top: "#f4f1ea", botw: pants, bottom: "#2b2b33", hat: none, eyew: none, neck: none } }   # Order robes: white yukata, topknot clear of the face (Shelly #424526 "this person")
+  l178-order-3: { name: "Order of the Sun Goddess", sex: f, expr: "calm", voice: l178-order-3, look: { hair: topknot, hairc: "#1c1612", topw: l178_yukata, top: "#f4f1ea", botw: pants, bottom: "#2b2b33", hat: none, eyew: none, neck: none } }   # Order robes: white yukata, topknot clear of the face (Shelly #424526 "this person")
 residentLevel: 8
 residentHp: 60
 # --- polish pass: the rest of the house answers E (scripts/l178-prop.js); c = the point the look aims at

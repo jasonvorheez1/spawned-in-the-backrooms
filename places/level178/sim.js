@@ -21,7 +21,7 @@ function quest(ctx, p) { // A Place to Rest: eat at the low table, then doze on 
 }
 const IDS = Object.keys(L.residents);
 function person(ctx, id) {
-  const r = L.residents[id], g = L.people[id] ?? {}, look = { species: "cat", sex: g.sex ?? "f", expr: g.expr, ...(g.hairc ? { hairc: g.hairc } : {}) };
+  const r = L.residents[id], g = L.people[id] ?? {}, look = { species: "cat", sex: g.sex ?? "f", expr: g.expr, ...(g.hairc ? { hairc: g.hairc } : {}), ...(g.look ?? {}) };
   const rounds = (L.rounds[id] ?? []).map(([x, z, dwell]) => ({ x, y: L.arrive.y, z, dwell }));
   ctx.spawn(id, { tags: ["npc", "l178", "friendly"], feetPosition: { x: r.x, y: L.arrive.y, z: r.z }, rotation: { yaw: r.yaw ?? 0 }, physics: "character",
     ...critterSpec(npcLook(id, look, "survivor", L.residentLevel, "resident")), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
