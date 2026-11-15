@@ -5,7 +5,7 @@ from mathutils import Vector, Matrix
 SRC = "/workspace/k178/tripo"; OUT = "/workspace/k178/out"; os.makedirs(OUT, exist_ok=True)
 # name: (source, target tris, slot name, cut base disc fraction)
 KIT = {"chochin": ("chochin", 6000, "washi", 0), "toro": ("toro", 9000, "stone", 0), "rocka": ("rocka", 4000, "stone", 0),
-       "rockb": ("rockb", 3500, "stone", 0), "shrub": ("shrub", 14000, "leaves", 0), "maple": ("maple", 22000, "leaves", 0.045),
+       "rockb": ("rockb", 3500, "stone", 0), "shrub": ("shrub", 14000, "leaves", 0), "maple": ("maple", 36000, "leaves", 0.045),
        "shishi": ("shishi", 9000, "bamboo", 0), "moss": ("moss", 2500, "moss", 0), "tobi": ("tobi", 2000, "stone", 0)}
 
 def clean():
@@ -34,17 +34,6 @@ def ground(o, cut=0.0):
         h = z0 + (z1 - z0) * cut
         bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.z < h], context="VERTS")
         bm.to_mesh(me); bm.free()
-        # keep the largest connected piece set: drop loose crumbs under 30 verts
-        bm = bmesh.new(); bm.from_mesh(me); seen = set(); kill = []
-        for v in bm.verts:
-            if v in seen: continue
-            isl = []; st = [v]
-            while st:
-                a = st.pop()
-                if a in seen: continue
-                seen.add(a); isl.append(a); st += [e.other_vert(a) for e in a.link_edges]
-            if len(isl) < 30: kill += isl
-        bmesh.ops.delete(bm, geom=kill, context="VERTS"); bm.to_mesh(me); bm.free()
     xs = [v.co.x for v in me.vertices]; ys = [v.co.y for v in me.vertices]; zs = [v.co.z for v in me.vertices]
     me.transform(Matrix.Translation((-(min(xs) + max(xs)) / 2, -(min(ys) + max(ys)) / 2, -min(zs))))
 
@@ -83,7 +72,7 @@ for src in ("rockb", "rocka", "tobi"):
 parts = []
 # walk the rectangle-ish oval perimeter outside the pool edge
 per = []
-N = 34
+N = 46
 for i in range(N):
     a = 2 * math.pi * i / N
     c, s = math.cos(a), math.sin(a)
@@ -96,9 +85,9 @@ for (a, x, y) in per:
     src = "rocka" if random.random() < 0.25 else "rockb"
     base = lib[src]
     ob = base.copy(); ob.data = base.data.copy(); bpy.context.scene.collection.objects.link(ob)
-    big = 0.75 + random.random() * 0.35
+    big = 1.0 + random.random() * 0.45
     d = base.dimensions
-    sx = big * 0.62 / d.x; sz = (0.22 + random.random() * 0.18) / d.z if src == "rockb" else (0.3 + random.random() * 0.2) / d.z
+    sx = big * 0.62 / d.x; sz = (0.26 + random.random() * 0.2) / d.z if src == "rockb" else (0.36 + random.random() * 0.22) / d.z
     ob.scale = (sx, sx * (0.8 + random.random() * 0.3), sz)
     ob.rotation_euler = (0, 0, a + math.pi / 2 + random.uniform(-0.4, 0.4))
     ob.location = (x, y, -0.06)
