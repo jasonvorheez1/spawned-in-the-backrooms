@@ -62,6 +62,12 @@ export function alliedWitnesses(ctx, victim, player, rows) {
 
 export function assaulted(ctx, victim, player) {
   if (victim.state?.follow || !victim.state) return;
+  // an invulnerable host (the Duke of Morigont) shrugs every blow off: no warning, no grudge, no allies
+  if (victim.state.invulnerable && victim.state.friendly) {
+    victim.state.hp = victim.state.maxHp ?? victim.state.hp;
+    if (player.state) player.state.notice = { text: `${String(victim.state.name ?? "They").split(" ·")[0]} brushes off his robe: "Ha! Was that a hello? You'll have to do better."`, at: ctx.now() };
+    return;
+  }
   const prior = incidentOf(ctx, victim, player);
   // a first stray hit is a warning, on every level (Shelly: "some determination between im doing it deliberately and on accident"):
   // only a second within STRIKE_WINDOW_MS, or a killing blow, is an assault. Already-hostile NPCs are unaffected.
