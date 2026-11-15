@@ -56,7 +56,7 @@ function findFocus(ctx, ray, reach = REACH) {
   for (const it of ctx.query({ anyTags: KINDS, radius: reach + 1 })) {
     if (it.state?.taken) continue
     if (!flat) { // cheap cull before any bounds read or raycast: behind the look, or more than 1.6 m off its line, can never be the focus
-      const q = it.state?.c ?? (it.parent ? ctx.getObject(it.id)?.worldFeetPosition : null) ?? it.feetPosition, ax = q.x - o.x // a piece hung on a parent (Ferry's door) reads local feet: cull by where it stands in the world, az = q.z - o.z, along = ax * dx0 + az * dz0
+      const q = it.state?.c ?? (it.parent ? ctx.getObject(it.id)?.worldFeetPosition : null) ?? it.feetPosition, ax = q.x - o.x, az = q.z - o.z, along = ax * dx0 + az * dz0 // a piece hung on a parent (Ferry's door) reads local feet: cull by where it stands in the world
       if (along < -0.8 || Math.abs(ax * dz0 - az * dx0) > 1.6) continue
     }
     const tag = kindOf(it.tags)
