@@ -17,7 +17,7 @@ for sex in ("f", "m"):
     core = [p for p in pts if abs(p.x) < 0.24]
     mn = Vector([min(p[i] for p in core) for i in range(3)]); mx = Vector([max(p[i] for p in core) for i in range(3)])
     face = [p for p in core if p.y < (mn.y + mx.y) / 2]                       # the front half of the head
-    fw = 2 * max(abs(p.x) for p in face)
+    fw = 2 * sorted(abs(p.x) for p in face if p.z < (mn.z + mx.z) / 2 + 0.08)[-1]   # cheek width, ears excluded
     clear(); bpy.ops.import_scene.gltf(filepath=SRC)
     ms = [o for o in bpy.context.scene.objects if o.type == "MESH"]
     for o in ms: o.select_set(True)
@@ -31,7 +31,7 @@ for sex in ("f", "m"):
     keep.vertex_groups.clear(); keep.name = "KitsuneMask"
     vs = [v.co.copy() for v in keep.data.vertices]
     a = Vector([min(v[i] for v in vs) for i in range(3)]); b = Vector([max(v[i] for v in vs) for i in range(3)])
-    s = fw * 1.08 / (b.x - a.x)                                                # uniform: the mask keeps its own shape
+    s = fw * 1.0 / (b.x - a.x)                                                # uniform: the mask keeps its own shape
     cz = mn.z + (mx.z - mn.z) * 0.52                                           # centred on the eyes
     back = mn.y + 0.035                                                        # its back rests just behind the muzzle tip
     for v in keep.data.vertices:
@@ -47,7 +47,7 @@ for sex in ("f", "m"):
     sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 8; sc.render.resolution_x = sc.render.resolution_y = 420
     w = bpy.data.worlds.new("w"); sc.world = w; w.color = (0.8, 0.8, 0.8)
     hz = (mn.z + mx.z) / 2
-    for nm, loc in (("front", (0, -1.0, hz)), ("side", (-1.0, -0.2, hz))):
+    for nm, loc in (("front", (0, -2.2, hz)), ("side", (-2.2, -0.2, hz))):
         cam = bpy.data.objects.new(nm, bpy.data.cameras.new(nm)); sc.collection.objects.link(cam); cam.location = loc
         e = bpy.data.objects.new("e" + nm, None); sc.collection.objects.link(e); e.location = (0, (mn.y + mx.y) / 2, hz)
         t = cam.constraints.new("TRACK_TO"); t.target = e; cam.data.lens = 70
