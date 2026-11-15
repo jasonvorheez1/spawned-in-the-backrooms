@@ -325,6 +325,8 @@ function pickpocket(ctx, it) {
   if (now - (m.pickAt ?? -1e9) < 900) return
   m.pickAt = now
   const items = pocketsOf(ctx, it), who = (it.state.name ?? 'Stranger').split(' ·')[0]
+  const arm = it.state.arm // their weapon rides in the list too (Shelly: "i should be able to pickpocket weapons")
+  if (arm && arm !== 'fists' && !items.some((t) => t === 'weapon:' + arm)) { items.unshift('weapon:' + arm); it.state.pockets = items.join(',') }
   if (!items.length) { note(ctx, `${who}'s pockets are empty.`); return }
   s.lootOpen = it.id; s.lootName = `${who}'s pockets`; s.lootList = it.state.pockets; s.pocket = true; s.focus = null
   snd(ctx, 'loot-take-all-rustle', 0.15)
@@ -332,13 +334,15 @@ function pickpocket(ctx, it) {
 // one grab from an open pocket: the roll happens here, per item
 function liftOne(ctx, it, i) {
   const s = ctx.self.state, items = pocketsOf(ctx, it), who = (it.state.name ?? 'Stranger').split(' ·')[0]
-  const chance = pickChance(ctx, it) ?? 0.5
+  const lifting = items[i], weapon = typeof lifting === 'string' && lifting.startsWith('weapon:')
+  const chance = Math.max(0.05, (pickChance(ctx, it) ?? 0.5) - (weapon ? 0.15 : 0)) // a weapon at the belt is harder to lift than a pocket (my pick)
   it.state.picked = { ...(it.state.picked ?? {}), [ctx.self.id]: (it.state.picked?.[ctx.self.id] ?? 0) + 1 }
   if (!(i >= 0 && i < items.length)) return
   if (ctx.random() < chance) {
     const t = items[i], r = takeToken(ctx, t)
     if (!r.ok) { note(ctx, r.msg || "You can't carry that."); return }
     items.splice(i, 1); it.state.pockets = items.join(','); s.lootList = it.state.pockets
+    if (weapon && it.state.arm === t.slice(7)) { it.state.arm = 'fists'; it.state.armed = false; if (ctx.place.objects[it.id + '/held']) ctx.destroy(it.id + '/held') } // left bare-handed
     note(ctx, `Lifted ${describe(t).name} from ${who}`)
     questLift1(ctx, ctx.self, it)
     snd(ctx, 'loot-take-all-rustle', 0.25)
