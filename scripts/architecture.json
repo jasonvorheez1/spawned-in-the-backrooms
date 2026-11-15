@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9267,
-  "updatedAt": "2026-11-15T19:48:24.622Z",
-  "summary": "Spawned in the Backrooms is a multiplayer survival RPG spanning Level 0, the Bonus mall, The Hub and authored destinations. Character progress lives in player.state, while Solo and Multiplayer keep separate run/story state; global scripts and shared registries coordinate play and place scenes/sims compose local worlds. The Bonus Teleport Station now records explored destinations in a character-level atlas and can route to any visited atlas level.",
+  "basedOnSpecVersion": 9273,
+  "updatedAt": "2026-11-15T19:57:06.776Z",
+  "summary": "Spawned in the Backrooms is a multiplayer survival RPG spanning Level 0, the Bonus mall, The Hub and authored destinations. Character progress lives in player.state, while Solo and Multiplayer keep separate run/story state; global scripts and shared registries coordinate play and place scenes/sims compose local worlds. The Bonus Teleport Station presents the character's explored-level atlas for travel.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes and anomalies; momentsV gates wall moments/room-prop regeneration, sim handles ceiling-stuck enemies, objects.scene hosts shared controllers.",
-    "places/bonus + places/testlab (3D) - shared vaporwave mall with shops, staff, arcade, homes and Teleport Station; Test Range has loot/enemy bays and HIT SQUAD pad.",
+    "places/bonus + places/testlab (3D) - shared vaporwave mall with shops, staff, arcade, homes and atlas Teleport Station; Test Range has loot/enemy bays and HIT SQUAD pad.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; sim builds tunnels/doors and staffs camps; t5-a2 leads to Level 178.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; scenes and sims own local beats.",
     "places/level1 + places/level1c + places/level2 + places/level4 + places/level26 (3D) - Level 1 M.E.G. camp, far-west Level 0 entry/arrival, and Corrupted Corridor; Level 1.1 sim lays cast, caches and supplies.",
     "places/level9 + places/level10 + places/level11 + places/level61 + places/level70 (3D) - Suburbs, farm, city/Base Beta/strip mall/clinic, Snackrooms checkpoint and Froidetown.",
     "places/level169 + places/level132 + places/level178 (3D) - Level 169 desert/house/trail/Field Office 7, Level 132 Duchy of Morigont/Lumiria and barter, Level 178 Kyoto terrain/house/residents/arrival quest.",
-    "places/level01, level02, level114, level12, level13, level21, level27, level3, level31, level5, level6, level7, spamton, level1c and other numbered place configs - authored Backrooms destinations and side locations, each with local cells and where present a sim."
+    "places/levelrun (3D) - Level ! Chapter 2 finale: intake-room horde breach, crimson obstacle corridor and rescue to the Safe Alcove; sim stages the chase and characters. Other numbered places and side locations have authored cells/sims."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera and ordered behaviors/actions; fall-guard precedes movement; radio, barter and phone are player behaviors.",
@@ -22,7 +22,7 @@
     "places/level132/sim.js + scripts/lib/data/level132.yml + scripts/lib/l132-*.js - town/countryside lay and tick orchestration for stalls, shops, land, people, Duke, quests and barter.",
     "places/level178/config.yaml + scripts/terrain178.js + x0z0.scene + sim.js - Kyoto terrain, house, residents, arrival quest, finds, containers and breakable sweep.",
     "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js + scripts/ui.js - title/save lifecycle, Solo/Multiplayer switch, expedition choices and HUD.",
-    "scripts/hub.js + scripts/lib/hub.js - Bonus mall counters and Teleport Station actions; shared hub library owns room routing, home access and atlas policy."
+    "scripts/hub.js + scripts/hub-ui.js + scripts/lib/hub.js - Bonus mall counters and atlas Teleport Station UI/actions; shared hub library owns room routing, home access and atlas policy."
   ],
   "shared": [
     "scripts/lib/places.js - canonical place names/labels/HUD titles; consumed by feed, quest names and scripts/ui.js; also defines valid atlas destinations.",
@@ -65,8 +65,9 @@
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold handlers call carryAcross for held props/followers; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone (Level 1.1 sectors, Level 178 house, Level 132 Lumiria); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass.",
     "scripts/player.js update detects place arrival → scripts/lib/hub.js noteAtlas writes player.state.atlas once per arrival (tutorial0 aliases main); old saved place is backfilled when absent.",
-    "Bonus Teleport Station choice → scripts/hub.js validates atlasable(destination) and s.atlas entry → board(ctx, s, destination, false) routes to a visited level; last-level, Test Range and unlocked homes retain their dedicated choices.",
-    "scripts/player.js update → preloadTick(ctx) every tick; scripts/lib/body3.js reads combat-anims.yml and held weapon/session/camera aim → shared third-person pose for player and NPC bodies."
+    "Bonus Teleport Station in scripts/hub-ui.js renders ATLAS_ORDER as visited travel cards and locked unexplored slots; choice → scripts/hub.js validates atlasable(destination) and discovery before routing, with last-level, Test Range and unlocked homes as quick stops.",
+    "scripts/player.js update → preloadTick(ctx) every tick; scripts/lib/body3.js reads combat-anims.yml and held weapon/session/camera aim → shared third-person pose for player and NPC bodies.",
+    "scripts/hounds.js and scripts/stealers.js updates → one elected manager per place processes each pack; hounds cache perception between ~5 Hz checks and idle without AI beyond 90 m. Level ! sim's hound/partygoer models are included in scripts/lib/data/preload.yml."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
@@ -91,7 +92,7 @@
     "Multiplayer room ID is mp- plus sanitized party ID (or user ID); hub.js selects it only when leaving Bonus in multiplayer. Continue must not wake a multiplayer save into a solo room.",
     "scripts/lib/mp-guard.js only spares NPC-tagged, non-overboard targets in rooms with a multiplayer player; shootable includes attackOnSight, killable, l8-hostile, born-hostile Ezra/Tobit and Lightless faction.",
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with sim-created hub-from-l178.",
-    "Level 169 uses x/z, north = -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth align with level169.yml. Level 1.1 hall distance is +X (0–620 m), north at -Z; sector boundaries and doorway/seam-return markers stay paired.",
+    "Level 169 uses x/z, north = -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth align with level169.yml. Level 1.1 hall distance is +X (0–620 m), north at -Z; sector boundaries and doorway/seam returns share that coordinate frame.",
     "Atlas state is character-level player.state.atlas keyed by places.js IDs; tutorial0 counts as main, atlas skips scripted/non-destination places, and kiosk travel requires an existing entry. Keep discovery on arrival and destination validation aligned."
   ]
 }
