@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9115,
-  "updatedAt": "2026-11-15T15:01:08.214Z",
+  "basedOnSpecVersion": 9125,
+  "updatedAt": "2026-11-15T15:07:13.028Z",
   "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Global scripts and shared registries coordinate play, while place scenes and simulations compose local spaces and stories, including Kyoto Dreams and the playable Lumiria countryside, town and quests.",
   "scriptPaths": [],
   "places": [
@@ -10,9 +10,9 @@
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; sim builds tunnels/doors and staffs camps; t5-a2 leads to Level 178.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; scenes own geometry, sims/cutscenes supply route props and local beats.",
     "places/level1 + places/level4 + places/level26 (3D) - M.E.G. camps and office mazes; Level 26's S.S. Fun has cabin 23, Partygoer decks/lockdown and aboard gate; Level 1 includes Dina's radio.",
-    "places/level9 + places/level10 + places/level11 + places/level61 + places/level70 (3D) - Suburbs, Bumper Crop farm, city/Base Beta/strip mall/clinic, Snackrooms food court/checkpoint and Froidetown winter market; Level 10 entrances reach Lumiria.",
-    "places/level169 + places/level132 (3D) - Level 169 desert, Ferry's house/trail/pantry/basement and Field Office 7; Level 132, The Duchy of Morigont, has Lumiria's town, barter stalls, shops, residents, quests, cottages, roads and fields; stalls can break/restock wares.",
-    "places/level178 + remaining authored level*/bonus places (3D) - Level 178 is Kyoto Dreams, with machiya/courtyard, residents, house quests and searchable containers; soaking in its spring can wake the player in Lumiria; other levels hold authored setpieces."
+    "places/level9 + places/level10 + places/level11 + places/level61 + places/level70 (3D) - Suburbs, Bumper Crop farm, city/Base Beta/strip mall/clinic, Snackrooms food court/checkpoint and Froidetown winter market; Level 10 entrances reach L…",
+    "places/level169 + places/level132 (3D) - Level 169 desert, Ferry's house/trail/pantry/basement and Field Office 7; Level 132, The Duchy of Morigont, includes Lumiria's town, barter stalls, shops (RadioShed has Tripo TV-wall, spinner and shelf models), residents, quests and fields.",
+    "places/level178 + remaining authored level*/bonus places (3D) - Level 178 is Kyoto Dreams, with machiya/courtyard, residents, house quests and searchable containers; soaking in its spring can wake the player in Lumiria; other levels hold authored routes and setpieces."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera setup, ordered behaviors and input actions; fall-guard runs before movement and radio is on the player.",
@@ -32,7 +32,7 @@
     "scripts/lib/containment.js - Level 109 persistent pen/loose-foe, open-door and remembered-door-position books; sim supplies room IDs/boxes and spawnFoe adapter.",
     "scripts/lib/pg-society.js + scripts/lib/data/pg-society.yml - Level 26 Partygoer roles/routes, sight-bound relay and deck alert/search/recovery; partygoers.js owns actor behavior/traps.",
     "scripts/lib/prop-interactions.js + interactive-props data - shared usable-prop/container migration and geometry specs; scripts/interact.js dispatches; scripts/lib/voices.js resolves NPC voices and recorded takes.",
-    "scripts/lib/breakables.js + scripts/lib/data/breakables.yml - shared prop/wall damage, materials, salvage and regrowth; local sims call sweepProps and idMat rules classify placed props; scripts/field-fixture.js is reused by authored beds, hot springs and related fixtures."
+    "scripts/lib/loot.js + clothes.js + data/loot*.yml - shared leveled loot rolls by place pool and item category; interact.js gates and preserves searched container stock, loot3.js supplies Level 3 tables."
   ],
   "notableExports": [
     "scripts/lib/places.js - PLACES, PLACE_NAMES, PLACE_LABELS, LEVEL_TITLES.",
@@ -42,7 +42,7 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - journal/advancement/reward helpers; containment.js - pen/door operations; ch2-quest.js - Chapter 2 stages/dialogue helpers; scripts/field-fixture.js - startRestPose, finishRest, finishHeat, ears.",
     "scripts/lib/run-opts.js - OPTS, DEFAULTS, PICK_DEFAULTS, RATE, PRESETS, runOf, needsMul, sanityMul, noStory, noNpcs, cleanPick, KEEP, SKIP; scripts/main-menu.js - SLOTS.",
-    "scripts/lib/l132-barter.js - CATS, WANTS, NAMES, bookOf, holds, pieces, barter, keep, dukeOffer, tick, offer; l132-quests.js - ears, lay, tick, l132Choices, handleDialogueQuest132; l132-shops.js - ears.press, lay, tick; l132-stalls.js - ears.press, lay, tick."
+    "scripts/lib/loot.js - POOL, poolOf, rollWeapon, rollItem, gateItems, crate/level-specific rolls; clothes.js - rollLevel, rollCloth; l132-barter.js - dukeOffer and barter helpers; l132-quests.js - quest handlers."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable player.state progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, saved place/position, currency and related progress.",
@@ -52,10 +52,10 @@
     "scripts/lib/run-opts.js + scripts/main-menu.js - player.state.run owns expedition picks; run options determine story/NPC presence and hunger/thirst/sanity drain multipliers.",
     "scripts/db.js + scripts/main-menu.js - SQL saves table owns named save-slot snapshots by player owner and slot; player.state remains live/current run state.",
     "scripts/main-menu.js + scripts/lib/tut0-cut.js + scripts/lib/tutorial.js - player.state.t0n/t0cut/t0Done/t0fade track tutorial beats; guideSeen/guideTip/guideMuted track Field Guide state/preferences.",
-    "scripts/lib/l178-prop.js writes player.state.l178dozeAt/l178dozeWarned/l178dozing during the Kyoto spring soak and clears them on exit/transfer; scripts/ui.js only renders the progress indicator; Level 178 quest keys and player.state.l132 store per-player progress."
+    "Container state owns items/full/refillAt/scavved/lootTiered across searches; place.state.looted records per-container depleted stock until refill, and the opening player's lootList is the displayed snapshot."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focused tagged props and dispatches their actions.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focused tagged props and dispatches uses/searches.",
     "templates/player.js runs scripts/fall-guard.js before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on place arrival.",
@@ -65,18 +65,18 @@
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone (Level 178 maps to l178_house; Level 132 to l132_lumiria); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names.",
     "scripts/level-door.js onTriggerEnter resolves threshold ID/partner → destination marker and carryAcross; l132-tree-exit returns to level10#l10-from-l132, while Level 10's hollow tree and Archers' tower thresholds enter level132#l132-arrive.",
-    "places/level132/sim.js runs staged component lay/tick hooks, sweeping breakables when occupied; l132-land.js builds town/fields/tree chunks from l132-land.yml. l132-stalls.js uses l132-stalls.yml, breakables' wreck records and npc-social.say: nearest keeper reacts once to broken ware, then it restores after 120 s when unoccupied; dialogue choices route through talk.js to l132-barter.offer or l132-quests handlers, and Rosalind's apple-for-hat response consumes fruit/adds a hat.",
-    "scripts/lib/npc-social.js uses chatter.yml's level132_strangers for Lumirian passer-by small talk; dialogue.js selects lumiria faction archetypes. talk-ui.js suppresses Recruit for Duke/Lumiria/noRecruit NPCs; scripts/lib/l178-prop.js soak timer writes l178dozeAt/dozing, scripts/ui.js draws its bar, then the spring transfers the player to level132#l132-arrive."
+    "places/level132/sim.js runs staged component lay/tick hooks; l132-shops.js reads l132-shops.yml models/layout for Lumiria's shops, while l132-duke.js holds the Duke near guests and scripts/lib/forgive.js makes friendly invulnerable hosts shrug off assaults.",
+    "scripts/interact.js openLoot → scripts/lib/loot.js poolOf/rollItem/gateItems and clothes.js rollLevel; level-aware search rolls are retained in container/place ledgers across reopen/refill, while talk.js invokes dukeOffer directly for the Duke's sleeve trade."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
-    "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table with separately fitted chairs; field-fixture variants reuse fixture systems.",
-    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon variants share combat; sounds/rack/reload/liquid effects and swing/hold presentation vary by weapon; Kyoto adds bokken and kiseru.",
+    "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table with separately fitted chairs; field-fix…",
+    "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js + scripts/lib/loot.js - weapon variants share combat and rarity/level gates; place-specific loot pools and local weapon lists vary by environment.",
     "cat-wardrobe.yml and the art fitting builders - body-specific garment/prop fitting; Kyoto yukata and haori have separate fitted cuts, tabi/geta and hachimaki have dedicated models, with wardrobe slots mapping their item IDs.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "scripts/lib/l169-road.js + scripts/lib/l169-road-geo.js + scripts/lib/l169-travel.js + scripts/lib/l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
-    "places/level132/sim.js + scripts/lib/data/level132.yml + l132-{square,stalls,shops,land,people,duke,quests,barter}.js - componentized town/countryside; land is staged/data/model-driven, stalls trade eight ware categories and now restore broken wares, and residents share Lumiria-specific voiced dialogue, passer-by chatter and keeper trade/quest handlers."
+    "places/level132/sim.js + scripts/lib/data/level132.yml + l132-{square,stalls,shops,land,people,duke,quests,barter}.js - componentized town/countryside; land is staged/data/model-driven, stalls trade eight ware categories and restore breakable stock."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -91,7 +91,7 @@
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with the sim-created hub-from-l178 marker.",
     "Level 13's building shell is authored in cells/x0z0.scene; sim.js returns if l13-floor is absent and no longer regenerates the shell. Preserve matching floor ID and scene wall/threshold geometry; LETH remains in player.state.leth13.",
     "Level 169 uses x/z with north at -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth must align. level169.yml holds tuned positions/rules; sim layout version and well version are separate.",
-    "Level 178 positions in level178.yml use metres, north = -Z, house floor y=0.45; preserve shell2 frames/pivots, usable IDs/coordinates and basin collider dimensions. Cabinet IDs carry container state/items directly; pool.dozeSec/dozeFade in level178 data controls the spring transition timing.",
-    "Level 132 uses metres, north = -Z and town ground y=0; keep terrain marks/config, l132-land.yml positions, scene anchors and generated props aligned. Land generation stamps landV after staged builds; Level 10's l10-from-l132 and Level 132's l132-arrive markers pair the tree route."
+    "Level 178 positions in level178.yml use metres, north = -Z, house floor y=0.45; preserve shell2 frames/pivots, usable IDs/coordinates and basin collider dimensions. Cabinet IDs carry container state/items directly; pool l178 yields Kyoto-specific consumables and gear.",
+    "Level 132 uses metres, north = -Z and town ground y=0; keep terrain marks/config, l132-land.yml positions, scene anchors and generated props aligned. Level 10's l10-from-l132 and Level 132's tree-exit/arrival markers pair across the boundary."
   ]
 }
