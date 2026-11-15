@@ -1,0 +1,32 @@
+{
+  "name": "game-rules-manager",
+  "displayName": "Game Rules Manager",
+  "description": "A 📜 Game Rules button on your game's HUD opens a panel for your build rules, saved as files: All games, Only this game, and Not in this game. Reorder rules, edit them inline, delete with a confirmation, switch light or dark theme, and export or import .zip (JSON + Markdown). When installed, it asks Savi to add the button to your HUD and fill the rules from your notes. Also available as a tab in god mode.",
+  "tags": [
+    "tools",
+    "rules",
+    "editor"
+  ],
+  "visibility": "public",
+  "version": "1.0.2",
+  "inputs": {
+    "actions": {
+      "rulesLoad": {},
+      "rulesSave": {}
+    }
+  },
+  "attach": [
+    {
+      "target": {
+        "kind": "god"
+      },
+      "behavior": "rules.js"
+    }
+  ],
+  "tab": {
+    "id": "rules",
+    "label": "Game Rules",
+    "icon": "📜",
+    "render": "hud.js"
+  }
+}
