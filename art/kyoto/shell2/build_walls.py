@@ -10,7 +10,7 @@ kit.M["lacquer"] = (None, 1, .18, 0, (.018, .014, .012), None, 1)
 ONLY = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 random.seed(178)
 W, H, KAMOI = 1.82, 2.5, 2.00; LW, LH = 0.91, 1.97;   # 2.00 head: a 1.9 m body walks through (was 1.80/1.77)
-DY = KAMOI - 1.80   # everything that sat on the old 1.80 head rides up with it; TR = 0.018
+DY = KAMOI - 1.80; TR = 0.018   # everything that sat on the old 1.80 head rides up with it
 AX = {"x": 0, "y": 2, "z": 1}
 SEED = [0]
 
