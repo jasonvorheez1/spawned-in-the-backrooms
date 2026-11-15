@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9244,
-  "updatedAt": "2026-11-15T19:09:35.091Z",
+  "basedOnSpecVersion": 9246,
+  "updatedAt": "2026-11-15T19:14:38.310Z",
   "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state holds the character while solo and multiplayer runs retain separate story, quest and resume state. Global scripts and shared registries coordinate play, while place scenes and simulations compose local spaces and stories; third-person bodies share combat poses with rig-aware locomotion.",
   "scriptPaths": [],
   "places": [
@@ -12,7 +12,7 @@
     "places/level1 + places/level1c + places/level2 + places/level4 + places/level26 (3D) - Level 1 M.E.G. camp and signed entry to the 620 m Corrupted Corridor; Level 1.1 sim lays cast, caches and supplies.",
     "places/level9 + places/level10 + places/level11 + places/level61 + places/level70 (3D) - Suburbs, farm, city/Base Beta/strip mall/clinic, Snackrooms checkpoint and Froidetown.",
     "places/level169 + places/level132 (3D) - Level 169 desert, Ferry's house/trail/basement and Field Office 7; Level 132 Duchy of Morigont, Lumiria town, collection barter and generated countryside.",
-    "places/level178 + places/level01 + places/level02 + places/level114 + places/level12 + places/level13 + places/level21 + places/level27 + places/level3 + places/level31 + places/level5 + places/level6 + places/level7 + places/spamton + places/gamma (3D) - authored destinations including Kyoto Dreams, Level ! Chapter 2 and other local scenes."
+    "places/level178 + places/level01 + places/level02 + places/level114 + places/level12 + places/level13 + places/level21 + places/level27 + places/level3 + places/level31 + places/level5 + places/level6 + places/level7 + places/spamton + pla…"
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera and ordered behaviors/actions; fall-guard precedes movement; radio, barter and phone are player behaviors.",
@@ -42,7 +42,7 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - journal/advancement/reward helpers; scripts/lib/containment.js - pen/door operations; scripts/lib/run-opts.js - OPTS, DEFAULTS, RATE, PRESETS, runOf, noStory, noNpcs, isMulti, mpRoom, MODE_SLOT, isStoryKey.",
     "scripts/lib/mp-guard.js - shootable, multiRoom, spared; scripts/lib/dialogue.js - DLG, dlgReady, warmDialogue, archOf, entryOf, BYE_CHOICE, rootChoices, childChoices, nodeOf, greetingOf, lineOf, barkOf.",
-    "scripts/lib/l132-shops.js - RANGE, ears, lay, tick; scripts/lib/level169-quest.js - questTick, useThing; scripts/lib/voices.js - warmVoices, hasVoice, voiceKey; scripts/critter.js - updateSchedule, blinkEnd, blinkNow, twitchEnd, onInput, update; scripts/humanoid-locomotion.js - sit, onInput, update; scripts/lib/body3.js - heldRot, famOf, play, tick3, swing3, fire3, handle3, stagger3, react3, aimPose, carry3, aimMode."
+    "scripts/lib/l132-shops.js - RANGE, ears, lay, tick; scripts/lib/level169-quest.js - questTick, useThing; scripts/lib/voices.js - warmVoices, hasVoice, voiceKey; scripts/critter.js - updateSchedule, blinkEnd, blinkNow, twitchEnd, onInput, u…"
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable character player.state: progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance/look, currency and gear shared across Solo/Multiplayer.",
@@ -55,9 +55,9 @@
     "places/level1c/sim.js + scripts/lib/level1c-quest.js - place state builtV/l1cPh/xV/l1cDead; player state holds per-walker sector/quest/passage/fall progress."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused interactions.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused i…",
     "templates/player.js runs scripts/fall-guard.js before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
-    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; camera derives eye height from worn body/model and critter-head; scripts/player.js builds the local first-person viewmodel.",
+    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; camera derives eye height from worn body/model and critter-head; scripts/player.js builds the local first-…",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
     "scripts/main-menu-ui.js mode action → scripts/main-menu.js switchMode → SQL MODE_SLOT snapshots; isStoryKey fields swap while character/gear/look persist, then Multiplayer routes to Bonus and Solo to its saved place.",
     "scripts/main-menu.js Multiplayer start → skips tutorial/story and goes to The Bonus Rooms; scripts/lib/run-opts.js noStory treats multiplayer as story-off and isMulti identifies its run.",
@@ -66,13 +66,13 @@
     "scripts/main-menu.js requests furry bodyStyle; scripts/lib/critter-model.js setStyle clears HUMAN for the critter body, while scripts/critter.js can instead render the avatar selected by player.state.look.spawnAv.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold handlers call carryAcross for held props/followers; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone (Level 1.1 sectors, Level 178 house, Level 132 Lumiria); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass.",
-    "scripts/lib/body3.js derives the equipped long-gun pose and armed state → scripts/critter.js turns a third-person armed body toward the camera; scripts/humanoid-locomotion.js uses movement-key direction to choose ash rifle sidestep/back-step gait clips, while scripts/lib/data/combat-anims.yml gives long guns a distinct ash idle ready carry and upper-body-masked aim clips."
+    "scripts/lib/body3.js stance derives equipped long-gun aim/ready pose and armed state; for any held long gun it returns LeftHand reach IK attached to session.heldObj (including worn/custom bodies) → scripts/critter.js merges bones and turns third-person armed bodies toward the camera; scripts/humanoid-locomotion.js selects rifle sidestep/back-step gait from movement direction."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
     "scripts/lib/data/weapons.yml + scripts/player.js + ballistics.js + knock.js + loot.js - weapon variants share combat and rarity/level gates; weights and upgrade rolls vary by level.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
-    "scripts/crawl.js + scripts/player.js + humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait; held crouch initiates crawl and tight spaces trigger automatic crawl; armed bodies steered to camera use directional rifle sidestep/back-step clips from the ash set, compatible across critter, plymodel and spawn-avatar rigs.",
+    "scripts/crawl.js + scripts/player.js + humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait; held crouch initiates crawl and tight spaces trigger automatic crawl; armed bodies steered to camera use directiona…",
     "scripts/lib/l169-road.js + l169-road-geo.js + l169-travel.js + l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
     "places/level132/sim.js + l132-{stalls,shops,land,people,duke,quests,barter}.js + barter-deal.js - staged town and keeper trades use eight goods categories; first gift then balanced currency-free barter.",
     "scripts/phone.js + phone-ui.js + screen.js - one shared wrist phone; apps include keeper contacts/restock texts, camera/photos/notes, flashlight and radio.",
