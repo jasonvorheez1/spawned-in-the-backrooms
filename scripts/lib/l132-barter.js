@@ -43,7 +43,7 @@ export function tick(ctx) { // restock
   for (const w of ctx.query({ tags: ["usable"], center: { x: 0, y: 0, z: 0 }, radius: 30 })) if (w.state?.goneAt && now - w.state.goneAt > RESTOCK_MS) { w.visible = true; w.state = { ...w.state, goneAt: null }; }
 }
 // a townsfolk keeper's offer in talk: they part with one piece of their own stall's kind for the one kind their shelf lacks
-const KEEPER = { "l132-gus": "fruit", "l132-rosalind": "hats", "l132-teodora": "pottery", "l132-benny": "phones", "l132-margo": "remedies", "l132-silas": "records", "l132-anouk": "spices" };
+const KEEPER = { "l132-gus": "fruit", "l132-rosalind": "hats", "l132-teodora": "pottery", "l132-benny": "phones", "l132-margo": "remedies", "l132-silas": "records", "l132-anouk": "spices", "l132-dex": "computers", "l132-wendell": "phones", "l132-del": "fruit", "l132-mateo": "spices", "l132-odalys": "computers" }; // every keeper with a trade option in dlg-level132.yml
 export function offer(ctx, { by, npc }) {
   const p = ctx.place.players.find((q) => q.id === by), cat = KEEPER[npc];
   if (!p || !cat) return;
