@@ -1,0 +1,12 @@
+# The old compass, overhauled Nov 15 (Shelly: "make compasses spawn in some loot even for beginners and massively overhaul it").
+# Her picks, all of them.
+charges: 6          # windings a compass holds; extra compasses stack
+windSeconds: 30     # one winding keeps the needle alive this long while it's open
+range: 90           # metres it can sense people, supplies, danger
+refreshMs: 500      # how often the needle re-reads
+wobble: 8           # degrees of honest wobble at full sanity
+madWobble: 70       # extra wobble at zero sanity
+spinBelow: 0.25     # sanity share under which it may spin outright
+shiver: 12          # metres: a creature this close makes the needle shiver
+modes: [exit, people, loot, danger]
+labels: { exit: "WAY OUT", people: "PEOPLE", loot: "SUPPLIES", danger: "DANGER" }

@@ -97,7 +97,7 @@ function describe0(token) {
   if (token === 'canal_water') return { name: 'Canal Lock Almond Water', info: 'Fresh Almond Water drawn from the Grand Canal spillway', color: '#74b9ff' }
   if (token === 'nvg') return { name: 'Night vision goggles', info: 'See in the dark of Level 6 · F · drains battery', color: '#7cf08a' }
   if (token === 'skates') return { name: 'Roller skates', info: 'Quad skates from the Coach · roll on the rink instead of slipping', color: '#ff9a4a' }
-  if (token === 'compass') return { name: 'Old compass', info: 'Senses what is near · wears out', color: '#d8b56a' }
+  if (token === 'compass') return { name: 'Old compass', info: 'Live needle: way out, people, supplies, danger · press to switch · winds down', color: '#d8b56a' }
   if (token === 'almond') return { name: 'Almond water', info: `+${L.almondHp} HP · +${L.almondSanity} sanity`, color: '#f3e7b0' }
   if (token === 'ammo') return { name: 'Pistol rounds', info: `x${W.ammo.perPickup}`, color: '#e9c46a' }
   if (token === 'latex') return { name: 'Balloon latex', info: `x${W.latex.perPickup} pellets`, color: '#c8ff60' }

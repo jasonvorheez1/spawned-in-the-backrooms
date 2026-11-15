@@ -19,7 +19,7 @@ export const ears = {
     if (st.kind === "compass") {
       if (st.taken) return;
       s.compass = (s.compass ?? 0) + COMPASS.charges; s.pickedAt = now;
-      say(`Old compass · ${s.compass} reads · assign a quick slot in the inventory`); snd("brass-compass-lid-snapped-shut-click");
+      say(`Old compass · ${s.compass} windings · use it to open, again to switch what it seeks`); snd("brass-compass-lid-snapped-shut-click");
       hands(ctx, p);
       st.taken = true; me.visible = false; ctx.after(RESTOCK_S, "restock"); return;
     }

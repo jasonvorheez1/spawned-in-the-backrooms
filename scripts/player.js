@@ -108,7 +108,7 @@ import SOUNDS from './lib/data/sounds.yml'
 import THROW from './lib/data/throwables.yml'
 import { RAG } from './nade.js'
 import { stepTick } from './lib/footsteps.js'
-import { useCompass, COMPASS } from './lib/compass.js'
+import { useCompass, compassTick, COMPASS } from './lib/compass.js'
 import { nearFresh, FRESH_BODY } from './lib/fresh-aura.js'
 import { placeMusicBox, musicNear, kneel } from './lib/musicbox.js'
 import L3I from './lib/data/l3items.yml'
@@ -531,7 +531,7 @@ function takeToken1(ctx, token, opts) {
   }
   if (token === 'compass') { // an old compass: a few reads left in it (use it from the inventory or a quick slot)
     s.compass = (s.compass ?? 0) + COMPASS.charges; s.pickedAt = now
-    s.notice = { text: `Old compass · ${s.compass} reads · assign a quick slot in the inventory`, at: now }
+    s.notice = { text: `Old compass · ${s.compass} windings · use it to open, again to switch what it seeks`, at: now }
     sound(ctx, 'pickup-ammo', 0.5, true)
     return { ok: true }
   }
@@ -1656,6 +1656,7 @@ function fitPaws(body, w, left, both) {
 
 export function update(ctx, dt) {
   clockHeal(ctx) // future-dated stamps from another room's clock (lib/clock-heal.js)
+  compassTick(ctx, dt) // the open compass's live needle (lib/compass.js)
   { const s0 = ctx.self.state; if (s0.hp != null) { if (Number.isFinite(s0.hp)) ctx.self.session.hpOk = s0.hp; else { ctx.log('[hp-guard] non-finite hp', String(s0.hp), 'restored', ctx.self.session.hpOk ?? 100); s0.hp = ctx.self.session.hpOk ?? 100 } } } // Nov 15: hp once went to a broken number on Level 2; never let it stick
   preloadTick(ctx) // a level door within reach starts its level's models downloading (lib/preload-next.js)
   laterTick(ctx) // reload steps (later())

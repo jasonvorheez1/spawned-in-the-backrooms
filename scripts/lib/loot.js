@@ -52,7 +52,7 @@ export const PLACE_CATEGORY = {
 export const LOOT_CATEGORIES = {
   office: [
     ["almond", 24], ["cloudy_almond", 7], ["warm_tea", 7], ["lobby_wafer", 14], ["bar", 9],
-    ["bobbypin", 12], ["battery", 9], ["tape", 6], ["keycard", 4], ["painkillers", 5],
+    ["bobbypin", 12], ["battery", 9], ["tape", 6], ["keycard", 4], ["painkillers", 5], ["compass", 2.5],
     ["bandage", 5], ["weapon", 9], ["cloth", 6], ["mag:science", 2.5], ["mag:speech", 2.5],
     ["mag:lockpick", 2], ["mag:barter", 2], ["manual:tools", 1.5], ["manual:aid", 1],
   ],
@@ -87,7 +87,7 @@ export const LOOT_CATEGORIES = {
   expedition: [
     ["almond", 16], ["warm_tea", 9], ["ration", 12], ["bandage", 10], ["firstaid", 8],
     ["medkit", 4], ["ammo", 12], ["shells", 7], ["battery", 9], ["kit", 6],
-    ["bobbypin", 7], ["compass", 3], ["repellent", 2], ["cashew", 1.5], ["weapon", 12], ["cloth", 8],
+    ["bobbypin", 7], ["compass", 5], ["repellent", 2], ["cashew", 1.5], ["weapon", 12], ["cloth", 8],
     ["mag:survival", 3], ["mag:guns", 2.5], ["mag:medicine", 2], ["mag:sneak", 2], ["manual:food", 1.5], ["manual:armor", 1.5], ["manual:weapons", 1],
   ],
   security: [
@@ -178,7 +178,7 @@ export function magOf(ctx, pool = "l0") {
   const list = MAG_BY_POOL[pool] ?? MAG_BY_POOL.l0;
   return list[Math.floor(ctx.random() * list.length)];
 }
-const ITEM_WEIGHTS = [["lobby_wafer", 11], ["warm_tea", 3], ["cloudy_almond", 3], ["painkillers", 3], ["antiseptic", 2], ["meat", 5], ["beans", 6], ["bar", 7], ["ration", 3], ["almond", 34], ["ammo", 15], ["shells", 7], ["weapon", 10], ["kit", 4], ["bobbypin", 10], ["molotov", 1.5], ["mag", 3], ["manual", 3], ["firesalt", 2.5], ["repellent", 0.4], ["cloth", CL.crateWeight]];
+const ITEM_WEIGHTS = [["lobby_wafer", 11], ["warm_tea", 3], ["cloudy_almond", 3], ["painkillers", 3], ["antiseptic", 2], ["meat", 5], ["beans", 6], ["bar", 7], ["ration", 3], ["almond", 34], ["ammo", 15], ["shells", 7], ["weapon", 10], ["kit", 4], ["bobbypin", 10], ["molotov", 1.5], ["mag", 3], ["manual", 3], ["firesalt", 2.5], ["repellent", 0.4], ["compass", 2.5], ["cloth", CL.crateWeight]]; // compass: Nov 15, Shelly wanted beginners finding them
 // some containers are locked, Fallout style: a Lockpick or Science level you need to have. Locked ones hold more.
 export function rollLock(ctx) {
   const r = ctx.random(); if (r > 0.3) return null;
@@ -239,7 +239,7 @@ export function dropLoot(ctx, pos, name = "Remains", luck = 1, clothMul = 1, poo
 }
 
 // Level 1's crates: rations, bandages, field mags, manuals and batteries join the roll.
-const L1_WEIGHTS = [["bobbypin", 8], ["firesalt", 4], ["repellent", 0.5], ["cashew", 1], ["meat", 2.5], ["ration", 4], ["stale_ration", 2], ["almond", 3.5], ["warm_tea", 1], ["bandage", 2.5], ["painkillers", 1], ["splint", 0.8], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2], ["kit", 1.6], ["mag", 1.4], ["manual", 1.6], ["cloth", 2.2], ["compass", 1], ["molotov", 0.5]];
+const L1_WEIGHTS = [["bobbypin", 8], ["compass", 2], ["firesalt", 4], ["repellent", 0.5], ["cashew", 1], ["meat", 2.5], ["ration", 4], ["stale_ration", 2], ["almond", 3.5], ["warm_tea", 1], ["bandage", 2.5], ["painkillers", 1], ["splint", 0.8], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2], ["kit", 1.6], ["mag", 1.4], ["manual", 1.6], ["cloth", 2.2], ["compass", 1], ["molotov", 0.5]];
 const L1_WEPS = [["rebar", 5], ["wrench", 4]];
 export function rollWeaponL1(ctx, level) {
   const lv = effectiveLootLevel(ctx, undefined, level, "l1"), cap = rarityCap(lv);
