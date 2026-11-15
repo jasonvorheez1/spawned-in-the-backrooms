@@ -3177,9 +3177,9 @@ l178-story-hairpin:
   tags: [l178-story]
 l178-story-kamidana:
   castShadow: true
-  feetPosition: {x: -2.3, y: 2.28, z: 16.95}
+  feetPosition: {x: -2.3, y: 2.05, z: 16.95}
   id: l178-story-kamidana
-  layout: {box: {max: {x: 0.375, y: 0.55, z: 0.15}, min: {x: -0.375, y: 0, z: -0.15}}}
+  layout: {box: {max: {x: 0.5, y: 0.82, z: 0.18}, min: {x: -0.5, y: 0, z: -0.18}}}
   model: /cdn/value.4d2faad8c18b0f45887c5902a49096bf54a143cd0ce7d2d87fc723ada8999320.glb
   receiveShadow: true
   rotation: {pitch: 0, roll: 0, yaw: 180}
