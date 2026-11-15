@@ -35,10 +35,9 @@ export function onInput(ctx, input) {
     me(ctx, SND.deal, 0.6);
   }
 }
-let at = 0;
 export function update(ctx) { // walk away from the keeper and the table folds
   const s = ctx.self.state; if (!s?.bt) return ctx.sleep(1);
-  if (ctx.now() - at < 500) return; at = ctx.now();
+  const ses = ctx.self.session; if (ctx.now() - (ses.btAt ?? 0) < 500) return; ses.btAt = ctx.now();
   const k = s.bt.npc?.startsWith("l132-") ? ctx.getObject(s.bt.npc) : null, p = ctx.self.feetPosition;
   if (ctx.self.place !== "level132" || (k && Math.hypot(k.feetPosition.x - p.x, k.feetPosition.z - p.z) > 6)) s.bt = null;
 }

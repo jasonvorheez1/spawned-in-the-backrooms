@@ -36,11 +36,10 @@ function where(ctx) { // where your friends are right now, for the Friends tab
     ctx.self.state.phoneWhere = Object.fromEntries(rows.map((r) => [r.userId, r.world ? (r.world === ctx.world.id ? "here" : "away") : "off"]));
   }).catch(() => {});
 }
-let seen = null, at = 0;
 export function update(ctx) { // a new text buzzes wherever you stand
   const s = ctx.self.state; if (!s?.phone) return ctx.sleep(5);
-  if (ctx.now() - at < 2000) return; at = ctx.now();
+  const ses = ctx.session; if (ctx.now() - (ses.phAt ?? 0) < 2000) return; ses.phAt = ctx.now();
   const mail = ctx.self.mail ?? [], top = mail.find((m) => !m.read && !m.retracted);
-  if (seen === null) { seen = top?.id ?? ""; return; }
-  if (top && top.id !== seen) { seen = top.id; me(ctx, BUZZ, 0.7); s.notice = { text: `📱 ${top.from?.displayName ?? "Someone"}: ${String(top.text).slice(0, 60)}`, at: ctx.now() }; }
+  if (ses.phSeen === undefined) { ses.phSeen = top?.id ?? ""; return; }
+  if (top && top.id !== ses.phSeen) { ses.phSeen = top.id; me(ctx, BUZZ, 0.7); s.notice = { text: `📱 ${top.from?.displayName ?? "Someone"}: ${String(top.text).slice(0, 60)}`, at: ctx.now() }; }
 }

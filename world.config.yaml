@@ -145,6 +145,9 @@ inputs:
       keys:
         - y
     radio: {}
+    bt: {}
+    phone:
+      keys: [m]
     make: {}
     os: {}
     wardrobe:
