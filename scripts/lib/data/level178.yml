@@ -24,7 +24,7 @@ residents:
   l178-order-2: { x: -8, z: 4, yaw: 90 }
   l178-order-3: { x: 4, z: 12, yaw: 180 }
 # --- the live layer (places/level178/sim.js, scripts/l178-prop.js); Savi's picks unless noted
-layoutV: 1
+layoutV: 2
 exits: { hub: "thehub#hub-from-l178", notBuilt: { level66: "Level 66 (not built)", level132: "Level 132 (not built)" } }
 threshold: { x: 0, y: 0.45, z: 16.45, w: 1.4, h: 2.0, d: 0.5 }
 finds:   # weapons lying in the house (places/level178/sim.js lays each once); katana, naginata, kitsune mask are quest rewards, never placed
