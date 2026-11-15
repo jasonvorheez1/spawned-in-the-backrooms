@@ -20,8 +20,9 @@ const T = ["l1c"];
 const M = { crate: "/cdn/value.96f48b56e826ebb5fd584d269b08f2272040ab5d50589b2e04101b00f31d82a2.glb", tent: "/cdn/value.876d02a55c4b5fe879189ef5684d6e5d4836e9e5f6b7295f7e9b0b85ad9f7b58.glb", cot: "/cdn/value.7c6ab929e07fc61864842584ca2d254442f6dc31bfa7d2e2b9e4e3f48588f485.glb", table: "/cdn/value.c015312d6391f45684bfd1e30ad93c9391f659d879584af998cf53decc1613de.glb", stove: "/cdn/value.330d65cefe10f77c51d0fea1858662db291a4746b272dfdc2f81d21c681479f7.glb", bags: "/cdn/value.3ef438addb021fb2564e48689de4b5281d9464d3a65b502624bd0244ce8cad87.glb", pallet: "/cdn/value.e55e3090a6f8a13ae4db1cc993f62b0f07ee7a16a6c05c0fccde459bf7f1d9f8.glb",
   radio: "/cdn/value.f1226f58e269ddcf3e7ad202f86321f7e4d1e85c80fc9c48e05de310ca179c89.glb", chair: "/cdn/value.43409c9170eee8570170bc2e51c135fc29bb79c0455bc055066382edcccd96df.glb", gen: "/cdn/value.80d2ced5ed0ef62f2d773415d1cba7f0691d479e734b5866f1ce463bb6861c96.glb", drum: "/cdn/value.de68d3453156f6d0341dc0143da17f0a5f60f2da731a9b018363a51fcf233712.glb", cone: "/cdn/value.a551b5000627f75d0d6595406211bf3c968f4ec63f676742b66ef4c667374d92.glb",
   locker: "/cdn/value.ac588f5447d2ddb6addaef77cb3bf255a2d108fb0c5a29bb77a6566622a25b60.glb", pack: "/cdn/value.791caacc394ad1207d2f95fd9acea541c7baff44abdc9e272f2bf77b6a6550d9.glb", phone: "/cdn/value.b561d5052cd200bcc0924967e95a1d80511130c3f4288980d47d710d0df29394.glb",
+  wraith: "/cdn/value.eb08a17daca3dd58ef7443988210386a71c47eff5171c4ee0966914de67aef45.glb", rupture: "/cdn/value.8709ee762a810c77faf46388e91f800d9dd5580b8fd29d41453db36e4e45f30a.glb", aid: "/cdn/value.717a0b61a989c8e04c272424d3cdcf374d1f29997321713f41f99b996a0ead14.glb",
   hound: "/cdn/value.180d1072a97d34551e1394960b70202777c9d0b51fb0ca67779a59e429ef6fa7.glb" };
-const SIZE = { crate: [0.63, 0.6, 0.77], tent: [4.6, 3.3, 4.6], cot: [2.0, 0.6, 2.0], table: [1.6, 1.4, 1.6], stove: [0.75, 1.0, 0.75], bags: [1.6, 1.0, 0.5], pallet: [1.3, 1.4, 1.3], radio: [0.34, 0.2, 0.17], chair: [0.48, 0.86, 0.52], gen: [0.84, 0.72, 0.72], drum: [0.6, 0.9, 0.6], cone: [0.36, 0.5, 0.36], locker: [0.9, 0.62, 0.62], pack: [0.42, 0.55, 0.3], phone: [0.3, 0.55, 0.2] };
+const SIZE = { crate: [0.63, 0.6, 0.77], tent: [4.6, 3.3, 4.6], cot: [2.0, 0.6, 2.0], table: [1.6, 1.4, 1.6], stove: [0.75, 1.0, 0.75], bags: [1.6, 1.0, 0.5], pallet: [1.3, 1.4, 1.3], radio: [0.34, 0.2, 0.17], chair: [0.48, 0.86, 0.52], gen: [0.84, 0.72, 0.72], drum: [0.6, 0.9, 0.6], cone: [0.36, 0.5, 0.36], locker: [0.9, 0.62, 0.62], pack: [0.42, 0.55, 0.3], phone: [0.3, 0.55, 0.2], wraith: [0.9, 1.7, 0.6], rupture: [1.4, 2.4, 0.35], aid: [0.5, 0.6, 0.16] };
 const RUST = { texture: "cdn/texture-rusted-corrugated-steel-shutter.png", wrap: "repeat", repeat: [0.8, 0.8], color: "oklch(0.6 0.05 50)", metalness: 0.6, roughness: 0.6 };
 const WARM = "oklch(0.85 0.12 75)", COLD = "oklch(0.96 0.02 230)", PINK = "oklch(0.93 0.07 350)";
 const fit = ([w, h, d]) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
@@ -54,7 +55,7 @@ function note(ctx, id, x, y, z, yaw, name, text) {
 function mark(ctx, id, x, y, z, rot, seed, w) { ctx.spawn(id, { tags: T, feetPosition: { x, y, z }, rotation: rot, vector: symbolSvg(seed, w), visibleRange: { max: 30 } }); }
 function seam(ctx, id, x, side) {
   const z = side * (halfW(x) - 0.06), y = Y(x, z), col = "oklch(0.75 0.3 330)";
-  ctx.spawn(id, { tags: T, feetPosition: { x, y, z }, primitive: { kind: "box", width: 1.3, height: 2.3, depth: 0.1 }, material: { color: "oklch(0.2 0.1 330)", emissive: col, emissiveIntensity: 2.5, opacity: 0.55, transparent: true }, castShadow: false, visibleRange: { max: 50 },
+  ctx.spawn(id, { tags: T, feetPosition: { x, y, z: z - side * 0.08 }, rotation: { yaw: side > 0 ? 180 : 0 }, model: { id: M.rupture }, layout: fit(SIZE.rupture), castShadow: false, visibleRange: { max: 50 },
     fx: { script: `fx\nlocal\npop tear rate=22 on=box(1.2,2.2,.05).c(1.1) life=.15..0.5 size=.04..0.14 asp=6 col=hdr(2.4,.5,2)|hdr(.4,2.4,.6) a=1>0 sz=$size r=sprite(soft-disc,add)` },
     audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-fluorescent-light-flicker-buzz.mp3", gain: 0.3, loop: true, spatial: true, maxDistance: 10 } });
   ctx.spawn(id + "-t", { tags: T, feetPosition: { x, y, z: z - side * 0.25 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.1, height: 2.2, depth: 0.5 }, visible: false, behavior: "scripts/l1c-use.js", state: { kind: "seam" } });
@@ -96,9 +97,7 @@ function foe(ctx, n) {
     : kind === "hound" ? { model: { id: M.hound } }
     : kind === "warped" ? { model: { id: M.hound }, scale: { x: 0.75, y: 2.2, z: 1.5 }, children: [{ feetPosition: { x: 0, y: 0.9, z: 0 }, light: { kind: "point", color: "oklch(1 0 0)", intensity: 0.8, distance: 4, shadow: { enabled: false } } }] }
     : kind === "stealer" ? { model: stealerModel(true) }
-    : { primitive: { kind: "sphere", radius: 0.42, widthSegments: 14, heightSegments: 10 }, scale: { x: 0.7, y: 1.8, z: 0.7 }, material: { color: "oklch(0.02 0 0)", roughness: 1 },
-        children: [{ feetPosition: { x: 0, y: 0.4, z: 0 }, rotation: { pitch: 90 }, primitive: { kind: "torus", radius: 0.7, tube: 0.025, radialSegments: 6, tubularSegments: 28 }, material: { color: "oklch(1 0 0)", emissive: "oklch(1 0 0)", emissiveIntensity: 3 }, castShadow: false },
-          { feetPosition: { x: 0, y: 0.52, z: 0.36 }, primitive: { kind: "sphere", radius: 0.07 }, material: { color: "oklch(1 0 0)", emissive: "oklch(1 0 0)", emissiveIntensity: 4 }, castShadow: false }] };
+    : { model: { id: M.wraith }, layout: fit(SIZE.wraith), children: [{ feetPosition: { x: 0, y: 1.4, z: 0 }, light: { kind: "point", color: "oklch(1 0 0)", intensity: 0.6, distance: 3, shadow: { enabled: false } } }] };
   ctx.spawn("l1c-foe-" + n, { tags: ["l1c-foe", "l8-hostile", "l1c-" + kind], feetPosition: { x, y: y + (K.fly ? 1.3 : 0), z }, rotation: { yaw: 90 }, physics: { body: "kinematic", collider: "capsule" }, castShadow: false, visibleRange: { max: 90 }, ...body,
     state: { hp: K.hp, maxHp: K.hp, name: K.name, kind, xp: K.xp, n, home: { x, z }, brain: K } });
 }
@@ -247,7 +246,7 @@ function walkers(ctx) {
   for (const id of Object.keys(seen)) if (!ctx.place.players.some((p) => p.id === id)) delete seen[id];
 }
 // ---- extras: things to open and things that answer (its own version, so the hall is not re-laid)
-const XV = 1;
+const XV = 2;
 function searchable(ctx, id, m, x, z, yaw, items, name, mat, o = {}) {
   ctx.spawn(id, { tags: ["l1c", "container", "breakable"], feetPosition: { x, y: o.y ?? Y(x, z), z }, rotation: { yaw }, model: { id: M[m] }, layout: fit(SIZE[m]), physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 40 },
     state: { name, mat, hp: mat === "metal" ? 90 : 25, maxHp: mat === "metal" ? 90 : 25, items: items.join(",") } });
@@ -259,12 +258,17 @@ function layExtras(ctx) {
   searchable(ctx, "l1c-x-locker1", "locker", 127.0, -3.5, 0, loot(ctx, 3), "Quartermaster's Footlocker", "metal");
   [[0, 201, 1, 200], [1, 258, -1, 15], [2, 381, 1, 160], [3, 432, -1, 300]].forEach(([k, x, sd, yaw]) =>
     searchable(ctx, "l1c-x-pack" + k, "pack", x, sd * (halfW(x) - 0.45), yaw, loot(ctx, 2), "Wanderer's Backpack", "cloth"));
+  [["l1c-x-aid0", 49.2, zb + 0.08, 0], ["l1c-x-aid1", 118.0, -HW + 0.08, 0]].forEach(([id, x, z, yaw]) =>
+    searchable(ctx, id, "aid", x, z, yaw, loot(ctx, 2), "First Aid Cabinet", "metal", { y: Y(x, z) + 1.1 }));
+  for (const sid of ["l1c-seam-0", "l1c-seam-1"]) { const o = ctx.place.objects[sid]; if (o) { const f = o.feetPosition; ctx.destroy(sid); ctx.destroy(sid + "-t"); ctx.destroy(sid + "-l"); } }
+  seam(ctx, "l1c-seam-0", D.seam.x, D.seam.side); seam(ctx, "l1c-seam-1", 436, -1);
+  for (const f of ctx.query({ tags: ["l1c-drifter"], radius: 1e6, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(f.id);
   const px = 158, pz = -HW + 0.12;
   ctx.spawn("l1c-x-phone", { tags: ["l1c", "l1c-x", "usable"], feetPosition: { x: px, y: Y(px, pz) + 1.0, z: pz }, rotation: { yaw: 0 }, model: { id: M.phone }, layout: fit(SIZE.phone), castShadow: false, visibleRange: { max: 35 }, behavior: "scripts/l1c-use.js",
     audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-old-payphone-ringing-muffled-loop.mp3", gain: 0.18, loop: true, spatial: true, maxDistance: 14 },
     state: { kind: "note", name: "Payphone", verb: "Pick up", info: "It rings. There is no wire behind it.",
       text: "A man's voice, close, like he's standing behind you: \"...if Ines is listening, Post Three is gone. Don't send anyone. The hall folded at the green lamp and we walked the same forty metres for a day. Tell Wren I kept the splint. Tell her I'm sorry about the...\" Then the tone. Then nothing.", c: { x: px, y: Y(px, pz) + 1.3, z: pz } } });
-  for (const k of ["locker0", "locker1", "pack0", "pack1", "pack2", "pack3"]) { const o = ctx.place.objects["l1c-x-" + k]; if (o) o.tags = [...o.tags, "l1c-x"]; }
+  for (const k of ["aid0", "aid1", "locker0", "locker1", "pack0", "pack1", "pack2", "pack3"]) { const o = ctx.place.objects["l1c-x-" + k]; if (o) o.tags = [...o.tags, "l1c-x"]; }
 }
 export function tick(ctx) {
   const s = ctx.place.state;
