@@ -14,6 +14,8 @@ idMat:
   - ['^l178-ware-\d+$', ceramic, { solid: true }]
   - ['^l178-shoji-\d+/leaf$', washi, { tear: washi }]
   - ['^l178-[a-z-]*(sake|tokkuri)', ceramic, { solid: true }]
+  - ['^l178-story-(calli-cup|catdish|donabe|teatray|bottle)$', ceramic, { solid: true }]
+  - ['^l178-story-andon-\d+$', washi, { solid: true }]
   - ['^l178-[a-z-]*bamboo', bamboo, {}]   # a smashed prop or looted container comes back after this long (Shelly: an hour)
 regrowMinutes: 25        # a broken Level 0 wall grows back after this long, so the maze stays a maze
 wallHpMul: 1.5           # a Level 0 wall is a double sheet of drywall: 180 hp
