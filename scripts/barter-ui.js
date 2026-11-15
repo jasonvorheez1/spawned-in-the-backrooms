@@ -5,21 +5,21 @@ const CSS = `<style>
 #barter .bb{flex:1;display:grid;grid-template-columns:1fr 200px 1fr;gap:16px;padding:18px 22px;min-height:0}
 #barter .col{display:flex;flex-direction:column;gap:6px;overflow:auto;min-height:0}
 #barter h2{font:500 15px var(--ui-display);letter-spacing:.08em;color:var(--ui-muted);margin:0 0 4px}
-#barter .row{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--ui-line);background:#ffffff06}
-#barter .row.in{border-color:var(--ui-accent)}#barter .row .n{flex:1;min-width:0}#barter .row .v{color:var(--ui-muted);font-size:12px}
-#barter .row button{min-width:30px}#barter .q{min-width:22px;text-align:center;color:var(--ui-accent);font-weight:700}
+#barter .row{display:flex;align-items:center;gap:8px;padding:0 10px;height:52px;flex:none;box-sizing:border-box;border:1px solid var(--ui-line);background:#ffffff06}
+#barter .row.in{border-color:var(--ui-accent)}#barter .row .n{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#barter .row .v{color:var(--ui-muted);font-size:12px}
+#barter .row button{width:32px;height:32px;flex:none}#barter .q{width:24px;flex:none;text-align:center;color:var(--ui-accent);font-weight:700}
 #barter .want{color:var(--ui-accent);font-size:11px;letter-spacing:.06em}
-#barter .mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center}
+#barter .mid{display:grid;grid-template-rows:64px 14px 64px 64px 40px;align-content:start;padding-top:24px;gap:12px;text-align:center;justify-items:center}
 #barter .num{font:500 40px var(--ui-display);line-height:1}#barter .lbl{font-size:11px;letter-spacing:.1em;color:var(--ui-muted)}
 #barter .bar{width:100%;height:10px;border:1px solid var(--ui-line);position:relative}#barter .bar i{position:absolute;inset:0 auto 0 0;background:var(--ui-accent)}
-#barter .ok i{background:oklch(.78 .16 145)}#barter .say{min-height:40px;font-style:italic}
-#barter .acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+#barter .ok i{background:oklch(.78 .16 145)}#barter .say{height:64px;overflow:hidden;font-style:italic;display:flex;align-items:center;justify-content:center}
+#barter .acts{display:flex;gap:8px;justify-content:center}#barter .acts button{width:88px;height:40px}
 </style>`;
 export function barterUi(ctx, player) {
   const s = player.state ?? {}, bt = s.bt; if (!bt) return "";
   const o = offerOf(bt), a = askOf(bt), ok = a > 0 && o >= a, pct = a ? Math.min(100, Math.round((o / a) * 100)) : 0;
   const mineRows = mine(s).map((m) => { const q = bt.give[m.k] ?? 0, want = m.k === "g:" + bt.want;
-    return `<div class="row ${q ? "in" : ""}"><div class="n">${esc(m.name)} <span class="v">×${m.n} · worth ${worth(bt, m.k)}</span>${want ? `<div class="want">THEY WANT THIS</div>` : ""}</div>
+    return `<div class="row ${q ? "in" : ""}"><div class="n" title="${esc(m.name)}">${want ? "★ " : ""}${esc(m.name)} <span class="v">×${m.n} · worth ${worth(bt, m.k)}</span></div>
       <button onclick="sendAction('bt',{k:'ungive',id:'${m.k}'})">−</button><span class="q">${q}</span><button onclick="sendAction('bt',{k:'give',id:'${m.k}'})">+</button></div>`; }).join("") || `<div class="v">Nothing to trade. Food, drink, meat, almond water or Lumiria goods all count.</div>`;
   const theirRows = Object.entries(bt.stock).filter(([, n]) => n > 0).map(([c, n]) => { const q = bt.take[c] ?? 0;
     return `<div class="row ${q ? "in" : ""}"><div class="n">${esc(LABEL[c])} <span class="v">×${n} · asks ${Math.ceil(worth({}, "g:" + c) * bt.ask)}</span></div>

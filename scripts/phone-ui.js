@@ -9,7 +9,7 @@ const CSS = `<style>
 #phone .scr{flex:1;background:oklch(.24 .03 150);border-radius:10px;border:2px solid oklch(.1 0 0);display:flex;flex-direction:column;overflow:hidden;color:oklch(.9 .1 150)}
 #phone .top{display:flex;justify-content:space-between;padding:6px 10px;font-size:12px;background:oklch(.18 .03 150)}
 #phone .sig{display:inline-flex;gap:2px;align-items:flex-end;height:12px}#phone .sig i{width:3px;background:currentColor}#phone .sig i.off{opacity:.2}
-#phone .tabs{display:flex}#phone .tabs button{flex:1;padding:6px;background:none;border:0;border-bottom:2px solid transparent;color:inherit;font-size:12px;letter-spacing:.06em}
+#phone .tabs{display:flex}#phone .tabs button{flex:1;height:30px;padding:6px;background:none;border:0;border-bottom:2px solid transparent;color:inherit;font-size:12px;letter-spacing:.06em}
 #phone .tabs button[aria-pressed=true]{border-color:currentColor;font-weight:700}
 #phone .body{flex:1;overflow:auto;padding:8px 10px;display:flex;flex-direction:column;gap:6px;font-size:13px}
 #phone .msg{padding:6px 8px;border:1px solid oklch(.5 .08 150 / .5);cursor:pointer}#phone .msg.new{border-color:currentColor;font-weight:700}
@@ -29,10 +29,10 @@ export function phoneUi(ctx, player) {
   if (tab === "friends") body = fr.length ? fr.map((f) => `<div class="msg" onclick="sendAction('phone',{k:'to',to:'${esc(f.userId)}'})"><b>${esc(f.displayName)}</b><div class="from">${wh[f.userId] === "here" ? "in the Backrooms now" : wh[f.userId] === "away" ? "online elsewhere" : wh[f.userId] === "off" ? "offline · text waits for them" : "…"}</div></div>`).join("")
     : `<div class="dim">No contacts. Add friends from their name card and they show up here.</div>`;
   if (tab === "write") { const to = fr.find((f) => f.userId === s.phoneTo), mineLog = (s.phoneLog ?? []).filter((l) => l.to === s.phoneTo).slice(0, 4).reverse();
-    body = s.phoneTo ? `<div class="from">To: <b>${esc(to?.displayName ?? "contact")}</b></div>${mineLog.map((l) => `<div class="mine">${esc(l.text)}</div>`).join("")}
+    body = s.phoneTo ? `<div class="from">To: <b>${esc(to?.displayName ?? "contact")}</b></div><div style="flex:1;overflow:auto;display:flex;flex-direction:column;gap:6px">${mineLog.map((l) => `<div class="mine">${esc(l.text)}</div>`).join("")}</div>
       <textarea id="ph-text" maxlength="200" placeholder="Text… (200)" onkeydown="event.stopPropagation()"></textarea>
       <button class="send" onclick="const e=document.getElementById('ph-text');if(e.value.trim()){sendAction('phone',{k:'send',text:e.value,to:'${esc(s.phoneTo)}'});e.value=''}"><span>Send</span></button>
-      <div class="from">${esc(s.phoneSent?.text ?? "")}</div>` : `<div class="dim">Pick someone in Friends first.</div>`; }
+      <div class="from" style="height:16px">${esc(s.phoneSent?.text ?? "")}</div>` : `<div class="dim">Pick someone in Friends first.</div>`; }
   const unread = mail.filter((m) => !m.read).length;
   return `${CSS}<div id="phone" data-modal tabindex="0" onkeydown="if(event.key==='Escape'){event.preventDefault();sendAction('phone')}">
   <div class="scr"><div class="top"><span class="sig">${[1, 2, 3, 4].map((i) => `<i class="${i <= bars ? "" : "off"}" style="height:${i * 3}px"></i>`).join("")}</span><span>${esc(PLACE_LABELS?.[player.place] ?? "")}</span><span>${clock}</span></div>
