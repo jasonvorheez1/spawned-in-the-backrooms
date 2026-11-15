@@ -15,13 +15,16 @@ const CSS = `<style>
 #barter .ok i{background:oklch(.78 .16 145)}#barter .say{height:64px;overflow:hidden;font-style:italic;display:flex;align-items:center;justify-content:center}
 #barter .acts{display:flex;gap:8px;justify-content:center}#barter .acts button{width:88px;height:40px}
 </style>`;
+let SEEN = { who: null, rows: [] };
 export function barterUi(ctx, player) {
   const s = player.state ?? {}, bt = s.bt; if (!bt) return "";
   const o = offerOf(bt), a = askOf(bt), ok = a > 0 && o >= a, pct = a ? Math.min(100, Math.round((o / a) * 100)) : 0;
-  const mineRows = mine(s).map((m) => { const q = bt.give[m.k] ?? 0, want = m.k === "g:" + bt.want;
+  const live = mine(s), seen = (SEEN.who === bt.who ? SEEN : (SEEN = { who: bt.who, rows: [] })); // rows stay where they were after a Deal (a gone one reads ×0), so the buttons never jump
+  for (const m of live) if (!seen.rows.some((r) => r.k === m.k)) seen.rows.push({ k: m.k, name: m.name });
+  const mineRows = seen.rows.map((r) => live.find((m) => m.k === r.k) ?? { ...r, n: 0 }).map((m) => { const q = bt.give[m.k] ?? 0, want = m.k === "g:" + bt.want;
     return `<div class="row ${q ? "in" : ""}"><div class="n" title="${esc(m.name)}">${want ? "★ " : ""}${esc(m.name)} <span class="v">×${m.n} · worth ${worth(bt, m.k)}</span></div>
       <button onclick="sendAction('bt',{k:'ungive',id:'${m.k}'})">−</button><span class="q">${q}</span><button onclick="sendAction('bt',{k:'give',id:'${m.k}'})">+</button></div>`; }).join("") || `<div class="v">Nothing to trade. Food, drink, meat, almond water or Lumiria goods all count.</div>`;
-  const theirRows = Object.entries(bt.stock).filter(([, n]) => n > 0).map(([c, n]) => { const q = bt.take[c] ?? 0;
+  const theirRows = Object.entries(bt.stock).map(([c, n]) => { const q = bt.take[c] ?? 0;
     return `<div class="row ${q ? "in" : ""}"><div class="n">${esc(LABEL[c])} <span class="v">×${n} · asks ${Math.ceil(worth({}, "g:" + c) * bt.ask)}</span></div>
       <button onclick="sendAction('bt',{k:'untake',id:'${c}'})">−</button><span class="q">${q}</span><button onclick="sendAction('bt',{k:'take',id:'${c}'})">+</button></div>`; }).join("") || `<div class="v">Table's bare. Come back in a couple of minutes.</div>`;
   return `${CSS}<div id="barter" data-modal tabindex="0" onkeydown="if(event.key==='Escape'){event.preventDefault();sendAction('bt',{k:'leave'})}"><section class="journal-panel" aria-labelledby="bt-title">
