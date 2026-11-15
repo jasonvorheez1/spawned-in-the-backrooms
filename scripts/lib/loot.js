@@ -310,7 +310,7 @@ export function rollTableL2(ctx, table) {
   return rollItemL2(ctx);
 }
 export function fillContainerL2(ctx, kind, bonus = 0) {
-  const C = L2C.containers[kind], n = C.n[0] + Math.floor(ctx.random() * (C.n[1] - C.n[0] + 1)) + bonus, items = [];
+  const C = L2C.containers[kind] ?? L2C.containers.locker, n = C.n[0] + Math.floor(ctx.random() * (C.n[1] - C.n[0] + 1)) + bonus, items = [];
   for (let i = 0; i < n; i++) items.push(rollTableL2(ctx, C.table));
   return items.join(",");
 }
