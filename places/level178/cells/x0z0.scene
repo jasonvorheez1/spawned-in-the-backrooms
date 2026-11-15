@@ -966,6 +966,11 @@ l178-cupboard-4:
   rotation: {yaw: 90}
   state: {open: false}
   tags: [l178, l178-prop]
+l178-dew:
+  feetPosition: {x: 0, y: 0.08, z: 0}
+  fx: {script: "fx\npop dew n=?mobile:40|90 on=box(6.5,.05,6.5) life=1.5..3 size=.015..0.03 col=hdr(2,1.8,1.3) a=(0>.5:1>0)*flick(3,.6) sz=$size r=sprite(mote,add)"}
+  id: l178-dew
+  tags: [l178]
 l178-door-hub:
   feetPosition: {x: -0.455, y: 0.47, z: 17}
   id: l178-door-hub
@@ -1219,6 +1224,21 @@ l178-engawa-w5:
   model: /cdn/value.857121c04438bd6d0c7708b18cd360a2535befcd412182775e8456d6af986a8b.glb
   physics: {body: static, collider: mesh}
   rotation: {yaw: -90}
+  tags: [l178]
+l178-fall-0:
+  feetPosition: {x: -1.6, y: 0.4, z: -6.95}
+  fx: {script: "fx\npop water rate=70 on=line(.5,1,0,0) life=.3..0.45 v=<0,-.2,.7>+sdir()*.08 size=.03..0.06 acc=grav() col=<.86,.94,.95> a=0>.2:.7>.8:.6>0 sz=$size floor=die r=sprite(droplet,alpha,velocity,.04)\npop mist on=@water?.3 life=.5..0.9 v=up(.2..0.4) size=.1..0.2 acc=drag(1.5) col=<.92,.96,.96> a=0>.3:.25>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)"}
+  id: l178-fall-0
+  tags: [l178]
+l178-fall-1:
+  feetPosition: {x: 0, y: 0.4, z: -6.95}
+  fx: {script: "fx\npop water rate=70 on=line(.5,1,0,0) life=.3..0.45 v=<0,-.2,.7>+sdir()*.08 size=.03..0.06 acc=grav() col=<.86,.94,.95> a=0>.2:.7>.8:.6>0 sz=$size floor=die r=sprite(droplet,alpha,velocity,.04)\npop mist on=@water?.3 life=.5..0.9 v=up(.2..0.4) size=.1..0.2 acc=drag(1.5) col=<.92,.96,.96> a=0>.3:.25>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)"}
+  id: l178-fall-1
+  tags: [l178]
+l178-fall-2:
+  feetPosition: {x: 1.6, y: 0.4, z: -6.95}
+  fx: {script: "fx\npop water rate=70 on=line(.5,1,0,0) life=.3..0.45 v=<0,-.2,.7>+sdir()*.08 size=.03..0.06 acc=grav() col=<.86,.94,.95> a=0>.2:.7>.8:.6>0 sz=$size floor=die r=sprite(droplet,alpha,velocity,.04)\npop mist on=@water?.3 life=.5..0.9 v=up(.2..0.4) size=.1..0.2 acc=drag(1.5) col=<.92,.96,.96> a=0>.3:.25>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)"}
+  id: l178-fall-2
   tags: [l178]
 l178-floor-e0:
   feetPosition: {x: 13.1, y: 0, z: -7.359999999999999}
@@ -1478,6 +1498,84 @@ l178-geta:
   id: l178-geta
   model: /cdn/value.2d76afb22d94326794a0d3147b16f9e77c46fb8d1c39f31636522e24b7fadf32.glb
   rotation: {yaw: 20}
+  tags: [l178]
+l178-lantern-0:
+  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  feetPosition: {x: -1.8, y: 2.93, z: 13}
+  id: l178-lantern-0
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178, l178-break]
+l178-lantern-1:
+  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  feetPosition: {x: 1.8, y: 2.93, z: 13}
+  id: l178-lantern-1
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-lantern-10:
+  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  feetPosition: {x: 10, y: 2.93, z: 13.5}
+  id: l178-lantern-10
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-lantern-11:
+  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  feetPosition: {x: -10, y: 2.93, z: 13.5}
+  id: l178-lantern-11
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-lantern-2:
+  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  feetPosition: {x: 10.8, y: 2.93, z: -3}
+  id: l178-lantern-2
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-lantern-3:
+  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  feetPosition: {x: 10.8, y: 2.93, z: 3}
+  id: l178-lantern-3
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-lantern-4:
+  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  feetPosition: {x: 14.7, y: 2.93, z: 0}
+  id: l178-lantern-4
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-lantern-5:
+  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  feetPosition: {x: 13.1, y: 2.93, z: -12.6}
+  id: l178-lantern-5
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-lantern-6:
+  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  feetPosition: {x: -6.1, y: 2.93, z: -13}
+  id: l178-lantern-6
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-lantern-7:
+  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  feetPosition: {x: 0, y: 2.93, z: -13}
+  id: l178-lantern-7
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-lantern-8:
+  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  feetPosition: {x: 6.1, y: 2.93, z: -13}
+  id: l178-lantern-8
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-lantern-9:
+  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 9, intensity: 2.2, kind: point}}]
+  feetPosition: {x: -13, y: 2.93, z: 0}
+  id: l178-lantern-9
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-maple:
+  feetPosition: {x: -5, y: 0, z: 4.4}
+  id: l178-maple
+  model: {id: /cdn/value.50d2923c98f15f52b691085839583581de9deaddb761f1284a2c55a447ebb104.glb, materials: {ochre: {color: oklch(0.6 0.2 32)}}}
+  scale: 1.25
   tags: [l178]
 l178-out-e0:
   feetPosition: {x: 17, y: 0.45, z: -16.105263157894736}
@@ -2105,6 +2203,134 @@ l178-pantry:
   rotation: {yaw: 90}
   state: {open: false}
   tags: [l178, l178-prop]
+l178-porch-lantern-0:
+  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 7, intensity: 1.6, kind: point}}]
+  feetPosition: {x: 0, y: 3.2, z: 7.25}
+  id: l178-porch-lantern-0
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-porch-lantern-1:
+  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 7, intensity: 1.6, kind: point}}]
+  feetPosition: {x: 0, y: 3.2, z: -7.25}
+  id: l178-porch-lantern-1
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-porch-lantern-2:
+  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 7, intensity: 1.6, kind: point}}]
+  feetPosition: {x: 7.25, y: 3.2, z: 0}
+  id: l178-porch-lantern-2
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-porch-lantern-3:
+  children: [{feetPosition: {x: 0, y: -0.33, z: 0}, id: glow, light: {color: oklch(0.86 0.1 75), distance: 7, intensity: 1.6, kind: point}}]
+  feetPosition: {x: -7.25, y: 3.2, z: 0}
+  id: l178-porch-lantern-3
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-porch-lantern-4:
+  children: []
+  feetPosition: {x: 4.8, y: 3.2, z: 7.25}
+  id: l178-porch-lantern-4
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-porch-lantern-5:
+  children: []
+  feetPosition: {x: -4.8, y: 3.2, z: 7.25}
+  id: l178-porch-lantern-5
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-porch-lantern-6:
+  children: []
+  feetPosition: {x: 4.8, y: 3.2, z: -7.25}
+  id: l178-porch-lantern-6
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-porch-lantern-7:
+  children: []
+  feetPosition: {x: -4.8, y: 3.2, z: -7.25}
+  id: l178-porch-lantern-7
+  model: /cdn/value.6ba7d0d8573bc7096a698d660191e3fef7a7b3c85c52fbd3f0fd633a800d127b.glb
+  tags: [l178]
+l178-rock-0:
+  feetPosition: {x: -2.4, y: -0.04, z: -6.2}
+  id: l178-rock-0
+  model: /cdn/value.5ac4f0f87c6f79556212f1c0ba232007efe4c80f08dfae400eee10a7e93c2c33.glb
+  physics: static
+  rotation: {yaw: 0}
+  scale: 0.7
+  tags: [l178]
+l178-rock-1:
+  feetPosition: {x: -0.6, y: -0.04, z: -5.4}
+  id: l178-rock-1
+  model: /cdn/value.f1958ec975b576b0aaba71b17fa4b6fd39d41865371c9a25b916be714d7ca0e8.glb
+  physics: static
+  rotation: {yaw: 67}
+  scale: 0.95
+  tags: [l178]
+l178-rock-2:
+  feetPosition: {x: 1.2, y: -0.04, z: -6.1}
+  id: l178-rock-2
+  model: /cdn/value.5ac4f0f87c6f79556212f1c0ba232007efe4c80f08dfae400eee10a7e93c2c33.glb
+  physics: static
+  rotation: {yaw: 134}
+  scale: 1.2
+  tags: [l178]
+l178-rock-3:
+  feetPosition: {x: 2.8, y: -0.04, z: -5.2}
+  id: l178-rock-3
+  model: /cdn/value.f1958ec975b576b0aaba71b17fa4b6fd39d41865371c9a25b916be714d7ca0e8.glb
+  physics: static
+  rotation: {yaw: 201}
+  scale: 0.7
+  tags: [l178]
+l178-rock-4:
+  feetPosition: {x: -1.4, y: -0.04, z: -3.6}
+  id: l178-rock-4
+  model: /cdn/value.f1958ec975b576b0aaba71b17fa4b6fd39d41865371c9a25b916be714d7ca0e8.glb
+  physics: static
+  rotation: {yaw: 268}
+  scale: 0.95
+  tags: [l178]
+l178-rock-5:
+  feetPosition: {x: 0.4, y: -0.04, z: -2.9}
+  id: l178-rock-5
+  model: /cdn/value.5ac4f0f87c6f79556212f1c0ba232007efe4c80f08dfae400eee10a7e93c2c33.glb
+  physics: static
+  rotation: {yaw: 335}
+  scale: 1.2
+  tags: [l178]
+l178-rock-6:
+  feetPosition: {x: 1.8, y: -0.04, z: -3.8}
+  id: l178-rock-6
+  model: /cdn/value.f1958ec975b576b0aaba71b17fa4b6fd39d41865371c9a25b916be714d7ca0e8.glb
+  physics: static
+  rotation: {yaw: 402}
+  scale: 0.7
+  tags: [l178]
+l178-rock-7:
+  feetPosition: {x: -3.9, y: -0.04, z: 0.3}
+  id: l178-rock-7
+  model: /cdn/value.f1958ec975b576b0aaba71b17fa4b6fd39d41865371c9a25b916be714d7ca0e8.glb
+  physics: static
+  rotation: {yaw: 469}
+  scale: 0.95
+  tags: [l178]
+l178-rock-8:
+  feetPosition: {x: 5.6, y: -0.04, z: -4.5}
+  id: l178-rock-8
+  model: /cdn/value.5ac4f0f87c6f79556212f1c0ba232007efe4c80f08dfae400eee10a7e93c2c33.glb
+  physics: static
+  rotation: {yaw: 536}
+  scale: 1.2
+  tags: [l178]
+l178-rock-9:
+  feetPosition: {x: -5.8, y: -0.04, z: -3}
+  id: l178-rock-9
+  model: /cdn/value.f1958ec975b576b0aaba71b17fa4b6fd39d41865371c9a25b916be714d7ca0e8.glb
+  physics: static
+  rotation: {yaw: 603}
+  scale: 0.7
+  tags: [l178]
 l178-roof-0:
   feetPosition: {x: 0, y: 0.45, z: 0}
   id: l178-roof-0
@@ -2249,12 +2475,97 @@ l178-shoji-9:
   scale: {x: 1.099, y: 1, z: 1}
   state: {axis: x, closedX: -0.9, ease: 0.35, open: true, openX: 0, slide: 0.9}
   tags: [l178, l178-shoji]
+l178-shrub-0:
+  feetPosition: {x: -5.6, y: 0, z: -5.8}
+  id: l178-shrub-0
+  model: {id: /cdn/value.2954246ba917f2926d1c0079b481a235519c893e262ad8b13abe4c4a1e0d4e55.glb, materials: {tatami: {color: oklch(0.62 0.16 5)}}}
+  rotation: {yaw: 0}
+  scale: 0.8
+  tags: [l178]
+l178-shrub-1:
+  feetPosition: {x: -4.2, y: 0, z: -6.2}
+  id: l178-shrub-1
+  model: {id: /cdn/value.2954246ba917f2926d1c0079b481a235519c893e262ad8b13abe4c4a1e0d4e55.glb, materials: {tatami: {color: oklch(0.5 0.12 140)}}}
+  rotation: {yaw: 50}
+  scale: 1
+  tags: [l178]
+l178-shrub-2:
+  feetPosition: {x: 4.4, y: 0, z: -6.1}
+  id: l178-shrub-2
+  model: {id: /cdn/value.2954246ba917f2926d1c0079b481a235519c893e262ad8b13abe4c4a1e0d4e55.glb, materials: {tatami: {color: oklch(0.5 0.12 140)}}}
+  rotation: {yaw: 100}
+  scale: 1.2000000000000002
+  tags: [l178]
+l178-shrub-3:
+  feetPosition: {x: 5.9, y: 0, z: -2.2}
+  id: l178-shrub-3
+  model: {id: /cdn/value.2954246ba917f2926d1c0079b481a235519c893e262ad8b13abe4c4a1e0d4e55.glb, materials: {tatami: {color: oklch(0.62 0.16 5)}}}
+  rotation: {yaw: 150}
+  scale: 1.4000000000000001
+  tags: [l178]
+l178-shrub-4:
+  feetPosition: {x: 5.7, y: 0, z: 5.6}
+  id: l178-shrub-4
+  model: {id: /cdn/value.2954246ba917f2926d1c0079b481a235519c893e262ad8b13abe4c4a1e0d4e55.glb, materials: {tatami: {color: oklch(0.5 0.12 140)}}}
+  rotation: {yaw: 200}
+  scale: 0.8
+  tags: [l178]
+l178-shrub-5:
+  feetPosition: {x: 3.6, y: 0, z: 5.9}
+  id: l178-shrub-5
+  model: {id: /cdn/value.2954246ba917f2926d1c0079b481a235519c893e262ad8b13abe4c4a1e0d4e55.glb, materials: {tatami: {color: oklch(0.5 0.12 140)}}}
+  rotation: {yaw: 250}
+  scale: 1
+  tags: [l178]
+l178-shrub-6:
+  feetPosition: {x: -3.4, y: 0, z: 5.8}
+  id: l178-shrub-6
+  model: {id: /cdn/value.2954246ba917f2926d1c0079b481a235519c893e262ad8b13abe4c4a1e0d4e55.glb, materials: {tatami: {color: oklch(0.62 0.16 5)}}}
+  rotation: {yaw: 300}
+  scale: 1.2000000000000002
+  tags: [l178]
+l178-shrub-7:
+  feetPosition: {x: -6, y: 0, z: 1.6}
+  id: l178-shrub-7
+  model: {id: /cdn/value.2954246ba917f2926d1c0079b481a235519c893e262ad8b13abe4c4a1e0d4e55.glb, materials: {tatami: {color: oklch(0.5 0.12 140)}}}
+  rotation: {yaw: 350}
+  scale: 1.4000000000000001
+  tags: [l178]
+l178-shrub-8:
+  feetPosition: {x: -6.1, y: 0, z: 6.1}
+  id: l178-shrub-8
+  model: {id: /cdn/value.2954246ba917f2926d1c0079b481a235519c893e262ad8b13abe4c4a1e0d4e55.glb, materials: {tatami: {color: oklch(0.5 0.12 140)}}}
+  rotation: {yaw: 400}
+  scale: 0.8
+  tags: [l178]
+l178-shrub-9:
+  feetPosition: {x: 6.1, y: 0, z: -6}
+  id: l178-shrub-9
+  model: {id: /cdn/value.2954246ba917f2926d1c0079b481a235519c893e262ad8b13abe4c4a1e0d4e55.glb, materials: {tatami: {color: oklch(0.62 0.16 5)}}}
+  rotation: {yaw: 450}
+  scale: 1
+  tags: [l178]
 l178-sink:
   feetPosition: {x: 12.05, y: 0.45, z: -0.46}
   id: l178-sink
   model: /cdn/value.cd3db1bb6e12ab3e1668c44ced9ab7dd17ea8f359b48b68c91fa34c76419e9af.glb
   physics: static
   rotation: {yaw: 90}
+  tags: [l178]
+l178-snd-creak:
+  audio: {bus: Ambience, clip: cdn/sfx-old-wooden-floorboards-creaking-slowly-loop.mp3, gain: 0.1, loop: true, maxDistance: 8, spatial: true}
+  feetPosition: {x: 8.1, y: 0.5, z: 0}
+  id: l178-snd-creak
+  tags: [l178]
+l178-snd-falls:
+  audio: {bus: Ambience, clip: cdn/sfx-small-stream-trickling-over-rocks-into-pool-loop.mp3, gain: 0.2, loop: true, maxDistance: 18, spatial: true}
+  feetPosition: {x: 0, y: 0.3, z: -6.6}
+  id: l178-snd-falls
+  tags: [l178]
+l178-snd-flute:
+  audio: {bus: Ambience, clip: cdn/music-solo-shakuhachi-bamboo-flute-slow-distant-loop.mp3, gain: 0.12, loop: true, maxDistance: 32, spatial: true}
+  feetPosition: {x: 0, y: 2, z: -15.5}
+  id: l178-snd-flute
   tags: [l178]
 l178-spring:
   castShadow: false
@@ -2269,6 +2580,49 @@ l178-stair:
   model: /cdn/value.e5d4d2b7d884617e03be398ab39b6dd2572eb7aaa6c0c5daaeb022fa4c029bf6.glb
   physics: {body: static, collider: mesh}
   rotation: {yaw: 0}
+  tags: [l178]
+l178-steam:
+  feetPosition: {x: 0, y: 0.12, z: 0}
+  fx: {script: "fx\npop steam rate=?mobile:5|10 on=box(2.8,.02,1.6) life=3..5 v=up(.12..0.25) size=.5..0.9 acc=curl(.3)*.3+drag(.6) col=<.95,.96,.94> a=0>.25:.12>.7:.06>0 sz=$size*(.7>2) rot=spin(.05) r=sprite(smoke-puff,alpha)"}
+  id: l178-steam
+  tags: [l178]
+l178-step-0:
+  feetPosition: {x: 0, y: -0.03, z: 6.55}
+  id: l178-step-0
+  model: /cdn/value.5ac4f0f87c6f79556212f1c0ba232007efe4c80f08dfae400eee10a7e93c2c33.glb
+  physics: static
+  rotation: {yaw: 0}
+  scale: {x: 0.9, y: 0.6, z: 0.8}
+  tags: [l178]
+l178-step-1:
+  feetPosition: {x: 0, y: -0.03, z: -6.55}
+  id: l178-step-1
+  model: /cdn/value.5ac4f0f87c6f79556212f1c0ba232007efe4c80f08dfae400eee10a7e93c2c33.glb
+  physics: static
+  rotation: {yaw: 0}
+  scale: {x: 0.9, y: 0.6, z: 0.8}
+  tags: [l178]
+l178-step-2:
+  feetPosition: {x: 6.55, y: -0.03, z: 0}
+  id: l178-step-2
+  model: /cdn/value.5ac4f0f87c6f79556212f1c0ba232007efe4c80f08dfae400eee10a7e93c2c33.glb
+  physics: static
+  rotation: {yaw: 90}
+  scale: {x: 0.9, y: 0.6, z: 0.8}
+  tags: [l178]
+l178-step-3:
+  feetPosition: {x: -6.55, y: -0.03, z: 0}
+  id: l178-step-3
+  model: /cdn/value.5ac4f0f87c6f79556212f1c0ba232007efe4c80f08dfae400eee10a7e93c2c33.glb
+  physics: static
+  rotation: {yaw: 90}
+  scale: {x: 0.9, y: 0.6, z: 0.8}
+  tags: [l178]
+l178-stone-lantern:
+  feetPosition: {x: 4.6, y: 0, z: 3.6}
+  id: l178-stone-lantern
+  model: /cdn/value.854bdaba55d7bb9cf9d58f6efc91b3328fec7b8be5fc75e6ba66e16efa1865e7.glb
+  physics: static
   tags: [l178]
 l178-table-dining:
   feetPosition: {x: 13.1, y: 0.48, z: -12.6}
