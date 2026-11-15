@@ -62,6 +62,11 @@ export function update(ctx, dt) {
     mem.allHounds = ctx.query({ tags: ["hound"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   }
   const objs = ctx.place.objects;
+  if (!ctx.self.tags?.includes("hound")) { // one pack manager a place: a second one steps (and bites) the whole pack twice (perf, Nov 15)
+    if (!ctx.self.tags?.includes("pack-mgr")) ctx.self.tags = [...(ctx.self.tags ?? []), "pack-mgr"];
+    if (now >= (mem.mgrAt ?? 0)) { mem.mgrAt = now + 3000; for (const o of ctx.query({ tags: ["pack-mgr"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.id !== ctx.self.id && String(o.id) < String(ctx.self.id)) { ctx.destroy(ctx.self.id); return; } }
+  }
+  const allPlayers = ctx.place.players;
   const allHounds = [];
   let dropped = false;
   for (const h of mem.allHounds) {
@@ -76,7 +81,9 @@ export function update(ctx, dt) {
   for (const h of allHounds) {
     if (!(h.id in ctx.place.objects)) { mem.allHounds = null; delete mem[h.id]; continue; } // gone since the census: re-count next tick
     const m = (mem[h.id] ??= {}), pos = h.feetPosition, st = h.state ?? {}, mu = npcMul(st);
-    if (knocked(ctx, h, now, dt)) { if (st.sneakTarget) st.sneakTarget = null; continue; } // kicked flat or shoved: it tumbles, no AI till it is up
+    if (knocked(ctx, h, now, dt)) { if (st.sneakTarget) st.sneakTarget = null; continue; }
+    if (now >= (m.farAt ?? 0)) { m.farAt = now + 1000; let nd = Infinity; for (const p of allPlayers) { const d0 = Math.hypot(p.feetPosition.x - pos.x, p.feetPosition.z - pos.z); if (d0 < nd) nd = d0; } const far = nd > 90 && !m.hunting && !st.dead && (st.hp ?? 1) > 0 && !m.bleed; if (far && !m.far) { h.velocity = { x: 0, y: 0, z: 0 }; anim(h, m, "idle", true); } m.far = far; }
+    if (m.far) continue; // nobody within 90 m: it stands and waits, no sight, no path (perf) // kicked flat or shoved: it tumbles, no AI till it is up
     if (ctx.self.place === "level5" && !st.dead && zoneAt5(pos.x, pos.z)?.id !== "boiler") { h.feetPosition = { x: [37.5, 28.5, 40.5][Math.floor(ctx.random() * 3)], y: 0.05, z: [2.5, -0.5, -9.5][Math.floor(ctx.random() * 3)] }; m.roam = null; continue; } // level 5: the pack lives in the Boiler Room alone
     if (now >= (m.meshChk ?? 0)) { m.meshChk = now + 2000; const o = ctx.getObject(h.id); if (o && !String(o.model?.id ?? o.model ?? "").includes(MODEL.slice(5))) { o.primitive = null; o.model = { id: MODEL }; } } // the old coded body gives way to the mesh
     if (m.bleed && now >= m.bleed.next) { // the maul's wound: 2 a second for 4 s, dealt from here
@@ -117,11 +124,14 @@ export function update(ctx, dt) {
       if (!(d < sight * crouchMul(p) * sn(p) && d < best) || !sees(ctx,h,p)) return;
       best = d; prey = p;
     };
-    for (const p of players) checkTarget(p, false);
-    for (const n of ctx.query({ tags: ["npc"], radius: sight, center: pos })) {
+    const fresh = now >= (m.percAt ?? 0); // eyes and ears at ~5 Hz a hound, staggered; between looks it keeps the prey it had (perf)
+    if (fresh) m.percAt = now + 170 + Math.floor(ctx.random() * 70);
+    else if (m.preyId) { const c = byId(m.preyId); if (c && !c.state?.dead && (c.state?.hp ?? 1) > 0 && !safeAt(c.feetPosition.x, c.feetPosition.z)) { prey = c; best = Math.hypot(c.feetPosition.x - pos.x, c.feetPosition.z - pos.z); } }
+    if (fresh) for (const p of players) checkTarget(p, false);
+    if (fresh) for (const n of ctx.query({ tags: ["npc"], radius: sight, center: pos })) {
       if (!n.state?.dead && !safeAt(n.feetPosition.x, n.feetPosition.z)) checkTarget(n, true);
     }
-    if (st.horde) { const hp = players.find((p) => p.id === st.horde); if (hp && Math.hypot(hp.feetPosition.x-pos.x,hp.feetPosition.z-pos.z)<sight*sn(hp) && sees(ctx,h,hp)) { prey = hp; best = Math.hypot(hp.feetPosition.x - pos.x, hp.feetPosition.z - pos.z); } } // a blackout horde hunts its player
+    if (fresh && st.horde) { const hp = players.find((p) => p.id === st.horde); if (hp && Math.hypot(hp.feetPosition.x-pos.x,hp.feetPosition.z-pos.z)<sight*sn(hp) && sees(ctx,h,hp)) { prey = hp; best = Math.hypot(hp.feetPosition.x - pos.x, hp.feetPosition.z - pos.z); } } // a blackout horde hunts its player
     if (L3) { // brigades: share the spotter's prey, and lie in wait in dead ends
     }
     if (prey && !m.hunting && !m.howled) { // it HOWLS once on sight: head back, jaw wide, and every hound in 30 m comes
@@ -130,11 +140,12 @@ export function update(ctx, dt) {
       heard(ctx, { clip: SND("hound-bark-howl-call"), position: pos, volume: 1, maxDistance: 60 });
       for (const o of ctx.query({ tags: ["hound"], radius: T.callRadius, center: pos })) if (o.id !== h.id) { const om = (mem[o.id] ??= {}); om.lastSeen={x:prey.feetPosition.x,z:prey.feetPosition.z,at:now}; om.pack = prey.id; om.packUntil = now + T.callHold * 1000; om.howled = true; }
     }
-    if (!prey && m.pack && now < m.packUntil) {
+    if (fresh && !prey && m.pack && now < m.packUntil) {
       prey = players.find((p) => p.id === m.pack) ?? (() => { const n = ctx.getObject(m.pack); return n && !n.state?.dead ? n : null; })() ?? null;
       if (prey && (Math.hypot(prey.feetPosition.x-pos.x,prey.feetPosition.z-pos.z)>sight*sn(prey) || !sees(ctx,h,prey))) prey=null;
       if (prey) best = Math.hypot(prey.feetPosition.x - pos.x, prey.feetPosition.z - pos.z);
     }
+    if (fresh) m.preyId = prey?.id ?? null;
     if (prey) m.lastSeen = { x: prey.feetPosition.x, z: prey.feetPosition.z, at: now };
     else { const sh = shotAt(st, now); if (sh && (!m.lastSeen || (m.lastSeen.at ?? 0) < sh.at)) m.lastSeen = { x: sh.x, z: sh.z, at: now } } // shot from afar: it runs to where the shot came from
     if (L3) {
@@ -159,7 +170,8 @@ export function update(ctx, dt) {
     else if (L3 && m.lurkAt) goal = m.lurkAt;
     else if (m.lastSeen && now - (m.lastSeen.at ?? now) < 5000 && Math.hypot(m.lastSeen.x - pos.x, m.lastSeen.z - pos.z) > 1) goal = m.lastSeen; // sniff where it last saw them
     else { m.lastSeen = null; if (!m.roam || now > m.until) { const a = ctx.random() * 6.283; m.roam = { x: pos.x + Math.cos(a) * 14, z: pos.z + Math.sin(a) * 14 }; m.until = now + 4000; } goal = m.roam; }
-    const directSight = prey && now >= (m.pathUntil ?? 0) && Math.abs(prey.feetPosition.y - pos.y) < 1.5 && hasClearSight(ctx, pos, prey.feetPosition, h.id, prey.id); // a prey on another floor, or a straight line that got it stuck: it walks the maze instead
+    if (fresh || !prey) m.ds = !!(prey && Math.abs(prey.feetPosition.y - pos.y) < 1.5 && hasClearSight(ctx, pos, prey.feetPosition, h.id, prey.id));
+    const directSight = prey && now >= (m.pathUntil ?? 0) && m.ds; // a prey on another floor, or a straight line that got it stuck: it walks the maze instead
     let way = null;
     if (!directSight) {
       if (L6) way = stepToward6(pos.x, pos.z, goal.x, goal.z, 30);
