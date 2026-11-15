@@ -48,7 +48,7 @@ atmosphere:
   timeOfDay: 16.4
   cycle: { frozen: 16.4 }
   clouds: { enabled: true, density: 0.3, opacity: 0.55, altitude: 1100, thickness: 320, speed: 0.6 }
-  fog: { kind: linear, near: 60, far: 420, color: oklch(0.93 0.03 85) }
+  fog: { kind: linear, near: 80, far: 650, color: oklch(0.93 0.03 85) }
   sun: { orbit: { noonYaw: 215, maxElevation: 62 }, light: { intensity: 1.6, color: oklch(0.9 0.09 75), shadow: { enabled: true, softness: 1 } } }
   ambient: { light: { color: oklch(0.88 0.04 85), intensity: 0.7 } }
   hemisphere: { skyColor: oklch(0.86 0.05 235), groundColor: oklch(0.62 0.07 120), intensity: 0.55 }
