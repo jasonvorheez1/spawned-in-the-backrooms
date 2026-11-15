@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9211,
-  "updatedAt": "2026-11-15T17:57:54.728Z",
+  "basedOnSpecVersion": 9213,
+  "updatedAt": "2026-11-15T18:04:12.664Z",
   "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Global scripts and shared registries coordinate play while place scenes and simulations compose local spaces and stories, including the expanded Level 1.1 Corrupted Corridor, Kyoto Dreams and Lumiria. A separate Director Savi mod supplies a creator-approved trailer workflow.",
   "scriptPaths": [],
   "places": [
@@ -9,7 +9,7 @@
     "places/bonus + places/testlab (3D) - vaporwave mall with shops, staff, arcade, homes and salon; Test Range has loot/enemy bays and HIT SQUAD pad.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; sim builds tunnels/doors and staffs camps; t5-a2 leads to Level 178.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; scenes own geometry, sims/cutscenes local beats.",
-    "places/level1 + places/level1c + places/level2 + places/level4 + places/level26 (3D) - Level 1 M.E.G. camp and signed entry to the 620 m Corrupted Corridor; Level 1.1 sim lays M.E.G./Tunnel Gang cast, caches, aid cabinets, footlockers, backpacks and a ringing payphone.",
+    "places/level1 + places/level1c + places/level2 + places/level4 + places/level26 (3D) - Level 1 M.E.G. camp and signed entry to the 620 m Corrupted Corridor; Level 1.1 sim lays M.E.G./Tunnel Gang cast, caches, aid cabinets and footlockers.",
     "places/level9 + places/level10 + places/level11 + places/level61 + places/level70 (3D) - Suburbs, farm, city/Base Beta/strip mall/clinic, Snackrooms checkpoint and Froidetown.",
     "places/level169 + places/level132 (3D) - Level 169 desert, Ferry's house/trail/basement and Field Office 7; Level 132 Duchy of Morigont, Lumiria town, collection barter and generated countryside.",
     "places/level178 + remaining authored levels (3D) - Kyoto Dreams residents/house quests/searchable containers; Level ! Chapter 2 chase finale and other authored destinations."
@@ -45,7 +45,7 @@
     "scripts/lib/l132-shops.js - RANGE, ears, lay, tick; scripts/lib/level169-quest.js - questTick, useThing; scripts/lib/voices.js - warmVoices, hasVoice, voiceKey; places/thehub/sim.js - cadence, tick."
   ],
   "ownership": [
-    "scripts/player.js + scripts/lib/save.js - durable player.state progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, saved place/position, currency and related progress.",
+    "scripts/player.js + scripts/lib/save.js - durable player.state progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance/look, saved place/position, currency and related progress; look.spawnAv selects the player's own Spawn avatar.",
     "scripts/lib/stats.js - derived attributes, skills and combat/carry stats; scripts/stats-ui.js formats; scripts/lib/progression.js migrates xpCurve progression.",
     "scripts/lib/modifiers.js - bookBonuses/readBooks/genericBooksRead/effects and modifier derivation; scripts/lib/clothes.js owns worn gear records/passives.",
     "scripts/lib/manuals.js + scripts/player.js - player.state.recipes learned IDs; legacy manuals grants recipe kinds; reading a manual learns one recipe.",
@@ -55,17 +55,18 @@
     "places/level1c/sim.js + scripts/lib/level1c-quest.js - place state builtV/l1cPh/xV/l1cDead; player state holds per-walker sector/quest/passage/fall progress."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused targets.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused triggers.",
     "templates/player.js runs scripts/fall-guard.js before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
     "scripts/main-menu-ui.js actions → scripts/main-menu.js → player.state.run or SQL saves; new-run reset retains NEW_KEEP screen/menu/save-list keys; after t0Done pause Return routes to Bonus Rooms.",
-    "scripts/main-menu.js forces furry bodyStyle; scripts/lib/critter-model.js setStyle clears HUMAN, so character models are furry-only.",
+    "scripts/main-menu.js requests furry bodyStyle; scripts/lib/critter-model.js setStyle clears HUMAN for the critter body, while scripts/critter.js can instead render the avatar selected by player.state.look.spawnAv.",
     "scripts/lib/run-opts.js noStory/noNpcs → menu/global sim story and NPC gates; noNpcs also blocks CH2 activation and switches hub-route to ledger/loose-key steps, while hub-thing gives the Tenth Tunnel trail's Level 11 key first.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold handlers call carryAcross for held props/followers; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone (Level 1.1 sectors, Level 178 house, Level 132 Lumiria); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass.",
     "scripts/level-door.js onTriggerEnter resolves threshold/partner → destination marker and carryAcross; Level 1 ↔ Level 1.1 paired markers and scripts/l1c-use.js seam return keep the crossing linked.",
-    "places/level1c/sim.js tick lays versioned geometry/cast, then xV lays searchable supplies, payphone note/audio and modelled seams; scripts/l1c-use.js consumes use/note interactions, foes/sectors and questTick1c update the corridor; level1c.js supplies plan and player.js applies zone effects.",
+    "places/level1c/sim.js tick lays versioned geometry/cast, then xV lays searchable supplies, payphone note/audio and modelled seams; scripts/l1c-use.js consumes use/note interactions, foes/sectors and questTick1c update the corridor; level1c-quest.js owns its player quest progress.",
+    "Salon and wardrobe UI dress actions → scripts/critter.js onInput → player.state.look; model/spawnav/modelUrl choices clear competing model fields, and spawnav requires ctx.self.avatarUrl before the update renders that URL as the worn body.",
     "scripts/talk.js → scripts/lib/dialogue.js + scripts/lib/voices.js; npc-voices.yml assigns distinct prompts to named Level 1.1 M.E.G. and Tunnel Gang cast, while first standing tick warms authored dialogue and recorded voice takes."
   ],
   "behaviorFamilies": [
@@ -76,7 +77,7 @@
     "scripts/lib/l169-road.js + l169-road-geo.js + l169-travel.js + l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
     "places/level132/sim.js + l132-{stalls,shops,land,people,duke,quests,barter}.js + barter-deal.js - staged town and keeper trades use eight goods categories; first gift then balanced currency-free barter.",
     "scripts/phone.js + phone-ui.js + screen.js - one shared wrist phone; apps include keeper contacts/restock texts, camera/photos/notes, flashlight and radio.",
-    "scripts/lib/dialogue.js loads authored YAML lazily into shared DLG; scripts/talk.js consumes choice/line/bark helpers and warms recorded voice takes on first standing tick; scripts/lib/tutorial.js selects contextual and moment-of-need Field Guide prompts."
+    "scripts/lib/dialogue.js loads authored YAML lazily into shared DLG; scripts/talk.js consumes choice/line/bark helpers and warms recorded voice takes on first standing tick; scripts/lib/tutorial.js selects contextual and moment-of-need Field Guide entries."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists; Level 26 placements/barrage use uploaded models.",
