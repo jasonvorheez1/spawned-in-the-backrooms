@@ -18,7 +18,7 @@ const CSS = `<style>
 export function radioUi(ctx, player) {
   const s = player.state ?? {}; if (!s.radioOpen) return ''
   const cur = stationOf(s.radioSt), air = onAir(ctx.now(), cur)
-  const what = (seg) => seg.kind === 'host' ? `${esc(cur.host)} · ${esc(seg.title)}` : esc(seg.title)
+  const what = (seg) => seg.kind === 'host' ? `${esc(cur.host)} · ${esc(seg.title)}` : 'Music' // no song names on the dial (Shelly, Nov 15: "remove the song names in radios")
   const bars = Array.from({ length: 28 }, (_, i) => `<i style="height:22px;animation-delay:-${((i * 37) % 100) / 100}s"></i>`).join('')
   const dial = (st) => { const on = !!s.radioOn && cur.key === st.key
     return `<div class="st ${on ? 'on' : ''}"><div class="dial"><div class="nm">${esc(st.name)}</div><div class="fq">${esc(st.freq)} · hosted by ${esc(st.host)}</div></div>
