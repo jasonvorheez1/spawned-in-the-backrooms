@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8661,
-  "updatedAt": "2026-11-15T00:41:57.208Z",
-  "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices, radio tuning and resume location. Shared registries and handlers coordinate global play, while per-place simulations, authored cell scenes and procedural builders compose local spaces and stories. Level 169's Ferry's Friends house combines a scheduled cast, usable owned belongings, loot containers and authored chatter; the HALOGEN and world radios share a clocked station registry with authored and recorded segments.",
+  "basedOnSpecVersion": 8676,
+  "updatedAt": "2026-11-15T01:34:24.557Z",
+  "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices, radio tuning and resume location. Shared registries and handlers coordinate global play, while per-place simulations, authored cell scenes and procedural builders compose local spaces and stories. Level 169 combines a scheduled desert-house cast, owned belongings and route infrastructure with a new Backrooms Robotics outpost, frenzied gunslinger units and the Faulty Units quest.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes, anomalies and deterministic dressing; momentsV gates fitted wall moments and room-prop regeneration.",
@@ -12,17 +12,17 @@
     "places/level1 + places/level4 + places/level26 (3D) - M.E.G. camps and authored office mazes; Level 26's S.S. Fun has cabin 23, Partygoer decks/lockdown and aboard gate; Level 1 includes Dina's radio.",
     "places/level9 + places/level11 + places/level61 (3D) - seeded Suburbs, Level 11 city/Base Beta/strip mall/clinic and Chapter 2 trail, and Snackrooms food court/M.E.G. checkpoint with simulated staff and Clippers lounge.",
     "places/level70 (3D) - winter market/civic town, stalls, hotel, office, pump and Dry Pipes landmarks; sim composes civic, wild and life systems with town/path builders.",
-    "places/level169 (3D, 'Welcome to the Desert') - seeded desert, Ferry's house/trail/pantry/basement and desk, seven scheduled Friends, ownership/theft reactions, chatter, quests, road and S.S. Fun links."
+    "places/level169 (3D, 'Welcome to the Desert') - seeded desert, Ferry's house/trail/pantry/basement, seven scheduled Friends, checkpoints/ship and Field Office 7 with the Backrooms Robotics crew and hostile units."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input actions; fall-guard runs before locomotion/player behavior and scripts/radio.js is on the player.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local config, authored placements and place generation/tick behavior; selected sims compose shared helpers.",
     "places/level169/config.yaml + scripts/terrain169.js - seeded height/material generator and desert marks; config binds terrain and scrub dressing, while cell scenes hold placed flora models.",
-    "places/level169/sim.js + scripts/lib/data/level169.yml + scripts/lib/l169-house.js + scripts/lib/l169-ferry.js + scripts/lib/l169-friends.js + scripts/lib/l169-road.js - dynamic well/house/pantry/Ferry/Friends/trail/road composition; sim ticks Friends, road, quest and Ferry systems.",
+    "places/level169/sim.js + scripts/lib/data/level169.yml + scripts/lib/l169-house.js + scripts/lib/l169-ferry.js + scripts/lib/l169-friends.js + scripts/lib/l169-road.js + scripts/lib/l169-robotics.js - dynamic well/house/pantry/Ferry/Friends/trail/road/ship/outpost composition and ticks.",
+    "scripts/l169-outpost-geo.js - procedural Field Office 7 hut, mast, generator, workbench, fence and floodlights, placed by l169-robotics.js.",
     "places/level13/cells/x0z0.scene + places/level13/sim.js - cell scene owns apartment shell and permanent architectural fixtures; sim handles lethargy and delegates furnishing, foes, people, dressing and tape.",
     "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js - title/settings, new-expedition choices, five-slot save manager and story/tutorial lifecycle; scripts/ui.js composes the in-game HUD and wrist panels.",
-    "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, wake/resume, aiming, third-person view and per-place zone resolution.",
-    "places/main/sim.js + scripts/lib/maze.js + xmas-room.js + level0-moments.js - Level 0 layout and deterministic maze dressing/encounters; moments version gates rebuilds."
+    "scripts/player.js + scripts/camera.js + scripts/view3.js - player actions/state, wake/resume, aiming, third-person view and per-place zone resolution."
   ],
   "shared": [
     "scripts/lib/places.js - canonical per-place names, labels and HUD titles; consumed by feed, quest names and scripts/ui.js.",
@@ -42,7 +42,7 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - shared journal/advancement/reward helpers; containment.js - containment state/pen/door operations; ch2-quest.js - Chapter 2 stages and dialogue helpers.",
     "scripts/lib/run-opts.js - OPTS, DEFAULTS, PICK_DEFAULTS, RATE, PRESETS, runOf, needsMul, sanityMul, noStory, noNpcs, cleanPick, KEEP, SKIP; scripts/main-menu.js - SLOTS.",
-    "scripts/lib/radio.js - STATIONS, STATION, stationOf, onAir; scripts/lib/l169-friends.js - stopsOf, planAt, slateText, layFriends, tickFriends; l169-house.js - layTrail, layHouse."
+    "scripts/lib/radio.js - STATIONS, STATION, stationOf, onAir; scripts/lib/l169-friends.js - stopsOf, planAt, slateText, layFriends, tickFriends; l169-house.js - layTrail, layHouse; l169-robotics.js - layRobotics, roboTick."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable player.state progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, saved place/position, currency and related player progress.",
@@ -52,22 +52,21 @@
     "scripts/lib/run-opts.js + scripts/main-menu.js - player.state.run owns expedition picks; run options determine story/NPC presence and hunger/thirst/sanity drain multipliers.",
     "scripts/db.js + scripts/main-menu.js - SQL saves table owns named save-slot snapshots by player owner and slot; player.state remains the live/current run state.",
     "scripts/radio.js - player.state.radioOn/radioSt retain tuned station and power; radioOpen is the current wrist-tab state, with stream/hush object IDs kept in session.",
-    "places/level169/sim.js and generated prop/NPC state - Friends own live schedule/hostility/chatter state; house props encode owner/steal metadata and loot, while interact.js applies theft reactions and pantry/desk handlers award or refresh their usable goods."
+    "Level 169: l169-friends.js owns live cast schedule/hostility/chatter; l169-robotics.js uses place.state.botNext/botSeq and player.state.l169bot/l169botK for unit scheduling and quest progress; gear drops are wearable clothes records."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focusable tagged props and dispatches E to their handler/loot/dialogue paths.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focusable tagged props and dispatches interaction handlers.",
     "templates/player.js runs scripts/fall-guard.js update before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; periodic saves exclude intake, bonus and tutorial0.",
     "scripts/main-menu-ui.js actions → scripts/main-menu.js → player.state.run or SQL saves; new-run reset uses run-opts KEEP/SKIP and run options gate story/NPC presence and drain multipliers; load resolves destination through wakePlace.",
-    "scripts/lib/run-opts.js → main-menu story gates Dina/Chapter 2/cutscenes; global sim.js removes tagged NPCs only when every player in a place chose noNpcs, and Phoebe only when every player chose noStory; needsMul feeds crafting and surviv…",
+    "scripts/lib/run-opts.js → main-menu story gates Dina/Chapter 2/cutscenes; global sim.js removes tagged NPCs only when every player in a place chose noNpcs, and Phoebe only when every player chose noStory; needsMul feeds crafting and survival drains.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone; scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js place-matched jobs; carried items/kills/world events advance errands and quest dialogue handlers → journal, player.state.errands/qtrack, feed, reputation and rewards.",
     "scripts/lib/data/craft.yml food recipes consume raw meat or carried snack IDs and produce IDs defined in snacks.yml; scripts/lib/manuals.js gates recipe learning through player.state.recipes.",
-    "places/level169/config.yaml → scripts/terrain169.js heightAt/materialAt and cell-scene flora; places/level169/sim.js lays well and versioned level169.yml setpieces, then ticks Friends/road/S.S. Fun/quest and Ferry; l169-friends.js schedules the seven NPCs and runs their shared chatter.",
-    "scripts/lib/l169-house.js lays Tobin-owned pantry goods/crates and Senna's desk objects; E→scripts/interact.js theft/owner checks or container loot; desk-item.js/pantry-item.js apply compass, drink, snack, reading and hand-animation effects, with timed restocks.",
-    "scripts/lib/radio.js data → onAir shared station clock → scripts/radio.js local HALOGEN stream and scripts/world-radio.js spatial radio; radio-ui.js reads radioSt/radioOn for station and current/next segment labels (music labels stay generic)."
+    "places/level169/config.yaml → scripts/terrain169.js terrain and flora; places/level169/sim.js lays versioned level169.yml setpieces and ticks Friends/road/S.S. Fun/quest/robotics; l169-robotics.js composes Field Office 7 and spawns units around players in open desert.",
+    "Field Office 7 dialogue data and scripts/lib/l169-robotics.js: talking with Desmond starts Faulty Units → nearby kills of l169-bot units advance player.state.l169botK → talk to Desmond again awards XP/currency; clothing registry gives dead units' chassis and hat wearable identities."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
@@ -76,8 +75,8 @@
     "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters, plus art/cat-wardrobe/fit.py + tailclear.py + art/level70-stall/parts.py - fitted GLBs/prop catalogs and body-specific garment/prop fitting.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
-    "scripts/lib/l169-road.js + scripts/l169-road-geo.js + scripts/lib/l169-travel.js + scripts/lib/l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards facing their approach, animated locker/logbook …",
-    "scripts/lib/l169-house.js PANTRY + scripts/pantry-geo.js + scripts/pantry-item.js and desk-item.js - procedural owned pantry tins/jars and distinct desk objects use shared E-handling, varied token/kind effects and hour-scale restock."
+    "scripts/lib/l169-road.js + scripts/lib/l169-road-geo.js + scripts/lib/l169-travel.js + scripts/lib/l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards facing their approach, animated locker/…",
+    "scripts/lib/l169-house.js PANTRY + scripts/pantry-geo.js + scripts/pantry-item.js and desk-item.js - procedural owned pantry tins/jars and distinct desk objects use shared E-handling, varied token/kind effects and hour-scale restock; l169-robotics.js + l169-outpost-geo.js share cat NPC/gunslinger behavior with weapons, dialogue, quest and fitted robochassis/cowboy wardrobe variants."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -88,10 +87,10 @@
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
-    "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together. The Hub cells own fixed fixture/furniture IDs; keep matching scene placements w…",
+    "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together. The Hub cells own fixed fixture/furniture IDs; keep matching scene placements with them.",
     "Level 13's building shell is authored in cells/x0z0.scene; sim.js returns if l13-floor is absent and no longer regenerates the shell. Preserve matching floor ID and scene wall/threshold geometry; LETH remains in player.state.leth13.",
-    "Level 169 uses x/z with north at -z and 1:10 map scale; terrain marks, track, house, road sites and ship berth must align. level169.yml holds tuned positions/rules; sim's well has independent l169WellV and house/road rebuilds use separate …",
-    "Ferry's pantry goods and house props use stable l169-pantry-* / l169-house-* IDs with positions derived from level169.yml geometry; container/usable state holds per-prop inventory and Tobin/Senna ownership. Keep desk pieces aligned to the split model offsets and preserve owner IDs used by Friend NPCs.",
-    "HALOGEN and world radios derive segment indices from the same room clock and scripts/lib/data/radio*.yml; station order is keyed by array index (Kyoto Dreams Radio is 178.0 FM at index 4), and art/kyoto/out/*.tsv are recorded host lines, not runtime station data."
+    "Level 169 uses x/z with north at -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth must align. level169.yml holds tuned positions/rules; sim layout version and well version are separate.",
+    "Ferry's pantry goods and house props use stable l169-pantry-* / l169-house-* IDs and positions from level169.yml; container/usable state holds per-prop inventory and Tobin/Senna ownership. Field Office and robot placements likewise use stable l169-bro-* IDs; keep L.robotics aligned with procedural geometry and interaction points.",
+    "Faulty Units uses player.state.l169bot and l169botK, place.state.botNext/botSeq, 50 m kill-credit radius and three required credited kills; NPC gear uses strict clothes IDs robochassis and cowboy, registered with cat-specific fitted GLBs."
   ]
 }
