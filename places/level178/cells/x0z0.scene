@@ -710,7 +710,8 @@ l178-cab-1:
   model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 90}
-  tags: [l178]
+  state: {containerOpen: false, items: "l178_miso,almond", name: Kitchen cabinet}
+  tags: [container, l178, l178-prop, breakable]
 l178-cab-2:
   children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
   feetPosition: {x: 12.05, y: 0.45, z: 0.46}
@@ -718,7 +719,8 @@ l178-cab-2:
   model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 90}
-  tags: [l178]
+  state: {containerOpen: false, items: warm_tea, name: Kitchen cabinet}
+  tags: [container, l178, l178-prop, breakable]
 l178-cab-3:
   children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
   feetPosition: {x: 12.05, y: 0.45, z: 4.6}
@@ -726,7 +728,8 @@ l178-cab-3:
   model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 90}
-  tags: [l178]
+  state: {containerOpen: false, items: l178_onigiri, name: Kitchen cabinet}
+  tags: [container, l178, l178-prop, breakable]
 l178-cab-4:
   children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
   feetPosition: {x: 12.05, y: 0.45, z: 5.5}
@@ -734,7 +737,8 @@ l178-cab-4:
   model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 90}
-  tags: [l178]
+  state: {containerOpen: false, items: "almond,almond", name: Kitchen cabinet}
+  tags: [container, l178, l178-prop, breakable]
 l178-cab-5:
   children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
   feetPosition: {x: 9.8, y: 0.45, z: 5.6}
@@ -742,7 +746,8 @@ l178-cab-5:
   model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 180}
-  tags: [l178]
+  state: {containerOpen: false, items: l178_bento, name: Kitchen cabinet}
+  tags: [container, l178, l178-prop, breakable]
 l178-cab-6:
   children: [{id: door, model: /cdn/value.847e892d7d0f5e8349bda1bb09d17aee55f1399f959c036e84c227eb3f1e05dd.glb}]
   feetPosition: {x: 10.72, y: 0.45, z: 5.6}
@@ -750,7 +755,8 @@ l178-cab-6:
   model: /cdn/value.20b03d270090fe22e4c3637dbf97e92e3c1fc901acd09681224df276724748a9.glb
   physics: static
   rotation: {yaw: 180}
-  tags: [l178]
+  state: {containerOpen: false, items: "warm_tea,l178_miso", name: Kitchen cabinet}
+  tags: [container, l178, l178-prop, breakable]
 l178-cabinet-swords:
   behavior: [scripts/l178-prop.js]
   feetPosition: {x: -2.3, y: 0.48, z: 16.6}
@@ -1024,48 +1030,6 @@ l178-door-hub:
   rotation: {yaw: 90}
   state: {to: thehub}
   tags: [l178, l178-door]
-l178-drawer-1:
-  children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
-  feetPosition: {x: 12.05, y: 0.45, z: -1.38}
-  id: l178-drawer-1
-  rotation: {yaw: 90}
-  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
-  tags: [container, l178, l178-prop]
-l178-drawer-2:
-  children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
-  feetPosition: {x: 12.05, y: 0.45, z: 0.46}
-  id: l178-drawer-2
-  rotation: {yaw: 90}
-  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
-  tags: [container, l178, l178-prop]
-l178-drawer-3:
-  children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
-  feetPosition: {x: 12.05, y: 0.45, z: 4.6}
-  id: l178-drawer-3
-  rotation: {yaw: 90}
-  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
-  tags: [container, l178, l178-prop]
-l178-drawer-4:
-  children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
-  feetPosition: {x: 12.05, y: 0.45, z: 5.5}
-  id: l178-drawer-4
-  rotation: {yaw: 90}
-  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
-  tags: [container, l178, l178-prop]
-l178-drawer-5:
-  children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
-  feetPosition: {x: 9.8, y: 0.45, z: 5.6}
-  id: l178-drawer-5
-  rotation: {yaw: 180}
-  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
-  tags: [container, l178, l178-prop]
-l178-drawer-6:
-  children: [{behavior: scripts/prop-part.js, id: prop-motion-drawer, model: /cdn/value.5024661d047c13f7b4b4c1fd39b9523f558bf3a0076afd7ad5becafb879aa579.glb, state: {axis: slide, goal: 0, rest: {x: 0, y: 0, z: 0}, travel: -0.35, value: 0}}]
-  feetPosition: {x: 10.72, y: 0.45, z: 5.6}
-  id: l178-drawer-6
-  rotation: {yaw: 180}
-  state: {containerOpen: false, items: "", name: Drawer, propArt: l178-drawer}
-  tags: [container, l178, l178-prop]
 l178-engawa-e0:
   feetPosition: {x: 8.1, y: 0, z: -6}
   id: l178-engawa-e0
