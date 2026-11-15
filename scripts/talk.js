@@ -34,6 +34,7 @@ import L109 from './lib/data/l109-outpost.yml'
 import { handleDialogueQuestBeast } from './lib/l5-beast.js'
 import { handleDialogueQuestHub } from './lib/hub-quest.js'
 import { handleDialogueQuest61 } from './lib/level61-quests.js'
+import { handleDialogueQuest178 } from './lib/level178-quests.js'
 import { handleDialogueCh2 } from './lib/ch2-quest.js'
 import { handleHubErrand } from './lib/hub-errands.js'
 import { handleFieldErrand } from './lib/field-errands.js'
@@ -256,7 +257,7 @@ function send(ctx, d) {
     const before = new Set(Object.keys(s.quests ?? {})) // a quest line: the quest's own handler answers it (scripts/lib/level*-quests.js, zenith-quest.js)
     ctx._lastCheck = null
     const qRes = handleDialogueQuest02(ctx, ctx.self, it, questText) ?? handleDialogueQuest13(ctx, ctx.self, it, questText) ?? handleDialogueQuest(ctx, ctx.self, it, questText) ?? handleDialogueQuest10(ctx, ctx.self, it, questText) ?? handleDialogueQuest8(ctx, ctx.self, it, questText)
-      ?? handleDialogueQuest21(ctx, ctx.self, it, questText) ?? handleDialogueQuestZ(ctx, ctx.self, it, questText) ?? handleDialogueQuest1(ctx, ctx.self, it, questText) ?? handleDialogueQuest31(ctx, ctx.self, it, questText) ?? handleDialogueQuest109(ctx, ctx.self, it, questText) ?? handleDialogueQuestBeast(ctx, ctx.self, it, questText) ?? handleDialogueQuest70(ctx, ctx.self, it, questText) ?? handleDialogueQuestHub(ctx, ctx.self, it, questText) ?? handleDialogueQuest61(ctx, ctx.self, it, questText) ?? handleDialogueCh2(ctx, ctx.self, it, questText) ?? handleHubErrand(ctx, ctx.self, it, questText) ?? handleFieldErrand(ctx, ctx.self, it, questText) ?? factionReply(it, s, questText) ?? megAssignmentReply(it, s, questText)
+      ?? handleDialogueQuest21(ctx, ctx.self, it, questText) ?? handleDialogueQuestZ(ctx, ctx.self, it, questText) ?? handleDialogueQuest1(ctx, ctx.self, it, questText) ?? handleDialogueQuest31(ctx, ctx.self, it, questText) ?? handleDialogueQuest109(ctx, ctx.self, it, questText) ?? handleDialogueQuestBeast(ctx, ctx.self, it, questText) ?? handleDialogueQuest70(ctx, ctx.self, it, questText) ?? handleDialogueQuestHub(ctx, ctx.self, it, questText) ?? handleDialogueQuest61(ctx, ctx.self, it, questText) ?? handleDialogueQuest178(ctx, ctx.self, it, questText) ?? handleDialogueCh2(ctx, ctx.self, it, questText) ?? handleHubErrand(ctx, ctx.self, it, questText) ?? handleFieldErrand(ctx, ctx.self, it, questText) ?? factionReply(it, s, questText) ?? megAssignmentReply(it, s, questText)
     const qChk = ctx._lastCheck
     ctx._lastCheck = null
     if (qChk && qRes) {

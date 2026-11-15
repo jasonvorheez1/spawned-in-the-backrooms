@@ -2,6 +2,7 @@
 import { animate } from "builtin/tween";
 import L from "./lib/data/level178.yml";
 import { queuePayout } from "./lib/quests.js";
+import { touch178 } from "./lib/level178-quests.js"; // quest beats on house props (scripts/lib/level178-quests.js)
 const STREAM = `fx
 pop water rate=?mobile:30|60 on=disc(.008) life=.22..0.28 v=<0,-0.6,0> acc=grav() size=.01..0.016 col=<.82,.9,1> a=.55 sz=$size r=sprite(soft-disc,alpha,velocity,.04)`;
 function leaf(ctx, instant) {
@@ -26,6 +27,9 @@ function use(ctx, s, at) {
     if (ps && s.open && !ps.l178closet) { ps.l178closet = 1; queuePayout(ps, { items: String(L.closetGift).split(","), text: "A haori and a hachimaki, folded on top. Nobody will miss them." }); } else if (ps && s.open) say(ps, "Folded kimonos in indigo and plum, a row of geta under them. They smell of cedar.", ctx); return;
   }
   if (!ps) return;
+  const beat = touch178(ctx, p, ctx.self.id);
+  if (s.kind === "qspot") { ctx.emit("playSound", { clip: "cdn/sfx-paper-page-turn-soft.mp3", position: at, volume: 0.25 }); say(ps, beat ?? s.why ?? s.name, ctx); return; }
+  if (beat && s.kind !== "read") say(ps, beat, ctx);
   if (s.kind === "read") { ps.reading = s.page; ctx.emit("playSound", { clip: "cdn/sfx-paper-page-turn-soft.mp3", position: at, volume: 0.35 }); return; } // a page in scripts/lib/data/pages.yml, drawn by ui.js's reading panel
   if (s.kind === "towels") { ps.sanity = Math.min(100, (ps.sanity ?? 100) + L.towel.sanity); if (ps.wet) ps.wet = 0; ctx.emit("playSound", { clip: "cdn/sfx-soft-cotton-towel-unfolding.mp3", position: at, volume: 0.4 }); say(ps, "A warm towel off the stack. Still smells like sun.", ctx); return; }
   if (s.kind === "table") {
@@ -50,10 +54,11 @@ export const ears = {
     if (s.kind === "shoji") {
       s.open = !s.open; s.verb = s.open ? "Close" : "Open"; leaf(ctx, false);
       ctx.emit("playSound", { clip: "cdn/sfx-wooden-shoji-paper-door-sliding-in-wood-track.mp3", position: at, volume: 0.45 });
-    } else if (s.kind === "futon" || s.kind === "towels" || s.kind === "table" || s.kind === "cabinet" || s.kind === "closet" || s.kind === "read") {
+    } else if (s.kind === "futon" || s.kind === "towels" || s.kind === "table" || s.kind === "cabinet" || s.kind === "closet" || s.kind === "read" || s.kind === "qspot") {
       use(ctx, s, at);
     } else if (s.kind === "tap") {
       s.on = !s.on; s.verb = s.on ? "Turn off" : "Turn on"; tap(ctx);
+      const tp = who(ctx, m?.by), beat = tp && touch178(ctx, tp, ctx.self.id); if (beat) say(tp.state, beat, ctx);
       ctx.emit("playSound", { clip: "cdn/sfx-steel-kitchen-tap-lever-click.mp3", position: at, volume: 0.4 });
     }
   },
