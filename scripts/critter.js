@@ -282,7 +282,8 @@ export function update(ctx) {
     if (ses.pose || had) applyBones(ctx)
   }
   { const h = Number(l.heightS) || 1, w = Number(l.buildS) || 1, k = h + ':' + w // height and build: the whole body, everyone sees it
-    if (ses.hw !== k) { ses.hw = k; ctx.self.scale = { x: w, y: h, z: w } } }
+    const sc = ctx.self.scale, off = !sc || typeof sc === 'number' ? (sc ?? 1) !== h || h !== w : Math.abs((sc.y ?? 1) - h) > 1e-3 || Math.abs((sc.x ?? 1) - w) > 1e-3
+    if (ses.hw !== k || off) { ses.hw = k; ctx.self.scale = { x: w, y: h, z: w } } } // Shelly Nov 15: height reaches a plymodel or spawn avatar too: a re-dressed body (worn model swap, place crossing) came back at scale 1, so the scale is checked against the look, not only on a slider move
   const wornNow = !!((l.spawnAv && ctx.self.avatarUrl) || l.modelUrl || (l.model && C.models?.[l.model]))
   if (wornNow) {
     // an imported body has its own skeleton (pelvis, spine_01 …): no tail, ears or lids to act on, and the gait plays library clips on its bones
