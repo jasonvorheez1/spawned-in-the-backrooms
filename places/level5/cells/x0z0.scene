@@ -2727,8 +2727,9 @@ l5-hall-room-n5-bed:
   physics: static
   primitive: {kind: scripted, params: {kind: bed, quilt: oklch(0.86 0.04 240), seed: 1, w: 1.4, wood: oak}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 180}
-  state: {hp: 60, mat: wood, maxHp: 60}
-  tags: [l5-hall, furniture, breakable]
+  state: {"hp":60,"mat":"wood","maxHp":60,"name":"Guest bed","kind":"field-rest","room":"room-n5","verb":"Rest","info":"For the holder of this room's key","restLine":"Fresh linen and a few quiet breaths."}
+  tags: ["l5-hall","furniture","breakable","usable"]
+  behavior: scripts/field-fixture.js
 l5-hall-room-n5-chair:
   feetPosition: {x: -13.375, y: 0, z: -18.7}
   id: l5-hall-room-n5-chair
@@ -3047,8 +3048,9 @@ l5-hall-room-s4-bed:
   physics: static
   primitive: {kind: scripted, params: {kind: bed, quilt: oklch(0.9 0.02 90), seed: 2, w: 1.4, wood: walnut}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 0}
-  state: {hp: 60, mat: wood, maxHp: 60}
-  tags: [l5-hall, furniture, breakable]
+  state: {"hp":60,"mat":"wood","maxHp":60,"name":"Guest bed","kind":"field-rest","room":"room-s4","verb":"Rest","info":"For the holder of this room's key","restLine":"Fresh linen and a few quiet breaths."}
+  tags: ["l5-hall","furniture","breakable","usable"]
+  behavior: scripts/field-fixture.js
 l5-hall-room-s4-chair:
   feetPosition: {x: -14.625, y: 0, z: 18.7}
   id: l5-hall-room-s4-chair
@@ -3138,8 +3140,9 @@ l5-hall-suite-ne-bed:
   physics: static
   primitive: {kind: scripted, params: {kind: bed, quilt: oklch(0.72 0.07 160), seed: 23, w: 1.7, wood: mahog}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 0}
-  state: {hp: 60, mat: wood, maxHp: 60}
-  tags: [l5-hall, furniture, breakable]
+  state: {"hp":60,"mat":"wood","maxHp":60,"name":"Guest bed","kind":"field-rest","room":"suite-ne","verb":"Rest","info":"For the holder of this room's key","restLine":"Fresh linen and a few quiet breaths."}
+  tags: ["l5-hall","furniture","breakable","usable"]
+  behavior: scripts/field-fixture.js
 l5-hall-suite-ne-ctable:
   feetPosition: {x: -14.325, y: 0, z: -7.4}
   id: l5-hall-suite-ne-ctable
@@ -3255,8 +3258,9 @@ l5-hall-suite-nw-bed:
   physics: static
   primitive: {kind: scripted, params: {kind: bed, quilt: oklch(0.78 0.08 30), seed: 23, w: 1.7, wood: walnut}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 0}
-  state: {hp: 60, mat: wood, maxHp: 60}
-  tags: [l5-hall, furniture, breakable]
+  state: {"hp":60,"mat":"wood","maxHp":60,"name":"Guest bed","kind":"field-rest","room":"suite-nw","verb":"Rest","info":"For the holder of this room's key","restLine":"Fresh linen and a few quiet breaths."}
+  tags: ["l5-hall","furniture","breakable","usable"]
+  behavior: scripts/field-fixture.js
 l5-hall-suite-nw-ctable:
   feetPosition: {x: -28.325, y: 0, z: -7.4}
   id: l5-hall-suite-nw-ctable
@@ -3372,8 +3376,9 @@ l5-hall-suite-se-bed:
   physics: static
   primitive: {kind: scripted, params: {kind: bed, quilt: oklch(0.7 0.1 350), seed: 21, w: 1.7, wood: walnut}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 180}
-  state: {hp: 60, mat: wood, maxHp: 60}
-  tags: [l5-hall, furniture, breakable]
+  state: {"hp":60,"mat":"wood","maxHp":60,"name":"Guest bed","kind":"field-rest","room":"suite-se","verb":"Rest","info":"For the holder of this room's key","restLine":"Fresh linen and a few quiet breaths."}
+  tags: ["l5-hall","furniture","breakable","usable"]
+  behavior: scripts/field-fixture.js
 l5-hall-suite-se-ctable:
   feetPosition: {x: -14.325, y: 0, z: 7.4}
   id: l5-hall-suite-se-ctable
@@ -3489,8 +3494,9 @@ l5-hall-suite-sw-bed:
   physics: static
   primitive: {kind: scripted, params: {kind: bed, quilt: oklch(0.82 0.06 260), seed: 23, w: 1.7, wood: oak}, script: scripts/l5-hall-geo.js}
   rotation: {pitch: 0, yaw: 180}
-  state: {hp: 60, mat: wood, maxHp: 60}
-  tags: [l5-hall, furniture, breakable]
+  state: {"hp":60,"mat":"wood","maxHp":60,"name":"Guest bed","kind":"field-rest","room":"suite-sw","verb":"Rest","info":"For the holder of this room's key","restLine":"Fresh linen and a few quiet breaths."}
+  tags: ["l5-hall","furniture","breakable","usable"]
+  behavior: scripts/field-fixture.js
 l5-hall-suite-sw-ctable:
   feetPosition: {x: -28.325, y: 0, z: 7.4}
   id: l5-hall-suite-sw-ctable

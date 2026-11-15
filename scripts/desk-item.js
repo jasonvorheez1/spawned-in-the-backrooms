@@ -44,5 +44,14 @@ export function restock(ctx) {
 }
 
 // your hands (Shelly, Nov 15: "interact like grab and drink stuff with my hands"): the presser's body reaches and lifts, then lets go
-export function hands(ctx, p) { if (!p?.anim) return; p.anim.hands = { clip: "cdn/clip-pickup.glb", loop: false, weight: 1, blend: 0.15 }; ctx.after(1.1, "handsOff", { id: p.id }); }
-export function handsOff(ctx, { id } = {}) { const p = ctx.place.players.find((q) => q.id === id); if (p?.anim) p.anim.hands = null; }
+export function hands(ctx, p) {
+  if (!p?.anim) return;
+  const at = ctx.now();
+  p.state.fixtureHandsAt = at;
+  p.anim.hands = { clip: "cdn/clip-pickup.glb", loop: "once", weight: 1.2, mask: { from: "Spine" }, blendIn: 0.15, blendOut: 0.3 };
+  ctx.after(1.1, "handsOff", { id: p.id, at });
+}
+export function handsOff(ctx, { id, at } = {}) {
+  const p = ctx.place.players.find((q) => q.id === id);
+  if (p?.anim && p.state.fixtureHandsAt === at) p.anim.hands = null;
+}

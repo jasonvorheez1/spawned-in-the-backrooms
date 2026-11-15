@@ -1,7 +1,7 @@
 // Level 169 "Welcome to the Desert" (archived Wikidot version; Shelly's brief, Nov 14). No hostile entities here, ever: the land is the danger.
 // Every position and number: scripts/lib/data/level169.yml. Scale 1:10 (Savi's pick). The sun, cold and water-to-sand rules ride the player: scripts/sun169.js.
 import L from "../../scripts/lib/data/level169.yml";
-import { layHouse } from "../../scripts/lib/l169-house.js";
+import { layHouse, wireGuestFurniture } from "../../scripts/lib/l169-house.js";
 import { layFerry } from "../../scripts/lib/l169-ferry.js";
 import { layFriends, tickFriends } from "../../scripts/lib/l169-friends.js";
 import { layRoad, tickRoad } from "../../scripts/lib/l169-road.js";
@@ -55,6 +55,8 @@ export function tick(ctx) {
   if (s.l169V !== V) {
     layHouse(ctx, put, L); layFerry(ctx, put, L); layFriends(ctx, put, L); layRoad(ctx, put, L); layRobotics(ctx, put, L);
     s.l169V = V;
+    s.l169GuestV = 0;
   }
+  if (s.l169GuestV !== V && wireGuestFurniture(ctx)) s.l169GuestV = V;
   tickFriends(ctx, L); tickRoad(ctx, put, L); shipTick(ctx, put, "level169", L.ship); questTick(ctx, L); roboTick(ctx, L);
 }

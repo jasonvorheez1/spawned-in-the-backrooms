@@ -12,6 +12,7 @@ import { weaponBody } from "../../scripts/lib/weapon-look.js";
 import { settle, tickPeople } from "../../scripts/lib/l4-people.js";
 import { tickWalls, B as BRK } from "../../scripts/lib/breakables.js";
 import { workbenchSpec, ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
+import { wireOfficeCots } from "../../scripts/l4-home.js";
 export const cadence = "1s";
 const V = 2;
 const KIT = { // real models at the old boxes' size (Shelly: never blocky)
@@ -152,6 +153,7 @@ export function tick(ctx) {
   }
   const s = ctx.place.state;
   if (s.builtV !== V) { s.builtV = V; lay(ctx); }
+  if (!s.cotUseV) { wireOfficeCots(ctx); s.cotUseV = 1; }
   if ((s.campBenchV ?? 0) < 1) {
     s.campBenchV = 1;
     ensureBenches(ctx, [

@@ -1,6 +1,7 @@
 import A from './data/interactive-props.yml'
 import P from './data/l2props.yml'
 import F from './data/furniture.yml'
+import { movePart } from '../prop-part.js'
 const VERSION=3,PART='prop-motion-',SHELL='prop-shell'
 const models=new Map(Object.entries(P.containers).map(([kind,id])=>[id,kind]))
 models.set('/cdn/value.c6241c9ef9004df7d80aae0e234ed284e1f3e9ea13a77cc4183bbf4f92977eca.glb','locker')
@@ -57,13 +58,13 @@ export function containerPose(ctx,o,open){
  const row=A[o.state?.propArt];if(!row)return
  if(!open&&(ctx.place.players??[]).some(p=>p.id!==ctx.self.id&&p.state?.lootOpen===o.id))return
  o.state.containerOpen=!!open
- for(const part of row.parts){const child=ctx.getObject(o.id+'/'+PART+part.id);if(child)child.state.goal=open?1:0}
+ for(const part of row.parts)movePart(ctx,ctx.getObject(o.id+'/'+PART+part.id),open?1:0)
 }
 export function toggleLamp(ctx,o){
  const a=ctx.self.worldFeetPosition??ctx.self.feetPosition,b=o.worldFeetPosition??o.feetPosition
  if(!o.state.propLamp||!a||!b||Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z)>4.5||ctx.now()-(o.state.lampAt??-1e9)<150)return false
  const light=ctx.getObject(o.id+'/'+PART+'light');if(!light)return false
- o.state.lampAt=ctx.now();o.state.lampOn=!o.state.lampOn;o.state.verb=o.state.lampOn?'Turn off':'Turn on';light.state.goal=o.state.lampOn?1:0
+ o.state.lampAt=ctx.now();o.state.lampOn=!o.state.lampOn;o.state.verb=o.state.lampOn?'Turn off':'Turn on';movePart(ctx,light,o.state.lampOn?1:0)
  ctx.emit('playSound',{clip:'/cdn/moodboard-realistic-gritty/sfx-lock-picking-click.mp3',position:b,volume:.25,maxDistance:8});return true
 }
 export function upgradeNearby(ctx){

@@ -1,5 +1,15 @@
 import {animate} from 'builtin/tween'
 import {MOTION_MS,sampleMotion,propFrames} from './lib/prop-easing.js'
+export function movePart(ctx, part, goal) {
+ if (!part || part.state.goal === goal) return
+ part.state.goal = goal
+ ctx.emit('propMotion', { goal }, { to: part.id })
+}
+export const ears = {
+ propMotion(ctx, { goal }) {
+  if (ctx.self.state.goal === goal) update(ctx)
+ },
+}
 export function update(ctx){
  const s=ctx.self.state,m=ctx.self.session,now=ctx.now(),goal=s.goal?1:0
  let motion=s.motion
