@@ -24,7 +24,7 @@ export const SPOTS = {
 export const QUESTS178 = {
   kitchens: { key: "l178k", id: "l178-kitchens", name: "The Kitchens", giver: "l178-sector-1",
     tips: { 1: "Scoop rice from the open sack in the kitchen corner", 2: "Wash it under the kitchen tap", 3: "Set the donabe going on the stove", 4: "Tell the cook the rice is on" },
-    marks: { 1: MARK("l178-qs-ricesack", "Rice sack", 9.75, -5.45), 2: MARK("l178-tap", "Kitchen tap", 10, -2), 3: MARK("l178-qs-donabe", "Stove", 12, 1.4), 4: MARK("l178-sector-1", "Cook", 10.8, -3) } },
+    marks: { 1: MARK("l178-qs-ricesack", "Rice sack", 9.75, -5.45), 2: MARK("l178-tap", "Kitchen tap", 12.05, -0.46), 3: MARK("l178-qs-donabe", "Stove", 12, 1.4), 4: MARK("l178-sector-1", "Cook", 10.8, -3) } },
   ingredient: { key: "l178u", id: "l178-ingredient", name: "An Unfamiliar Ingredient", giver: "l178-sector-2",
     tips: { 1: "Look behind the rice cooker for the jar the cook found", 2: "Ask Irawan what the jar is", 3: "Tell the cook what Irawan said" },
     marks: { 1: MARK("l178-qs-ricecooker", "Rice cooker", 12, -4.5), 2: MARK("l178-irawan", "Irawan", 14.5, 1), 3: MARK("l178-sector-2", "Cook", 10.8, 3) } },

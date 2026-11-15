@@ -9,6 +9,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import { setQuest, tellQuest, finishLevelQuest } from "../../scripts/lib/quests.js";
+import { questTick178, SPOTS } from "../../scripts/lib/level178-quests.js"; // the six quests after A Place to Rest
 const Q = { key: "l178q", id: L.quest.id, name: L.quest.name };
 const mk = (u, label) => ({ place: "level178", x: L.uses[u].c[0], y: 0, z: L.uses[u].c[2], label });
 function quest(ctx, p) { // A Place to Rest: eat at the low table, then doze on a futon (stamps written by scripts/l178-prop.js)
@@ -32,8 +33,9 @@ export function tick(ctx) {
   if (ctx.place.players?.length) sweepProps(ctx); // lanterns, shoji paper, tableware break and regrow (breakables.yml idMat)
   if ((s.layoutV ?? 0) < L.layoutV + 1) { s.layoutV = L.layoutV + 1; for (const id of IDS) if (!ctx.place.objects[id]) person(ctx, id); }
   if ((s.findsV ?? 0) < 1) { s.findsV = 1; for (const f of L.finds ?? []) ctx.spawn("l178-find-" + f.kind, { tags: ["weapon"], state: { kind: f.kind }, feetPosition: { x: f.x, y: f.y, z: f.z }, rotation: { yaw: f.yaw ?? 0 }, visibleRange: { max: 40 }, ...weaponBody(f.kind) }); }
+  if ((s.spotsV ?? 0) < 1) { s.spotsV = 1; for (const [k, v] of Object.entries(SPOTS)) if (!ctx.place.objects["l178-qs-" + k]) ctx.spawn("l178-qs-" + k, { tags: ["usable", "l178-prop", "l178-qs"], behavior: "scripts/l178-prop.js", feetPosition: { x: v.x, y: v.y, z: v.z }, state: { kind: "qspot", name: v.name, verb: "Look", why: v.why, c: { x: v.x, y: v.y, z: v.z } } }); } // quiet Look spots on the story props (scripts/lib/level178-quests.js)
   if (!ctx.place.players.length) return;
   if (every(ctx, "l178people", 5000)) keepPeople(ctx, IDS, person);
-  for (const p of ctx.place.players) quest(ctx, p);
+  for (const p of ctx.place.players) { quest(ctx, p); questTick178(ctx, p); }
   tickChatter(ctx, CHATTER.level178 ?? [], Object.fromEntries(IDS.map((id) => [id, L.people[id]?.voice ?? id]))); // the house talks in its own words, never the Backrooms pool
 }
