@@ -2,11 +2,12 @@ import { interactiveSpec } from './prop-interactions.js'
 // Loot: one place that knows how almond water and weapons appear in the maze, whether from the
 // floor spawner (places/main/sim.js) or from a smiler that just died (scripts/player.js).
 import L from "./data/level0.yml";
+import L3 from "./data/loot3.yml";
 import W, { rollVariant, rarityIdx, rarityCap, authoredVariant } from "./weapons.js";
 import { SKILL_KEYS } from "./stats.js";
 import { rollManual } from "./manuals.js";
 import { weaponBody } from "./weapon-look.js";
-import { rollCloth, wornTokens, CLOTHES as CL } from "./clothes.js";
+import { rollCloth, rollLevel, wornTokens, CLOTHES as CL } from "./clothes.js";
 
 const scatter = (ctx, c) => ({ x: c.x + (ctx.random() - 0.5) * 2, y: 0.01, z: c.z + (ctx.random() - 0.5) * 2 });
 
@@ -29,13 +30,14 @@ export function spawnShells(ctx, c) {
 // Loot pools: a weapon with `pools: [l4, l5]` in weapons.yml turns up only where its pool is rolled (l0 lobby, l1 garage, l2 pipes, l3 station and Gamma,
 // l4 offices, l5 hotel); a weapon with none is a base weapon rolled everywhere. poolOf maps a place id to its pool.
 export const POOL = {
-  main: "l0", level01: "l01", level02: "l0",
+  main: "l0", level01: "l01", level02: "l02",
   level1: "l1", level2: "l2", level21: "l2",
   level3: "l3", gamma: "l3", level4: "l4",
   level5: "l5", level6: "l5", level61: "l5",
   level7: "l7", level8: "l2", level9: "l5",
-  level10: "l10", level11: "l11", level26: "l26",
+  level10: "l10", level11: "l11", level13: "l13", level26: "l26",
   level31: "l31", level34: "l2", level70: "l70", level109: "l109",
+  level114: "l114", level169: "l169", level178: "l178",
 };
 export const poolOf = (place) => POOL[place] ?? "l0";
 export const PLACE_CATEGORY = {
@@ -44,8 +46,9 @@ export const PLACE_CATEGORY = {
   level3: "industrial", gamma: "expedition", level4: "office",
   level5: "residential", level6: "hazardous", level61: "food_service",
   level7: "expedition", level8: "hazardous", level9: "residential",
-  level10: "abandoned_settlement", level11: "security", level26: "residential",
+  level10: "abandoned_settlement", level11: "security", level13: "residential", level26: "residential",
   level31: "residential", level34: "maintenance", level70: "expedition", level109: "medical",
+  level114: "residential", level169: "expedition", level178: "retreat",
 };
 
 // Contextual category tables: weighted items & matched temporary skill magazines (never infini-respawning permanent Skill Books).
@@ -84,6 +87,10 @@ export const LOOT_CATEGORIES = {
     ["ration", 10], ["stale_ration", 9], ["meat", 16], ["charcoal", 6], ["painkillers", 4],
     ["bandage", 4], ["cloth", 4], ["mag:survival", 2.5], ["mag:barter", 2.5], ["manual:food", 3],
   ],
+  retreat: [
+    ["l178_water", 14], ["l178_barley_tea", 12], ["l178_onigiri", 10], ["l178_miso", 8],
+    ["l178_bento", 3], ["l178_towel", 6], ["cloth", 10], ["bandage", 4], ["manual:food", 3],
+  ],
   expedition: [
     ["almond", 16], ["warm_tea", 9], ["ration", 12], ["bandage", 10], ["firstaid", 8],
     ["medkit", 4], ["ammo", 12], ["shells", 7], ["battery", 9], ["kit", 6],
@@ -115,32 +122,41 @@ export const LOOT_CATEGORIES = {
   ],
 };
 const POOL_TIER = { l0: 1, l01: 6, l02: 7, l1: 4, l2: 8, l21: 9, l3: 12, l4: 10, l5: 14, l6: 15, l7: 16, l8: 17, l9: 13, l10: 11, l11: 12, l12: 14, l13: 15, l26: 9, l27: 13, l31: 7, l34: 11, l61: 14, l70: 15, l109: 11, l114: 15, l169: 14, l184: 16, gamma: 12 };
-export function effectiveLootLevel(ctx, cap, level, pool = "l0") {
-  if (level != null) return Math.max(1, Number(level) || 1);
-  if (ctx?.self?.state?.level != null) return Math.max(1, Number(ctx.self.state.level) || 1);
-  if (ctx?.place?.players?.length) return Math.max(1, ...ctx.place.players.map((p) => Number(p?.state?.level) || 1));
-  const tier = CL.leveled.placeTier[ctx?.self?.place ?? ctx?.place?.id] ?? POOL_TIER[pool] ?? 1;
-  return cap != null ? Math.max(tier, cap === 0 ? 2 : cap === 1 ? 5 : cap === 2 ? 9 : 14) : Math.max(1, tier);
-}
 export function leveledWeaponScale(k, lv) {
-  const w = W[k]; if (!w) return 1;
-  const ml = w.minLevel ?? 1, ri = rarityIdx(k), above = Math.max(0, lv - ml);
-  if (ml <= 2 && ri === 0) return lv <= 4 ? 1 : Math.max(0.22, 1 - (lv - 4) * 0.065);
-  const debut = (above === 0 && ml >= 5) ? 0.75 : 1;
-  return debut * (1 + Math.min(2.8, above * 0.28) + ri * (lv >= 8 ? 0.5 : 0));
+  const unlocked = Math.max(W[k]?.minLevel ?? 1, [1, 3, 6, 10][rarityIdx(k)] ?? 1);
+  const age = Math.max(0, lv - unlocked);
+  if (unlocked <= 2) return Math.max(0.2, 1 - Math.max(0, age - 2) * 0.09);
+  return Math.max(0.45, 1.5 - Math.max(0, age - 2) * 0.12);
 }
-// Weighted pick over every found weapon this pool and level can hold; higher levels unlock better tiers and fade starter junk.
-export function rollWeapon(ctx, pool = "l0", cap, level) {
-  const lv = effectiveLootLevel(ctx, cap, level, pool), effCap = cap ?? rarityCap(lv);
-  const baseFilter = (k) => !W[k].unique && !W[k].level1 && !W[k].level2 && !W[k].level3 && (!W[k].pools?.length || W[k].pools.includes(pool));
-  let kinds = W.order.slice(1).filter((k) => baseFilter(k) && rarityIdx(k) <= effCap && (W[k].minLevel ?? 1) <= lv);
-  if (!kinds.length) kinds = W.order.slice(1).filter((k) => baseFilter(k) && rarityIdx(k) <= effCap);
-  if (!kinds.length) kinds = W.order.slice(1).filter(baseFilter);
-  const weighted = kinds.map((k) => [k, (W[k].weight ?? 1) * leveledWeaponScale(k, lv)]);
-  const total = weighted.reduce((a, [, wt]) => a + wt, 0);
-  let r = ctx.random() * total;
-  for (const [k, wt] of weighted) { r -= wt; if (r <= 0) { const v = rollVariant(ctx, k, lv); return rarityIdx(v) <= effCap ? v : k; } }
-  return kinds[0] ?? "table_leg";
+
+const LOCAL_WEAPONS = {
+  l1: [0.55, [["rebar", 5], ["wrench", 4]]],
+  l2: [0.72, [["screwdriver", 6], ["table_leg", 3], ["pipe_scrap", 4], ["crowbar", 5], ["wrench", 5], ["sledgehammer", 3]]],
+  l3: [L3.weaponL3 ?? 0.45, [["knife", 3], ["stun_baton", 5], ["lineman_machete", 5], ["smg", 3]]],
+  l5: [0.7, [["knife", 5], ["cleaver", 4], ["revolver", 4], ["coach_gun", 3], ["smg", 4]]],
+};
+const COMMON_WEAPONS = W.order.slice(1)
+  .filter((k) => !W[k].level1 && !W[k].level2 && !W[k].level3)
+  .map((k) => [k, W[k].weight ?? 1]);
+
+function pickWeapon(ctx, rows, lv, cap, minLevel, pool) {
+  const eligible = rows.filter(([k, weight]) =>
+    weight > 0 && W[k] && !W[k].unique && (W[k].weight ?? 1) > 0 &&
+    (!pool || !W[k].pools?.length || W[k].pools.includes(pool)) &&
+    rarityIdx(k) <= cap && (W[k].minLevel ?? 1) <= lv && (W[k].minLevel ?? 1) >= minLevel);
+  if (!eligible.length) return null;
+  const weighted = eligible.map(([k, weight]) => [k, weight * leveledWeaponScale(k, lv)]);
+  let r = ctx.random() * weighted.reduce((total, [, weight]) => total + weight, 0);
+  for (const [k, weight] of weighted) if ((r -= weight) <= 0) return rollVariant(ctx, k, lv, { cap });
+  return weighted[weighted.length - 1][0];
+}
+
+export function rollWeapon(ctx, pool = "l0", cap, level, minLevel = 1) {
+  const lv = level == null ? rollLevel(ctx, POOL_TIER[pool] ?? 1) : Math.max(1, Number(level) || 1);
+  const ceiling = Math.min(cap ?? 3, rarityCap(lv));
+  const [chance, local] = LOCAL_WEAPONS[pool] ?? [];
+  const nearby = local && ctx.random() < chance ? pickWeapon(ctx, local, lv, ceiling, minLevel) : null;
+  return nearby ?? pickWeapon(ctx, COMMON_WEAPONS, lv, ceiling, minLevel, pool) ?? (minLevel === 1 ? "table_leg" : null);
 }
 // A found thing too good for this player's level steps down; at higher levels, starter junk has a chance to roll up into fitting gear.
 export function gateItems(ctx, items, level, pool = "l0") {
@@ -148,10 +164,11 @@ export function gateItems(ctx, items, level, pool = "l0") {
   return String(items ?? "").split(",").filter(Boolean).map((t) => {
     if (!t.startsWith("weapon:")) return t;
     const k = t.slice(7);
-    if (W[k]?.unique || authoredVariant(k)) return t; // a one-of-a-kind is never rerolled
-    if (rarityIdx(k) > cap || (W[k]?.minLevel ?? 1) > lv) return "weapon:" + rollWeapon(ctx, pool, cap, lv);
+    if (!W[k] || W[k].unique || W[k].weight === 0 || authoredVariant(k)) return t; // keep authored discoveries
+    if (rarityIdx(k) > cap || (W[k].minLevel ?? 1) > lv) return "weapon:" + rollWeapon(ctx, pool, cap, lv);
     if (lv >= 7 && (W[k]?.minLevel ?? 1) <= 2 && rarityIdx(k) === 0 && ctx.random() < Math.min(0.65, (lv - 5) * 0.08)) {
-      return "weapon:" + rollWeapon(ctx, pool, cap, lv);
+      const better = rollWeapon(ctx, pool, cap, lv, 3);
+      if (better) return "weapon:" + better;
     }
     return t;
   }).join(",");
@@ -196,8 +213,9 @@ export function rollCategoryItem(ctx, category = "office", pool = "l0") {
   return "almond";
 }
 export function rollItem(ctx, pool = "l0") {
-  const cat = Object.entries(POOL).find(([, p]) => p === pool)?.[0];
-  if (cat && PLACE_CATEGORY[cat] && pool !== "l0") return rollCategoryItem(ctx, PLACE_CATEGORY[cat], pool);
+  const place = ctx?.self?.place ?? ctx?.place?.id;
+  const source = POOL[place] === pool ? place : Object.keys(POOL).find((id) => POOL[id] === pool);
+  if (PLACE_CATEGORY[source] && pool !== "l0") return rollCategoryItem(ctx, PLACE_CATEGORY[source], pool);
   if (ctx.random() < 0.14) return rollCash(ctx);
   const total = ITEM_WEIGHTS.reduce((a, [, w]) => a + w, 0);
   let r = ctx.random() * total;
@@ -239,18 +257,8 @@ export function dropLoot(ctx, pos, name = "Remains", luck = 1, clothMul = 1, poo
 }
 
 // Level 1's crates: rations, bandages, field mags, manuals and batteries join the roll.
-const L1_WEIGHTS = [["bobbypin", 8], ["compass", 2], ["firesalt", 4], ["repellent", 0.5], ["cashew", 1], ["meat", 2.5], ["ration", 4], ["stale_ration", 2], ["almond", 3.5], ["warm_tea", 1], ["bandage", 2.5], ["painkillers", 1], ["splint", 0.8], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2], ["kit", 1.6], ["mag", 1.4], ["manual", 1.6], ["cloth", 2.2], ["compass", 1], ["molotov", 0.5]];
-const L1_WEPS = [["rebar", 5], ["wrench", 4]];
-export function rollWeaponL1(ctx, level) {
-  const lv = effectiveLootLevel(ctx, undefined, level, "l1"), cap = rarityCap(lv);
-  const elig = L1_WEPS.filter(([k]) => rarityIdx(k) <= cap && (W[k]?.minLevel ?? 1) <= lv);
-  if (elig.length && ctx.random() < 0.55) {
-    const weighted = elig.map(([k, w]) => [k, w * leveledWeaponScale(k, lv)]);
-    let r = ctx.random() * weighted.reduce((a, [, w]) => a + w, 0);
-    for (const [k, w] of weighted) if ((r -= w) <= 0) { const v = rollVariant(ctx, k, lv); return rarityIdx(v) <= cap ? v : k; }
-  }
-  return rollWeapon(ctx, "l1", cap, lv);
-}
+const L1_WEIGHTS = [["bobbypin", 8], ["compass", 3], ["firesalt", 4], ["repellent", 0.5], ["cashew", 1], ["meat", 2.5], ["ration", 4], ["stale_ration", 2], ["almond", 3.5], ["warm_tea", 1], ["bandage", 2.5], ["painkillers", 1], ["splint", 0.8], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2], ["kit", 1.6], ["mag", 1.4], ["manual", 1.6], ["cloth", 2.2], ["molotov", 0.5]];
+export const rollWeaponL1 = (ctx, level) => rollWeapon(ctx, "l1", undefined, level);
 export function rollItemL1(ctx) {
   if (ctx.random() < 0.14) return rollCash(ctx);
   const total = L1_WEIGHTS.reduce((a, [, w]) => a + w, 0);
@@ -273,17 +281,7 @@ export function rollItemL2(ctx) {
   for (const [k, w] of L2_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL2(ctx) : k === "manual" ? rollManual(ctx, "l2") : k === "mag" ? magOf(ctx, "l2") : k === "cloth" ? rollCloth(ctx) : k === "meat" ? rollMeat(ctx) : k; }
   return "battery";
 }
-const L2_WEPS = [["screwdriver", 6], ["table_leg", 3], ["pipe_scrap", 4], ["crowbar", 5], ["wrench", 5], ["sledgehammer", 3]];
-export function rollWeaponL2(ctx, level) {
-  const lv = effectiveLootLevel(ctx, undefined, level, "l2"), cap = rarityCap(lv);
-  const elig = L2_WEPS.filter(([k]) => rarityIdx(k) <= cap && (W[k]?.minLevel ?? 1) <= lv);
-  if (elig.length && ctx.random() < 0.72) {
-    const weighted = elig.map(([k, w]) => [k, w * leveledWeaponScale(k, lv)]);
-    let r = ctx.random() * weighted.reduce((a, [, w]) => a + w, 0);
-    for (const [k, w] of weighted) if ((r -= w) <= 0) { const v = rollVariant(ctx, k, lv); return rarityIdx(v) <= cap ? v : k; }
-  }
-  return rollWeapon(ctx, "l2", cap, lv);
-}
+export const rollWeaponL2 = (ctx, level) => rollWeapon(ctx, "l2", undefined, level);
 export function spawnCrateL2(ctx, p) {
   const n = 2 + Math.floor(ctx.random() * 3), items = [];
   for (let i = 0; i < n; i++) items.push(rollItemL2(ctx));
@@ -334,17 +332,7 @@ export function spawnContainerL2(ctx, kind, p, yaw, opts = {}) {
 export const L5_WEIGHTS = [["almond", 22], ["warm_tea", 4], ["ammo", 17], ["meat", 20], ["ration", 5], ["stale_ration", 3], ["bandage", 5], ["painkillers", 3], ["antiseptic", 2], ["battery", 5], ["bobbypin", 8], ["weapon", 6], ["mag", 2.5], ["manual", 2], ["cloth", 6], ["royal_ration", 1]] // nvg: Ines's quest only (scripts/l5-goggles.js);
 export const MEAT5 = [["steak", 3], ["fish", 4], ["chicken", 6], ["spam", 8], ["sardines", 8], ["jerky", 7], ["hotdog", 4], ["rat", 6]];
 export function rollMeat(ctx) { const t = MEAT5.reduce((a, [, w]) => a + w, 0); let r = ctx.random() * t; for (const [k, w] of MEAT5) { r -= w; if (r <= 0) return "meat:" + k; } return "meat:rat"; }
-const L5_WEPS = [["knife", 5], ["cleaver", 4], ["revolver", 4], ["coach_gun", 3], ["smg", 4]];
-export function rollWeaponL5(ctx, level) {
-  const lv = effectiveLootLevel(ctx, undefined, level, "l5"), cap = rarityCap(lv);
-  const elig = L5_WEPS.filter(([k]) => rarityIdx(k) <= cap && (W[k]?.minLevel ?? 1) <= lv);
-  if (elig.length && ctx.random() < 0.7) {
-    const weighted = elig.map(([k, w]) => [k, w * leveledWeaponScale(k, lv)]);
-    let r = ctx.random() * weighted.reduce((a, [, w]) => a + w, 0);
-    for (const [k, w] of weighted) if ((r -= w) <= 0) { const v = rollVariant(ctx, k, lv); return rarityIdx(v) <= cap ? v : k; }
-  }
-  return rollWeapon(ctx, "l5", cap, lv);
-}
+export const rollWeaponL5 = (ctx, level) => rollWeapon(ctx, "l5", undefined, level);
 export function rollItemL5(ctx) {
   if (ctx.random() < 0.14) return rollCash(ctx);
   const total = L5_WEIGHTS.reduce((a, [, w]) => a + w, 0);

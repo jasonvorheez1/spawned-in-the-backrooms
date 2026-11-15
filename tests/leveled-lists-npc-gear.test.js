@@ -6,11 +6,12 @@ mock.module('builtin/nav', () => ({ findPath: () => null }))
 mock.module('../scripts/mat-cloth.js', () => ({ PRINTS: {} }))
 
 const { default: W, baseOf, variantOf, rarityIdx, rarityCap, rollVariant } = await import('../scripts/lib/weapons.js')
-const { rollWeapon, rollWeaponL1, rollWeaponL2, rollWeaponL5, gateItems } = await import('../scripts/lib/loot.js')
+const { rollItem, rollWeapon, rollWeaponL1, rollWeaponL2, rollWeaponL5, gateItems, poolOf } = await import('../scripts/lib/loot.js')
 const { rollWeaponL3 } = await import('../scripts/lib/loot3.js')
-const { rollCloth, npcLook, wornDR, leveledRows, CLOTHES } = await import('../scripts/lib/clothes.js')
+const { rollCloth, rollLevel, npcLook, wornDR, leveledRows, CLOTHES } = await import('../scripts/lib/clothes.js')
 const { npcGearLevel, rollNpcWeapon, rollNpcPocketLoot, adaptNpcWear } = await import('../scripts/lib/npc-gear.js')
 const { sendSquad } = await import('../scripts/lib/hit-squad.js')
+const { openLoot } = await import('../scripts/interact.js')
 
 function rng(seed = 4242) {
   return {
@@ -98,6 +99,54 @@ test('gateItems enforces minLevel, preserves uniques, and upgrades starter junk 
     if (baseOf(out) !== 'table_leg') upgraded++
   }
   expect(upgraded).toBeGreaterThan(50)
+})
+
+test('shared stock follows the room median, and zero-weight items stay out of random stock', () => {
+  const ctx = { ...rng(93), place: { id: 'level178', players: [1, 20].map(level => ({ state: { level } })) } }
+  expect(rollLevel(ctx)).toBe(1)
+  for (let i = 0; i < 500; i++) {
+    const k = rollWeapon(ctx, 'l178', 4)
+    expect(rarityIdx(k)).toBe(0)
+    expect(W[k].weight).toBeGreaterThan(0)
+  }
+  const low = { ...ctx, self: { place: 'level3', state: { level: 1 } } }
+  expect(rollLevel(low)).toBe(1)
+  expect(gateItems(ctx, 'weapon:l178_tanto', 1, 'l178')).toBe('weapon:l178_tanto')
+})
+
+test('generic containers use the actual place and keep local finds', () => {
+  const collect = (place) => {
+    const ctx = { ...rng(781), self: { place, state: { level: 10 } } }
+    return new Set(Array.from({ length: 500 }, () => rollItem(ctx, poolOf(place))))
+  }
+  expect(collect('level02')).toContain('firesalt')
+  const snackrooms = collect('level61')
+  expect(snackrooms).toContain('manual:food')
+  expect([...snackrooms].some(t => t.startsWith('weapon:'))).toBe(false)
+  const kyoto = collect('level178')
+  expect(kyoto).toContain('l178_onigiri')
+  expect([...kyoto].some(t => t.startsWith('cloth:') && t.includes(':l178_'))).toBe(true)
+})
+
+test('opening shared loot a second time keeps the same stock and preserves authored items', () => {
+  const ctx = {
+    random: () => 0, now: () => 100, emit: () => {}, query: () => [],
+    self: { place: 'level2', id: 'finder', feetPosition: { x: 0, y: 0, z: 0 }, state: { level: 1 } },
+    place: { state: {} },
+  }
+  const c = { id: 'case', tags: ['container'], state: { name: 'Case', items: 'weapon:shotgun', scavved: true } }
+  openLoot(ctx, c)
+  const shown = c.state.items
+  expect(shown).not.toBe('weapon:shotgun')
+  ctx.self.state.level = 17
+  openLoot(ctx, c)
+  expect(c.state.items).toBe(shown)
+  expect(ctx.self.state.lootList).toBe(shown)
+
+  ctx.self.state.level = 1
+  const fixed = { ...c, state: { name: 'Case', items: 'weapon:shotgun', fixedStock: true } }
+  openLoot(ctx, fixed)
+  expect(ctx.self.state.lootList).toBe('weapon:shotgun')
 })
 
 test('clothes leveled lists cover newer places, exclude shop exclusives from loot, and fix npcLook NaN handling', () => {

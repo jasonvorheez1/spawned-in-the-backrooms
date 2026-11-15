@@ -169,8 +169,11 @@ function refill(ctx, c) {
   const st = c?.state; if (!st) return
   // the place's ledger outlives a rebuilt container (a level update re-lays its props full): what you took stays taken until its hour is up
   const led = ctx.place.state?.looted?.[c.id]
-  if (led && led.at > ctx.now() && !st.refillAt) { if (st.full == null) st.full = st.items ?? ''; st.items = led.items; st.refillAt = led.at }
-  if (st.full != null && st.refillAt && ctx.now() >= st.refillAt) { st.items = st.full; st.refillAt = 0; st.scavved = false }
+  if (led && led.at > ctx.now() && !st.refillAt) {
+    if (st.full == null) st.full = st.items ?? ''
+    st.items = led.items; st.refillAt = led.at; st.scavved = true; st.lootTiered = true
+  }
+  if (st.full != null && st.refillAt && ctx.now() >= st.refillAt) { st.items = st.full; st.refillAt = 0; st.scavved = false; st.lootTiered = false }
 }
 function ledger(ctx, c) { // one row per looted container in this place, expired rows pruned as it writes
   const now = ctx.now(), old = ctx.place.state.looted ?? {}, next = {}
@@ -202,15 +205,17 @@ export function openLoot(ctx, c) {
     c.state.lock = ''; c.state.name = sk === 'science' ? 'Unlocked locker' : 'Opened crate'
     note(ctx, `[${SKN[sk]} ${lv}] ${sk === 'science' ? 'You crack the locker' : 'You pick the lock'}`); snd(ctx, 'lock-picking-click', 0.5)
   }
-  if (!c.tags?.includes('storage') && !c.state.fixedStock && !c.state.scavved && c.state.items !== undefined) { // Scavenge and Luck: a chance of one extra find, once per container
+  const leveled = !c.tags?.includes('storage') && !c.tags?.includes('npc') && !c.state.dead && !c.state.fixedStock && c.state.name !== 'Dropped bag'
+  if (leveled && !c.state.scavved && c.state.items !== undefined) { // Scavenge and Luck: a chance of one extra find, once per refill
     c.state.scavved = true
     if (ctx.random() < derived(s).scav) c.state.items = [c.state.items, (ctx.self.place === 'level1' ? rollItemL1(ctx) : ctx.self.place === 'level2' ? rollItemL2(ctx) : ctx.self.place === 'level3' ? rollItemL3(ctx) : rollItem(ctx, poolOf(ctx.self.place)))].filter(Boolean).join(',')
     const cl = spotCloth(ctx, derived(s).clothFind) // Observation (Perception) spots a wearable tucked in the junk
     if (cl) c.state.items = [c.state.items, cl].filter(Boolean).join(',')
     spamtonPerk(ctx, c)
   }
-  if (!c.tags?.includes('storage') && !c.tags?.includes('npc') && c.state.items) { // nothing rarer than this player's level allows (lib/weapons.js rarityCap)
+  if (leveled && !c.state.lootTiered && c.state.items) { // keep shared stock stable after the first search
     const g = gateItems(ctx, c.state.items, s.level ?? 1, poolOf(ctx.self.place)); if (g !== c.state.items) c.state.items = g
+    c.state.lootTiered = true
   }
   const own = ownerOf(ctx, c)
   s.lootOpen = c.id; s.lootName = (own ? `${c.state.ownerName ?? 'Someone'}'s · ` : '') + plainName(c.state?.name); s.lootList = c.state?.items ?? ''; s.focus = null; s.lootStore = !!c.tags?.includes('storage') // storage (your fridge): you put things in too

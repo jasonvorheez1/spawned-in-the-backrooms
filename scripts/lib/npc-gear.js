@@ -150,14 +150,10 @@ export function rollNpcWeapon(ctx, me, opts = {}) {
     if (!w || w.unique) return false;
     if (opts?.forceRanged && !w.ranged) return false;
     if (poolKey === "frenzied" && !opts?.allowRanged && !opts?.forceRanged && !me?.tags?.includes?.("l109-wanderer") && w.ranged) return false;
-    return (w.minLevel ?? 1) <= lv && rarityIdx(k) <= Math.max(cap, (w.minLevel ?? 1) <= lv ? rarityIdx(k) : cap);
+    return (w.minLevel ?? 1) <= lv && rarityIdx(k) <= cap;
   });
   const usable = candidates.length ? candidates : [["table_leg", 1]];
-  const weighted = usable.map(([k, baseWt]) => {
-    const scale = leveledWeaponScale(k, lv);
-    const rarPenalty = rarityIdx(k) > cap ? 0.45 : 1;
-    return [k, baseWt * scale * rarPenalty];
-  });
+  const weighted = usable.map(([k, baseWt]) => [k, baseWt * leveledWeaponScale(k, lv)]);
   const rng = opts?.random ? ctx : seededCtx(id + "|arm|" + lv, ctx);
   let r = rng.random() * weighted.reduce((a, [, wt]) => a + wt, 0);
   let chosen = usable[0][0];

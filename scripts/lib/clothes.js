@@ -121,10 +121,12 @@ export function honest(cur, next) {
   return b
 }
 
-// the level a roll is for: a player's own level, else the place's tier (a drop with nobody behind it)
-export function rollLevel(ctx) {
-  const lv = Number(ctx?.self?.state?.level) || 0, tier = CL.leveled.placeTier[ctx?.self?.place] ?? 1
-  return Math.max(lv, tier)
+// Shared stock uses the lower middle level so one veteran doesn't set the room's drops.
+export function rollLevel(ctx, fallback = 1) {
+  if (ctx?.self?.state?.level != null) return Math.max(1, Number(ctx.self.state.level) || 1)
+  const levels = ctx?.place?.players?.map((p) => Math.max(1, Number(p?.state?.level) || 1)).sort((a, b) => a - b)
+  if (levels?.length) return levels[Math.floor((levels.length - 1) / 2)]
+  return CL.leveled.placeTier[ctx?.self?.place ?? ctx?.place?.id] ?? fallback
 }
 const rowLevel = (r) => Math.max(r.level ?? 1, CL.leveled.rarityAt[r.rarity] ?? 1)
 // the leveled list at a level: every row it can roll, each with its weight
@@ -148,9 +150,9 @@ const pickW = (list, u) => { let x = u * list.reduce((a, [, w]) => a + w, 0); fo
 // a random garment off the leveled list (a find in a crate or on remains); regular: true rolls only the plain set
 export function rollCloth(ctx, regular = false, level) {
   const lv = level ?? rollLevel(ctx)
-  const here = ctx?.self?.place, inSpecial = here === 'level5' || here === 'level7'
+  const here = ctx?.self?.place ?? ctx?.place?.id, inSpecial = here === 'level5' || here === 'level7' || here === 'level178'
   const list = leveledRows(regular ? 1 : lv, (r) => !r.shop && (r.places ? r.places.includes(here) && !regular : regular ? r.regular : true))
-  if (inSpecial && !regular && ctx.random() < 0.65) { const h = list.filter(([r]) => r.places); if (h.length) { const row = pickW(h, ctx.random()); return clothToken(row.slot, row.id, row.colours[Math.floor(ctx.random() * row.colours.length)], pickPat(row, () => ctx.random())) } } // Level 5 & Level 7 mostly turn up their own wardrobe
+  if (inSpecial && !regular && ctx.random() < 0.65) { const h = list.filter(([r]) => r.places); if (h.length) { const row = pickW(h, ctx.random()); return clothToken(row.slot, row.id, row.colours[Math.floor(ctx.random() * row.colours.length)], pickPat(row, () => ctx.random())) } }
   const row = pickW(list, ctx.random()) ?? CL.rows[0]
   return clothToken(row.slot, row.id, row.colours[Math.floor(ctx.random() * row.colours.length)], pickPat(row, () => ctx.random()))
 }
