@@ -1,11 +1,11 @@
 # Lumiria's three walk-in shops. Shop-local metres: +Z = the door side, x across, f = the way a piece FACES (0 = to the back wall, 180 = to the door, 270 = +x, 90 = -x).
 # Row: id, m (model key), x, z, f; top: guess of the surface it rests on (it settles by a ray); wall: its height on a wall; u: what E does; seat; booth/pc: adds their sit spots.
-V: 3
+V: 4
 floor: 0.02
 door: { w: 1.28, h: 2.28, open: 95 }
 tune: "/cdn/moodboard-toon-vibrant/music-1950s-doo-wop-jukebox-slow-dance-instrumental.mp3"
 shops:
-  a: { x: 0, z: -40, yaw: 0, sy: 1.32, rx: 6.63, front: 4.31, back: 4.24, jamb: 4.56, name: "RadioShed", light: "oklch(0.97 0.02 240)",
+  a: { x: 0, z: -40, yaw: 0, sy: 1.32, boxCol: 4.4, rx: 6.63, front: 4.31, back: 4.24, jamb: 4.56, name: "RadioShed", light: "oklch(0.97 0.02 240)",
        shell: "/cdn/value.0882e91ad30c06c026715f90b46021f89bfc87e778caf4aa5feb3576380269df.glb",
        mats: { wall_in: "cdn/texture-beige-slatwall-retail-panel.png", floor_in: "cdn/texture-grey-commercial-carpet-tiles.png", ceil_in: "cdn/texture-white-acoustic-ceiling-tiles.png", jamb: "cdn/texture-oak-wood-planks-dark.png" } }
   b: { x: 40, z: 0, yaw: -90, rx: 7.1, front: 4.6, back: 4.42, jamb: 4.85, name: "Starlite Diner", light: "oklch(0.96 0.04 60)",

@@ -33,7 +33,14 @@ function buildShop(ctx, key) {
   if (ctx.getObject(root)) ctx.destroy(root);
   const mats = {}; for (const k in sh.mats) mats[k] = { texture: sh.mats[k], repeat: [1, 1], wrap: "repeat", roughness: k === "floor_in" ? 0.55 : 0.85 };
   ctx.spawn(root, { feetPosition: { x: sh.x, y: 0, z: sh.z }, rotation: { yaw: sh.yaw }, scale: { x: 1, y: sh.sy ?? 1, z: 1 }, tags: ["l132", "l132-shop"], state: { name: sh.name },
-    model: { id: sh.shell, materials: mats }, physics: { body: "static", collider: "mesh" } });
+    model: { id: sh.shell, materials: mats }, physics: sh.boxCol ? undefined : { body: "static", collider: "mesh" } });
+  if (sh.boxCol) { // a stretched shell's mesh collider closed its doorway: plain walls instead, the door gap left open
+    const H = sh.boxCol, T = 0.3, W = S.door.w / 2 + 0.05, L = sh.rx;
+    const wall = (n, x, z, w, d, y = 0, h = H) => ctx.spawn(`${root}-col-${n}`, { feetPosition: at(sh, x, z, y), rotation: { yaw: sh.yaw }, tags: ["l132"], primitive: { kind: "box", width: w, height: h, depth: d }, visible: false, physics: "static" });
+    wall("back", 0, -sh.back, 2 * L, T); wall("l", -L, (sh.front - sh.back) / 2, T, sh.front + sh.back); wall("r", L, (sh.front - sh.back) / 2, T, sh.front + sh.back);
+    wall("fl", -(L + W) / 2, sh.front, L - W, T); wall("fr", (L + W) / 2, sh.front, L - W, T); wall("lintel", 0, sh.front, 2 * W, T, S.door.h + 0.05, H - S.door.h - 0.05);
+    wall("roof", 0, (sh.front - sh.back) / 2, 2 * L, sh.front + sh.back, H, 0.2);
+  }
   // lights: three overhead, one at the back
   [[-sh.rx * 0.55, 0], [sh.rx * 0.55, 0], [0, -sh.back * 0.5], [0, sh.front * 0.55]].forEach(([x, z], i) =>
     ctx.spawn(`${root}-light-${i}`, { feetPosition: at(sh, x, z, 2.85), tags: ["l132"], light: { kind: "point", color: sh.light, intensity: 16, distance: 15 } }));
