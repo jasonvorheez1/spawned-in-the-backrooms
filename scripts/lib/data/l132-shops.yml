@@ -1,6 +1,6 @@
 # Lumiria's three walk-in shops. Shop-local metres: +Z = the door side, x across, f = the way a piece FACES (0 = to the back wall, 180 = to the door, 270 = +x, 90 = -x).
 # Row: id, m (model key), x, z, f; top: guess of the surface it rests on (it settles by a ray); wall: its height on a wall; u: what E does; seat; booth/pc: adds their sit spots.
-V: 5
+V: 6
 floor: 0.02
 door: { w: 1.28, h: 2.28, open: 95 }
 tune: "/cdn/moodboard-toon-vibrant/music-1950s-doo-wop-jukebox-slow-dance-instrumental.mp3"
@@ -15,13 +15,13 @@ shops:
        shell: "/cdn/value.5d3776904b9252fac495230c5e741297499836e8ca7866380653a2091f591fbe.glb",
        mats: { wall_in: "cdn/texture-teal-sponge-painted-plaster-wall.png", floor_in: "cdn/texture-purple-confetti-pattern-arcade-carpet.png", ceil_in: "cdn/texture-white-acoustic-ceiling-tiles.png", jamb: "cdn/texture-oak-wood-planks-dark.png" } }
 models:   # key: [address, the axis the file faces, scale]
-  monitors: ["/cdn/value.2f19b1994839489e9d7af016c95c5942ec0a15ca173fb8b931236d25f56c8762.glb", "+z", 1]   # Tripo 2026-11-15
-  shelf: ["/cdn/value.77652200e84b50a26812f5b32786e9e58be86ec6feea0c2997f0b393bfbb093c.glb", "+z", 1]   # Tripo 2026-11-15
+  monitors: ["/cdn/value.2f19b1994839489e9d7af016c95c5942ec0a15ca173fb8b931236d25f56c8762.glb", "+x", 1]   # Tripo 2026-11-15
+  shelf: ["/cdn/value.77652200e84b50a26812f5b32786e9e58be86ec6feea0c2997f0b393bfbb093c.glb", "+x", 1]   # Tripo 2026-11-15
   slat: ["/cdn/value.1e06f865e3bab819652a7465866afc2c45f18e4e921be428e2aa3ee858166281.glb", "+z", 1]
   wire: ["/cdn/value.8e72f7f37b80c9e96c97fa180ed93d497a4099cbdfbc464895fc5a8894c8c120.glb", "+x", 1.15]
   case: ["/cdn/value.4e4232d504243753b8093ecbded15cf7a15d83caa454d9a7267753de18ec803b.glb", "+z", 1]
   register: ["/cdn/value.f2663b8e02cbce4a46bcfac7649bc914ec716a82c522683d3afa35ae62387855.glb", "+z", 1]
-  spinner: ["/cdn/value.d2cb6f91bbb22e0debb1be68ede985ccf93216c562d215f52fc3cfb60539e403.glb", "+z", 1]   # Tripo 2026-11-15
+  spinner: ["/cdn/value.d2cb6f91bbb22e0debb1be68ede985ccf93216c562d215f52fc3cfb60539e403.glb", "+x", 1]   # Tripo 2026-11-15
   router: ["/cdn/value.2ee6d65e80f6bdb605e09f0ddf35522299c2c9aca1c14b28e52653eb02a03d3a.glb", "+z", 1.6]
   laptop: ["/cdn/value.057f996de00404bf98410b7deabf7d3b9c2fb08d17f7c440de21a7c8fcc8d5a0.glb", "+z", 0.4]
   camera: ["/cdn/value.eb9043ffee889ef53f7797e2af2908562b0e11141b0c8f8d4be5b7ddc3fc543f.glb", "+z", 0.6]
