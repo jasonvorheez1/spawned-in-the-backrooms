@@ -120,8 +120,19 @@ const ID_MAT = [[/clock|lamp|bulb|lantern|fan|radio|tv|monitor|phone/, 'fixture'
   [/drywall/, 'drywall'], [/chair|table|tbl|desk|bench|crate|box|stool|shelf|dresser|bed|pallet|plank|lumber|junk|salv|cart|sawhorse|cot|couch|sofa/, 'wood']]
 const ID_SKIP = /floor|wall|ceil|door|gate|stair|step|ramp|col$|-col-|collider|sign|ground|road|terrain|track|rail|pier|deck|dock|bridge|spawn|exit|from-|to-|portal|hatch|elevator|lift|skirt|scuff|nose/
 const matOfId = (id) => { if (ID_SKIP.test(id)) return null; for (const [re, m] of ID_MAT) if (re.test(id)) return m; return null }
+const ID_RULES = (B.idMat ?? []).map(([re, mat, opt]) => [new RegExp(re), mat, opt ?? {}])
 function sweepIds(ctx) {
   for (const [id, h] of Object.entries(ctx.place.objects)) {
+    const rule = h && ID_RULES.find(([re]) => re.test(id))
+    if (rule) {
+      const [, mat, opt] = rule
+      if ((h.tags?.includes('breakable') && h.state?.mat === mat) || h.tags?.includes('wreck') || h.state?.wreck) continue
+      const hp = opt.hp ?? Math.round((B.materials[mat]?.hp ?? 40) * 0.5)
+      if (!h.tags?.includes('breakable')) h.tags = [...(h.tags ?? []), 'breakable']
+      if (opt.solid && !h.physics) h.physics = { body: 'static', collider: 'box' }
+      h.state.mat = mat; h.state.hp = hp; h.state.maxHp = hp; if (opt.tear) h.state.tear = opt.tear
+      continue
+    }
     if (!h || h.parent || !(h.model || h.primitive) || h.tags?.includes('breakable') || h.tags?.includes('npc') || h.tags?.includes('usable') || h.tags?.includes('player')) continue
     const mat = matOfId(id); if (!mat) continue
     const b = h.bounds; if (b && Math.max(b.size.x, b.size.y, b.size.z) > 3.5) continue // big structure, not a prop
@@ -158,7 +169,7 @@ export function rollDrops(ctx, mat, kind) {
 function crumble(ctx, at, mat, big) {
   const m = B.materials[mat] ?? B.materials.wood, [r, g, b] = m.dust
   const FX = `fx
-pop chunk burst=${big ? '26..34' : '12..18'} on=box(<${big ? '1.6,1.1,.15' : '.5,.4,.5'}>) life=1.4..2.2 v=sdir()*(1.5..3.5)+up(1..2.5) size=.06..0.2 spin=-8..8 acc=grav()+drag(.4) col=<${r * 0.8},${g * 0.8},${b * 0.8}> a=1>.8:1>0 sz=$size rot=$age*$spin floor=bounce(.3) r=mesh(box,1,.6,.8)
+pop chunk burst=${big ? '26..34' : '12..18'} on=box(<${big ? '1.6,1.1,.15' : '.5,.4,.5'}>) life=1.4..2.2 v=sdir()*(1.5..3.5)+up(1..2.5) size=.06..0.2 spin=-8..8 acc=grav()*${m.fall ?? 1}+drag(${m.fall ? 2.2 : 0.4}) col=<${r * 0.8},${g * 0.8},${b * 0.8}> a=1>.8:1>0 sz=$size rot=$age*$spin floor=${m.fall ? 'stick' : 'bounce(.3)'} r=mesh(box,${(m.chunk ?? [1, 0.6, 0.8]).join(',')})
 pop dust burst=${big ? 14 : 7} on=box(<${big ? '1.6,1.1,.3' : '.5,.4,.5'}>) life=1.6..2.6 v=sdir()*(.4..1)+up(.2..0.6) size=.5..0.9 acc=buoy(.2)+drag(1.2) col=<${r},${g},${b}> a=0>.45:.2>.7:.25>0 sz=$size*(.6>2.2) rot=spin(.2) r=sprite(smoke-puff,alpha)`
   ctx.emit('fx', { position: at, script: m.sparks ? FX + `
 pop spark burst=18..26 life=.2..0.5 v=sdir()*(3..6)+up(1..2) size=.015..0.03 acc=grav()*.6 col=hdr(5,3,1)>hdr(2,.7,.1) a=1>0 sz=$size r=sprite(ember,add,velocity,.03)
@@ -203,7 +214,7 @@ export function damageEntity(ctx, o, dmg, at, normal, kind) {
     if (k && !['splinter', 'dent', 'spark'].includes(k.act)) { wreck(ctx, o); return true } // shards, spills and confetti leave no rubble pile
     const rare = rollDrops(ctx, mat, kind), items = [...rare, ...(o.state.items ? String(o.state.items).split(',').filter(Boolean) : [])]
     spawnRubble(ctx, { x: fp.x, y: fp.y + 0.02, z: fp.z }, items, o.state.items ? (o.state.name ?? 'Wreck') : mat === 'machine' ? `${o.state.name ?? 'Machine'} parts` : 'Rubble')
-    const good = rare.filter((t) => !['scrap_metal', 'scrap_wood', 'drywall', 'nails', 'wire', 'rubble', 'rust_flakes', 'mortar_dust', 'bricks', 'cinder', 'tile_shard'].includes(t))
+    const good = rare.filter((t) => !['scrap_metal', 'scrap_wood', 'drywall', 'nails', 'wire', 'rubble', 'rust_flakes', 'mortar_dust', 'bricks', 'cinder', 'tile_shard', 'ceramic_shard', 'washi_scrap', 'bamboo_strip'].includes(t))
     if (good.length) { ctx.emit('damageNumber', { position: { x: fp.x, y: fp.y + 1.4, z: fp.z }, text: `+${good.length} parts`, color: '#7fd1a0', size: 1 }); heard(ctx, { maxDistance: 8, refDistance: 1.5, clip: SND('mechanical-parts-salvage-clink'), position: fp, volume: 0.8 }) }
     wreck(ctx, o)
   }
@@ -212,6 +223,12 @@ export function damageEntity(ctx, o, dmg, at, normal, kind) {
 // a smashed prop isn't deleted: it goes out of sight, untouchable, and stands again an hour later (Shelly 2026-11-07)
 export const REGROW_MS = (B.propRegrowMinutes ?? 60) * 60000
 function wreck(ctx, o) {
+  const ts = o.state?.tear, tm = ts && typeof o.model === 'object' ? o.model?.materials?.[ts] : null
+  if (tm) { // a torn hole: the frame stands, its paper hangs open until the hour is up
+    o.state.wreck = { at: ctx.now(), tear: ts, slot: tm }
+    o.model = { ...o.model, materials: { ...o.model.materials, [ts]: { ...tm, dissolve: 0.85 } } }
+    const wr = (ctx.place.state.wrecks ??= []); if (!wr.includes(o.id)) wr.push(o.id); return
+  }
   if (o.tags?.includes('rubble') || o.lifetime || o.state?.stayGone) { if (o.state?.stayGone && !o.id.includes('/')) { const g = ctx.place.state.gone ?? {}; if (!g[o.id]) ctx.place.state.gone = { ...g, [o.id]: 1 } } ctx.destroy(o.id); return } // Nov 10 (Shelly: "fix the wall rebuilding itself"): a place's rebuild skips what was smashed for good
   o.state.wreck = { at: ctx.now(), tags: [...(o.tags ?? [])], physics: o.physics ?? null, items: o.state.items ?? null }
   o.tags = ['wreck']; o.visible = false; o.physics = 'none'
@@ -233,12 +250,13 @@ export function regrowWrecks(ctx) {
   const remaining = []
   for (const id of wr) {
     const o = ctx.getObject(id)
-    if (!o || !o.tags?.includes('wreck')) continue
+    if (!o || !(o.tags?.includes('wreck') || o.state?.wreck?.tear)) continue
     const w = o.state?.wreck
     if (!w) continue
     if (now - w.at < REGROW_MS) { remaining.push(id); continue }
     const f = o.feetPosition
     if (f && ctx.place.players.some((p) => Math.hypot(p.feetPosition.x - f.x, p.feetPosition.z - f.z) < 2)) { remaining.push(id); continue }
+    if (w.tear) { o.model = { ...o.model, materials: { ...o.model.materials, [w.tear]: w.slot } }; const st = { ...o.state }; delete st.wreck; delete st.broke; st.hp = st.maxHp ?? 10; o.state = st; continue }
     o.tags = w.tags; o.physics = w.physics; o.visible = true
     const st = { ...o.state }; delete st.wreck; delete st.broke; st.hp = st.maxHp ?? B.materials[st.mat ?? 'wood']?.hp ?? 60
     if (st.full != null) { st.items = st.full; st.refillAt = 0; st.scavved = false } else if (w.items != null) st.items = w.items

@@ -7,7 +7,14 @@ critPer: 0.015          # crit chance per Luck point (my pick: LCK 5 = 7.5%)
 critMul: 1.8
 # more things that break: tag -> material (hp is half the material's). usable machines that run minigames stay whole
 props: { l4-vend: machine, l4-bed: wood, l4-prop: wood, gamma-sign: metal, gamma-cam: fixture, gamma-bed: wood, l3lamp: fixture, l3farbulb: fixture, l1lamp: fixture, l2lamp: fixture, crate: wood, lootfurn: wood }            # bare hands barely scratch a wall
-propRegrowMinutes: 60   # a smashed prop or looted container comes back after this long (Shelly: an hour)
+propRegrowMinutes: 60
+# placed props a level names by id: [id regex, material, { hp, solid (give it a box collider so swings find it), tear (a slot that tears open instead of the piece vanishing) }]
+idMat:
+  - ['^l178-(porch-)?lantern-\d+$', washi, { solid: true }]
+  - ['^l178-ware-\d+$', ceramic, { solid: true }]
+  - ['^l178-shoji-\d+/leaf$', washi, { tear: washi }]
+  - ['^l178-[a-z-]*(sake|tokkuri)', ceramic, { solid: true }]
+  - ['^l178-[a-z-]*bamboo', bamboo, {}]   # a smashed prop or looted container comes back after this long (Shelly: an hour)
 regrowMinutes: 25        # a broken Level 0 wall grows back after this long, so the maze stays a maze
 wallHpMul: 1.5           # a Level 0 wall is a double sheet of drywall: 180 hp
 materials:
@@ -29,6 +36,10 @@ materials:
   # Level 27, The Bunker Springs: the cave's limestone gives travertine off the pool rim, calcite crystal and dried spring salt
   travertine: { name: Travertine, hp: 120, mul: { blunt: 0.9, edged: 0.25, firearm: 0.3 }, toolMul: { smash: 1.8, pry: 1.2 }, breakSound: concrete-slab-crack-crumble, sound: concrete-chip-impact-crack, dust: [0.9, 0.86, 0.76], drops: [[travertine, 2, 4], [spring_salt, 0, 2]] }
   calcite:    { name: Calcite crystal, hp: 90, mul: { blunt: 1.1, edged: 0.3, firearm: 0.4 }, toolMul: { smash: 1.9, pry: 1.3 }, breakSound: ceramic-tile-shatter-crumble, sound: concrete-chip-impact-crack, dust: [0.96, 0.95, 0.9], drops: [[calcite, 1, 3], [travertine, 0, 1]] }
+  # Level 178, Kyoto Dreams (Shelly: "give them breakables"): tableware, paper lanterns and shoji, bamboo. chunk = the fx shard's shape, fall = how fast it drops
+  ceramic:  { name: Glazed ceramic, hp: 16, mul: { blunt: 1.5, edged: 0.8, firearm: 1.2 }, sound: ceramic-teacup-clink-chip, breakSound: ceramic-teacup-crisp-shatter, dust: [0.9, 0.86, 0.78], chunk: [1, 0.25, 0.8], drops: [[ceramic_shard, 1, 3]] }
+  washi:    { name: Washi paper, hp: 20, mul: { blunt: 0.9, edged: 1.8, firearm: 1.0 }, sound: washi-paper-screen-poke-rustle, breakSound: washi-paper-screen-tear-rip, dust: [0.96, 0.93, 0.84], chunk: [1, 0.04, 1], fall: 0.25, drops: [[washi_scrap, 1, 2], [bamboo_strip, 0, 1]] }
+  bamboo:   { name: Bamboo, hp: 60, mul: { blunt: 0.9, edged: 1.6, firearm: 0.5 }, sound: bamboo-stalk-knock-hollow, breakSound: bamboo-stalk-crack-snap, dust: [0.78, 0.72, 0.45], chunk: [0.2, 0.2, 1.4], drops: [[bamboo_strip, 2, 4]] }
   fixture:  { name: Fixture,  hp: 25,  mul: { blunt: 1.4, edged: 1.0, firearm: 1.2 }, sound: metal-sheet-clang-hit,    dust: [0.95, 0.95, 0.85], drops: [[wire, 1, 2], [scrap_metal, 0, 1]] }
 breakSound: debris-collapse-crumble
 buildSound: hammer-nail-wood-build
@@ -58,6 +69,9 @@ scrap:
   mortar_dust: { name: Mortar dust, kg: 0.2, color: "#cfc8b8" }
   copper_wire: { name: Copper wire, kg: 0.1, color: "#e8904a" }
   tile_shard:  { name: Tile shard,  kg: 0.2, color: "#d8b878" }
+  ceramic_shard: { name: Ceramic shard, kg: 0.1, color: "#e8e0cc" }
+  washi_scrap: { name: Washi scrap,  kg: 0.02, color: "#f4eedc" }
+  bamboo_strip: { name: Bamboo strip, kg: 0.15, color: "#c8b468" }
   # Level 13 (unspooled cassettes, cracked sets) and Level 0.2 (the crew's own putty): Savi's picks
   magnetic_tape: { name: Magnetic tape, kg: 0.05, color: "#5a4a3a" }
   crt_glass:   { name: Picture-tube glass, kg: 0.4, color: "#9ab8b4" }

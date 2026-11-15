@@ -1,6 +1,7 @@
 // Level 178 "Kyoto Dreams": the house is authored in cells/x0z0.scene; this keeps its eight residents (no hostiles, ever)
 // walking their rounds (scripts/meg-agent.js reads state.rounds) and lays the Hub's return marker once.
 import L from "../../scripts/lib/data/level178.yml";
+import { sweepProps } from "../../scripts/lib/breakables.js";
 import { keepPeople, every } from "../../scripts/lib/level-kit.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
@@ -27,6 +28,7 @@ function person(ctx, id) {
 export const cadence = "1s";
 export function tick(ctx) {
   const s = ctx.place.state;
+  if (ctx.place.players?.length) sweepProps(ctx); // lanterns, shoji paper, tableware break and regrow (breakables.yml idMat)
   if ((s.layoutV ?? 0) < L.layoutV + 1) { s.layoutV = L.layoutV + 1; for (const id of IDS) if (!ctx.place.objects[id]) person(ctx, id); }
   if (!ctx.place.players.length) return;
   if (every(ctx, "l178people", 5000)) keepPeople(ctx, IDS, person);
