@@ -388,12 +388,13 @@ export function update(ctx, dt) {
   { const A = WP[me.state.arm]; carry3(me, me.state.arm, !!A && !A.ranged && !!me.state.armed && (me.state.hp ?? 1) > 0 && now - (m3(me).at ?? 0) > 1000); } // a drawn melee weapon is carried across the body between swings, as a player's is (scripts/lib/body3.js)
   if (m.dressed !== 5) { m.dressed = 5; if (!s.dead) dress(ctx, me); }
   // empty level or far-off NPC: sleep to save CPU (perf)
-  if (!ctx.place.players.length) { ctx.sleep(2); return; }
+  const halt = () => { const v = me.velocity; if (v && (v.x || v.z)) me.velocity = { x: 0, y: v.y ?? 0, z: 0 }; }; // a sleeping walker keeps its last velocity and strolls off the map: stand still first
+  if (!ctx.place.players.length) { halt(); ctx.sleep(2); return; }
   if (knocked(ctx, me, now, dt)) return; // kicked flat: down a beat, then back up
   let nearPlayerDist = 1e9; const f = me.feetPosition;
   for (const p of ctx.place.players) { const d = Math.hypot(p.feetPosition.x - f.x, p.feetPosition.z - f.z); if (d < nearPlayerDist) nearPlayerDist = d; }
   if (!s.follow && !s.target && !m.down && !m.talking) {
-    if (nearPlayerDist > 70) { ctx.sleep(2); return; } // past sight: frozen. 45 m froze Level 31's crew in plain view across the hall (Shelly: "all of them were just standing")
+    if (nearPlayerDist > 70) { halt(); ctx.sleep(2); return; } // past sight: frozen. 45 m froze Level 31's crew in plain view across the hall (Shelly: "all of them were just standing")
     if (nearPlayerDist > 45 && !m.aimAt && !m.inspect && !m.flee) { ctx.sleep(0.4); dt += 0.4; }
     else if (nearPlayerDist > 28 && !m.aimAt && !m.inspect && !m.flee) { ctx.sleep(0.2); dt += 0.2; }
     else if (nearPlayerDist > 18 && !m.aimAt && !m.inspect && !m.flee) { ctx.sleep(0.1); dt += 0.1; }
