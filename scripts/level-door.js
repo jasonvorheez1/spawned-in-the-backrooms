@@ -27,9 +27,20 @@ const KIND = {
  // Level 26: jump the rail and the sea takes you to Level 7
 
 };
+const PRESS_ONLY = new Set(["l178-to-hub"]);
+export const ears = {
+  "press": (ctx, p) => {
+    const id = p?.by ?? p?.player ?? p?.playerId ?? p?.id;
+    const who = id && ctx.getObject(id);
+    if (!who) return;
+    ctx.self.session.pressed = true;
+    try { onTriggerEnter(ctx, who); } finally { ctx.self.session.pressed = false; }
+  },
+};
 export function onTriggerEnter(ctx, other) {
   if (!other?.state || other.state.level == null || !ctx.self.state.to) return;
   const key = String(ctx.self.id).split("/").pop();
+  if (PRESS_ONLY.has(key) && !ctx.self.session.pressed) return; // these doors open to E alone
   if (ctx.self.state.to === "level26" && !funGate(ctx, other)) return; // the ship takes passengers: no pass, no boarding (three ways round, scripts/lib/dina-quest.js)
   ctx.emit("screenFlash", { color: "#000000", duration: 0.9, intensity: 1 }, { audience: { player: other.id } });
   heard(ctx, { maxDistance: 22, refDistance: 3, clip: "/cdn/moodboard-realistic-gritty/sfx-static-burst-glitch-threshold.mp3", position: other.feetPosition, volume: 0.8 }, { audience: { player: other.id } });

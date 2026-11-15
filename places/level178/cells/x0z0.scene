@@ -2805,8 +2805,8 @@ l178-to-hub:
   id: l178-to-hub
   physics: {body: static, trigger: true}
   primitive: {depth: 0.5, height: 2, kind: box, width: 1.4}
-  state: {to: thehub}
-  tags: [l178]
+  state: {info: Back to The Hub, name: Hub Tunnel, to: thehub, verb: Leave}
+  tags: [l178, usable]
   visible: false
 l178-towel-shelf:
   feetPosition: {x: -9.65, y: 0.45, z: -7.6}
