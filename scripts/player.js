@@ -377,10 +377,10 @@ function takeToken0(ctx, token, opts) {
   if (token.startsWith('manual:')) { // a crafting manual: teaches one random recipe of its kind you lack (scripts/lib/manuals.js)
     const k = token.slice(7), m = MANUALS[k]
     if (!m) return { ok: false, msg: '' }
-    const id = learnFromManual(s, k, () => ctx.random())
-    if (!id) return { ok: false, msg: `You already know every recipe in the ${m.name}` }
+    const ids = []; for (let i = 0; i < 3; i++) { const id = learnFromManual(s, k, () => ctx.random()); if (id) ids.push(id) } // Shelly Nov 15: "easier to get crafting recipes": 3 per manual (was 1)
+    if (!ids.length) return { ok: false, msg: `You already know every recipe in the ${m.name}` }
     s.pickedAt = now
-    s.notice = { text: `You read the ${m.name}: learned ${CR.recipes[id].name} (Y to craft)`, at: now }; gain(ctx, L.xpAlmond)
+    s.notice = { text: `You read the ${m.name}: learned ${ids.map((id) => CR.recipes[id].name).join(', ')} (Y to craft)`, at: now }; gain(ctx, L.xpAlmond)
     sound(ctx, 'pickup-weapon', 0.5, true)
     return { ok: true }
   }

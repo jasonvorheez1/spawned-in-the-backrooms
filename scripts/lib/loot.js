@@ -57,51 +57,51 @@ export const LOOT_CATEGORIES = {
     ["almond", 24], ["cloudy_almond", 7], ["warm_tea", 7], ["lobby_wafer", 14], ["bar", 9],
     ["bobbypin", 12], ["battery", 9], ["tape", 6], ["keycard", 4], ["painkillers", 5], ["compass", 2.5],
     ["bandage", 5], ["weapon", 9], ["cloth", 6], ["mag:science", 2.5], ["mag:speech", 2.5],
-    ["mag:lockpick", 2], ["mag:barter", 2], ["manual:tools", 1.5], ["manual:aid", 1],
+    ["mag:lockpick", 2], ["mag:barter", 2], ["manual:tools", 3], ["manual:aid", 2],
   ],
   residential: [
     ["almond", 18], ["cloudy_almond", 7], ["warm_tea", 8], ["beans", 9], ["bar", 9],
     ["stale_ration", 8], ["meat", 12], ["bandage", 7], ["painkillers", 6], ["antiseptic", 4],
     ["bobbypin", 9], ["cloth", 9], ["weapon", 9], ["ammo", 7],
-    ["mag:survival", 2.5], ["mag:sneak", 2.5], ["mag:melee", 2], ["mag:unarmed", 2], ["manual:armor", 1.5], ["manual:food", 1.5],
+    ["mag:survival", 2.5], ["mag:sneak", 2.5], ["mag:melee", 2], ["mag:unarmed", 2], ["manual:armor", 3], ["manual:food", 3],
   ],
   medical: [
     ["almond", 18], ["bandage", 20], ["firstaid", 14], ["medkit", 7], ["painkillers", 14],
     ["antiseptic", 12], ["splint", 9], ["stim_shot", 5], ["charcoal", 7], ["warm_tea", 6],
-    ["cloth", 3], ["mag:medicine", 4], ["mag:science", 2], ["manual:aid", 3],
+    ["cloth", 3], ["mag:medicine", 4], ["mag:science", 2], ["manual:aid", 6],
   ],
   industrial: [
     ["battery", 16], ["tape", 14], ["kit", 10], ["fuse", 8], ["valve", 6],
     ["bobbypin", 9], ["ammo", 12], ["shells", 6], ["weapon", 14], ["cloth", 6],
     ["ration", 6], ["stale_ration", 6], ["painkillers", 5], ["splint", 4], ["firesalt", 4],
-    ["mag:repair", 3], ["mag:energy", 2], ["mag:explosives", 2], ["manual:tools", 2], ["manual:weapons", 1.5],
+    ["mag:repair", 3], ["mag:energy", 2], ["mag:explosives", 2], ["manual:tools", 4], ["manual:weapons", 3],
   ],
   maintenance: [
     ["tape", 16], ["battery", 15], ["kit", 9], ["fuse", 9], ["valve", 8],
     ["bobbypin", 10], ["almond", 10], ["cloudy_almond", 6], ["warm_tea", 5],
     ["bandage", 6], ["antiseptic", 5], ["charcoal", 4], ["weapon", 12], ["cloth", 5],
-    ["mag:repair", 3.5], ["mag:lockpick", 2.5], ["mag:science", 2], ["manual:tools", 2.5], ["manual:aid", 1],
+    ["mag:repair", 3.5], ["mag:lockpick", 2.5], ["mag:science", 2], ["manual:tools", 5], ["manual:aid", 2],
   ],
   food_service: [
     ["almond", 22], ["warm_tea", 14], ["cloudy_almond", 10], ["bar", 14], ["beans", 14],
     ["ration", 10], ["stale_ration", 9], ["meat", 16], ["charcoal", 6], ["painkillers", 4],
-    ["bandage", 4], ["cloth", 4], ["mag:survival", 2.5], ["mag:barter", 2.5], ["manual:food", 3],
+    ["bandage", 4], ["cloth", 4], ["mag:survival", 2.5], ["mag:barter", 2.5], ["manual:food", 6],
   ],
   retreat: [
     ["l178_water", 14], ["l178_barley_tea", 12], ["l178_onigiri", 10], ["l178_miso", 8],
-    ["l178_bento", 3], ["l178_towel", 6], ["cloth", 10], ["bandage", 4], ["manual:food", 3],
+    ["l178_bento", 3], ["l178_towel", 6], ["cloth", 10], ["bandage", 4], ["manual:food", 6],
   ],
   expedition: [
     ["almond", 16], ["warm_tea", 9], ["ration", 12], ["bandage", 10], ["firstaid", 8],
     ["medkit", 4], ["ammo", 12], ["shells", 7], ["battery", 9], ["kit", 6],
     ["bobbypin", 7], ["compass", 5], ["repellent", 2], ["cashew", 1.5], ["weapon", 12], ["cloth", 8],
-    ["mag:survival", 3], ["mag:guns", 2.5], ["mag:medicine", 2], ["mag:sneak", 2], ["manual:food", 1.5], ["manual:armor", 1.5], ["manual:weapons", 1],
+    ["mag:survival", 3], ["mag:guns", 2.5], ["mag:medicine", 2], ["mag:sneak", 2], ["manual:food", 3], ["manual:armor", 3], ["manual:weapons", 2],
   ],
   security: [
     ["ammo", 20], ["shells", 11], ["weapon", 18], ["kit", 8], ["firstaid", 8],
     ["medkit", 5], ["stim_shot", 5], ["painkillers", 6], ["bandage", 7], ["bobbypin", 9],
     ["keycard", 4], ["cloth", 7], ["molotov", 3], ["frag", 3],
-    ["mag:guns", 3], ["mag:explosives", 2.5], ["mag:melee", 2], ["mag:lockpick", 2], ["manual:ammo", 2.5], ["manual:weapons", 2],
+    ["mag:guns", 3], ["mag:explosives", 2.5], ["mag:melee", 2], ["mag:lockpick", 2], ["manual:ammo", 5], ["manual:weapons", 4],
   ],
   abandoned_settlement: [
     ["stale_ration", 16], ["cloudy_almond", 12], ["ration", 7], ["beans", 8], ["bar", 7],
@@ -195,7 +195,7 @@ export function magOf(ctx, pool = "l0") {
   const list = MAG_BY_POOL[pool] ?? MAG_BY_POOL.l0;
   return list[Math.floor(ctx.random() * list.length)];
 }
-const ITEM_WEIGHTS = [["lobby_wafer", 11], ["warm_tea", 3], ["cloudy_almond", 3], ["painkillers", 3], ["antiseptic", 2], ["meat", 5], ["beans", 6], ["bar", 7], ["ration", 3], ["almond", 34], ["ammo", 15], ["shells", 7], ["weapon", 10], ["kit", 4], ["bobbypin", 10], ["molotov", 1.5], ["mag", 3], ["manual", 3], ["firesalt", 2.5], ["repellent", 0.4], ["compass", 2.5], ["cloth", CL.crateWeight]]; // compass: Nov 15, Shelly wanted beginners finding them
+const ITEM_WEIGHTS = [["lobby_wafer", 11], ["warm_tea", 3], ["cloudy_almond", 3], ["painkillers", 3], ["antiseptic", 2], ["meat", 5], ["beans", 6], ["bar", 7], ["ration", 3], ["almond", 34], ["ammo", 15], ["shells", 7], ["weapon", 10], ["kit", 4], ["bobbypin", 10], ["molotov", 1.5], ["mag", 3], ["manual", 6], ["firesalt", 2.5], ["repellent", 0.4], ["compass", 2.5], ["cloth", CL.crateWeight]]; // compass: Nov 15, Shelly wanted beginners finding them
 // some containers are locked, Fallout style: a Lockpick or Science level you need to have. Locked ones hold more.
 export function rollLock(ctx) {
   const r = ctx.random(); if (r > 0.3) return null;
@@ -257,7 +257,7 @@ export function dropLoot(ctx, pos, name = "Remains", luck = 1, clothMul = 1, poo
 }
 
 // Level 1's crates: rations, bandages, field mags, manuals and batteries join the roll.
-const L1_WEIGHTS = [["bobbypin", 8], ["compass", 3], ["firesalt", 4], ["repellent", 0.5], ["cashew", 1], ["meat", 2.5], ["ration", 4], ["stale_ration", 2], ["almond", 3.5], ["warm_tea", 1], ["bandage", 2.5], ["painkillers", 1], ["splint", 0.8], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2], ["kit", 1.6], ["mag", 1.4], ["manual", 1.6], ["cloth", 2.2], ["molotov", 0.5]];
+const L1_WEIGHTS = [["bobbypin", 8], ["compass", 3], ["firesalt", 4], ["repellent", 0.5], ["cashew", 1], ["meat", 2.5], ["ration", 4], ["stale_ration", 2], ["almond", 3.5], ["warm_tea", 1], ["bandage", 2.5], ["painkillers", 1], ["splint", 0.8], ["battery", 3], ["ammo", 2], ["shells", 1], ["weapon", 1.2], ["kit", 1.6], ["mag", 1.4], ["manual", 3.2], ["cloth", 2.2], ["molotov", 0.5]];
 export const rollWeaponL1 = (ctx, level) => rollWeapon(ctx, "l1", undefined, level);
 export function rollItemL1(ctx) {
   if (ctx.random() < 0.14) return rollCash(ctx);
@@ -273,7 +273,7 @@ export function spawnCrateL1(ctx, p) {
   ctx.spawn({ tags: ["container", "crate", "breakable"], feetPosition: { x: p.x, y: p.y ?? 0.01, z: p.z }, rotation: Math.floor(ctx.random() * 4) * 90, physics: "static", visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "scripted", script: "scripts/loot-geo.js", params: { kind: "crate" } }, state: { mat: "wood", hp: 60, maxHp: 60, name: lk ? lk.name : ctx.random() < 0.25 ? "Rations crate" : "Wooden crate", items: items.join(","), ...(lk ? { lock: lk.lock } : {}) } });
 }
 // Level 2: a tool depot. More batteries and ammo, fewer rations; maintenance magazines and trauma triage.
-const L2_WEIGHTS = [["frag", 2], ["firesalt", 5], ["repellent", 0.6], ["cashew", 0.6], ["meat", 5], ["molotov", 3], ["almond", 12], ["cloudy_almond", 3], ["bobbypin", 7], ["ammo", 17], ["shells", 9], ["battery", 14], ["bandage", 8], ["antiseptic", 3], ["splint", 2], ["painkillers", 2], ["ration", 5], ["stale_ration", 2], ["weapon", 10], ["kit", 5], ["mag", 4], ["manual", 4], ["cloth", 8], ["tape", 6], ["fuse", 4], ["valve", 3], ["keycard", 2], ["beans", 5], ["bar", 6], ["firstaid", 3], ["compass", 2]];
+const L2_WEIGHTS = [["frag", 2], ["firesalt", 5], ["repellent", 0.6], ["cashew", 0.6], ["meat", 5], ["molotov", 3], ["almond", 12], ["cloudy_almond", 3], ["bobbypin", 7], ["ammo", 17], ["shells", 9], ["battery", 14], ["bandage", 8], ["antiseptic", 3], ["splint", 2], ["painkillers", 2], ["ration", 5], ["stale_ration", 2], ["weapon", 10], ["kit", 5], ["mag", 4], ["manual", 8], ["cloth", 8], ["tape", 6], ["fuse", 4], ["valve", 3], ["keycard", 2], ["beans", 5], ["bar", 6], ["firstaid", 3], ["compass", 2]];
 export function rollItemL2(ctx) {
   if (ctx.random() < 0.14) return rollCash(ctx);
   const total = L2_WEIGHTS.reduce((a, [, w]) => a + w, 0);
@@ -329,7 +329,7 @@ export function spawnContainerL2(ctx, kind, p, yaw, opts = {}) {
 }
 
 // ---- Level 5 (Terror Hotel): what a hotel room's dresser, wardrobe or kitchen holds. Meat feeds Samantha; the SMG and knife are this floor's guns.
-export const L5_WEIGHTS = [["almond", 22], ["warm_tea", 4], ["ammo", 17], ["meat", 20], ["ration", 5], ["stale_ration", 3], ["bandage", 5], ["painkillers", 3], ["antiseptic", 2], ["battery", 5], ["bobbypin", 8], ["weapon", 6], ["mag", 2.5], ["manual", 2], ["cloth", 6], ["royal_ration", 1]] // nvg: Ines's quest only (scripts/l5-goggles.js);
+export const L5_WEIGHTS = [["almond", 22], ["warm_tea", 4], ["ammo", 17], ["meat", 20], ["ration", 5], ["stale_ration", 3], ["bandage", 5], ["painkillers", 3], ["antiseptic", 2], ["battery", 5], ["bobbypin", 8], ["weapon", 6], ["mag", 2.5], ["manual", 4], ["cloth", 6], ["royal_ration", 1]] // nvg: Ines's quest only (scripts/l5-goggles.js);
 export const MEAT5 = [["steak", 3], ["fish", 4], ["chicken", 6], ["spam", 8], ["sardines", 8], ["jerky", 7], ["hotdog", 4], ["rat", 6]];
 export function rollMeat(ctx) { const t = MEAT5.reduce((a, [, w]) => a + w, 0); let r = ctx.random() * t; for (const [k, w] of MEAT5) { r -= w; if (r <= 0) return "meat:" + k; } return "meat:rat"; }
 export const rollWeaponL5 = (ctx, level) => rollWeapon(ctx, "l5", undefined, level);
