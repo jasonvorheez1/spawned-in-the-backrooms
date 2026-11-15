@@ -218,6 +218,10 @@ export function update(ctx, dt) {
     mem.allStealers = ctx.query({ tags: ["stealer"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   }
   const objs = ctx.place.objects;
+  if (!ctx.self.tags?.includes("stealer")) { // one manager a place: a second steps the whole pack twice (perf, Nov 15)
+    if (!ctx.self.tags?.includes("steal-mgr")) ctx.self.tags = [...(ctx.self.tags ?? []), "steal-mgr"];
+    if (now >= (mem.mgrAt ?? 0)) { mem.mgrAt = now + 3000; for (const o of ctx.query({ tags: ["steal-mgr"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) if (o.id !== ctx.self.id && String(o.id) < String(ctx.self.id)) { ctx.destroy(ctx.self.id); return; } }
+  }
   const allStealers = [];
   let dropped = false;
   for (const e of mem.allStealers) {
