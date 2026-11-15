@@ -20,10 +20,12 @@ export const ears = {
       if (st.taken) return;
       s.compass = (s.compass ?? 0) + COMPASS.charges; s.pickedAt = now;
       say(`Old compass · ${s.compass} reads · assign a quick slot in the inventory`); snd("brass-compass-lid-snapped-shut-click");
+      hands(ctx, p);
       st.taken = true; me.visible = false; ctx.after(RESTOCK_S, "restock"); return;
     }
     if (st.kind === "mug") {
       if (st.empty) { say("The mug's empty. Ferry fills it again later."); return; }
+      hands(ctx, p);
       s.thirst = Math.min(100, (s.thirst ?? 100) + 8); st.empty = true; st.verb = "Look"; st.info = "empty, a ring of coffee at the bottom";
       say("Cold coffee, gritty with sand · +8 water"); snd("sipping-from-tin-mug-swallow"); ctx.after(RESTOCK_S, "restock"); return;
     }
@@ -40,3 +42,7 @@ export function restock(ctx) {
   if (st.kind === "compass") { st.taken = false; ctx.self.visible = true; }
   if (st.kind === "mug") { st.empty = false; st.verb = "Drink"; st.info = "cold coffee, still half full"; }
 }
+
+// your hands (Shelly, Nov 15: "interact like grab and drink stuff with my hands"): the presser's body reaches and lifts, then lets go
+export function hands(ctx, p) { if (!p?.anim) return; p.anim.hands = { clip: "cdn/clip-pickup.glb", loop: false, weight: 1, blend: 0.15 }; ctx.after(1.1, "handsOff", { id: p.id }); }
+export function handsOff(ctx, { id } = {}) { const p = ctx.place.players.find((q) => q.id === id); if (p?.anim) p.anim.hands = null; }

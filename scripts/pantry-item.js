@@ -9,8 +9,13 @@ export const ears = {
     ps.snacks = { ...(ps.snacks ?? {}), [tok]: (ps.snacks?.[tok] ?? 0) + 1 }; ps.pickedAt = now;
     ps.notice = { text: `${st.name} · in your bag`, at: now };
     ctx.emit("playSound", { clip: st.jar ? "cdn/moodboard-realistic-gritty/sfx-glass-jar-lifted-off-wooden-shelf-clink.mp3" : "cdn/moodboard-realistic-gritty/sfx-tin-can-lifted-off-wooden-shelf-scrape.mp3", position: me.worldFeetPosition, volume: 0.6, maxDistance: 12 });
+    hands(ctx, p);
     st.taken = true; me.visible = false;
     ctx.after(RESTOCK_S, "restock");
   },
 };
 export function restock(ctx) { ctx.self.state.taken = false; ctx.self.visible = true; }
+
+// your hands (Shelly, Nov 15: "interact like grab and drink stuff with my hands"): the presser's body reaches and lifts, then lets go
+export function hands(ctx, p) { if (!p?.anim) return; p.anim.hands = { clip: "cdn/clip-pickup.glb", loop: false, weight: 1, blend: 0.15 }; ctx.after(1.1, "handsOff", { id: p.id }); }
+export function handsOff(ctx, { id } = {}) { const p = ctx.place.players.find((q) => q.id === id); if (p?.anim) p.anim.hands = null; }
