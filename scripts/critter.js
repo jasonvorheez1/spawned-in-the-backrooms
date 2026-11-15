@@ -333,6 +333,7 @@ export function update(ctx) {
   const worn = ses.cachedWorn
   if(!worn && HUMAN && ses.cachedParams)humanFaceTick(ctx,face)
   if (worn && ctx.getObject(ctx.self.id + '/' + HEAD_ID)) dropHead(ctx, ctx.self) // a worn body never keeps the critter head, whoever put it back
+  if (worn && ctx.now() - (ses.cwSweep ?? 0) > 1000) { ses.cwSweep = ctx.now(); dropCatKids(ctx, ctx.self) } // Shelly Nov 15: a worn model (spawn avatar, plymodel) shows none of the cat's ears, hair or clothes
   if (MESH && !HUMAN && !worn && ses.headFace !== face) { ses.headFace = face; applyBones(ctx) }
   const talk = talkingNow(ctx), faceKey = face + (talk ? ':talk' : '')
   if (MESH && !HUMAN && !worn && isNewCat(ses.cachedParams) && ses.catFace !== faceKey) { ses.catFace = faceKey; ctx.self.model = bodyModel({ ...ses.cachedParams, expr: face, talk }) } // the new cat's face is a picture in its skin: a mood swaps it
@@ -430,3 +431,9 @@ function dropHead(ctx, o) { clearAppearance(ctx,o) }
 // the species head (face, ears, tail) rides the body's rig as a skinned child; restyled when the look changes
 function wearHead(ctx, o, l) { seatHead(ctx,o,{...l,vary:false}) }
 
+
+// the cat's skinned children (ears, hair, fluff, worn garments) belong on the cat body alone
+function dropCatKids(ctx, me) {
+  const pre = me.id + '/cw-'
+  for (const id of Object.keys(ctx.place.objects)) if (id.startsWith(pre)) { try { ctx.destroy(id) } catch (e) {} }
+}
