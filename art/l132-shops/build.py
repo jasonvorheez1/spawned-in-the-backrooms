@@ -2,8 +2,8 @@
 # run: blender -b --factory-startup --python-exit-code 1 --python art/l132-shops/build.py -- <key> <H> <yawdeg>
 import bpy, bmesh, sys, json, math
 from mathutils import Vector, Matrix
-key, H, yaw = sys.argv[-3], float(sys.argv[-2]), float(sys.argv[-1])
-W, D = 16.0, 11.0
+key, H, yaw, FX, FY, XS = sys.argv[-6], *[float(a) for a in sys.argv[-5:]]
+W, D = 16.0 * FX, 11.0 * FY  # eaves overhang the walls: the fit puts the door threshold 5.5 m from the centre
 SRC = f"/workspace/l132shops/shell-{key}.glb"; OUT = f"/workspace/l132shops/out-{key}"
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=SRC)
@@ -22,6 +22,7 @@ lo, hi = bb(sh); sz = hi - lo; print("SRCDIMS", key, tuple(round(c, 3) for c in 
 c = (lo + hi) / 2
 sh.data.transform(Matrix.Translation((-c.x, -c.y, -lo.z)))
 sh.data.transform(Matrix.Diagonal((W / sz.x, D / sz.y, H / sz.z, 1)))
+sh.data.transform(Matrix.Translation((XS, 0, 0)))
 sh.data.update(); bpy.context.view_layer.update()
 dg = bpy.context.evaluated_depsgraph_get()
 def ray(o, d):
@@ -101,4 +102,4 @@ bpy.ops.object.light_add(type="POINT", location=(0, 0, 2.8)); bpy.context.active
 cam = bpy.data.objects.new("c", bpy.data.cameras.new("c")); bpy.context.collection.objects.link(cam); sc.camera = cam; cam.data.lens = 22
 def shot(p, t, name):
     cam.location = p; cam.rotation_euler = (Vector(t) - Vector(p)).to_track_quat("-Z", "Y").to_euler(); sc.render.filepath = f"{OUT}-{name}.png"; bpy.ops.render.render(write_still=True)
-shot((5, -21, 3.5), (0, 0, 2.6), "front"); shot((4.5, 3, 1.6), (-1, -ryf, 1.3), "in"); shot((-5, 21, 3.5), (0, 0, 2.6), "back")
+shot((5, -24, 3.5), (0, 0, 3), "front"); shot((4.5, 3, 1.6), (-1, -ryf, 1.3), "in"); shot((-2.5, -11, 1.6), (0, -5, 1.4), "back")
