@@ -45,6 +45,7 @@ l132-shop-a-boombox:
   scale: 1
   state: {info: ["The tape hisses, then somebody's holiday, taped over somebody's wedding."], name: Boombox, verb: Press play}
   tags: [l132, usable, l132-top]
+  visibleRange: {max: 32}
 l132-shop-a-camera:
   behavior: scripts/lib/l132-shops.js
   castShadow: false
@@ -56,6 +57,7 @@ l132-shop-a-camera:
   scale: 0.6
   state: {info: [Through the finder the shop looks older than it is.], name: Film camera, verb: Look through}
   tags: [l132, usable, l132-top]
+  visibleRange: {max: 32}
 l132-shop-a-case-1:
   castShadow: true
   feetPosition: {x: 2.3, y: 0.02, z: -38.6}
@@ -66,6 +68,7 @@ l132-shop-a-case-1:
   scale: 1.5
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-a-case-2:
   castShadow: true
   feetPosition: {x: 4, y: 0.02, z: -38.6}
@@ -76,6 +79,7 @@ l132-shop-a-case-2:
   scale: 1.5
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-a-case-3:
   castShadow: true
   feetPosition: {x: -4.2, y: 0.02, z: -39.8}
@@ -86,6 +90,7 @@ l132-shop-a-case-3:
   scale: 1.5
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-a-col-back:
   feetPosition: {x: 0, y: 0, z: -44.24}
   id: l132-shop-a-col-back
@@ -152,6 +157,7 @@ l132-shop-a-crt-1:
   scale: 1
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-a-door:
   behavior: scripts/home11-door.js
   children: [{behavior: scripts/home11-door.js, feetPosition: {x: 0, y: 0, z: 0}, id: leaf, material: {pbr: true}, physics: static, primitive: {kind: scripted, params: {d: 0.1, h: 2.28, hingeSide: left, part: leaf, seed: 100, style: wood, swing: -1, w: 1.28}, script: scripts/door-geo.js}, state: {hinge: l132-shop-a-door, kind: door, name: RadioShed door, verb: Close}, tags: [usable]}]
@@ -171,6 +177,7 @@ l132-shop-a-headphones:
   scale: 1
   state: {}
   tags: [l132, l132-top]
+  visibleRange: {max: 32}
 l132-shop-a-laptop:
   behavior: scripts/lib/l132-shops.js
   castShadow: false
@@ -182,6 +189,7 @@ l132-shop-a-laptop:
   scale: 0.4
   state: {kind: read, name: "Laptop · M.E.G. database", page: 1322, verb: Browse}
   tags: [l132, usable, l132-top]
+  visibleRange: {max: 32}
 l132-shop-a-light-0:
   feetPosition: {x: -3.6465, y: 2.85, z: -40}
   id: l132-shop-a-light-0
@@ -213,6 +221,7 @@ l132-shop-a-phone-1:
   scale: 1
   state: {info: ["One bar. Then none. Then a text from nobody: 'u up? lol'"], name: Flip phone, verb: Flip open}
   tags: [l132, usable, l132-top]
+  visibleRange: {max: 32}
 l132-shop-a-phone-2:
   castShadow: false
   feetPosition: {x: 2.05, y: 1.02, z: -38.5}
@@ -223,6 +232,7 @@ l132-shop-a-phone-2:
   scale: 1
   state: {}
   tags: [l132, l132-top]
+  visibleRange: {max: 32}
 l132-shop-a-plant:
   castShadow: true
   feetPosition: {x: -5.9, y: 0.02, z: -36.4}
@@ -233,6 +243,7 @@ l132-shop-a-plant:
   scale: 1
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-a-register:
   behavior: scripts/lib/l132-shops.js
   castShadow: false
@@ -244,6 +255,7 @@ l132-shop-a-register:
   scale: 1
   state: {info: ["No coins inside. A ledger of collections: who lacks what, and who would trade it."], name: Till, verb: Open}
   tags: [l132, usable, l132-top]
+  visibleRange: {max: 32}
 l132-shop-a-shelf-1:
   behavior: scripts/lib/l132-shops.js
   castShadow: true
@@ -255,6 +267,7 @@ l132-shop-a-shelf-1:
   scale: 1
   state: {info: ["Pagers, a breadmaker, a talking fish. Beside them, a clay oil lamp with a barcode."], name: Boxed gadgets, verb: Look over}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-a-shelf-2:
   behavior: scripts/lib/l132-shops.js
   castShadow: true
@@ -266,6 +279,7 @@ l132-shop-a-shelf-2:
   scale: 1
   state: {info: ["Walkie-talkies, sealed. Somebody's cassette collection must be nearly whole."], name: Boxed gadgets, verb: Look over}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-a-shelf-3:
   castShadow: true
   feetPosition: {x: 3.6, y: 0.02, z: -43.95}
@@ -276,6 +290,7 @@ l132-shop-a-shelf-3:
   scale: 1
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-a-slat-l:
   behavior: scripts/lib/l132-shops.js
   castShadow: true
@@ -287,6 +302,7 @@ l132-shop-a-slat-l:
   scale: 1
   state: {info: [Every plug that ever was. None of them fit each other.], name: Wall of cables and adapters, verb: Look over}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-a-slat-r:
   castShadow: true
   feetPosition: {x: 6.5, y: 0.02, z: -41.2}
@@ -297,6 +313,7 @@ l132-shop-a-slat-r:
   scale: 1
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-a-spinner:
   behavior: scripts/lib/l132-shops.js
   castShadow: true
@@ -308,6 +325,7 @@ l132-shop-a-spinner:
   scale: 1
   state: {kind: spin, name: Battery rack, verb: Spin}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-a-tvglow:
   feetPosition: {x: -3, y: 1.4, z: -42.9}
   id: l132-shop-a-tvglow
@@ -324,6 +342,7 @@ l132-shop-a-tvwall-1:
   scale: 1
   state: {info: ["Every screen shows the same channel: grey snow, and now and then a street you almost know.", The picture rolls. Nobody here minds; it restocks itself by morning.], name: Wall of televisions, verb: Watch}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-a-tvwall-2:
   behavior: scripts/lib/l132-shops.js
   castShadow: true
@@ -335,6 +354,7 @@ l132-shop-a-tvwall-2:
   scale: 1
   state: {info: ["Static, flecked with the square outside, seen from above."], name: Wall of televisions, verb: Watch}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-a-wire-1:
   castShadow: true
   feetPosition: {x: 6.25, y: 0.02, z: -37.8}
@@ -345,6 +365,7 @@ l132-shop-a-wire-1:
   scale: 1.15
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-b:
   feetPosition: {x: 40, y: 0, z: 0}
   id: l132-shop-b
@@ -364,6 +385,7 @@ l132-shop-b-booth-1:
   scale: 1
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-b-booth-1-seat-a:
   feetPosition: {x: 36.87, y: 0.02, z: -5.140000000000001}
   id: l132-shop-b-booth-1-seat-a
@@ -386,6 +408,7 @@ l132-shop-b-booth-2:
   scale: 1
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-b-booth-2-seat-a:
   feetPosition: {x: 36.87, y: 0.02, z: -2.6399999999999997}
   id: l132-shop-b-booth-2-seat-a
@@ -408,6 +431,7 @@ l132-shop-b-booth-3:
   scale: 1
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-b-booth-3-seat-a:
   feetPosition: {x: 36.87, y: 0.02, z: 3.9600000000000004}
   id: l132-shop-b-booth-3-seat-a
@@ -430,6 +454,7 @@ l132-shop-b-booth-4:
   scale: 1
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-b-booth-4-seat-a:
   feetPosition: {x: 36.87, y: 0.02, z: 6.46}
   id: l132-shop-b-booth-4-seat-a
@@ -452,6 +477,7 @@ l132-shop-b-cloche:
   scale: 1
   state: {}
   tags: [l132, l132-top]
+  visibleRange: {max: 32}
 l132-shop-b-coffee:
   behavior: scripts/lib/l132-shops.js
   castShadow: false
@@ -463,6 +489,7 @@ l132-shop-b-coffee:
   scale: 1
   state: {info: ["Hot, bottomless, and a little burnt. Like a real one."], name: Coffee urn, verb: Pour}
   tags: [l132, usable, l132-top]
+  visibleRange: {max: 32}
 l132-shop-b-counter-1:
   castShadow: true
   feetPosition: {x: 41.9, y: 0.02, z: -3.3}
@@ -473,6 +500,7 @@ l132-shop-b-counter-1:
   scale: 1.2
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-b-counter-2:
   castShadow: true
   feetPosition: {x: 41.9, y: 0.02, z: 0.3999999999999999}
@@ -483,6 +511,7 @@ l132-shop-b-counter-2:
   scale: 1.2
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-b-door:
   behavior: scripts/home11-door.js
   children: [{behavior: scripts/home11-door.js, feetPosition: {x: 0, y: 0, z: 0}, id: leaf, material: {pbr: true}, physics: static, primitive: {kind: scripted, params: {d: 0.1, h: 2.28, hingeSide: left, part: leaf, seed: 101, style: wood, swing: -1, w: 1.28}, script: scripts/door-geo.js}, state: {hinge: l132-shop-b-door, kind: door, name: Starlite Diner door, verb: Close}, tags: [usable]}]
@@ -503,6 +532,7 @@ l132-shop-b-grill:
   scale: 1
   state: {info: ["Hot, and scraped clean. Something was just flipped by nobody."], name: Griddle, verb: Check}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-b-hatch:
   behavior: scripts/lib/l132-shops.js
   castShadow: true
@@ -514,6 +544,7 @@ l132-shop-b-hatch:
   scale: 2.1
   state: {kind: bell, name: Serving hatch, verb: Ring}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-b-jukebox:
   behavior: scripts/lib/l132-shops.js
   castShadow: true
@@ -525,6 +556,7 @@ l132-shop-b-jukebox:
   scale: 0.85
   state: {kind: jukebox, name: Jukebox, verb: Play}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-b-light-0:
   feetPosition: {x: 40, y: 2.85, z: -3.9050000000000002}
   id: l132-shop-b-light-0
@@ -556,6 +588,7 @@ l132-shop-b-piecase:
   scale: 1
   state: {info: ["Cherry, lemon, and one nobody can name. A slice is worth whatever your collection is missing."], name: Pie case, verb: Look in}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-b-plant:
   castShadow: true
   feetPosition: {x: 43.7, y: 0.02, z: 6.4}
@@ -566,6 +599,7 @@ l132-shop-b-plant:
   scale: 1
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-b-register:
   behavior: scripts/lib/l132-shops.js
   castShadow: false
@@ -577,6 +611,7 @@ l132-shop-b-register:
   scale: 1
   state: {info: ["The drawer holds a stack of handwritten swaps. 'One milkshake: one button I did not have.'"], name: Till, verb: Open}
   tags: [l132, usable, l132-top]
+  visibleRange: {max: 32}
 l132-shop-b-stool-1:
   castShadow: true
   feetPosition: {x: 41, y: 0.02, z: -4.6}
@@ -587,6 +622,7 @@ l132-shop-b-stool-1:
   scale: 1
   state: {name: Counter stool, seat: {d: 0, w: 1, y: 0.4}, verb: Sit}
   tags: [l132, seat, usable]
+  visibleRange: {max: 50}
 l132-shop-b-stool-2:
   castShadow: true
   feetPosition: {x: 41, y: 0.02, z: -3.5}
@@ -597,6 +633,7 @@ l132-shop-b-stool-2:
   scale: 1
   state: {name: Counter stool, seat: {d: 0, w: 1, y: 0.4}, verb: Sit}
   tags: [l132, seat, usable]
+  visibleRange: {max: 50}
 l132-shop-b-stool-3:
   castShadow: true
   feetPosition: {x: 41, y: 0.02, z: -2.4}
@@ -607,6 +644,7 @@ l132-shop-b-stool-3:
   scale: 1
   state: {name: Counter stool, seat: {d: 0, w: 1, y: 0.4}, verb: Sit}
   tags: [l132, seat, usable]
+  visibleRange: {max: 50}
 l132-shop-b-stool-4:
   castShadow: true
   feetPosition: {x: 41, y: 0.02, z: -0.6000000000000001}
@@ -617,6 +655,7 @@ l132-shop-b-stool-4:
   scale: 1
   state: {name: Counter stool, seat: {d: 0, w: 1, y: 0.4}, verb: Sit}
   tags: [l132, seat, usable]
+  visibleRange: {max: 50}
 l132-shop-b-stool-5:
   castShadow: true
   feetPosition: {x: 41, y: 0.02, z: 0.49999999999999994}
@@ -627,6 +666,7 @@ l132-shop-b-stool-5:
   scale: 1
   state: {name: Counter stool, seat: {d: 0, w: 1, y: 0.4}, verb: Sit}
   tags: [l132, seat, usable]
+  visibleRange: {max: 50}
 l132-shop-b-stool-6:
   castShadow: true
   feetPosition: {x: 41, y: 0.02, z: 1.6}
@@ -637,6 +677,7 @@ l132-shop-b-stool-6:
   scale: 1
   state: {name: Counter stool, seat: {d: 0, w: 1, y: 0.4}, verb: Sit}
   tags: [l132, seat, usable]
+  visibleRange: {max: 50}
 l132-shop-c:
   feetPosition: {x: -40, y: 0, z: 0}
   id: l132-shop-c
@@ -657,6 +698,7 @@ l132-shop-c-arcade-1:
   scale: 1
   state: {kind: arcade, name: Arcade cabinet, verb: Play}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-c-arcade-2:
   behavior: scripts/lib/l132-shops.js
   castShadow: true
@@ -668,6 +710,7 @@ l132-shop-c-arcade-2:
   scale: 1
   state: {kind: arcade, name: Arcade cabinet, verb: Play}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-c-bar:
   castShadow: true
   feetPosition: {x: -37.8, y: 0.02, z: -6.2}
@@ -678,6 +721,7 @@ l132-shop-c-bar:
   scale: 1
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-c-bean-1:
   castShadow: true
   feetPosition: {x: -41, y: 0.02, z: -3.4}
@@ -688,6 +732,7 @@ l132-shop-c-bean-1:
   scale: 1.15
   state: {name: Bean bag, seat: {d: 0, w: 1, y: 0.05}, verb: Sit}
   tags: [l132, seat, usable]
+  visibleRange: {max: 50}
 l132-shop-c-bean-2:
   castShadow: true
   feetPosition: {x: -40.2, y: 0.02, z: -4.5}
@@ -698,6 +743,7 @@ l132-shop-c-bean-2:
   scale: 1.15
   state: {name: Bean bag, seat: {d: 0, w: 1, y: 0.05}, verb: Sit}
   tags: [l132, seat, usable]
+  visibleRange: {max: 50}
 l132-shop-c-bean-3:
   castShadow: true
   feetPosition: {x: -42.2, y: 0.02, z: -4.2}
@@ -708,6 +754,7 @@ l132-shop-c-bean-3:
   scale: 1.15
   state: {name: Bean bag, seat: {d: 0, w: 1, y: 0.05}, verb: Sit}
   tags: [l132, seat, usable]
+  visibleRange: {max: 50}
 l132-shop-c-coffee:
   behavior: scripts/lib/l132-shops.js
   castShadow: false
@@ -719,6 +766,7 @@ l132-shop-c-coffee:
   scale: 1
   state: {info: ["It gurgles for a long time and gives you half a cup. Patchy, like the Wi-Fi."], name: Coffee machine, verb: Pour}
   tags: [l132, usable, l132-top]
+  visibleRange: {max: 32}
 l132-shop-c-cork:
   behavior: scripts/lib/l132-shops.js
   castShadow: false
@@ -730,6 +778,7 @@ l132-shop-c-cork:
   scale: 1.5
   state: {info: ["The photography club's wall: the hollow tree in every light, the Duke mid-laugh, a cat asleep on a television.", "A note pinned under one: 'Swap you this for any photo with snow in it.'"], name: Corkboard of polaroids, verb: Look}
   tags: [l132, usable, l132-wall]
+  visibleRange: {max: 32}
 l132-shop-c-crt:
   behavior: scripts/lib/l132-shops.js
   castShadow: true
@@ -741,6 +790,7 @@ l132-shop-c-crt:
   scale: 1
   state: {kind: arcade, name: Console and television, verb: Play}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-c-cube:
   castShadow: true
   feetPosition: {x: -40.6, y: 0.02, z: -5.5}
@@ -751,6 +801,7 @@ l132-shop-c-cube:
   scale: 1
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-c-door:
   behavior: scripts/home11-door.js
   children: [{behavior: scripts/home11-door.js, feetPosition: {x: 0, y: 0, z: 0}, id: leaf, material: {pbr: true}, physics: static, primitive: {kind: scripted, params: {d: 0.1, h: 2.28, hingeSide: left, part: leaf, seed: 102, style: wood, swing: -1, w: 1.28}, script: scripts/door-geo.js}, state: {hinge: l132-shop-c-door, kind: door, name: Dial-Up Cafe door, verb: Close}, tags: [usable]}]
@@ -770,6 +821,7 @@ l132-shop-c-lava:
   scale: 1
   state: {}
   tags: [l132, l132-top]
+  visibleRange: {max: 32}
 l132-shop-c-light-0:
   feetPosition: {x: -40, y: 2.85, z: 3.6685000000000003}
   id: l132-shop-c-light-0
@@ -801,6 +853,7 @@ l132-shop-c-pc-1:
   scale: 1.3
   state: {kind: read, name: "Beige PC · M.E.G. database", page: 1322, verb: Browse the database}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-c-pc-1-seat:
   feetPosition: {x: -43.2, y: 0.02, z: 4.4}
   id: l132-shop-c-pc-1-seat
@@ -818,6 +871,7 @@ l132-shop-c-pc-2:
   scale: 1.3
   state: {kind: modem, name: Beige PC, verb: Use}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-c-pc-2-seat:
   feetPosition: {x: -43.2, y: 0.02, z: 2.9}
   id: l132-shop-c-pc-2-seat
@@ -835,6 +889,7 @@ l132-shop-c-pc-3:
   scale: 1.3
   state: {info: ["A chat room with one other name in it. It types: 'a/s/l?' and then 'jk. welcome to Lumiria.'"], name: Beige PC, verb: Use}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-c-pc-3-seat:
   feetPosition: {x: -43.2, y: 0.02, z: 1.3999999999999997}
   id: l132-shop-c-pc-3-seat
@@ -852,6 +907,7 @@ l132-shop-c-pc-4:
   scale: 1.3
   state: {info: ["Somebody's photo page, half loaded. The top third of a very good sunset."], name: Beige PC, verb: Use}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-c-pc-4-seat:
   feetPosition: {x: -41.6, y: 0.02, z: 5.4}
   id: l132-shop-c-pc-4-seat
@@ -869,6 +925,7 @@ l132-shop-c-pc-5:
   scale: 1.3
   state: {info: ["Solitaire, two moves from done. You leave it for whoever started it."], name: Beige PC, verb: Use}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-c-pc-5-seat:
   feetPosition: {x: -40.1, y: 0.02, z: 5.4}
   id: l132-shop-c-pc-5-seat
@@ -886,6 +943,7 @@ l132-shop-c-pc-6:
   scale: 1.3
   state: {kind: modem, name: Beige PC, verb: Use}
   tags: [l132, usable]
+  visibleRange: {max: 50}
 l132-shop-c-pc-6-seat:
   feetPosition: {x: -38.6, y: 0.02, z: 5.4}
   id: l132-shop-c-pc-6-seat
@@ -902,6 +960,7 @@ l132-shop-c-plant:
   scale: 1
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-c-rug:
   castShadow: true
   feetPosition: {x: -41.2, y: 0.02, z: -4.3}
@@ -912,6 +971,7 @@ l132-shop-c-rug:
   scale: 1
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-shop-c-sofa:
   castShadow: true
   feetPosition: {x: -36.15, y: 0.02, z: 3.0000000000000004}
@@ -922,6 +982,7 @@ l132-shop-c-sofa:
   scale: 1
   state: {name: Sofa, seat: {d: 0.05, gap: 0.65, w: 2}, verb: Sit}
   tags: [l132, seat, usable]
+  visibleRange: {max: 50}
 l132-shop-c-vr:
   behavior: scripts/lib/l132-shops.js
   castShadow: false
@@ -933,6 +994,7 @@ l132-shop-c-vr:
   scale: 0.42
   state: {info: ["Red wireframe hills. You lift it off after a minute, seasick and grinning."], name: VR headset, verb: Try on}
   tags: [l132, usable, l132-top]
+  visibleRange: {max: 32}
 l132-shop-c-vrcase:
   castShadow: true
   feetPosition: {x: -43.9, y: 0.02, z: -5.2}
@@ -943,6 +1005,7 @@ l132-shop-c-vrcase:
   scale: 1.5
   state: {}
   tags: [l132]
+  visibleRange: {max: 50}
 l132-stall-0:
   feetPosition: {x: 5.74, y: 0, z: -13.86}
   id: l132-stall-0
@@ -1055,6 +1118,7 @@ l132-ware-ceramic-b-booth1-1:
   rotation: {yaw: 37}
   state: {name: Plate}
   tags: [l132, l132-top, breakable]
+  visibleRange: {max: 32}
 l132-ware-ceramic-b-booth1-2:
   castShadow: false
   feetPosition: {x: 36.45, y: 0.78, z: -5.78}
@@ -1064,6 +1128,7 @@ l132-ware-ceramic-b-booth1-2:
   rotation: {yaw: 74}
   state: {name: Coffee cup}
   tags: [l132, l132-top, breakable]
+  visibleRange: {max: 32}
 l132-ware-ceramic-b-booth2-1:
   castShadow: false
   feetPosition: {x: 36.45, y: 0.78, z: -3.5}
@@ -1073,6 +1138,7 @@ l132-ware-ceramic-b-booth2-1:
   rotation: {yaw: 37}
   state: {name: Plate}
   tags: [l132, l132-top, breakable]
+  visibleRange: {max: 32}
 l132-ware-ceramic-b-booth2-2:
   castShadow: false
   feetPosition: {x: 36.45, y: 0.78, z: -3.28}
@@ -1082,6 +1148,7 @@ l132-ware-ceramic-b-booth2-2:
   rotation: {yaw: 74}
   state: {name: Coffee cup}
   tags: [l132, l132-top, breakable]
+  visibleRange: {max: 32}
 l132-ware-ceramic-b-booth3-1:
   castShadow: false
   feetPosition: {x: 36.45, y: 0.78, z: 3.1}
@@ -1091,6 +1158,7 @@ l132-ware-ceramic-b-booth3-1:
   rotation: {yaw: 37}
   state: {name: Plate}
   tags: [l132, l132-top, breakable]
+  visibleRange: {max: 32}
 l132-ware-ceramic-b-booth3-2:
   castShadow: false
   feetPosition: {x: 36.45, y: 0.78, z: 3.3200000000000003}
@@ -1100,6 +1168,7 @@ l132-ware-ceramic-b-booth3-2:
   rotation: {yaw: 74}
   state: {name: Coffee cup}
   tags: [l132, l132-top, breakable]
+  visibleRange: {max: 32}
 l132-ware-ceramic-b-booth4-1:
   castShadow: false
   feetPosition: {x: 36.45, y: 0.78, z: 5.6000000000000005}
@@ -1109,6 +1178,7 @@ l132-ware-ceramic-b-booth4-1:
   rotation: {yaw: 37}
   state: {name: Plate}
   tags: [l132, l132-top, breakable]
+  visibleRange: {max: 32}
 l132-ware-ceramic-b-booth4-2:
   castShadow: false
   feetPosition: {x: 36.45, y: 0.78, z: 5.82}
@@ -1118,6 +1188,7 @@ l132-ware-ceramic-b-booth4-2:
   rotation: {yaw: 74}
   state: {name: Coffee cup}
   tags: [l132, l132-top, breakable]
+  visibleRange: {max: 32}
 l132-ware-ceramic-c-1:
   castShadow: false
   feetPosition: {x: -37.5, y: 1.46, z: -6.15}
