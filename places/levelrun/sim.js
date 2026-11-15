@@ -10,6 +10,8 @@ import { heard } from "../../scripts/lib/hear.js";
 import { spawnPhoebe } from "../../scripts/lib/phoebe.js";
 
 import { dressWorld } from "../../scripts/lib/levelrun-dress.js";
+const CHASE_THEME = "/cdn/music-run-for-your-life-r4zcn4il.mp3"; // the creator's upload
+
 export const cadence = "100ms";
 
 const box = (w, h, d) => ({ kind: "box", width: w, height: h, depth: d });
@@ -370,6 +372,7 @@ export function tick(ctx) {
       chase.active = false;
       chase.gateOpen = false;
       chase.hordeZ = 4.5;
+      ctx.music.stop({ fade: 0.8 });
       startIntroCut(ctx, p);
       continue;
     }
@@ -379,6 +382,7 @@ export function tick(ctx) {
       // Final collapse & Phoebe rescue threshold
       if (p.feetPosition.z <= CORRIDOR.collapseZ) {
         chase.active = false;
+        ctx.music.stop({ fade: 1.5 });
         const beam = ctx.place.objects?.["lrun-collapse-beam"];
         if (beam) beam.feetPosition = { x: 0, y: 0.72, z: CORRIDOR.collapseZ - 0.5 };
         // the ceiling gives: steel beam slam over a long concrete rumble, the hall shakes
@@ -392,6 +396,7 @@ export function tick(ctx) {
       if (!chase.active) {
         chase.active = true;
         chase.gateOpen = true;
+        ctx.music.play(CHASE_THEME, { fade: 0.4, volume: 0.8 }); // Shelly Nov 15: "run for your life" is this level's chase theme
         chase.hordeZ = Math.max(p.feetPosition.z + 11.5, 0.5);
         // the bulkhead rips up and the horde roars through it
         heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-heavy-metal-fire-door-slam-echo.mp3", position: { x: 0, y: 1.5, z: -5.45 }, volume: 1, maxDistance: 60 });
