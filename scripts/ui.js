@@ -466,10 +466,22 @@ function ledgerUi(s) {
     <div style="text-align:right;margin-top:10px"><button onclick="sendAction('inv',{k:'read',n:0})" style="background:#2a241a;color:#e4d7b6;border:0;padding:5px 14px;font-family:Georgia,serif;cursor:pointer">close the ledger</button></div>
   </div></div>`
 }
+// Kyoto hot spring: soak long enough and you fall asleep → Level 132. The bar fills by CSS from the soak's start stamp (player.state.l178dozeAt).
+function dozeBar(ctx, player) {
+  const at = player?.state?.l178dozeAt; if (at == null || ctx?.place?.id && ctx.place.id !== "level178") return "";
+  const D = 45, left = Math.max(0.1, D - (ctx.now() - at) / 1000), done = Math.min(1, 1 - left / D);
+  return `<style>@keyframes doze${Math.round(at)}{from{width:${(done * 100).toFixed(1)}%}to{width:100%}}@keyframes dozeEyes{0%,100%{opacity:.55}50%{opacity:1}}</style>
+<div style="position:fixed;left:50%;bottom:150px;transform:translateX(-50%);pointer-events:none;text-align:center;font-family:inherit;color:#fffde8;text-shadow:0 1px 3px #000">
+  <div style="font-size:13px;letter-spacing:.08em;margin-bottom:6px;animation:dozeEyes 3s ease-in-out infinite">${player.state.l178dozing ? "drifting off..." : "warm water · getting sleepy"}</div>
+  <div style="width:240px;height:6px;background:rgba(22,20,14,.75);box-shadow:0 0 0 1px #5a503d;border-radius:3px;overflow:hidden">
+    <div style="height:100%;background:linear-gradient(90deg,#d4b96a,#fffde8);animation:doze${Math.round(at)} ${left.toFixed(1)}s linear forwards"></div>
+  </div>
+</div>`;
+}
 export default function render(ctx, player) {
   const cs = player?.state
   const hasCinemaOv = cs && (cs.cinemaOpen || cs.cinemaPlaying || cs.cinemaPlayback?.playing || (cs._cinemaFadeOpacity ?? 0) > 0.001 || (cs._cinemaWashOpacity ?? 0) > 0.001 || (cs._cinemaTextOpacity ?? 0) > 0.001)
-  return `<div class="ui-root" ${uiPrefsAttrs(cs)}>${tarVeil(ctx, player) + renderHud(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + (player?.isEditor && ctx?.session?.lsOpen ? (lazy('lagscope', () => import('../mods/lagscope/panel.js'))?.overlay?.(ctx, player) ?? '') : '') + (hasCinemaOv ? (lazy('cinemaOv', () => import('../mods/absolute-cinema/lib/ui-cinema-overlays.js'))?.renderCinemaOverlays?.(player) ?? '') : '') + (cs?.cinemaOpen ? (lazy('cinema', () => import('../mods/absolute-cinema/lib/ui-cinema.js'))?.default?.(player) ?? '') : '') + UI_THEME}</div>${rulesHtml(ctx, player)}`
+  return `<div class="ui-root" ${uiPrefsAttrs(cs)}>${tarVeil(ctx, player) + dozeBar(ctx, player) + renderHud(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + (player?.isEditor && ctx?.session?.lsOpen ? (lazy('lagscope', () => import('../mods/lagscope/panel.js'))?.overlay?.(ctx, player) ?? '') : '') + (hasCinemaOv ? (lazy('cinemaOv', () => import('../mods/absolute-cinema/lib/ui-cinema-overlays.js'))?.renderCinemaOverlays?.(player) ?? '') : '') + (cs?.cinemaOpen ? (lazy('cinema', () => import('../mods/absolute-cinema/lib/ui-cinema.js'))?.default?.(player) ?? '') : '') + UI_THEME}</div>${rulesHtml(ctx, player)}`
 } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
 function renderHud(ctx, player) {
   const s = player.state ?? {}
