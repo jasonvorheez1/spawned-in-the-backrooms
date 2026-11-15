@@ -10,7 +10,7 @@ l132-duke:
   state: {dlg: l132-duke, faceYaw: 45, faction: lumiria, friendly: true, hp: 100, invulnerable: true, maxHp: 100, name: The Duke of Morigont, nextAt: 0, role: duke, stop: 0, voice: l132-duke}
   tags: [npc, friendly, l132, usable]
 l132-router:
-  behavior: scripts/lib/l132-shops.js
+  behavior: [scripts/lib/l132-shops.js, scripts/lib/l132-quests.js]
   castShadow: false
   feetPosition: {x: 3.6, y: 1.94, z: -43.95}
   id: l132-router
