@@ -191,6 +191,6 @@ export function stance(ctx) {
   aimPose(me, fam, s.reloading ? 'ready' : aimMode(me, aiming, s.crouch), pitch)
   // the clips pose the arms; on our own bodies a long gun's left hand also closes on the gun itself (it rides the gun, never a world point, so it can't flop). Shelly Nov 11: her plymodel held the gun right, the basic bodies' left arm hung off it
   const worn = !!(s.look?.modelUrl || s.look?.model), gun = me.session?.heldObj
-  if (fam === 'long' && !worn && gun && ctx.getObject(gun)) return { bones: { LeftHand: { reach: { object: gun, offset: { x: 0, y: -0.04, z: 0.43 }, blendIn: 0.18, blendOut: 0.25 } } }, aiming }
-  return { bones: null, aiming }
+  if (fam === 'long' && !worn && gun && ctx.getObject(gun)) return { bones: { LeftHand: { reach: { object: gun, offset: { x: 0, y: -0.04, z: 0.43 }, blendIn: 0.18, blendOut: 0.25 } } }, aiming, armed: true }
+  return { bones: null, aiming, armed: true }
 }
