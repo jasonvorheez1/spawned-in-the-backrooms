@@ -5,13 +5,8 @@
 // Words and barks: data/dlg-level169.yml (l169-bro-*, l169-bot-*), recorded by art/vo/act.py. Numbers are Savi's picks.
 import D from "./data/dlg-level169.yml";
 import { setQuest, tellQuest, finishLevelQuest } from "./quests.js";
-const T = { first: 30000, every: 80000, jitter: 60000, questEvery: 40000, maxAlive: 3, packMax: 2, minR: 30, maxR: 42, far: 130, returnMs: 3600000, need: 3 };
-const VARIANTS = [ // [variant, weapon, hp, weight]
-  { v: 1, tag: "Deadeye", arm: "revolver", hp: 80, w: 4 },
-  { v: 2, tag: "Buckshot", arm: "coach_gun", hp: 95, w: 3 },
-  { v: 3, tag: "Longhorn", arm: "lever_rifle", hp: 75, w: 2 },
-  { v: 4, tag: "Tin Sheriff", arm: "pistol", hp: 140, w: 1 },
-];
+import LV from "./data/level169.yml";
+const T = LV.robots.rules, VARIANTS = LV.robots.variants; // every number and each variant's paint: data/level169.yml robots
 const SERIAL = ["BR-0417", "BR-1129", "BR-2203", "BR-0066", "BR-3310", "BR-0981", "BR-7702", "BR-0150"];
 const CREW = [
   { n: 1, name: "Desmond Vail", job: "site supervisor", look: { species: "cat", sex: "m", topw: "megjacket" }, at: [-9.2, 0.6], yaw: 90, arm: "fists" },
@@ -54,9 +49,10 @@ function spawnBot(ctx, id, pos, face) {
   const serial = SERIAL[Math.floor(r() * SERIAL.length)], who = "l169-bot-" + V.v;
   Promise.all([import("./critter-model.js"), import("./clothes.js"), import("./stats.js"), import("./weapon-look.js")]).then(([{ critterSpec }, { npcLook }, { npcState }, { weaponBody }]) => {
     if (ctx.place.objects[id]) return;
-    const look = { species: "cat", sex: r() < 0.5 ? "m" : "f", eye: "#ff3a22", topw: "robochassis", hat: "cowboy" };
+    const look = { species: "cat", sex: V.sex, topw: "robochassis", hat: "cowboy" };
+    const dress = { robot: V.enamel, hair: "none", fluff: [], beard: "none", eyew: "none", neck: V.neck, neckc: V.neckc, botw: "pants", bottom: V.bottom, botp: "", shoes: "boots", shoec: "#3a2a1e", shoep: "", tail: "whip", snout: "button", ears: "upright", headS: 1, heightS: 1, buildS: 1 };
     ctx.spawn(id, { audience: "all", tags: ["npc", "l169-bot", "l8-hostile", "wretched"], feetPosition: pos, rotation: { yaw: Math.atan2(face.x, face.z) * 180 / Math.PI }, physics: "character",
-      ...critterSpec(npcLook(id, look, "frenzied", 8)), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
+      ...critterSpec({ ...npcLook(id, look, "frenzied", 8), ...dress }), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
       state: { ...npcState(ctx, "agent", V.hp), gearLevel: 8, name: `${V.tag} ${serial} · frenzied unit`, role: "survivor", faction: "lightless", factionName: "Backrooms Robotics units, gone frenzied", nerve: "frenzied", arm: V.arm,
         barks: D[who]?.barks, dlg: who, voice: who, variant: V.v, rounds: [{ x: pos.x, y: pos.y, z: pos.z, dwell: 20, act: null, look: { x: pos.x + face.x * 10, z: pos.z + face.z * 10 } }], ri: 0, home: { x: pos.x, z: pos.z } } });
     ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: V.arm }, ...weaponBody(V.arm) });
@@ -70,7 +66,7 @@ function quest(ctx, L) {
     const s = p.state; if (!s) continue; const q = s[Q.key] ?? 0;
     if (!q && s.talkWith === ID(1)) { s[Q.key] = 1; s.l169botK = 0; setQuest(s, Q.id, { name: Q.name, step: `Put down frenzied Backrooms Robotics units in the open desert (0/${T.need})`, mark: mk(O) }); tellQuest(ctx, p, "New quest: Faulty Units"); }
     else if (q === 1 && (s.l169botK ?? 0) >= T.need) { s[Q.key] = 2; setQuest(s, Q.id, { name: Q.name, step: "Go back to Desmond Vail at Field Office 7", mark: mk(O) }); tellQuest(ctx, p, `Faulty Units · ${T.need} units down. Desmond will want to hear it.`); }
-    else if (q === 2 && s.talkWith === ID(1)) finishLevelQuest(ctx, p, Q.key, Q, { xp: 220, cents: 7500, items: [], by: "survivors", text: "Quest Completed: Faulty Units" });
+    else if (q === 2 && s.talkWith === ID(1)) finishLevelQuest(ctx, p, Q.key, Q, { xp: T.xp, cents: T.cents, items: [], by: "survivors", text: "Quest Completed: Faulty Units" });
   }
 }
 
@@ -85,7 +81,7 @@ export function roboTick(ctx, L) {
     const d = Math.min(Infinity, ...ps.map((p) => Math.hypot(p.feetPosition.x - b.feetPosition.x, p.feetPosition.z - b.feetPosition.z)));
     const dead = o.state?.dead || (o.state?.hp ?? 1) <= 0;
     if (dead) {
-      if (!o.state.credited) { o.state.credited = true; o.state.diedAt = now; for (const p of ps) if (p.state?.[Q.key] === 1 && near(p.feetPosition, b.feetPosition, 50)) { p.state.l169botK = (p.state.l169botK ?? 0) + 1; setQuest(p.state, Q.id, { name: Q.name, step: `Put down frenzied Backrooms Robotics units in the open desert (${Math.min(T.need, p.state.l169botK)}/${T.need})`, mark: mk(O) }); } }
+      if (!o.state.credited) { o.state.credited = true; o.state.diedAt = now; for (const p of ps) if (p.state?.[Q.key] === 1 && near(p.feetPosition, b.feetPosition, T.credit)) { p.state.l169botK = (p.state.l169botK ?? 0) + 1; setQuest(p.state, Q.id, { name: Q.name, step: `Put down frenzied Backrooms Robotics units in the open desert (${Math.min(T.need, p.state.l169botK)}/${T.need})`, mark: mk(O) }); } }
       if (now - (o.state.diedAt ?? now) > T.returnMs || d > 200) ctx.destroy(b.id);
     } else if (d > T.far) ctx.destroy(b.id); else living++;
   }

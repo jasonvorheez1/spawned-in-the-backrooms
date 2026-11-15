@@ -77,3 +77,12 @@ trail:                          # the arrival lane: stacked cairns up the track 
   side: 2.4                     # off the track's centre, alternating sides
   stones: 6
   mill: { x: 33, z: -504, yaw: 200 }   # a wind pump in Ferry's yard: 7 m tall, the first thing you see over the last rise
+
+# Backrooms Robotics frenzied units (scripts/lib/l169-robotics.js). enamel = body paint; neck = the cloth that tells them apart at range
+robots:
+  rules: { first: 30000, every: 80000, jitter: 60000, questEvery: 40000, maxAlive: 3, packMax: 2, minR: 30, maxR: 42, far: 130, returnMs: 3600000, need: 3, credit: 50, xp: 220, cents: 7500 }
+  variants:
+    - { v: 1, tag: Deadeye, arm: revolver, hp: 80, w: 4, sex: m, enamel: "#c8402e", neck: bandana, neckc: "#f2e9d0", bottom: "#3a2a1e" }
+    - { v: 2, tag: Buckshot, arm: coach_gun, hp: 95, w: 3, sex: m, enamel: "#e0a92a", neck: cape, neckc: "#2f6b45", bottom: "#4a3320" }
+    - { v: 3, tag: Longhorn, arm: lever_rifle, hp: 75, w: 2, sex: f, enamel: "#2f8f9a", neck: scarf, neckc: "#e8e2d2", bottom: "#22262e" }
+    - { v: 4, tag: Tin Sheriff, arm: pistol, hp: 140, w: 1, sex: f, enamel: "#d9dde2", neck: cape, neckc: "#15151a", bottom: "#15151a" }

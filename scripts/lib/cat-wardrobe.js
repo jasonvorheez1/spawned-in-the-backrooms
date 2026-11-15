@@ -121,6 +121,10 @@ export function catModel(sex, look) {
   const mouth = calm && !crew ? FACES.mouths?.[sk]?.[look?.mtype] : undefined
   const projection = sex === 'm' ? [2.9946, -2.118, -0.011] : [2.9946, -2.0198, 0.055]   // Nov 11 (Shelly 'fix eye placement and double noses'): picture 4.5% lower so its eyes sit in the sculpted sockets and its nose on the mesh nose
   const skin = (color) => ({ kind: 'scripted', script: 'scripts/mat-catskin.js', color, params })
+  if (look?.robot) { // a Backrooms Robotics unit (Shelly Nov 15 'they should look like robots'): the same body, every surface painted steel; the face is the fitted lamp and grille kit (catChildren)
+    const R = W.robot, enamel = (color) => ({ color, texture: R.panel, repeat: R.repeat, wrap: 'repeat', metalness: R.metalness, roughness: R.roughness })
+    return { id: CAT_BODY[sex].glb, forward: '+z', materials: { fur: enamel(look.robot), fur2: enamel(R.steel), headFur: enamel(look.robot), innerEar: { color: R.brass, metalness: 0.9, roughness: 0.3 } } }
+  }
   return {
     id: CAT_BODY[sex].glb, forward: '+z',
     materials: {
@@ -168,6 +172,14 @@ export function catChildren(sex, look) {
   }
   const fl = Array.isArray(look?.fluff) ? look.fluff : look?.fluff ? [look.fluff] : []
   const hairOn = !!(look?.hair && W.hair?.[look.hair])
+  if (look?.robot) { // no fur, no hair: brass-capped steel ears and the head kit
+    const R = W.robot, mt = (color) => ({ color, metalness: 0.9, roughness: 0.32 })
+    const eg = W.ears?.upright?.[sex]
+    if (eg) out.push({ id: 'cw-ears', attachment: { skin: true }, model: { id: eg, forward: '+z', materials: { earFur: mt(look.robot), earInner: mt(R.brass), earTuft: mt(R.brass) } } })
+    if (R.head?.[sex]) out.push({ id: 'cw-robohead', attachment: { skin: true }, model: { id: R.head[sex], forward: '+z', materials: {
+      lamp: { color: R.lamp, emissive: R.lamp, emissiveIntensity: R.lampGlow, roughness: 0.2, metalness: 0 }, brass: mt(R.brass), seam: { color: '#0e0e10', roughness: 0.6, metalness: 0.6 }, grille: { color: '#17171a', roughness: 0.5, metalness: 0.8 } } } })
+    return out
+  }
   for (const k of fl) {
     const g = W.fluff?.[k]?.[sex]
     if (!g) continue

@@ -60,7 +60,7 @@ models:
   bntgguard: { under: tee, tint: false, f: /cdn/value.b8afef8dc4c06ca0d4bca8241e70e7223b0439d77f0f3087c5bd1657efe24fd1.glb, m: /cdn/value.b29fd78b5383d89790ddd2987a18ed8c91523784a2f07fa9a0b8abb2cb7cb85e.glb }   # Nov 13 Tripo, fitted by art/cat-wardrobe/fit.py
   wwhelmet: { hat: true, tint: false, f: /cdn/value.b281961ebce4e32369ec42a86038e9e2fba7d745826c5ac1b00a628a860eccba.glb, m: /cdn/value.3fe3c8a879172733a34402d24a09f570e620fd9fc66ab0cfefc635a6b1ef162d.glb }   # Nov 13 Tripo, fitted by art/cat-wardrobe/hats.py
   robochassis: { under: tank, tint: false, f: /cdn/value.fed4976c6fd20385570202cd453c1e8973183c6cc2c86bbe6362f4774717738c.glb, m: /cdn/value.0b826777be39d26229978940c1303aceb7a8cac5d47eea9deba4dae6d87de567.glb }   # Nov 15 Backrooms Robotics chassis plating, built on each cat body (art/robo-armor/build.py); take it and the cat underneath shows
-  cowboy: { hat: true, tint: false, f: /cdn/value.a6f44909ebccc6c54907e8914877015d4526bd9426dd5b6bb8031f29f0e5133f.glb, m: /cdn/value.6a9f441ab67eb114a843a8a909fa5926b86270d68fd3705215b8c62c6f1718ef.glb }   # Nov 15 gunslinger hat (art/cowboy-hat/build.py, fitted by hats.py)
+  cowboy: { hat: true, tint: false, f: /cdn/value.38bbb24a8205980e3e6b149bcc18b0b64e6bbc4aa3471bc8c4b723ce65fbd951.glb, m: /cdn/value.3a61e2200a4f04dc89a18a8e2c9be08696ba38bc64905826f4f83a629458cbb3.glb }   # Nov 15 gunslinger hat (art/cowboy-hat/build.py, fitted by hats.py)
   bntgcap: { hat: true, tint: false, f: /cdn/value.6e6dbca5d1b6666ad8a8ba8d51025840ae1e720b39f84b0a686e7cca41860fc2.glb, m: /cdn/value.13fddbf996057a80764204f17d4abe5e70826992fa4ad31c6439056bee8305cd.glb }   # Nov 13 Tripo, fitted by art/cat-wardrobe/hats.py
   tarpponcho: { under: longsleeve, tint: false, f: /cdn/value.ddc37160e285ee3ed557f173e44940e63fc29efed8b57d29649422e59ca035f4.glb, m: /cdn/value.9a7c96f3de3c5c31b2d1ff88fe5100e51ca877e7d6d7276675bd1e03153b2a9a.glb, vars: [{ f: /cdn/value.dc8cb0e4c3de3d708ddd9aadc2ae8ae4177575c1cec9d5e4ae530c0e6dbf9319.glb, m: /cdn/value.8c49aaaa97e20415bb090b365853ff49c3e0e92454d3bd5a90eb71477bb96713.glb }, { f: /cdn/value.aa1809a521113a59eecf98565b7ec0ef8d1e55be7b77a40d6f5a93118c52fd74.glb, m: /cdn/value.bb5993c7be5878e3ff750f84ca067bcef88ab6f99c3a7c3c3d61e34a59f232a1.glb }] }   # Nov 12 lore: wanderer's tarp poncho, fit.py poncho, hood laid flat
   remodcoat: { under: longsleeve, tint: false, f: /cdn/value.7c5b79d0077f626cc82b72e7909e943b7baa6d68fb10fbe75c757ec5cf968fe6.glb, m: /cdn/value.b5be8e331ef225131a8d081b8b58944330a0f4fa0122a1cffa6a55d54c9f4e28.glb }   # Nov 12 Backrooms Remodeling Co. uniform: blue-grey coat, red pauldrons, black belt, white apron (wiki), Tripo, fit.py top
@@ -165,3 +165,15 @@ from:
   topp: { jerrytee: jerry, pphoodie: ppsad, pghoodie: pgsmile, gmhoodie: gmsplit, pgcoat: pgcoat }
 # hats that close over the ears: the sculpted ears stay off and the head's own fold flat under them
 covers: [divehelm, chitinhelm, beanie, souwester, pilgrimhat, wwhelmet]
+
+# a robot wearing the cat body (look.robot = its enamel colour; Shelly Nov 15 "they should look like robots"): steel skin on every body slot, the head kit from art/robo-head/build.py
+robot:
+  metalness: 0.85
+  roughness: 0.35
+  panel: cdn/texture-pale-painted-sheet-metal-panel-seams-and-rivets.png
+  repeat: [3, 3]
+  steel: "#b9bec4"
+  brass: "#c9973a"
+  lamp: "#ff2a14"
+  lampGlow: 3
+  head: { f: /cdn/value.73e36c815e9b5c925972a032364c9aea21755c130350f9b3e43fc460b2b99e75.glb, m: /cdn/value.c48df0a22a31994bdc79387aa2099fd28b680be88763e2a8514d0e46ad425641.glb }
