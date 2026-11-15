@@ -32,7 +32,7 @@ function buildShop(ctx, key) {
   const sh = S.shops[key], F = S.floor, root = `l132-shop-${key}`, tops = [];
   if (ctx.getObject(root)) ctx.destroy(root);
   const mats = {}; for (const k in sh.mats) mats[k] = { texture: sh.mats[k], repeat: [1, 1], wrap: "repeat", roughness: k === "floor_in" ? 0.55 : 0.85 };
-  ctx.spawn(root, { feetPosition: { x: sh.x, y: 0, z: sh.z }, rotation: { yaw: sh.yaw }, tags: ["l132", "l132-shop"], state: { name: sh.name },
+  ctx.spawn(root, { feetPosition: { x: sh.x, y: 0, z: sh.z }, rotation: { yaw: sh.yaw }, scale: { x: 1, y: sh.sy ?? 1, z: 1 }, tags: ["l132", "l132-shop"], state: { name: sh.name },
     model: { id: sh.shell, materials: mats }, physics: { body: "static", collider: "mesh" } });
   // lights: three overhead, one at the back
   [[-sh.rx * 0.55, 0], [sh.rx * 0.55, 0], [0, -sh.back * 0.5], [0, sh.front * 0.55]].forEach(([x, z], i) =>
