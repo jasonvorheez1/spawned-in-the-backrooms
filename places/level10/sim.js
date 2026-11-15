@@ -63,6 +63,7 @@ function lay(ctx) {
   // 1. ARRIVALS AND LEVEL EXITS
   // ==========================================
   sp("l10-from-l11", { feetPosition: T(0, 30, 0.2), rotation: { yaw: 0 } });
+  sp("l10-from-l132", { feetPosition: T(0, 14, 0.2), rotation: { yaw: 0 } }); // out of Lumiria's hollow tree (scripts/lib/l132-square.js), a little up the same road
   sp("l10-road-north", { ...DOOR("level11#lv10-arrive", 8, 4, 2), feetPosition: T(0, -282, 0) });
   sp("l10-road-south", { ...DOOR("level11#lv10-arrive", 8, 4, 2), feetPosition: T(0, 72, 0) });
   sp("l10-lake-deep", { ...DOOR("level7#l7-from-l10", 5, 1.2, 5), feetPosition: { x: 70, y: -3.9, z: -95 } });
