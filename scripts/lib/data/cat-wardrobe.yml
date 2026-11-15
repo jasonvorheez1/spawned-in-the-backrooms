@@ -90,6 +90,7 @@ prints:
 masks:
   bagmask: { f: "/cdn/value.bc18246d4a4b2ba8ce84a1a92e6662b939f2fbe90cdc6fb9411dad9ae8167150.glb", m: "/cdn/value.8e5ac77aa50da1a896a947c90ee01816bc15f8483b822841bf66d4e3e71497aa.glb" }
   shellmask: { f: "/cdn/value.cc38d73c3aa334473337f765ebf45f20949ef21ef0547cdc513d53edd547e480.glb", m: "/cdn/value.45981231ad8af5dd54859ea8bc0d6a6b321f7f1906ebecaad555500f8ebb0c37.glb" }
+  kitsune: { f: "/cdn/value.e164be1fc5320353f5e2fab543853813f953dd9bb5f137d7323c473cf6c1cbb5.glb", m: "/cdn/value.99ad636abeb9546c396013e43f2eea79e07a15d7e49559b88853ad61ae32a0c3.glb" }   # Kyoto Dreams quest mask (art/kyoto/kitsune_mask.py: Tripo mask fitted to each head)
 
 # fluff keyed by art/cat-wardrobe/fluff-keys.py (Nov 11: carries the body's snout/ear/chest keys so locks ride the face, no clip-through)
 # fluff: art/cat-wardrobe/fluff.py v3 (Nov 11): slim 10-sided locks combed onto the skin, tips lift; was chunky and winged
@@ -154,12 +155,12 @@ from:
           tailcoat: jacket, gown: longsleeve, maidapron: tee, hotelrobe: pajamas, seawatchsuit: jacket, oilskin: hoodie, abysshauberk: longsleeve,
           chitinplate: tank, pgcoat: jacket, jerrytee: tee, pphoodie: hoodie, pghoodie: hoodie, gmhoodie: hoodie, vest: tank, blazer: jacket,
           shirt: breton, crop: crop, breton: breton, hazmat: hazmat, bntgvest: bntgvest, tarpponcho: tarpponcho,
-          cpjacket: cpjacket, lljacket: lljacket, qmvest: qmvest, megcarrier: megcarrier, amberpatch: amberpatch, wwplate: wwplate, bntgcoat: bntgcoat, bntgguard: bntgguard, doccoat: doccoat, l109labcoat: doccoat, robochassis: robochassis }   # M.E.G. team gear (Nov 13): stand-in cuts until their own Tripo pieces   # lore pieces: their own Tripo models replace these stand-ins once fitted
+          cpjacket: cpjacket, lljacket: lljacket, qmvest: qmvest, megcarrier: megcarrier, amberpatch: amberpatch, wwplate: wwplate, bntgcoat: bntgcoat, bntgguard: bntgguard, doccoat: doccoat, l109labcoat: doccoat, l178_yukata: longsleeve, l178_haori: jacket, robochassis: robochassis }   # M.E.G. team gear (Nov 13): stand-in cuts until their own Tripo pieces   # lore pieces: their own Tripo models replace these stand-ins once fitted
   botw: { pants: pants, shorts: shorts, pjpants: pjpants, skirt: skirt, longskirt: skirt, overalls: pants, slacks: pants, cargo: pants,
           canvasskirt: skirt, pinstripe: pants, velvetskirt: skirt, tarwaders: pants, jeans: pants, briefs: briefs, leggings: leggings }
-  shoes: { sneakers: socks, slippers: socks, boots: boots, steeltoe: boots, hotelslip: socks, ballastboots: boots, pitchboots: boots, heels: socks, socks: socks }
+  shoes: { sneakers: socks, slippers: socks, boots: boots, steeltoe: boots, hotelslip: socks, l178_tabi_geta: socks, ballastboots: boots, pitchboots: boots, heels: socks, socks: socks }
   hat: { cap: cap, beanie: beanie, tophat: tophat, bow: bow, flower: flower, partyhat: partyhat, crown: crown, padbeanie: beanie, wwhelmet: wwhelmet, bntgcap: bntgcap, tmcap: cap,
-         opera: tophat, headphones: headphones, souwester: souwester, divehelm: divehelm, chitinhelm: chitinhelm, pgmask: bagmask, ppmask: shellmask, beret: beret, cowboy: cowboy }
+         opera: tophat, headphones: headphones, souwester: souwester, divehelm: divehelm, chitinhelm: chitinhelm, pgmask: bagmask, ppmask: shellmask, l178_hachimaki: bow, kitsune: kitsune, l178_kitsune_mask: kitsune, beret: beret, cowboy: cowboy }
   eyew: { glasses: almondspecs, shades: lobbyshades, megoggles: megoggles, asyncvisor: asyncvisor, crackedglasses: crackedglasses, lobbyshades: lobbyshades, almondspecs: almondspecs }
   neck: { scarf: scarf, bandana: bandana, cape: cape, bowtie: bowtie, necklace: necklace, bell: bell }
   topp: { jerrytee: jerry, pphoodie: ppsad, pghoodie: pgsmile, gmhoodie: gmsplit, pgcoat: pgcoat }

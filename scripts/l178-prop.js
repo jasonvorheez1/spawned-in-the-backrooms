@@ -1,6 +1,7 @@
 // Level 178 sliding shoji, the kitchen tap, futons, towels, the dining table, the sword cabinet and the kimono closet, the house's readables (kind read, state.page): E (scripts/interact.js `usable`) rings press; numbers in lib/data/level178.yml.
 import { animate } from "builtin/tween";
 import L from "./lib/data/level178.yml";
+import { queuePayout } from "./lib/quests.js";
 const STREAM = `fx
 pop water rate=?mobile:30|60 on=disc(.008) life=.22..0.28 v=<0,-0.6,0> acc=grav() size=.01..0.016 col=<.82,.9,1> a=.55 sz=$size r=sprite(soft-disc,alpha,velocity,.04)`;
 function leaf(ctx, instant) {
@@ -22,7 +23,7 @@ function use(ctx, s, at) {
   if (s.kind === "closet") {
     s.open = !s.open; s.verb = s.open ? "Close" : "Open";
     ctx.emit("playSound", { clip: "cdn/sfx-wooden-shoji-paper-door-sliding-in-wood-track.mp3", position: at, volume: 0.4 });
-    if (ps && s.open) say(ps, "Folded kimonos in indigo and plum, a row of geta under them. They smell of cedar.", ctx); return;
+    if (ps && s.open && !ps.l178closet) { ps.l178closet = 1; queuePayout(ps, { items: String(L.closetGift).split(","), text: "A haori and a hachimaki, folded on top. Nobody will miss them." }); } else if (ps && s.open) say(ps, "Folded kimonos in indigo and plum, a row of geta under them. They smell of cedar.", ctx); return;
   }
   if (!ps) return;
   if (s.kind === "read") { ps.reading = s.page; ctx.emit("playSound", { clip: "cdn/sfx-paper-page-turn-soft.mp3", position: at, volume: 0.35 }); return; } // a page in scripts/lib/data/pages.yml, drawn by ui.js's reading panel

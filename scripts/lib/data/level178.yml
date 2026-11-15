@@ -27,12 +27,16 @@ residents:
 layoutV: 1
 exits: { hub: "thehub#hub-from-l178", notBuilt: { level66: "Level 66 (not built)", level132: "Level 132 (not built)" } }
 threshold: { x: 0, y: 0.45, z: 16.45, w: 1.4, h: 2.0, d: 0.5 }
+finds:   # weapons lying in the house (places/level178/sim.js lays each once); katana, naginata, kitsune mask are quest rewards, never placed
+  - { kind: l178_bokken, x: -3.5, y: 0.46, z: 16.0, yaw: 20 }    # beside the sword cabinet, the dojo corner
+  - { kind: l178_kiseru, x: 14.2, y: 0.46, z: -4.6, yaw: 70 }    # the studio
+closetGift: "cloth:topw:l178_haori:1f2433,cloth:hat:l178_hachimaki:f4f1ea"   # the kimono closet, once per player
 stock:   # the shared container refill brings these back an hour after they are taken
   l178-fridge: { name: "Refrigerator", items: "l178_onigiri,l178_onigiri,l178_bento,almond,almond" }
   l178-pantry: { name: "Pantry", items: "l178_miso,warm_tea,almond" }
   l178-cupboard-1: { name: "Cupboard", items: "l178_miso,l178_onigiri" }
-  l178-cupboard-2: { name: "Cupboard", items: "warm_tea,almond" }
-  l178-cupboard-3: { name: "Cupboard", items: "l178_bento" }
+  l178-cupboard-2: { name: "Cupboard", items: "warm_tea,almond,cloth:topw:l178_yukata:2b3a67" }
+  l178-cupboard-3: { name: "Cupboard", items: "l178_bento,weapon:l178_tanto" }
   l178-cupboard-4: { name: "Cupboard", items: "almond,l178_onigiri" }
 swing: { door: 100, oven: 80 }      # degrees a cabinet door opens
 drawer: { pull: 0.35, ease: 0.35 }
