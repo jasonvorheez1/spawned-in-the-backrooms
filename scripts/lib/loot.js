@@ -125,8 +125,11 @@ const POOL_TIER = { l0: 1, l01: 6, l02: 7, l1: 4, l2: 8, l21: 9, l3: 12, l4: 10,
 export function leveledWeaponScale(k, lv) {
   const unlocked = Math.max(W[k]?.minLevel ?? 1, [1, 3, 6, 10][rarityIdx(k)] ?? 1);
   const age = Math.max(0, lv - unlocked);
-  if (unlocked <= 2) return Math.max(0.2, 1 - Math.max(0, age - 2) * 0.09);
-  return Math.max(0.45, 1.5 - Math.max(0, age - 2) * 0.12);
+  // Shelly Nov 15: "more interesting weapons the higher your level": rarer kinds and the ones just unlocked weigh more as you level (loot and NPCs share this)
+  const rare = 1 + rarityIdx(k) * Math.min(1.6, (lv - 1) * 0.12);
+  const fresh = unlocked >= 3 && age <= 3 ? 1.6 : 1;
+  if (unlocked <= 2) return Math.max(0.12, 1 - Math.max(0, age - 1) * 0.12) * rare;
+  return Math.max(0.45, 1.5 - Math.max(0, age - 2) * 0.12) * rare * fresh;
 }
 
 const LOCAL_WEAPONS = {
@@ -166,7 +169,7 @@ export function gateItems(ctx, items, level, pool = "l0") {
     const k = t.slice(7);
     if (!W[k] || W[k].unique || W[k].weight === 0 || authoredVariant(k)) return t; // keep authored discoveries
     if (rarityIdx(k) > cap || (W[k].minLevel ?? 1) > lv) return "weapon:" + rollWeapon(ctx, pool, cap, lv);
-    if (lv >= 7 && (W[k]?.minLevel ?? 1) <= 2 && rarityIdx(k) === 0 && ctx.random() < Math.min(0.65, (lv - 5) * 0.08)) {
+    if (lv >= 3 && rarityIdx(k) < cap && ctx.random() < Math.min(0.7, (lv - 2) * 0.09)) { // a plain find rolls up into something fitting your level, from level 3 (was 7)
       const better = rollWeapon(ctx, pool, cap, lv, 3);
       if (better) return "weapon:" + better;
     }
