@@ -14,6 +14,8 @@ engine:
       font: Geist Pixel Square
 inputs:
   actions:
+    rulesSave: {}
+    rulesLoad: {}
     journal:
       keys:
         - p

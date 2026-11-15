@@ -5,6 +5,9 @@ import { quickBar } from './lib/hud-quickbar.js'
 import { UI_THEME } from './lib/ui-theme.js'
 import { uiPrefsAttrs, uiPrefsOf, noticeToast, escKeyHandler } from './lib/ui-kit.js'
 import { screen, hasHalogen } from './lib/screen.js'
+import { rulesHtml, grm as grmPress, grmType as grmTyped } from "../mods/game-rules-manager/lib/panel.js";
+export function grm(a, i, s) { grmPress(a, i, s); }
+export function grmType(i, v) { grmTyped(i, v); }
 // Rare/modal UI panels, debug overlays, and level data are loaded on demand via lazy()/lazyFn().
 const MODS = Object.create(null), MOD_WAIT = Object.create(null)
 const lazy = (k, load) => {
@@ -466,7 +469,7 @@ function ledgerUi(s) {
 export default function render(ctx, player) {
   const cs = player?.state
   const hasCinemaOv = cs && (cs.cinemaOpen || cs.cinemaPlaying || cs.cinemaPlayback?.playing || (cs._cinemaFadeOpacity ?? 0) > 0.001 || (cs._cinemaWashOpacity ?? 0) > 0.001 || (cs._cinemaTextOpacity ?? 0) > 0.001)
-  return `<div class="ui-root" ${uiPrefsAttrs(cs)}>${tarVeil(ctx, player) + renderHud(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + (player?.isEditor && ctx?.session?.lsOpen ? (lazy('lagscope', () => import('../mods/lagscope/panel.js'))?.overlay?.(ctx, player) ?? '') : '') + (hasCinemaOv ? (lazy('cinemaOv', () => import('../mods/absolute-cinema/lib/ui-cinema-overlays.js'))?.renderCinemaOverlays?.(player) ?? '') : '') + (cs?.cinemaOpen ? (lazy('cinema', () => import('../mods/absolute-cinema/lib/ui-cinema.js'))?.default?.(player) ?? '') : '') + UI_THEME}</div>`
+  return `<div class="ui-root" ${uiPrefsAttrs(cs)}>${tarVeil(ctx, player) + renderHud(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + (player?.isEditor && ctx?.session?.lsOpen ? (lazy('lagscope', () => import('../mods/lagscope/panel.js'))?.overlay?.(ctx, player) ?? '') : '') + (hasCinemaOv ? (lazy('cinemaOv', () => import('../mods/absolute-cinema/lib/ui-cinema-overlays.js'))?.renderCinemaOverlays?.(player) ?? '') : '') + (cs?.cinemaOpen ? (lazy('cinema', () => import('../mods/absolute-cinema/lib/ui-cinema.js'))?.default?.(player) ?? '') : '') + UI_THEME}</div>${rulesHtml(ctx, player)}`
 } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
 function renderHud(ctx, player) {
   const s = player.state ?? {}
