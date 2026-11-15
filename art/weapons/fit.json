@@ -488,7 +488,8 @@
    0.06,
    1.75
   ],
-  "pca": true
+  "pca": true,
+  "flipLen": true
  },
  "l178_kiseru": {
   "min": [
@@ -501,6 +502,7 @@
    0.06,
    0.62
   ],
-  "pca": true
+  "pca": true,
+  "flipLen": true
  }
 }
