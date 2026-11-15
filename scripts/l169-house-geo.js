@@ -179,7 +179,7 @@ function shelfUnit(ctx, x0, x1, y0, zb, dir, rnd, kinds = "cans") {
     const y = y0 + ys[s];
     for (let x = x0 + 0.12; x < x1 - 0.1; ) {
       const t = rnd();
-      if (kinds !== "cans" && t < 0.3) { crate(ctx, x + 0.17, y, zc, 0.34, 0.24, 0.26); x += 0.42; continue; }
+      if (kinds !== "cans" && t < 0.3) { x += 0.2; continue; } // no crates on the shelves (Shelly, Nov 14)
       if (t < 0.12) { x += 0.14; continue; }
       if (t < 0.3) { paint(ctx, null); ctx.color("oklch(0.85 0.06 85)", 0.55); rings(ctx, x + 0.05, zc, [[0, y], [0.05, y], [0.05, y + 0.13], [0.035, y + 0.15]], 8); paint(ctx, null, "oklch(0.75 0.08 80)"); rod(ctx, [x + 0.05, y + 0.15, zc], [x + 0.05, y + 0.17, zc], 0.038, 8); x += 0.13; continue; }
       const rr = 0.038 + rnd() * 0.012, hh = 0.1 + rnd() * 0.04, c = lab[Math.floor(rnd() * lab.length)], stack = rnd() < 0.3 ? 2 : 1;
@@ -239,7 +239,7 @@ function kitchen(ctx, P) {
 function basement(ctx) {
   const y = BF, zs = Z1 - 0.2;
   shelfUnit(ctx, XM + 0.6, XM + 3.4, y, zs, -1, ctx.random, "mixed"); shelfUnit(ctx, XM + 3.7, XM + 6.5, y, zs, -1, ctx.random);
-  crate(ctx, XM + 7.3, y, zs - 0.4, 0.7, 0.5, 0.6); crate(ctx, XM + 7.25, y + 0.508, zs - 0.4, 0.55, 0.4, 0.5, "oklch(0.85 0.06 60)"); crate(ctx, XM + 8.1, y, zs - 0.35, 0.6, 0.45, 0.5);
+  // the floor crates here are lootable props now: l169-house-loot-* in scripts/lib/l169-house.js
   for (let i = 0; i < 3; i++) { paint(ctx, "linen", "oklch(0.85 0.06 80)"); sphere(ctx, [XM + 0.6, y + 0.16 + i * 0.24, 4.4 + (i % 2) * 0.1], 0.3, 10, [1, 0.55, 1.5]); }
   paint(ctx, "rug", null); bx(ctx, XM + 2.2, y, 2.6, XM + 5.4, y + 0.015, 4.4, 0.006);
 }
