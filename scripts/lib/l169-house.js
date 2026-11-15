@@ -37,7 +37,7 @@ function layPantry(ctx, put, L, C, F) {
       put(`l169-pantry-${n++}`, { tags: ["usable", "l169-pantry"], behavior: "scripts/pantry-item.js", feetPosition: { x: C.x + x + w / 2, y: F + yy, z: zc - 0.05 + rnd() * 0.1 }, rotation: -90 + (rnd() - 0.5) * 40,
         primitive: { kind: "scripted", script: "scripts/pantry-geo.js", params: row[1] === "jar" ? { kind: "jar", fill: row[2] } : { kind: row[1], label: row[2] } },
         physics: { body: "static", collider: "cylinder" }, visibleRange: { max: 40 },
-        state: { name: row[3], verb: "Take", info: "Ferry's pantry", token: row[0], jar: row[1] === "jar", taken: false } });
+        state: { name: row[3], verb: "Take", info: "Ferry's pantry · Tobin counts every tin", token: row[0], jar: row[1] === "jar", taken: false, owner: "l169-friend-2", ownerName: "Tobin", steal: true } });
       x += w + 0.012;
     }
   }
@@ -84,7 +84,7 @@ export function layHouse(ctx, put, L) {
     [[XM + 7.3, zs - 0.4, 0, 6], [XM + 7.3, zs - 0.4, 0.6, 2], [XM + 8.15, zs - 0.35, 0, 15]].forEach(([x, z, up, yaw], i) =>
       put(`l169-house-loot-${i}`, { tags: ["container"], feetPosition: { x, y: BF + up, z }, rotation: { yaw }, model: { id: CR }, castShadow: true,
         layout: { box: { min: { x: -0.4, y: 0, z: -0.3 }, max: { x: 0.4, y: 0.6, z: 0.3 } } }, physics: "static",
-        state: { items: loot[i][1], name: loot[i][0], verb: "Search", kind: "wood" } })); }
+        state: { items: loot[i][1], name: loot[i][0], verb: "Search", kind: "wood", owner: "l169-friend-2", ownerName: "Tobin" } })); }
   { const [x, z] = mid("living"); part("rug", { part: "rug", w: 3, d: 2.2 }, x, z + 0.5, F + 0.005); part("bench", { part: "bench" }, x, z + 2.2, F, { rotation: 180 });
     part("maptable", { part: "maptable" }, x - 2.4, z - 1.2, F); part("mapboard", { part: "mapboard" }, x - 2.4, r.hall[3] + 0.12, F + 1, { rotation: 180, physics: undefined });
     put("l169-house-mapchart", { feetPosition: { x: x - 2.4, y: F + 1.36, z: r.hall[3] + 0.135 }, rotation: 180, castShadow: false, primitive: { kind: "box", width: 1.62, height: 1.08, depth: 0.004 }, material: { texture: "/cdn/value.09c60272c011fe4220138ed9ce018805d3b1f67967b51a56c0ef026eb0415450.png", repeat: [1, 1], roughness: 0.85, transparent: true, alphaTest: 0.5 } }); }
@@ -105,7 +105,7 @@ export function layHouse(ctx, put, L) {
     const c = Math.cos(yaw * Math.PI / 180), sn = Math.sin(yaw * Math.PI / 180);
     for (const [k, [m, ox, oy, oz, name, verb, info]] of Object.entries(DESK)) { if (k === "desk") continue;
       put(`l169-house-m-${id}-${k}`, { feetPosition: { x: x + ox * c + oz * sn, y: F + oy, z: z - ox * sn + oz * c }, rotation: yaw, castShadow: k !== "map", model: { id: m },
-        tags: ["usable"], behavior: "scripts/desk-item.js", state: { kind: k, name, verb, info } }); } };
+        tags: ["usable"], behavior: "scripts/desk-item.js", state: { kind: k, name, verb, info, owner: "l169-friend-3", ownerName: "Senna", steal: k === "compass" || k === "mug" } }); } }; // Senna's desk (Shelly, Nov 15: "mark their stuff as their own")
   const hide = (id) => { const o = ctx.getObject?.(`l169-house-${id}`); if (o) o.visible = false; };
   for (const k of ["bed1", "bed2", "bed3"]) {
     const [x, z] = mid(k); hide(`bed-${k}`); hide(`kit-${k}`);
