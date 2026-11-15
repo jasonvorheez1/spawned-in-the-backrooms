@@ -86,6 +86,19 @@ export function layHouse(ctx, put, L) {
     kit: "/cdn/value.eca8c598b9635ca9dd37710d90c09c2a22fb1cd6c7bc4350026df9cf54ebf4b1.glb", bench: "/cdn/value.deb5057b345d8bf77d5e45c5b29111addfa13c16a2eccf25438e8967603bcce2.glb",
     table: "/cdn/value.d58e97357089082f01e8258e9db20ea148a8af7714637429c16482e89e92ac99.glb", counter: "/cdn/value.8afef9eb454fce97b4c7a21956c2213dc0c80e905f95988d8bdab1793861121d.glb" };
   const look = (id, m, x, z, yaw, hx, hy, hz) => put(`l169-house-m-${id}`, { feetPosition: { x, y: F, z }, rotation: yaw, castShadow: true, receiveShadow: true, model: { id: m }, layout: { box: { min: { x: -hx, y: 0, z: -hz }, max: { x: hx, y: hy, z: hz } } } });
+  // Ferry's map desk, split (art/desk-split, Nov 15: "split this model into separate usable models"): the bare desk plus five pieces, each its own E (scripts/desk-item.js)
+  const DESK = { desk: "/cdn/value.04803102ca40b0d0dc8b4853bff7bd2198abf4f1213ce1fa9dd2b0f2857ea99b.glb",
+    map: ["/cdn/value.b62f2e86e0bbeeccfb3d81c045eadf98aa750b924ee8a271774fc915c6fcfbca.glb", 0.0282, 0.647, 0.0371, "Ferry's map", "Read", "hand-drawn, the routes she trusts"],
+    books: ["/cdn/value.fd03cd9b6fa8eafa9e85c9e8f8560257ffca352f9de0da34eabee12d6a350c03.glb", 0.0489, 0.6476, 0.4125, "Books", "Read", "worn hardcovers, notes in the margins"],
+    mug: ["/cdn/value.2cedc48f2ae996d7f430bed6bae3d4f30cda6fc82844f182b55f6a848bf71c2f.glb", -0.1728, 0.6476, -0.4161, "Tin mug", "Drink", "cold coffee, still half full"],
+    compass: ["/cdn/value.fadf3574dd80a724bff92b6899b31b9a151b1f1600f3efd00ead7b6473f9c816.glb", -0.0413, 0.6476, -0.2151, "Old compass", "Take", "brass, the needle still swings"],
+    pencils: ["/cdn/value.97b1bb6132d572acd2914627da7721a563fa65e39cc159d9b96e0b5abf2d0fee.glb", 0.1464, 0.647, -0.4061, "Pencils", "Sketch", "two stubs, sharpened with a knife"] };
+  const desk = (id, x, z, yaw) => { // yaw 90: the model's +x runs to world -z, its +z to world +x
+    put(`l169-house-m-${id}`, { feetPosition: { x, y: F, z }, rotation: yaw, castShadow: true, receiveShadow: true, physics: "static", model: { id: DESK.desk } });
+    const c = Math.cos(yaw * Math.PI / 180), sn = Math.sin(yaw * Math.PI / 180);
+    for (const [k, [m, ox, oy, oz, name, verb, info]] of Object.entries(DESK)) { if (k === "desk") continue;
+      put(`l169-house-m-${id}-${k}`, { feetPosition: { x: x + ox * c + oz * sn, y: F + oy, z: z - ox * sn + oz * c }, rotation: yaw, castShadow: k !== "map", model: { id: m },
+        tags: ["usable"], behavior: "scripts/desk-item.js", state: { kind: k, name, verb, info } }); } };
   const hide = (id) => { const o = ctx.getObject?.(`l169-house-${id}`); if (o) o.visible = false; };
   for (const k of ["bed1", "bed2", "bed3"]) {
     const [x, z] = mid(k); hide(`bed-${k}`); hide(`kit-${k}`);
@@ -93,7 +106,7 @@ export function layHouse(ctx, put, L) {
     look(`kit-${k}-a`, M.kit, x + 0.8 - 0.95, z - 2.4, 0, 0.21, 0.8, 0.2); look(`kit-${k}-b`, M.kit, x + 0.8 + 0.95, z - 2.4, 0, 0.21, 0.8, 0.2);
   }
   { const [x, z] = mid("den"); hide("cot-1"); hide("cot-2"); look("cot-1", M.cot, x - 1.3, z - 0.6, 0, 0.38, 0.5, 0.97); look("cot-2", M.cot, x + 1.3, z - 0.6, 0, 0.38, 0.5, 0.97); }
-  { const [x, z] = mid("living"); hide("bench"); hide("maptable"); look("bench", M.bench, x, z + 2.2, 180, 0.8, 0.47, 0.22); look("maptable", M.table, x - 2.4, z - 1.2, 90, 0.45, 0.76, 0.8); }
+  { const [x, z] = mid("living"); hide("bench"); hide("maptable"); look("bench", M.bench, x, z + 2.2, 180, 0.8, 0.47, 0.22); desk("maptable", x - 2.4, z - 1.2, 90); }
   // the sitting corner (Nov 14 house pass): sofa against the kitchen wall facing the window, recliner across a coffee table, shelf and lamp behind
   { const sit = (id, m, fwd, x, z, yaw, s) => put(`l169-house-m-${id}`, { feetPosition: { x: x + (C.x - 18), y: F, z: z + (C.z + 500) }, rotation: yaw, castShadow: true, receiveShadow: true, physics: "static", model: { id: m, forward: fwd }, layout: { box: { min: { x: -s[0] / 2, y: 0, z: -s[2] / 2 }, max: { x: s[0] / 2, y: s[1], z: s[2] / 2 } } } });
     sit("sofa", "/cdn/value.ff13bc205536a957826e2f7fed75554c07ffe7848198e50e1d65f257cabacdd9.glb", "+x", 17.3, -496.4, 90, [2.1, 1.05, 1.01]);
@@ -103,7 +116,7 @@ export function layHouse(ctx, put, L) {
     sit("flamp", "/cdn/value.56e857c3fa9f839e7d3406ce7a54b6caaa028f92cfc1e5b9935ed654404c7d26.glb", "+x", 17.45, -494.7, 0, [0.51, 1.8, 0.51]); }
   { const kx = r.kitchen[1] - b.wallT - 0.31;
     look("counter-a", M.counter, kx, C.z + 2.6, 180, 0.31, 0.9, 1); look("counter-b", M.counter, kx, C.z + 4.6, 180, 0.31, 0.9, 1); // turned 180 so the sink and drawers face into the kitchen, not the wall
-    look("table", M.table, C.x + 4, C.z + 4, 90, 0.5, 0.76, 1.3); }
+    desk("table", C.x + 4, C.z + 4, 90); }
   // the hall: a runner down its length, a bench under the family photo wall, pictures between the doors (painted Nov 14)
   { const hz = (r.hall[2] + r.hall[3]) / 2, nW = r.hall[2] + b.wallT / 2 + 0.012, sW = r.hall[3] - b.wallT / 2 - 0.012, PY = F + 1.22;
     part("runner-a", { part: "rug", w: 7.2, d: 0.78 }, 12.2, hz, F + 0.006, { physics: undefined }); part("runner-b", { part: "rug", w: 7.2, d: 0.78 }, 19.8, hz, F + 0.006, { physics: undefined });
