@@ -1,0 +1,19 @@
+# Level 132 quests (scripts/lib/l132-quests.js). Metres, north = -Z, ground y = 0.
+v: 1
+missing: { key: l132m, id: l132-missing, xp: 150, rep: 5 }
+signal: { key: l132s, id: l132-signal, xp: 200, rep: 8, pass: l132_daypass }
+speech: 35            # Rosalind's vouch check (retryable)
+oweRange: 7           # a ware broken this close to a player is theirs to make right
+dukeRange: 20
+marks:
+  gus: { x: -6.35, z: -15.34, label: "Gus, Fruta Fresca" }
+  rosalind: { x: -15.34, z: -6.35, label: "Rosalind, hat stall" }
+  silas: { x: 6.35, z: 15.34, label: "Silas, Tune Town" }
+  dex: { x: -15.34, z: 6.35, label: "Dex, Bit Barn" }
+  wendell: { x: 0, z: -40, label: "Wendell, RadioShed" }
+  odalys: { x: 6, z: 20, label: "Odalys" }
+  knot: { x: 2.4, z: -2.2, label: "Knot in the hollow tree" }
+  router: { x: 3.6, z: -43.95, label: "RadioShed router" }
+record: { id: l132-q-record, model: /cdn/value.8229b38974d2db18ee2ea1ac34344fba9659b0410f081c145ae86f27bb28881b.glb, at: [-5.72, 0.95, -13.81], h: 0.3 }
+antenna: { id: l132-q-antenna, model: /cdn/value.3ab2cc1739896261e46ccdd6774965a8b25481727ea6d4ab2bb7004859844fe4.glb, h: 0.6, at: [-12.4, 0, 5.1] }
+knot: { id: l132-q-knot, at: [2.4, 2.2, -2.2], size: [0.7, 0.7, 0.7] }
