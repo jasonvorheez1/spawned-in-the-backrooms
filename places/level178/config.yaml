@@ -6,8 +6,8 @@ terrain:
   seed: 178
   generator: scripts/terrain178.js
   materials:
-    - { id: moss, albedo: cdn/texture-terrain-lush-green-cushion-moss-garden-floor.png, tint: "oklch(0.86 0.09 135)", textureScale: 2.2 }
-    - { id: gravel, albedo: cdn/texture-terrain-raked-pale-grey-zen-garden-gravel.png, tint: "oklch(0.92 0.01 90)", textureScale: 2 }
+    - { albedo: cdn/texture-terrain-short-even-velvet-green-moss-ground.png, id: moss, textureScale: 1.6, tint: oklch(0.9 0.07 135) }
+    - { albedo: cdn/texture-terrain-fine-pale-grey-pea-gravel-even.png, id: gravel, textureScale: 1.2, tint: oklch(0.94 0.01 90) }
   decorations: null
 gravity: { x: 0, y: -24, z: 0 }
 defaultSpawnPoint: { x: 0, y: 0.45, z: 13 }
