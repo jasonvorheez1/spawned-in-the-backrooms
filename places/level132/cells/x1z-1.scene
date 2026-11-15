@@ -1,0 +1,8 @@
+# spawn-scene v2 yaml x1z-1
+l132-keep:
+  feetPosition: {x: 110, y: 9, z: -110}
+  id: l132-keep
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 30, height: 24, kind: box, width: 30}
+  tags: [blueprint]
