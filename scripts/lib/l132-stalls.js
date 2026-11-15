@@ -12,7 +12,7 @@ export function frame(L, k) { // stall k: its spot, its forward (toward the tree
 }
 const kill = (ctx, id) => { if (id in ctx.place.objects) ctx.destroy(id); };
 export function lay(ctx, L) {
-  if (ctx.place.state.stallsV === D.v) return;
+  if (ctx.place.state.stallsV === D.v && ctx.getObject("l132-sign-0") && ctx.getObject("l132-stall-0")?.model) return; // a stamp alone survives a room reload that brings back the scene's blueprints
   ctx.place.state.stallsV = D.v;
   const [w, h, d] = D.size;
   for (const s of D.stalls) {
