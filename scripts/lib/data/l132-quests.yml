@@ -1,5 +1,5 @@
 # Level 132 quests (scripts/lib/l132-quests.js). Metres, north = -Z, ground y = 0.
-v: 1
+v: 2
 missing: { key: l132m, id: l132-missing, xp: 150, rep: 5 }
 signal: { key: l132s, id: l132-signal, xp: 200, rep: 8, pass: l132_daypass }
 speech: 35            # Rosalind's vouch check (retryable)
