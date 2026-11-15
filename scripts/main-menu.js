@@ -116,7 +116,7 @@ export function onInput(ctx, input) {
   const d = input.actionData?.mmenu
   if (input.pressed?.mmenu && d) {
     ctx.emit("playSound", { clip: CLICK, volume: 0.5 }, { audience: { player: ctx.self.id } })
-    if (st.bodyStyle && ctx.world.state.bodyStyle !== st.bodyStyle) ctx.world.state.bodyStyle = st.bodyStyle // their saved pick rides into whichever room they wake in
+    if (st.bodyStyle !== "furry") st.bodyStyle = "furry"; if (ctx.world.state.bodyStyle !== "furry") ctx.world.state.bodyStyle = "furry" // locked to furry (Shelly, Nov 15) // their saved pick rides into whichever room they wake in
     if (d.k === "start") { st.menuOpen = false; st.menuView = ""; if (!st.run && !st.madeChar) st.run = cleanPick(null); if (st.t0Done && st.madeChar && ctx.self.place !== "bonus") (lazy("hub", () => import("./lib/hub.js"))?.toHub?.(ctx) ?? import("./lib/hub.js").then((m) => { MODS.hub = m; m.toHub(ctx) })); else if (ctx.self.place !== "bonus") { st.introFrom = ctx.self.place; ctx.cross(ctx.self, "intake") } } // after the tutorial, launch lands in the Bonus Room (johnadams2)
     if (d.k === "resume") { st.menuOpen = false; st.menuView = "" }
     if (d.k === "title") { st.menuKind = "title"; st.menuView = "" }
@@ -135,6 +135,7 @@ export function onInput(ctx, input) {
       else if (d.key === "hudMinimal") p.hudMinimal = !!d.val
       st.uiPrefs = p
     }
+    if (d.k === "style") return; // body style is locked to furry
     if (d.k === "style") { st.bodyStyle = d.v === "human" || d.v === "furry" ? d.v : ((st.bodyStyle ?? ctx.world.state.bodyStyle) === "human" ? "furry" : "human"); ctx.world.state.bodyStyle = st.bodyStyle } // BODIES: the player's pick, saved; the room's characters follow it
   }
   holdTime(ctx, st)

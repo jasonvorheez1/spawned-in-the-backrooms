@@ -81,13 +81,6 @@ function settingsView(ctx, player, prefs) {
   return `<div class="mm-sub" role="region" aria-label="Settings">
     <h2>Settings</h2>
     <div class="mm-row">
-      <div><strong>Character Body Style</strong><small>Applies to characters across the world</small></div>
-      <div class="mm-seg">
-        ${seg('Human', body === 'human', "{k:'style',v:'human'}")}
-        ${seg('Furry', body === 'furry', "{k:'style',v:'furry'}")}
-      </div>
-    </div>
-    <div class="mm-row">
       <div><strong>Interface Scale</strong><small>Adjust menu and dialogue text size</small></div>
       <div class="mm-seg">
         ${Object.entries(SCALE_LABELS).map(([k, lbl]) => seg(lbl.split(' ')[0], prefs.scale === k, `{k:'pref',key:'scale',val:'${k}'}`)).join('')}
