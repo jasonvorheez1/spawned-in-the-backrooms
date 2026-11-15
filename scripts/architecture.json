@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8786,
-  "updatedAt": "2026-11-15T12:39:04.903Z",
+  "basedOnSpecVersion": 8793,
+  "updatedAt": "2026-11-15T12:44:02.898Z",
   "summary": "The Backrooms is a multiplayer survival RPG across Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Shared registries and handlers coordinate global play while cell scenes and local simulations compose spaces and stories; Kyoto Dreams (Level 178) and the solo tutorial are authored destinations.",
   "scriptPaths": [],
   "places": [
@@ -12,7 +12,7 @@
     "places/level1 + places/level4 + places/level26 (3D) - M.E.G. camps and office mazes; Level 26's S.S. Fun has cabin 23, Partygoer decks/lockdown and aboard gate; Level 1 includes Dina's radio.",
     "places/level9 + places/level11 + places/level61 + places/level70 (3D) - seeded Suburbs, city/Base Beta/strip mall/clinic and Chapter 2 trail, Snackrooms food court/checkpoint, and Froidetown winter market/civic town.",
     "places/level169 (3D, Welcome to the Desert) - seeded desert, Ferry's house/trail/pantry/basement, scheduled Friends, checkpoints/ship and Field Office 7 with Backrooms Robotics.",
-    "places/level178 (3D, Kyoto Dreams) - early-morning machiya around a courtyard hot spring and garden; x0z0.scene holds house and usable props, with garden-kit assets and per-model PBR skins; sim keeps resident rounds and arrival quest. Other level* places are authored 3D destinations."
+    "places/level178 (3D, Kyoto Dreams) - early-morning machiya around a courtyard hot spring and garden; x0z0.scene holds house/usable props and garden stone spring rim, raked gravel, moss, stepping stones, shishi-odoshi, lanterns and planted ornamentals; sim keeps resident rounds and arrival quest."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera setup, ordered behaviors and input actions; fall-guard runs before movement and radio is on the player.",
@@ -42,7 +42,7 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - journal/advancement/reward helpers; containment.js - pen/door operations; ch2-quest.js - Chapter 2 stages/dialogue helpers.",
     "scripts/lib/run-opts.js - OPTS, DEFAULTS, PICK_DEFAULTS, RATE, PRESETS, runOf, needsMul, sanityMul, noStory, noNpcs, cleanPick, KEEP, SKIP; scripts/main-menu.js - SLOTS.",
-    "scripts/lib/compass.js - COMPASS, useCompass, compassTick; scripts/lib/tutorial.js - orientation, GUIDE_CHAPTERS/LESSONS, tipsMuted, currentTip, guideTick, guideInput; scripts/lib/voices.js - voiceKey, throatOf, vo, actedVoice, hasVoice, hasCast."
+    "scripts/lib/compass.js - COMPASS, useCompass, compassTick; scripts/lib/tutorial.js - orientation, GUIDE_CHAPTERS/LESSONS, tipsMuted, currentTip, guideTick, guideInput; scripts/lib/voices.js - voiceKey, throatOf, vo, actedVoice, hasVoice."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable player.state progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, saved place/position, currency and related progress.",
@@ -55,28 +55,28 @@
     "scripts/lib/compass.js + scripts/player.js - player.state.compass charges and compassOn/compassRead dial state; player.session cmpWind/cmpNext/cmpLastD/cmpLastMode holds live winding, refresh and distance-trend memory."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focusable tagged props and dispatches their handlers.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focused tagged props and dispatches interactions.",
     "templates/player.js runs scripts/fall-guard.js before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
-    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose. Camera drops an unparented stray view if one is left behind.",
+    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose; camera discards an unparented stray view.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on place arrival to repair implausibly future-dated state timestamps.",
     "scripts/main-menu-ui.js actions → scripts/main-menu.js → player.state.run or SQL saves; new-run reset retains NEW_KEEP screen/menu/save-list keys and clears character state; after t0Done pause Return routes to Bonus Rooms.",
     "scripts/main-menu.js forces player/world bodyStyle to furry and ignores style actions; scripts/lib/critter-model.js setStyle always clears HUMAN, so character models are furry-only.",
     "scripts/lib/run-opts.js → main-menu story gates Dina/Chapter 2/cutscenes; global sim.js removes npc-tagged people only when all players in a place choose noNpcs, and Phoebe only when all choose noStory.",
-    "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded; Bonus train rides set temporary transfer state.",
+    "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded and Bonus train rides set tempo.",
     "scripts/player.js zone resolver → player.state.zone (Level 178 maps to l178_house); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js place-matched jobs; carried items/kills/world events advance errands and quest dialogue handlers → journal, player.state.errands/qtrack, feed, reputation and rewards.",
-    "places/tutorial0/sim.js builds route props/lights from scripts/lib/tut0.js; main-menu ticks scripts/lib/tut0-cut.js locally against player position/state, tut0-panel.js activates HALOGEN; t0Done leaves for Level 1; scripts/lib/tutorial.js tracks Field Guide progress.",
-    "NPC dialogue/chatter/use handlers → scripts/lib/voices.js vo/actedVoice resolves actorId + normalized line slug through voice-acted2.yml to /cdn/value.<sha>.mp3; scripts/lib/hear.js identifies voice clips, applies voice bus/distance occlusion and playback rules."
+    "places/tutorial0/sim.js builds route props/lights from scripts/lib/tut0.js; main-menu ticks scripts/lib/tut0-cut.js locally against player position/state, tut0-panel.js activates HALOGEN; t0Done leaves for Level 1; scripts/lib/tutorial.js supplies Field Guide tips.",
+    "NPC dialogue/chatter/use handlers → scripts/lib/voices.js vo/actedVoice resolves actorId + normalized line slug through voice-acted2.yml to /cdn/value.<sha>.mp3; scripts/lib/hear.js identifies voice clips and applies voice bus/distance occlusion."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table with separately fitted chairs.",
     "scripts/lib/data/weapons.yml + scripts/player.js + scripts/lib/ballistics.js + scripts/lib/knock.js - weapon variants share combat; per-weapon sound/rack/reload fields resolve through sounds.yml, with weapon-specific liquid effects.",
-    "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters, plus cat-wardrobe fitting and level70-stall parts - fitted GLBs/prop catalogs and body-specific garment/prop fitting; hair-facewindow.py refits selected cat faces.",
+    "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters, plus cat-wardrobe fitting and level70-stall parts - fitted GLBs/prop catalogs and body-specific garment/prop fitting; hair-facewindow.py refits selected cat assets.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "scripts/lib/l169-road.js + scripts/lib/l169-road-geo.js + scripts/lib/l169-travel.js + scripts/lib/l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
-    "art/kyoto/build_arch.py + build_props.py + kit.py + art/kyoto/garden/build.py + scripts/lib/data/level178.yml - machiya and garden kits share Blender-built/fitted assets and Level 178 layout; the garden builder cleans Tripo meshes and exports rocks, plants, spring rim and gravel ring; usable props vary by kind through scripts/l178-prop.js."
+    "art/kyoto/build_arch.py + build_props.py + kit.py + art/kyoto/garden/build.py + scripts/lib/data/level178.yml - machiya and garden kits share Blender-built/fitted assets and Level 178 layout; the garden builder cleans Tripo meshes and exports fitted garden assets."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -91,7 +91,7 @@
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with the sim-created hub-from-l178 marker.",
     "Level 13's building shell is authored in cells/x0z0.scene; sim.js returns if l13-floor is absent and no longer regenerates the shell. Preserve matching floor ID and scene wall/threshold geometry; LETH remains in player.state.leth13.",
     "Level 169 uses x/z with north at -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth must align. level169.yml holds tuned positions/rules; sim layout version and well version are separate.",
-    "Level 178 positions in scripts/lib/data/level178.yml use metres, north = -Z, house floor y=0.45; align scene placements, usable target IDs/coordinates and basin collider dimensions with terrain/pool cut and tuning. Garden assets are built by art/kyoto/garden/build.py into /workspace/k178/out; keep scene asset/material references consistent with those exports.",
-    "Compass tuning lives in scripts/lib/data/compass.yml; charge/open mode/read are player.state while winding/refresh/trend memory is session-only. voice-acted2.yml maps base36 hashes of actorId|slug(line) to packed asset hashes; voices.js loads the matching audio."
+    "Level 178 positions in scripts/lib/data/level178.yml use metres, north = -Z, house floor y=0.45; align scene placements, usable target IDs/coordinates and basin collider dimensions with terrain/pool cut and tuning. The garden scene uses ground-level gravel/moss and a stone spring rim; lantern placements/models are fitted below the eaves.",
+    "Compass tuning lives in scripts/lib/data/compass.yml; charge/open mode/read are player.state while winding/refresh/trend memory is session-only. voice-acted2.yml maps base36 hashes of actorId|slug(line) to packed asset hashes; voices.js looks up those recordings."
   ]
 }
