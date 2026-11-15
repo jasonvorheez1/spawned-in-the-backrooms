@@ -253,3 +253,19 @@ level109_lure:
 level109_stable:
   - [[l109o-ew0_13m-doc1, "bed two's holding."], [l109o-ew0_13m-petra, "for now."], [l109o-ew0_13m-doc1, "for now is what we do here."]]
   - [[l109o-ew0_13m-halloran, "what was it, bed two?"], [l109o-ew0_13m-doc1, "pressure. same as before."], [l109o-ew0_13m-halloran, "write it down. all of it."]]
+# Level 132, Lumiria: the stallkeepers across the square, gossiping over what they collect (scripts/lib/l132-people.js)
+level132:
+  - [[l132-teodora, "Anouk. Anouk! Have you got any saffron left?"], [l132-anouk, "For you? For one of those blue urns, maybe."], [l132-teodora, "Never. The blue ones stay."]]
+  - [[l132-benny, "Dex, the new cartridge. The gold one. Is it real?"], [l132-dex, "It's r-real. It's not for trade."], [l132-benny, "Everything's for trade, buddy."]]
+  - [[l132-gus, "Somebody brought me a record today. Didn't know what to do with it."], [l132-silas, "Bring it here, Gus. Bring it right here."]]
+  - [[l132-rosalind, "Margo, darling, your scarf. Is that new?"], [l132-margo, "Older than you. Keep your hands off it."], [l132-rosalind, "Ha! Worth a try."]]
+  - [[l132-anouk, "Did you hear? The Duke's festival is coming round again."], [l132-gus, "Already? Who's he calling this year?"], [l132-anouk, "Five lucky ones. Five big collections. Same as always."]]
+  - [[l132-silas, "Haven't seen old Pell since the last festival."], [l132-margo, "Well. He went up to the palace, didn't he."], [l132-silas, "Yeah. Lucky guy."]]
+  - [[l132-mateo, "The Wi-Fi's down again."], [l132-wendell, "I can, um, I can sell you a router. Trade you. Trade you a router."], [l132-mateo, "You traded me three already, Wendell."]]
+  - [[l132-del, "Pie's out! Who wants pie?"], [l132-gus, "Me! I'll bring you a peach for it."], [l132-del, "Two peaches, hon. It's cherry."]]
+  - [[l132-odalys, "Is the Wi-Fi always like this here?"], [l132-mateo, "Only on days that end in Y."], [l132-odalys, "Great. Just great."]]
+  - [[l132-benny, "New phone came in this morning. Sealed in the box!"], [l132-teodora, "And next to it, a Greek amphora. Your stall makes no sense."], [l132-benny, "It makes perfect sense. It's Lumiria."]]
+  - [[l132-dex, "Rosalind, d-do you have any hats with, um, propellers?"], [l132-rosalind, "I have one. It is not for you, sweetheart."]]
+  - [[l132-margo, "My knees say rain."], [l132-anouk, "It never rains here, Margo."], [l132-margo, "My knees don't know that."]]
+  - [[l132-wendell, "Del, the TV in the diner's working again?"], [l132-del, "Works if you hit it. So I hit it."]]
+  - [[l132-gus, "Lovely day."], [l132-silas, "Every day's a lovely day."], [l132-gus, "That's what I like about it."]]
