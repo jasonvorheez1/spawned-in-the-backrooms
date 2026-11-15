@@ -66,11 +66,14 @@ const asset = (sha) => `/cdn/value.${unpack(sha)}.mp3`
 let recorded = new Map(Object.entries(ACTED).map(([key, sha]) => [asset(sha), (TIMING[key] ?? 0) * 100]))
 // the table (214 KB) is read after the player stands, not before: every level's boot is that much lighter
 // Shelly Nov 14 "fix the voice lines theyre laughing": the first takes (voice-acted.yml) laughed and repeated lines; only the clean retakes (voice-acted2.yml, art/vo/act.py) play
-import('./data/voice-acted2.yml').then((m) => { ACTED = m?.default ?? m ?? {}; RETAKE = true; recorded = new Map(Object.entries(ACTED).map(([key, sha]) => [asset(sha), 0])) }).catch(() => {})
+// Nov 15 (arrival weight): 449 KB that boot fetched in its first wave; now asked for by the first player tick (talk.js) or the first line spoken, whichever is first
+let warmed = false
+export function warmVoices() { if (warmed) return; warmed = true; import('./data/voice-acted2.yml').then((m) => { ACTED = m?.default ?? m ?? {}; RETAKE = true; recorded = new Map(Object.entries(ACTED).map(([key, sha]) => [asset(sha), 0])) }).catch(() => { warmed = false }) }
 export const isVoiceClip = (clip) => recorded.has(clip) || String(clip).includes('/voice-')
 export const recordedDuration = (clip) => recorded.get(clip) || 0
 export const hasCast = (who) => Object.hasOwn(CAST, actorId(who))
 export function actedVoice(who, line) {
+  if (!warmed) warmVoices()
   const key = hash(actorId(who) + '|' + slug(line)).toString(36), sha = ACTED[key]
   if (!sha) return null
   // a take far longer than its words is a bad take (the voice maker padded a short line with laughs and repeats): silent, the subtitle stays
