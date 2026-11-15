@@ -10,6 +10,10 @@ props: { l4-vend: machine, l4-bed: wood, l4-prop: wood, gamma-sign: metal, gamma
 propRegrowMinutes: 60
 # placed props a level names by id: [id regex, material, { hp, solid (give it a box collider so swings find it), tear (a slot that tears open instead of the piece vanishing) }]
 idMat:
+  - ['^l132-ware-ceramic-', ceramic, { solid: true }]   # Lumiria (Level 132): every lane's wares, by what they are made of
+  - ['^l132-ware-glass-', glass, { solid: true }]
+  - ['^l132-ware-wood-', crate_wood, { solid: true }]
+  - ['^l132-ware-paper-', paper, { solid: true }]
   - ['^l178-(porch-)?lantern-\d+$', washi, { solid: true }]
   - ['^l178-ware-\d+$', ceramic, { solid: true }]
   - ['^l178-shoji-\d+/leaf$', washi, { tear: washi }]
@@ -42,12 +46,17 @@ materials:
   ceramic:  { name: Glazed ceramic, hp: 16, mul: { blunt: 1.5, edged: 0.8, firearm: 1.2 }, sound: ceramic-teacup-clink-chip, breakSound: ceramic-teacup-crisp-shatter, dust: [0.9, 0.86, 0.78], chunk: [1, 0.25, 0.8], drops: [[ceramic_shard, 1, 3]] }
   washi:    { name: Washi paper, hp: 20, mul: { blunt: 0.9, edged: 1.8, firearm: 1.0 }, sound: washi-paper-screen-poke-rustle, breakSound: washi-paper-screen-tear-rip, dust: [0.96, 0.93, 0.84], chunk: [1, 0.04, 1], fall: 0.25, drops: [[washi_scrap, 1, 2], [bamboo_strip, 0, 1]] }
   bamboo:   { name: Bamboo, hp: 60, mul: { blunt: 0.9, edged: 1.6, firearm: 0.5 }, sound: bamboo-stalk-knock-hollow, breakSound: bamboo-stalk-crack-snap, dust: [0.78, 0.72, 0.45], chunk: [0.2, 0.2, 1.4], drops: [[bamboo_strip, 2, 4]] }
+  glass:    { name: Glass, hp: 12, mul: { blunt: 1.5, edged: 0.9, firearm: 1.4 }, sound: glass-bottle-clink-tap, breakSound: glass-bottle-shatter-crash, dust: [0.82, 0.9, 0.92], chunk: [0.5, 0.05, 0.5], drops: [[glass_shard, 1, 3]] }
+  paper:    { name: Card and paper, hp: 14, mul: { blunt: 0.9, edged: 1.8, firearm: 1.0 }, sound: washi-paper-screen-poke-rustle, breakSound: washi-paper-screen-tear-rip, dust: [0.94, 0.9, 0.82], chunk: [1, 0.04, 1], fall: 0.25, drops: [[paper_scrap, 1, 2]] }
+  crate_wood: { name: Light wood, hp: 30, mul: { blunt: 1.0, edged: 1.5, firearm: 0.6 }, sound: wood-plank-crack-hit, dust: [0.62, 0.48, 0.3], drops: [[scrap_wood, 1, 2], [nails, 0, 1]] }
   fixture:  { name: Fixture,  hp: 25,  mul: { blunt: 1.4, edged: 1.0, firearm: 1.2 }, sound: metal-sheet-clang-hit,    dust: [0.95, 0.95, 0.85], drops: [[wire, 1, 2], [scrap_metal, 0, 1]] }
 breakSound: debris-collapse-crumble
 buildSound: hammer-nail-wood-build
 # scrap tokens: name, kg each, colour in the amber lists
 scrap:
   stuffing:    { name: Stuffing, kg: 0.1, color: "#f2efe6" }   # Christmas Area only: out of the Still Lifes and presents (crafts the Bobette and Carolynne)
+  glass_shard: { name: Glass shard, kg: 0.1, color: "#bfe6ea" }
+  paper_scrap: { name: Paper scrap, kg: 0.05, color: "#efe6cf" }
   scrap_wood:  { name: Scrap wood,  kg: 0.6, color: "#d9a35a" }
   scrap_metal: { name: Scrap metal, kg: 0.8, color: "#b9c2c8" }
   drywall:     { name: Drywall chunk, kg: 0.5, color: "#e8dcb6" }

@@ -1,3 +1,39 @@
-// Level 132 · stalls. lay(ctx, L) builds once (guard on ctx.place.state.stallsV); tick(ctx, L) runs each second while someone is here.
-export function lay(ctx, L) {}
+// Level 132 · the bazaar. Eight stalls ring the tree, each a copy of a store from another era; every ware is real:
+// press one and the place hears "l132:barter". This file is also each ware's behavior (its press ear).
+// lay(ctx, L) builds once per data version; fragile wares break and restock through lib/breakables.js (idMat rules).
+import D from "./data/l132-stalls.yml";
+const SELF = "scripts/lib/l132-stalls.js";
+export const ears = { press: (ctx, e) => { ctx.emit("l132:barter", { by: e?.by ?? null, ware: ctx.self.id }); } };
+export function frame(L, k) { // stall k: its spot, its forward (toward the tree) and its right
+  const a = ((L?.stalls?.angle0 ?? 22.5) + 45 * k) * Math.PI / 180, R = L?.stalls?.radius ?? 15;
+  const p = { x: +(R * Math.sin(a)).toFixed(2), y: 0, z: +(-R * Math.cos(a)).toFixed(2) }, n = Math.hypot(p.x, p.z);
+  const f = { x: -p.x / n, z: -p.z / n }, r = { x: -f.z, z: f.x };
+  return { p, f, r, at: (x, y, d) => ({ x: p.x + r.x * x + f.x * d, y, z: p.z + r.z * x + f.z * d }) };
+}
+const kill = (ctx, id) => { if (id in ctx.place.objects) ctx.destroy(id); };
+export function lay(ctx, L) {
+  if (ctx.place.state.stallsV === D.v) return;
+  ctx.place.state.stallsV = D.v;
+  const [w, h, d] = D.size;
+  for (const s of D.stalls) {
+    const F = frame(L, s.k), id = `l132-stall-${s.k}`;
+    for (const x of [id, `l132-sign-${s.k}`, `l132-lamp-${s.k}`]) kill(ctx, x);
+    ctx.spawn(id, { tags: ["l132", "l132-stall"], feetPosition: F.p, rotation: { lookAt: { x: 0, y: 0, z: 0 } }, physics: { body: "static", collider: "mesh" },
+      layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, model: { id: s.model, forward: "+x" }, state: { name: s.name, cat: s.cat } });
+    ctx.spawn(`l132-sign-${s.k}`, { tags: ["l132", "l132-sign"], feetPosition: s.signAt ? { x: s.signAt[0], y: s.signAt[1], z: s.signAt[2] } : F.at(D.sign.x, D.sign.y, D.sign.f), rotation: { lookAt: { x: 0, y: 0, z: 0 } },
+      layout: { box: { min: { y: 0 }, max: { y: D.sign.h } } }, model: { id: s.sign, forward: s.fwd ?? "+x" }, state: { name: s.name } });
+    ctx.spawn(`l132-lamp-${s.k}`, { tags: ["l132"], feetPosition: F.at(0, D.lamp.y, D.lamp.f), light: { kind: "point", color: s.lamp, intensity: D.lamp.intensity, distance: D.lamp.distance } });
+  }
+  for (const o of ctx.query({ tags: ["l132-ware"], radius: 60, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id);
+  for (const id of ctx.place.state.wrecks ?? []) if (String(id).startsWith("l132-ware-")) kill(ctx, id);
+  for (const wr of D.wares) {
+    if (!wr.at) continue;
+    const s = D.stalls[wr.k], F = frame(L, wr.k), n = +wr.id.split("-").pop();
+    const spec = { tags: ["l132", "l132-ware", "usable"], feetPosition: { x: wr.at[0], y: wr.at[1], z: wr.at[2] }, physics: "static", behavior: SELF,
+      rotation: { lookAt: F.at(((n * 37) % 11) - 5, 0, 15 + ((n * 53) % 7) - 3) }, layout: { box: { min: { y: 0 }, max: { y: wr.h } } }, model: { id: wr.model, forward: "+x" },
+      state: { name: wr.name, verb: "Barter", l132ware: { stall: wr.k, kind: wr.kind, cat: s.cat } } };
+    if (wr.kind === "turntable") spec.audio = { clip: D.music.clip, gain: D.music.gain, loop: true, spatial: true, maxDistance: D.music.maxDistance };
+    ctx.spawn(wr.id, spec);
+  }
+}
 export function tick(ctx, L) {}

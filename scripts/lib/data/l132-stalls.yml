@@ -1,0 +1,74 @@
+# Level 132 bazaar: eight stalls round the tree. at = resolved world spot of each ware (raycast onto the stall); regenerate with /workspace/l132s/gen.py
+v: 1
+size: [3.6, 3, 2.6]
+lamp: { intensity: 2.2, distance: 7, y: 2.1, f: 1.0 }
+sign: { h: 0.95, x: -1.55, y: 1.95, f: 1.45 }
+music: { clip: cdn/music-1970s-soul-funk-groove-vinyl-crackle-loop.mp3, gain: 0.12, maxDistance: 11 }
+stalls:
+  - { k: 0, name: "Kerameikos Pottery", cat: pottery, lamp: "oklch(0.86 0.09 70)", model: /cdn/value.312c98d7039403458ae27f9b208d5f965757323fb9e22ddd302d79d65ab09e03.glb, sign: /cdn/value.8a28bc5b35ef63e60da11df4015ca70fb3b58774ff163c1f27b0a065769a2c9e.glb, signAt: null, fwd: "+x" }
+  - { k: 1, name: "PhoneHut", cat: phones, lamp: "oklch(0.95 0.02 240)", model: /cdn/value.f10990a2017637c48dad484dda5367e3a01e3b5d474cc1ecb4d8e396ff737743.glb, sign: /cdn/value.0cde16e766642dcb7456a7463e24be1699339357b6b2b84ffc814708db38c90b.glb, signAt: null, fwd: "+x" }
+  - { k: 2, name: "Ye Olde Apothecary", cat: remedies, lamp: "oklch(0.85 0.1 80)", model: /cdn/value.98a3440fdf4873826207072693862af4f4fd46f9c7f601faa5291bb170a39dab.glb, sign: /cdn/value.342a5dcc86c010ae940164ddd34faa6d5e7ce515e062acad1f35b829028cb6a7.glb, signAt: null, fwd: "+x" }
+  - { k: 3, name: "Tune Town Records", cat: records, lamp: "oklch(0.84 0.12 60)", model: /cdn/value.863da95a6a517f54f2c5e87627ddf6ce3976a8b32380e0a639b309478c180349.glb, sign: /cdn/value.bfec74474125dab1d3a82d86436ac966cbedc393aba508dec9139687d23a173d.glb, signAt: null, fwd: "+x" }
+  - { k: 4, name: "Silk Road Spices", cat: spices, lamp: "oklch(0.82 0.13 65)", model: /cdn/value.4bd0b546bf3e29114f9c6c093a8946925fd9b10db7ee363016a685ac9160e945.glb, sign: /cdn/value.819cd1d383b7b1672f69c719caacf3ba749b585f0c2820420f048ba9f70d785e.glb, signAt: null, fwd: "+x" }
+  - { k: 5, name: "Bit Barn", cat: computers, lamp: "oklch(0.88 0.06 200)", model: /cdn/value.71ee020d32c4a3cafd34489d90d961b421013b01605281e6138f7283c144900f.glb, sign: /cdn/value.85626c8b755e7a1413b179db5eed4b83dfcb894142e877262c57afdf62b98d97.glb, signAt: null, fwd: "+x" }
+  - { k: 6, name: "Marguerite's Hats", cat: hats, lamp: "oklch(0.88 0.07 40)", model: /cdn/value.cb4987487bfd9ad09178d77e6355614e740eae2d2baadcd60cbbe101afcdb575.glb, sign: /cdn/value.e1c9928190c7ee253daf436ebc511b3aa212784a130138f74b82114b435de6da.glb, signAt: null, fwd: "+x" }
+  - { k: 7, name: "Fruta Fresca", cat: fruit, lamp: "oklch(0.87 0.1 85)", model: /cdn/value.92d0b170fa611c7572973dbd753398ca9a507c227831279b76766451930b2b83.glb, sign: /cdn/value.798f4d5f835397b6290586fcabd188ebbd73d896b0115fdf831409b1433ccaf9.glb, signAt: null, fwd: "+x" }
+wares:
+  - { id: l132-ware-ceramic-0-0, k: 0, model: /cdn/value.16808bf89a2e4eadb4f2f477899a0911c1a9d6c1d3c1ad32177cd63c41549198.glb, name: "Red-figure amphora", kind: amphora, h: 0.5, ground: 0, at: null }
+  - { id: l132-ware-ceramic-0-1, k: 0, model: /cdn/value.57ec6592165b75d49e7ebc350284dcee2d8f3b761f3b90bb981414534e4f4b5d.glb, name: "Black-figure krater", kind: krater, h: 0.4, ground: 0, at: null }
+  - { id: l132-ware-ceramic-0-2, k: 0, model: /cdn/value.f99bc5e3703346badcc517c9fb64dbf59e5a8131c6a00edc007c5710223e4e58.glb, name: "Terracotta oil lamp", kind: oil_lamp, h: 0.13, ground: 0, at: null }
+  - { id: l132-ware-ceramic-0-3, k: 0, model: /cdn/value.4851d1261861965e182804581ff11772cb80a7937d0526913353e37d67079944.glb, name: "Black-glaze hydria", kind: hydria, h: 0.42, ground: 0, at: null }
+  - { id: l132-ware-ceramic-0-4, k: 0, model: /cdn/value.16808bf89a2e4eadb4f2f477899a0911c1a9d6c1d3c1ad32177cd63c41549198.glb, name: "Olive-wreath amphora", kind: amphora, h: 0.62, ground: 1, at: null }
+  - { id: l132-ware-ceramic-0-5, k: 0, model: /cdn/value.f99bc5e3703346badcc517c9fb64dbf59e5a8131c6a00edc007c5710223e4e58.glb, name: "Terracotta oil lamp", kind: oil_lamp, h: 0.13, ground: 0, at: null }
+  - { id: l132-ware-ceramic-0-6, k: 0, model: /cdn/value.57ec6592165b75d49e7ebc350284dcee2d8f3b761f3b90bb981414534e4f4b5d.glb, name: "Wedding krater", kind: krater, h: 0.55, ground: 1, at: null }
+  - { id: l132-ware-metal-1-0, k: 1, model: /cdn/value.4ef14e840dc94d23019784620998f9995bd722a9556026c7873374fe4d0bc568.glb, name: "Smartphone, this year's", kind: phone, h: 0.2, ground: 0, at: null }
+  - { id: l132-ware-glass-1-1, k: 1, model: /cdn/value.692962491e9967a7797b9b112f6457a1b9f83704ba1b6c775b0b481e19f42f75.glb, name: "Cracked demo phone", kind: cracked_phone, h: 0.2, ground: 0, at: null }
+  - { id: l132-ware-paper-1-2, k: 1, model: /cdn/value.2238fe913fb328817b4f457c770997dbc2acc0209178804f7f4017b99d354225.glb, name: "Boxed smartphone", kind: phone_box, h: 0.17, ground: 0, at: null }
+  - { id: l132-ware-metal-1-3, k: 1, model: /cdn/value.4ef14e840dc94d23019784620998f9995bd722a9556026c7873374fe4d0bc568.glb, name: "Smartphone, midnight blue", kind: phone, h: 0.2, ground: 0, at: null }
+  - { id: l132-ware-paper-1-4, k: 1, model: /cdn/value.2238fe913fb328817b4f457c770997dbc2acc0209178804f7f4017b99d354225.glb, name: "Boxed smartphone", kind: phone_box, h: 0.17, ground: 0, at: null }
+  - { id: l132-ware-metal-1-5, k: 1, model: /cdn/value.4ef14e840dc94d23019784620998f9995bd722a9556026c7873374fe4d0bc568.glb, name: "Smartphone, pocket size", kind: phone, h: 0.17, ground: 0, at: null }
+  - { id: l132-ware-paper-1-6, k: 1, model: /cdn/value.2238fe913fb328817b4f457c770997dbc2acc0209178804f7f4017b99d354225.glb, name: "Boxed smartphone", kind: phone_box, h: 0.17, ground: 0, at: null }
+  - { id: l132-ware-metal-1-7, k: 1, model: /cdn/value.4ef14e840dc94d23019784620998f9995bd722a9556026c7873374fe4d0bc568.glb, name: "Smartphone, big screen", kind: phone, h: 0.23, ground: 0, at: null }
+  - { id: l132-ware-glass-2-0, k: 2, model: /cdn/value.b49c06c4498cccc8e123edf1b9dc9359dba92302f356e06149e130ed5447dabe.glb, name: "Cobalt tincture bottle", kind: tincture, h: 0.3, ground: 0, at: null }
+  - { id: l132-ware-glass-2-1, k: 2, model: /cdn/value.c912fa268d19f3fe8551b46e813883a52e85f4d6af5606a1ab466438995be068.glb, name: "Three small remedies", kind: remedy_trio, h: 0.18, ground: 0, at: null }
+  - { id: l132-ware-metal-2-2, k: 2, model: /cdn/value.61a467d50c257b10aafad1b81e73e74a687b0ee290a84fa2ba3680ce77768bd9.glb, name: "Brass balance scale", kind: scale, h: 0.38, ground: 0, at: null }
+  - { id: l132-ware-ceramic-2-3, k: 2, model: /cdn/value.fd29f1d15dd2cf872b6b8f9af5f82e7e45f2f6cfb3911bbbbedb10d98881fe2f.glb, name: "Mortar of lavender", kind: mortar, h: 0.16, ground: 0, at: null }
+  - { id: l132-ware-glass-2-4, k: 2, model: /cdn/value.b49c06c4498cccc8e123edf1b9dc9359dba92302f356e06149e130ed5447dabe.glb, name: "Laudanum-blue bottle", kind: tincture, h: 0.26, ground: 0, at: null }
+  - { id: l132-ware-glass-2-5, k: 2, model: /cdn/value.c912fa268d19f3fe8551b46e813883a52e85f4d6af5606a1ab466438995be068.glb, name: "Three small remedies", kind: remedy_trio, h: 0.2, ground: 0, at: null }
+  - { id: l132-ware-ceramic-2-6, k: 2, model: /cdn/value.fd29f1d15dd2cf872b6b8f9af5f82e7e45f2f6cfb3911bbbbedb10d98881fe2f.glb, name: "Mortar and pestle", kind: mortar, h: 0.15, ground: 0, at: null }
+  - { id: l132-ware-wood-3-0, k: 3, model: /cdn/value.67078eea32f93f32d777d69b831d7b7ee08c9eecd2a48f3745a35705e07c4dca.glb, name: "Turntable, still spinning", kind: turntable, h: 0.2, ground: 0, at: null }
+  - { id: l132-ware-paper-3-1, k: 3, model: /cdn/value.8229b38974d2db18ee2ea1ac34344fba9659b0410f081c145ae86f27bb28881b.glb, name: "LP on an easel", kind: lp, h: 0.34, ground: 0, at: null }
+  - { id: l132-ware-wood-3-2, k: 3, model: /cdn/value.3cc52e4c20875c8e0104f948fbb5ceeb29188312e7887a302e909be8cbc94c3b.glb, name: "Crate of vinyl", kind: vinyl_crate, h: 0.42, ground: 1, at: null }
+  - { id: l132-ware-paper-3-3, k: 3, model: /cdn/value.8229b38974d2db18ee2ea1ac34344fba9659b0410f081c145ae86f27bb28881b.glb, name: "LP, sunburst sleeve", kind: lp, h: 0.34, ground: 0, at: null }
+  - { id: l132-ware-wood-3-4, k: 3, model: /cdn/value.3cc52e4c20875c8e0104f948fbb5ceeb29188312e7887a302e909be8cbc94c3b.glb, name: "Crate of vinyl", kind: vinyl_crate, h: 0.42, ground: 1, at: null }
+  - { id: l132-ware-paper-3-5, k: 3, model: /cdn/value.8229b38974d2db18ee2ea1ac34344fba9659b0410f081c145ae86f27bb28881b.glb, name: "LP, first pressing", kind: lp, h: 0.3, ground: 0, at: null }
+  - { id: l132-ware-wood-3-6, k: 3, model: /cdn/value.3cc52e4c20875c8e0104f948fbb5ceeb29188312e7887a302e909be8cbc94c3b.glb, name: "Crate of vinyl", kind: vinyl_crate, h: 0.36, ground: 0, at: null }
+  - { id: l132-ware-cloth-4-0, k: 4, model: /cdn/value.d15fe0dcd57ca354fef682b81f31389e47623541ceb5eba23ff059c32156f982.glb, name: "Sack of turmeric", kind: turmeric, h: 0.55, ground: 1, at: null }
+  - { id: l132-ware-metal-4-1, k: 4, model: /cdn/value.bf372ff2ea69195ddfd4909b03bf9a5eb264533afb814f77900da766e241eefe.glb, name: "Pierced brass lamp", kind: brass_lamp, h: 0.3, ground: 0, at: null }
+  - { id: l132-ware-cloth-4-2, k: 4, model: /cdn/value.c4c3346b10fed13c5e7d552aa9702ce2f198b4554e9c437e33116e2e2af120bc.glb, name: "Bolts of silk", kind: silk, h: 0.3, ground: 0, at: null }
+  - { id: l132-ware-metal-4-3, k: 4, model: /cdn/value.f2f514924cc636d74b25ddf65dac59eaf9e99b817e13e88c2e2c341d72dac275.glb, name: "Tray of spices", kind: spice_tray, h: 0.09, ground: 0, at: null }
+  - { id: l132-ware-cloth-4-4, k: 4, model: /cdn/value.d15fe0dcd57ca354fef682b81f31389e47623541ceb5eba23ff059c32156f982.glb, name: "Sack of saffron-gold", kind: turmeric, h: 0.5, ground: 1, at: null }
+  - { id: l132-ware-metal-4-5, k: 4, model: /cdn/value.bf372ff2ea69195ddfd4909b03bf9a5eb264533afb814f77900da766e241eefe.glb, name: "Jewelled brass lamp", kind: brass_lamp, h: 0.26, ground: 0, at: null }
+  - { id: l132-ware-metal-4-6, k: 4, model: /cdn/value.f2f514924cc636d74b25ddf65dac59eaf9e99b817e13e88c2e2c341d72dac275.glb, name: "Tray of spices", kind: spice_tray, h: 0.09, ground: 0, at: null }
+  - { id: l132-ware-cloth-4-7, k: 4, model: /cdn/value.d15fe0dcd57ca354fef682b81f31389e47623541ceb5eba23ff059c32156f982.glb, name: "Sack of turmeric", kind: turmeric, h: 0.6, ground: 1, at: null }
+  - { id: l132-ware-glass-5-0, k: 5, model: /cdn/value.663a2586de4d3e4fafa0ac6f2d4f9e2c0998193f32e69e9f87811e241237ae4f.glb, name: "Beige home computer", kind: computer, h: 0.45, ground: 0, at: null }
+  - { id: l132-ware-glass-5-1, k: 5, model: /cdn/value.3103622737be313ab28593bafc5a49c31630bc919df1f1ae92e2d2528dff7d44.glb, name: "Case of cartridges", kind: cart_case, h: 0.28, ground: 0, at: null }
+  - { id: l132-ware-metal-5-2, k: 5, model: /cdn/value.c71d9b3a8f38134e4404011a02b87c95244d5c2429b79f2ea83c6b71e84110ef.glb, name: "Joystick and cartridges", kind: joystick, h: 0.16, ground: 0, at: null }
+  - { id: l132-ware-glass-5-3, k: 5, model: /cdn/value.663a2586de4d3e4fafa0ac6f2d4f9e2c0998193f32e69e9f87811e241237ae4f.glb, name: "Beige home computer", kind: computer, h: 0.42, ground: 0, at: null }
+  - { id: l132-ware-metal-5-4, k: 5, model: /cdn/value.c71d9b3a8f38134e4404011a02b87c95244d5c2429b79f2ea83c6b71e84110ef.glb, name: "Joystick and cartridges", kind: joystick, h: 0.16, ground: 0, at: null }
+  - { id: l132-ware-glass-5-5, k: 5, model: /cdn/value.3103622737be313ab28593bafc5a49c31630bc919df1f1ae92e2d2528dff7d44.glb, name: "Case of cartridges", kind: cart_case, h: 0.26, ground: 0, at: null }
+  - { id: l132-ware-metal-5-6, k: 5, model: /cdn/value.c71d9b3a8f38134e4404011a02b87c95244d5c2429b79f2ea83c6b71e84110ef.glb, name: "Joystick and cartridges", kind: joystick, h: 0.15, ground: 0, at: null }
+  - { id: l132-ware-cloth-6-0, k: 6, model: /cdn/value.2854e2fec3671ac4b04b39370105e76d8f636ffffb0b5d969f2d5a6ce35100f9.glb, name: "Rose cloche hat", kind: cloche, h: 0.36, ground: 0, at: null }
+  - { id: l132-ware-cloth-6-1, k: 6, model: /cdn/value.1c40fc2bd1b32ee0b4f0535aa2bb3b56a5b7ae3799fab7823062a2e958d03cf2.glb, name: "Cream summer hat", kind: sunhat, h: 0.42, ground: 0, at: null }
+  - { id: l132-ware-wood-6-2, k: 6, model: /cdn/value.acde3f082caecc0b3443b628c869efeb5a26f5d053eb8b98fb1a68cf68079a03.glb, name: "Spools of ribbon", kind: ribbon, h: 0.14, ground: 0, at: null }
+  - { id: l132-ware-glass-6-3, k: 6, model: /cdn/value.dfe84ed7be8449f63225ec19460b84e683da89a64e73376c534bc8903f319bba.glb, name: "Gilded vanity mirror", kind: mirror, h: 0.5, ground: 0, at: null }
+  - { id: l132-ware-cloth-6-4, k: 6, model: /cdn/value.2854e2fec3671ac4b04b39370105e76d8f636ffffb0b5d969f2d5a6ce35100f9.glb, name: "Rose cloche hat", kind: cloche, h: 0.33, ground: 0, at: null }
+  - { id: l132-ware-cloth-6-5, k: 6, model: /cdn/value.1c40fc2bd1b32ee0b4f0535aa2bb3b56a5b7ae3799fab7823062a2e958d03cf2.glb, name: "Feathered wide-brim hat", kind: sunhat, h: 0.4, ground: 0, at: null }
+  - { id: l132-ware-wood-6-6, k: 6, model: /cdn/value.acde3f082caecc0b3443b628c869efeb5a26f5d053eb8b98fb1a68cf68079a03.glb, name: "Spools of ribbon", kind: ribbon, h: 0.13, ground: 0, at: null }
+  - { id: l132-ware-wood-7-0, k: 7, model: /cdn/value.4bc2cbf25fa7c592dc8f2dd167c4bf649f8872bb4f42e130c7e25d928229b94b.glb, name: "Crate of apples", kind: apple, h: 0.34, ground: 0, at: null }
+  - { id: l132-ware-wood-7-1, k: 7, model: /cdn/value.017643769fa9fb751bf92e4b2aea2406de2a36684c2d9c899afa63503dfcd17d.glb, name: "Basket of fruit", kind: fruit_basket, h: 0.32, ground: 0, at: null }
+  - { id: l132-ware-metal-7-2, k: 7, model: /cdn/value.61418e8aa28b6c553279f17fb7c43d80fa25ecb791173cac08d23769e0a49a90.glb, name: "Bucket of cut flowers", kind: flowers, h: 0.6, ground: 1, at: null }
+  - { id: l132-ware-wood-7-3, k: 7, model: /cdn/value.4bc2cbf25fa7c592dc8f2dd167c4bf649f8872bb4f42e130c7e25d928229b94b.glb, name: "Crate of apples", kind: apple, h: 0.36, ground: 1, at: null }
+  - { id: l132-ware-wood-7-4, k: 7, model: /cdn/value.017643769fa9fb751bf92e4b2aea2406de2a36684c2d9c899afa63503dfcd17d.glb, name: "Basket of fruit", kind: fruit_basket, h: 0.3, ground: 0, at: null }
+  - { id: l132-ware-metal-7-5, k: 7, model: /cdn/value.61418e8aa28b6c553279f17fb7c43d80fa25ecb791173cac08d23769e0a49a90.glb, name: "Bucket of cut flowers", kind: flowers, h: 0.55, ground: 1, at: null }
+  - { id: l132-ware-wood-7-6, k: 7, model: /cdn/value.4bc2cbf25fa7c592dc8f2dd167c4bf649f8872bb4f42e130c7e25d928229b94b.glb, name: "Crate of apples", kind: apple, h: 0.34, ground: 0, at: null }
