@@ -1,0 +1,57 @@
+# spawn-scene v2 yaml x0z0
+l132-stall-0:
+  feetPosition: {x: 5.74, y: 0, z: -13.86}
+  id: l132-stall-0
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 2.6, height: 3, kind: box, width: 3.6}
+  tags: [blueprint]
+l132-stall-1:
+  feetPosition: {x: 13.86, y: 0, z: -5.74}
+  id: l132-stall-1
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 2.6, height: 3, kind: box, width: 3.6}
+  tags: [blueprint]
+l132-stall-2:
+  feetPosition: {x: 13.86, y: 0, z: 5.74}
+  id: l132-stall-2
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 2.6, height: 3, kind: box, width: 3.6}
+  tags: [blueprint]
+l132-stall-3:
+  feetPosition: {x: 5.74, y: 0, z: 13.86}
+  id: l132-stall-3
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 2.6, height: 3, kind: box, width: 3.6}
+  tags: [blueprint]
+l132-stall-4:
+  feetPosition: {x: -5.74, y: 0, z: 13.86}
+  id: l132-stall-4
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 2.6, height: 3, kind: box, width: 3.6}
+  tags: [blueprint]
+l132-stall-5:
+  feetPosition: {x: -13.86, y: 0, z: 5.74}
+  id: l132-stall-5
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 2.6, height: 3, kind: box, width: 3.6}
+  tags: [blueprint]
+l132-stall-6:
+  feetPosition: {x: -13.86, y: 0, z: -5.74}
+  id: l132-stall-6
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 2.6, height: 3, kind: box, width: 3.6}
+  tags: [blueprint]
+l132-stall-7:
+  feetPosition: {x: -5.74, y: 0, z: -13.86}
+  id: l132-stall-7
+  material: {kind: scripted, script: engine/blueprint}
+  physics: none
+  primitive: {depth: 2.6, height: 3, kind: box, width: 3.6}
+  tags: [blueprint]
