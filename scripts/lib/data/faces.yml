@@ -68,4 +68,4 @@ typeStrength: [0.75, 1.1]
 strength: [0.55, 1.25]
 eye: ["#15121a", "#3a2418", "#8a6a2a", "#d4902a", "#2f9a5a", "#2aa0a0", "#3f7fd9", "#7ab8e8", "#8a4fd8", "#d4547a", "#d03a3a", "#e0b838", "#8a909a", "#6a8a2a", "#48bfe3", "#ff758f", "#7209b7", "#e76f51", "#52b788", "#b5838d", "#ffb703"]
 blush: ["none", "none", "none", "none", "none", "#ff6285", "#ff8a9a", "#ff9f6a", "#e870b0", "#c86aa8", "#ffb0a0", "heart", "star", "hash", "soft"]
-nose: ["", "#231816", "#3a2a28", "#ff5f9e", "#ff9fbd", "#c86a6a", "#e0a090", "#6a4a3a", "#1a1412", "#f28482", "#d4726a", "#4a3028", "#ff7eb6", "#ffb3cf", "#f06292", "#e8879c", "#ffa8a8", "#b85a7a", "#8a5a5a", "#2e2a30"]   # Nov 14, Shelly: new nose types incl pink
+nose: ["", "#16121a", "#5a3626", "#9a6440", "#d8b48a", "#ff9fbd", "#ff4f9a", "#d8283c", "#b85a7a", "#ffc4a8", "#f4f0ea", "#8a8a92", "#3a6ad8", "#8a4ad8", "#3aa860", "#e8b830"]   # Nov 15, Shelly "most of the nose colors dont change anything": 15 clearly distinct noses, not 8 near-blacks
