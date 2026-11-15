@@ -31,7 +31,7 @@ export function spawnShells(ctx, c) {
 // l4 offices, l5 hotel); a weapon with none is a base weapon rolled everywhere. poolOf maps a place id to its pool.
 export const POOL = {
   main: "l0", level01: "l01", level02: "l02",
-  level1: "l1", level2: "l2", level21: "l2",
+  level1: "l1", level1c: "l1", level2: "l2", level21: "l2",
   level3: "l3", gamma: "l3", level4: "l4",
   level5: "l5", level6: "l5", level61: "l5",
   level7: "l7", level8: "l2", level9: "l5",
@@ -42,7 +42,7 @@ export const POOL = {
 export const poolOf = (place) => POOL[place] ?? "l0";
 export const PLACE_CATEGORY = {
   main: "office", level01: "office", level02: "hazardous",
-  level1: "industrial", level2: "maintenance", level21: "abandoned_settlement",
+  level1: "industrial", level1c: "industrial", level2: "maintenance", level21: "abandoned_settlement",
   level3: "industrial", gamma: "expedition", level4: "office",
   level5: "residential", level6: "hazardous", level61: "food_service",
   level7: "expedition", level8: "hazardous", level9: "residential",

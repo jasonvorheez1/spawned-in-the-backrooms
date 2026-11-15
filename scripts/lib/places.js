@@ -9,6 +9,7 @@ export const PLACES = {
   level01:   { name: "Zenith Station", label: "Level 0.1 · Zenith Station",            title: ["LEVEL 0.1", "ZENITH STATION"] },
   level02:   { name: "Level 0.2",      label: "Level 0.2 · Remodeled Mess",            title: ["LEVEL 0.2", "REMODELED MESS"] },
   level1:    { name: "Level 1",        label: "Level 1 · Habitable Zone",              title: ["LEVEL 1", "HABITABLE ZONE"] },
+  level1c:   { name: "Level 1.1",      label: "Level 1.1 · Corrupted Corridor",        title: ["LEVEL 1.1", "CORRUPTED CORRIDOR"] },
   level2:    { name: "Level 2",        label: "Level 2 · Pipe Dreams",                 title: ["LEVEL 2", "PIPE DREAMS"] },
   level21:   { name: "Level 2.1",      label: "Level 2.1 · Locked",                    title: ["LEVEL 2.1", "LOCKED"] },
   level3:    { name: "Level 3",        label: "Level 3 · Electrical Station",          title: ["LEVEL 3", "ELECTRICAL STATION"] },

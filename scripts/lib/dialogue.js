@@ -24,9 +24,10 @@ import D132 from "./data/dlg-level132.yml"; // Level 132 Lumiria
 import DG from "./data/dlg-generic.yml";
 import DHUB from "./data/dlg-thehub.yml"; // The Hub
 import DLRUN from "./data/dlg-levelrun.yml"; // Level ! Safe Alcove
-const ALL = { ...DHUB, ...DLRUN, ...DG, ...D1, ...D4, ...D5, ...D7, ...D10, ...D13, ...D31, ...D70, ...D109, ...D169, ...D178, ...D132 };
+import D1C from "./data/dlg-level1c.yml"; // Level 1.1 Corrupted Corridor: Team Corridor and the Tunnel Gang
+const ALL = { ...DHUB, ...DLRUN, ...D1C, ...DG, ...D1, ...D4, ...D5, ...D7, ...D10, ...D13, ...D31, ...D70, ...D109, ...D169, ...D178, ...D132 };
 // people who share one script of lines (a pair of guards, a crew)
-for (const [k, v] of Object.entries({ "l61-guard-b": "l61-guard-a", "l61-amber-b": "l61-amber-a", "l61-guild-b": "l61-guild-a", "l61-guild-c": "l61-guild-a" })) ALL[k] ??= ALL[v];
+for (const [k, v] of Object.entries({ "l61-guard-b": "l61-guard-a", "l61-amber-b": "l61-amber-a", "l61-guild-b": "l61-guild-a", "l61-guild-c": "l61-guild-a", "l1c-gang-2": "l1c-gang-1", "l1c-gang-3": "l1c-gang-1", "l1c-gang-4": "l1c-gang-1" })) ALL[k] ??= ALL[v];
 export const DLG = ALL;
 const short = (it) => String(it?.id ?? it ?? "").split("/").pop();
 const low = (v) => String(v ?? "").toLowerCase();

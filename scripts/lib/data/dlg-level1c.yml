@@ -1,0 +1,227 @@
+# Level 1.1 "Corrupted Corridor", written by hand. Quest lines live in scripts/lib/level1c-quest.js (l1cChoices).
+# M.E.G. Team Corridor keeps two staffed posts in Sector 1. The Tunnel Gang holds a hut at the end of Sector 2.
+l1c-meg-ines:
+  hi: ["You came in by the door, so you can leave by the door. That already puts you ahead of most of what I log."]
+  back: ["Still in one colour. Good.", "Back in Sector 1. Sit if you need to."]
+  warm: ["There you are. The line's quieter when you're on it."]
+  cold: ["Say it quickly."]
+  bye: ["Walk in, walk back.", "Mind the floor past the red sign."]
+  walk: ["Mm.", "Door's behind you if you want it."]
+  ask:
+    - q: "Where does this hall go?"
+      a: ["East. Only east. Four stretches of it that we've walked, and we call them sectors because it sounds like we planned it. This one's safe. The next one isn't level. The third is dark. The fourth we've roped off."]
+      then:
+        - q: "And after the fourth?"
+          a: ["A light. One, steady, a long way down. Some people call that Sector 5. I call it a light. Nobody on my team has stood next to it and nobody is going to try."]
+    - q: "How do I get out?"
+      a: ["The door you came through. That's it. Tobias will tell you about seams, places in the bad sectors where the wall isn't finished. Walk into one and you come out on Level 1 somewhere, missing some blood and some nerve. I don't count that as a door."]
+    - q: "Why is it safe here?"
+      a: ["I don't know. That's the honest answer. Nothing with teeth has come west of the red sign in the two years we've sat here. We keep the tubes lit and we don't ask the hall for reasons."]
+    - q: "What is Team Corridor?"
+      a: ["Four of us, on rotation, with a brief to map one hallway. We got as far as a cordon and we've been counting what walks out of the dark ever since."]
+  barks:
+    idle: ["Nine days. Nine.", "Somebody log the tubes.", "Walk in, walk back."]
+    hi: ["Morning. Or whatever it is.", "Report in.", "You're on my line now."]
+    drawn: ["Not in Sector 1. Put it away.", "Point that east."]
+    hurt: ["Wren's at Post Two. Go.", "You're leaking on my floor."]
+    close: ["Announce yourself next time."]
+    spot: ["Contact! East!"]
+    hostile: ["You picked the one safe place to do that."]
+    hit: ["Hit!", "That's on the report!"]
+    kill: ["Log it."]
+    clear: ["Clear. Check the tubes."]
+    flee: ["Back to the door!"]
+    death: ["Walk... back..."]
+    lowHealth: ["I'm hit. Hold the post."]
+  gest: { wave: "Mm. Hello.", gift: "For the post? Logged. Thank you.", dance: "Not on duty.", nodance: "No.", insult: "I've been called worse by a wall." }
+
+l1c-meg-tobias:
+  hi: ["Oh, good, a new pair of eyes. Have you noticed the ceiling yet? It can't decide how tall it is."]
+  back: ["Seven feet there, twelve there. I've measured it four times. It's four different numbers.", "Back! Did anything repeat on you?"]
+  warm: ["My favourite second opinion! Come look at this crack."]
+  cold: ["I'm measuring. Please."]
+  bye: ["Count your steps. It helps. It doesn't help."]
+  walk: ["Oh. Right. Off you go."]
+  ask:
+    - q: "What are the pipes behind the walls?"
+      a: ["Wonderful question. Nobody plumbed them. Where the block cracks you get pipe, duct, sometimes cable, all of it going east. In Sector 2 they stop staying behind the wall and come out across the hall. You'll climb round a few."]
+    - q: "What's a seam?"
+      a: ["A stretch of wall that's only half there. Looks like the picture's tearing, pink and green. Step into one and you land on Level 1, anywhere at all, and it costs you. It took a tooth off Osei. There's one by the first cache and one in the dark."]
+    - q: "Is there another way round the hut?"
+      sk: survival 25
+      a: ["South wall, a few steps before their barricade. There are pipes hanging across a gap. Behind the pipes it's a service run, dead straight, and it lets you out past the hut in the mouth of Sector 3. I found it by leaning on it."]
+      fail: ["There might be. I leaned on a wall once and it wasn't one. I can't remember which wall. Sorry."]
+    - q: "Why does Sector 2 repeat?"
+      a: ["It doesn't. I think. I think there's one board that says Post Three and one crate that's tipped over, and the hall shows them to you four times. There is no Post Three. I've stopped arguing with the board."]
+  barks:
+    idle: ["Three point six six. Then two point one. Why.", "That crack's wider than yesterday.", "Blue tile. Who chose blue."]
+    hi: ["Hello, hello!", "Mind the tape measure."]
+    drawn: ["Oh. Oh, that's a weapon.", "I'm a surveyor!"]
+    hurt: ["You should see Wren. Really."]
+    close: ["Ah! Don't do that in a corridor."]
+    spot: ["Ines! Something's moving!"]
+    hostile: ["I only measure things!"]
+    hit: ["Ow! My notes!"]
+    kill: ["Oh no. Oh, I did that."]
+    clear: ["Is it over? Is it measured?"]
+    flee: ["Door! Door! Door!"]
+    death: ["Four... numbers..."]
+    lowHealth: ["I need to sit down."]
+  gest: { wave: "Hello there!", gift: "For me? I'll log it under morale.", dance: "Ha! The floor's level enough for that here.", nodance: "I'd lose count.", insult: "That's not even accurate." }
+
+l1c-meg-wren:
+  hi: ["Sit. Sleeve up. No? Then you're the first one through today who isn't bleeding."]
+  back: ["Let me look at you. Fine. You'll do.", "You again. Still got all your colours?"]
+  warm: ["My best patient. Meaning you listen."]
+  cold: ["I treat everyone. I don't have to chat."]
+  bye: ["Drink something before Sector 2."]
+  walk: ["Go on, then."]
+  ask:
+    - q: "Can you patch me up?"
+      do: heal
+      a: ["Hold still. There. Try to keep it on the inside from now on."]
+    - q: "What does Sector 2 do to people?"
+      a: ["Headaches, first. Everything's the wrong colour and your eyes keep trying to fix it. Then turned ankles, the floor tilts and drops with no warning. Then the ones who saw the same crate four times and sat down and wouldn't get up."]
+    - q: "What's the smell in Sector 3?"
+      sk: medicine 25
+      a: ["Antiseptic. Chlorhexidine, near enough. Faint, but it's everywhere past the hut. There's no source and nothing in there is clean. I think something is being kept sterile for a reason I'd rather not meet."]
+      fail: ["Hospital. That's all anyone can tell you. It smells like a hospital, in the dark, with nobody in it."]
+    - q: "Have you treated the Tunnel Gang?"
+      a: ["One. Marrow. He let a cut on his leg go a week because Blade says M.E.G. medicine is how we tag people. It's going bad. If somebody they'd trust cleaned it, they'd owe that somebody."]
+  barks:
+    idle: ["Out of gauze again.", "Somebody boil that.", "Drink water. All of you."]
+    hi: ["Sit down.", "You look pale. Everyone does here."]
+    drawn: ["Not in my tent."]
+    hurt: ["You. Here. Now.", "That needs stitches."]
+    close: ["Don't creep up on a medic."]
+    spot: ["Osei! East side!"]
+    hostile: ["I'll patch you after. Maybe."]
+    hit: ["Ah! Hands, not the hands!"]
+    kill: ["I didn't want that."]
+    clear: ["Anyone hurt? Line up."]
+    flee: ["Fall back to the door!"]
+    death: ["Pressure... on it..."]
+    lowHealth: ["Physician, heal thyself. Right."]
+  gest: { wave: "Hello. Sit.", gift: "Supplies? Bless you.", dance: "That's good for the circulation.", nodance: "I'm sterile.", insult: "Charming. Still treating you." }
+
+l1c-meg-osei:
+  hi: ["Last staffed post, last counter, last chance to buy something before the floor goes strange. What do you need?"]
+  back: ["Back for more? Good. Stock's the same and so are the prices.", "Still walking. I'll note it."]
+  warm: ["My best customer. Sit, I'll find the good tin."]
+  cold: ["Cash first."]
+  bye: ["Past here it's caches and luck."]
+  walk: ["Mind the red sign."]
+  ask:
+    - q: "What's past this post?"
+      a: ["Fifty yards of good floor, a red sign, then Sector 2. We keep two caches further in. Nobody sits at them. Take what you need from the crates. That's what they're for."]
+    - q: "Who are the Tunnel Gang?"
+      a: ["Six wanderers who walked in here before we had a door sign, saw the light at the far end, and decided it was the way home. Blade does their talking. They built a hut across the hall where Sector 2 gives out and they charge to pass. Pipe and kitchen knives. I've seen worse armed toddlers."]
+      then:
+        - q: "Are they dangerous?"
+          a: ["To each other, mostly. But there are six, and the room's narrow. If you've the money, pay. If you've the tongue, talk. Blade likes to be listened to."]
+    - q: "Has anyone gone into Sector 4?"
+      a: ["Two of ours, roped, a year back. The rope came back. That's when Ines strung the cordon."]
+  barks:
+    idle: ["Twelve tins. Eleven. Who had a tin.", "Counting. Don't talk to me.", "Crates thin out east. Always have."]
+    hi: ["Buying or selling?", "Welcome to Post Two."]
+    drawn: ["That's not currency."]
+    hurt: ["Wren's in the tent."]
+    close: ["Stock's behind me. Stay in front."]
+    spot: ["Wren, down! East!"]
+    hostile: ["Shop's closed!"]
+    hit: ["That's coming out of your tab!"]
+    kill: ["Written off."]
+    clear: ["Clear. I'm recounting everything."]
+    flee: ["Leave the stock! Go!"]
+    death: ["Eleven... tins..."]
+    lowHealth: ["I'm short. Badly short."]
+  gest: { wave: "Hello. Browse.", gift: "On the house, for the house. Ta.", dance: "Mind the tins.", nodance: "I'm on the clock.", insult: "Prices just went up." }
+
+l1c-gang-blade:
+  hi: ["That's far enough. This room is ours, and what's past it is ours. You want through, you talk to me."]
+  back: ["You again. Road's the same and so's the price.", "Back. Still not seven of us. You joining?"]
+  warm: ["Here's the one who goes first. Sit by the stove."]
+  cold: ["Say your piece from over there."]
+  bye: ["Middle of the floor. Remember it.", "Tell the lime jackets nothing."]
+  walk: ["Walk, then."]
+  ask:
+    - q: "Why do you want Sector 5?"
+      a: ["Because it holds still. Look at this place. The floor moves, the colour moves, the dark moves. One thing down there doesn't. A light that stays put is a door somebody's holding open. I'm walking six people through it."]
+      then:
+        - q: "Then why haven't you gone?"
+          a: ["Because of what's between. You haven't seen four. It's drawn. Half the floor is a drawing of floor. I lost a man finding that out. We go when I know which tiles are real."]
+    - q: "Why hate the M.E.G.?"
+      a: ["They found the same light and put a rope in front of it. That's not caution. That's keeping. Anyone who ropes off a way out wants it for themselves."]
+    - q: "Is Blade your name?"
+      a: ["It's what I've got left. I walked in with a name and a job in a kitchen. One of those I kept the knife from."]
+  barks:
+    idle: ["When we're seven, we go.", "Watch the lime jackets.", "It hasn't moved. It never moves."]
+    hi: ["Far enough.", "State it."]
+    drawn: ["Six of us. Count again.", "Put it down or use it."]
+    hurt: ["You're bleeding on our floor."]
+    close: ["Back off my shoulder."]
+    spot: ["Up! Something's in the room!"]
+    hostile: ["Nobody walks through for free!", "That's the line! That's the line!"]
+    hit: ["Is that all?", "Agh!"]
+    kill: ["Should've paid."]
+    clear: ["Done. Stitch, count us."]
+    flee: ["To the hut! To the hut!"]
+    death: ["It... didn't... move..."]
+    lowHealth: ["Hold the line. Hold it."]
+  gest: { wave: "Hands where I see them.", gift: "That's a start.", dance: "...Pidge used to do that.", nodance: "No.", insult: "Say it closer." }
+
+l1c-gang-marrow:
+  hi: ["Don't mind me. I'm not getting up."]
+  back: ["Still here. Leg's still here too.", "You again."]
+  warm: ["That's the one who fixed my leg. Sit, sit."]
+  cold: ["Go and bother Blade."]
+  bye: ["Watch your feet in there."]
+  walk: ["Right."]
+  ask:
+    - q: "What happened to your leg?"
+      a: ["Pipe. In the tilted part. It came out of the wall where there wasn't one the day before. Blade says leave it, it'll knit. It's been a week and it smells like the dark does."]
+    - q: "Do you believe in the light?"
+      a: ["I believe in Blade. He believes in the light. That's near enough, when you can't walk."]
+    - q: "What's it like in the dark sector?"
+      a: ["You hear them before you see them. A sort of wet laugh. Then two eyes and a mouth where there wasn't a face. Stay in the black between the bright bits and keep moving. That's what Coil says. Coil came back, so."]
+  barks:
+    idle: ["Ah. Leg.", "Is the stove still in?", "Somebody else count today."]
+    hi: ["Yeah.", "Mm."]
+    drawn: ["I can't even stand. Really?"]
+    hurt: ["You and me both."]
+    close: ["Careful of the leg!"]
+    spot: ["Blade! Blade!"]
+    hostile: ["I'll hit you sitting down!"]
+    hit: ["Not the leg!"]
+    kill: ["Huh. Got one."]
+    clear: ["Is it gone?"]
+    flee: ["Somebody carry me!"]
+    death: ["Tell Blade..."]
+    lowHealth: ["I'm done. I'm done."]
+  gest: { wave: "Yeah, hi.", gift: "For me? Don't tell Blade.", dance: "Rub it in.", nodance: "Funny.", insult: "I've a bad leg, not bad ears." }
+
+l1c-gang-1:
+  hi: ["Talk to Blade. I just hold the pipe."]
+  back: ["Blade's over there.", "Still not my decision."]
+  bye: ["Yeah."]
+  walk: ["Go on."]
+  ask:
+    - q: "How long have you been here?"
+      a: ["Long enough to stop counting tubes. Blade says soon. Blade's said soon a while."]
+    - q: "What do you eat?"
+      a: ["What comes down the hall in crates. The lime jackets leave them and pretend they haven't. We take them and pretend we stole them. Everybody keeps their pride."]
+  barks:
+    idle: ["Soon, he says.", "Stove's low.", "I hate the green lights."]
+    hi: ["Blade's the one you want.", "Yeah?"]
+    drawn: ["Blade! They've got something out!"]
+    hurt: ["You look how I feel."]
+    close: ["Oi. Space."]
+    spot: ["Something's coming!"]
+    hostile: ["You crossed the line!", "Get them!"]
+    hit: ["Ow! That's my arm!"]
+    kill: ["Oh. Oh, I didn't mean that hard."]
+    clear: ["Are we all here?"]
+    flee: ["I'm not dying for a hut!"]
+    death: ["Soon..."]
+    lowHealth: ["I want to go home."]
+  gest: { wave: "Hi.", gift: "Ta. Don't tell the others.", dance: "Ha.", nodance: "Not in front of Blade.", insult: "Heard worse." }

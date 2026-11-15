@@ -59,6 +59,8 @@ import { zoneAt as zoneAt21 } from './lib/level21.js'
 import { zoneAt as zoneAt31 } from './lib/level31.js'
 import { zoneAt as zoneAt70 } from './lib/level70.js'
 import L21 from './lib/data/level21.yml'
+import { sectorAt as sector1c, DATA as L1C } from './lib/level1c.js'
+import { clearSector as clear1c } from './lib/level1c-fx.js'
 import L2 from './lib/data/level2.yml'
 import { zoneAt as zoneAt3 } from './lib/level3.js'
 import { zoneAt as zoneAt4, DRAIN4 } from './lib/level4.js'
@@ -83,6 +85,7 @@ const ZONE_RESOLVERS = {
   level34: () => 'l34_sewer',
   levelrun: () => 'lrun_halls',
   level109: () => 'l109_halls',
+  level1c: (_ctx, x) => 'l1c_s' + sector1c(x), // Level 1.1: the corridor's four sectors
   level7: (_ctx, x, z) => (Math.hypot(x - 46, z + 120) < 34 ? 'l7_seawatch' : Math.hypot(x + 70, z + 95) < 55 ? 'l7_fort' : z > -4 && Math.hypot(x, z) < 12 ? 'l7_room1' : z > -36 && Math.abs(x) < 10 ? 'l7_pier' : 'l7_sea'),
   level1: (_ctx, x, z) => 'l1_' + zoneAt1(x, z),
   level2: (_ctx, x, z) => 'l2_' + zoneAt2(x, z),
@@ -1825,6 +1828,7 @@ function tickStats(ctx, t, moving) {
   const det = s.crouch ? detection(ctx, p, w, t, moving) : (w.aware = 0, null)
   if ((s.detect ?? null) !== det) s.detect = det
   if (!s.crouch && s.aware) s.aware = 0
+  if (s.l1cAir && ctx.self.place !== 'level1c') clear1c(ctx.self) // Level 1.1's sector look and fog never follow you out
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
   let drain = ({
     level61: 0, level11: 0, level10: 0, bonus: 0, intake: 0, home11: 0, thehub: 0, testlab: 0, level27: 0, level178: 0, level132: 0,
@@ -1838,6 +1842,7 @@ function tickStats(ctx, t, moving) {
     level8: 0.14,
     level109: Math.hypot(p.x - 8, p.z - 20) < L109_DRAIN.arrivalR ? L109_DRAIN.arrival : L109_DRAIN.halls,
     level21: L21.sanityDrain[zone.slice(4)],
+    level1c: L1C.sanity[zone.slice(4)],
   }[ctx.self.place] ?? L.sanityDrain[zone]) ?? 0.12
   if (w.light && (zone === 'dark' || zone === 'red' || zone === 'l3_dark')) drain *= 0.4
   if (drain > 0 && nearFresh(ctx)) drain = 0

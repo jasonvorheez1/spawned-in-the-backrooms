@@ -1,0 +1,18 @@
+mode: 3d
+terrain:
+  kind: "off"
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: 3.2, y: 0.1, z: 0 }
+defaultSpawnRotation: { yaw: -90 }
+worldBounds: { bottom: -40 }
+atmosphere:
+  clouds: { enabled: false }
+  fog: { kind: linear, near: 14, far: 120, color: oklch(0.8 0.012 235) }
+  look: { script: scripts/look-l1c.js, params: { bloomThreshold: 0.9, bloomStrength: 0.4 } }
+  moon: { enabled: false, intensity: 0 }
+  sky: { kind: color, color: oklch(0.02 0 0) }
+  stars: { enabled: false }
+  timeOfDay: 0
+  wind: { direction: 0, speed: 0 }
+  ambient: { light: { color: oklch(0.95 0.01 235), intensity: 0.5 } }
+  hemisphere: { skyColor: oklch(0.96 0.01 235), groundColor: oklch(0.6 0.04 245), intensity: 0.35 }

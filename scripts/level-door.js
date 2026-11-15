@@ -6,6 +6,7 @@ import { carryAcross } from "./lib/carry.js";
 import { funGate } from "./lib/dina-quest.js";
 const PAIR = {
   "l1-back": "main#main-from-l1", "l178-to-hub": "thehub#hub-from-l178", "l1-to-hub": "thehub#hub-from-l1", "hub-to-l1": "level1#l1-from-hub", "l12-to-l13": "level13#l13-from-l12", "l0-to-l02": "level02#l02-from-l0", "l02-back": "main#main-from-l02", "l1-onward": "level2#l2-from-l1",
+  "l1-to-l1c": "level1c#l1c-from-l1", "l1c-back": "level1#l1-from-l1c", // Level 1.1: the signed door south of the M.E.G. camp, and back
   "l2-back": "level1#l1-from-l2", "l2-to-l3": "level3#l3-from-l2",
   "l3-back": "level2#l2-from-l3", "l3-lift5": "level5#l5-from-l3", "l4-stairs-down": "level5#l5-from-l4",
   "l5-lift3": "level3#l3-from-l5", "l5-stairs-up": "level4#l4-from-l5",

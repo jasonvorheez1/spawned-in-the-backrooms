@@ -141,6 +141,22 @@ export function tick(ctx) {
     const hz = cellCenter(N - 1, 28).z, hx = HALF;
     ctx.spawn("l1-from-hub", { feetPosition: { x: hx - 2.6, y: 0.1, z: hz }, rotation: { yaw: 90 } });
   }
+  if (s.seeded && (s.l1cDoor ?? 0) < 1) { s.l1cDoor = 1; // Level 1.1 "Corrupted Corridor": a white block doorway standing in the hall south of the camp, signed by Team Corridor
+    const a = cellCenter(ARRIVE.cx, ARRIVE.cz), x = a.x, z = a.z + 19.4, O = ctx.place.objects;
+    const WHITE = { texture: "cdn/texture-painted-cinder-block-wall-clean.png", wrap: "repeat", repeat: [0.5, 0.5], color: "oklch(0.96 0.004 240)", roughness: 0.75 };
+    for (const id of Object.keys(O)) { const o = O[id], f = o?.feetPosition; if (f && f.y < 2 && Math.hypot(f.x - x, f.z - z) < 3 && (o.tags?.includes("l1prop") || o.tags?.includes("l1kit") || o.tags?.includes("puddle") || o.tags?.includes("lootfurn"))) ctx.destroy(id); } // nothing parked in the doorway
+    const block = (id, dx, y, dz, w, h, d) => ctx.spawn(id, { feetPosition: { x: x + dx, y, z: z + dz }, primitive: { kind: "box", width: w, height: h, depth: d }, material: WHITE, physics: "static", castShadow: false, receiveShadow: true, visibleRange: { max: 70 } });
+    block("l1-l1c-back", 0, 0, 0.75, 3.4, 3.3, 0.3); block("l1-l1c-jamb0", -1.4, 0, 0.1, 0.6, 3.3, 1.0); block("l1-l1c-jamb1", 1.4, 0, 0.1, 0.6, 3.3, 1.0); block("l1-l1c-lintel", 0, 2.5, 0.1, 2.2, 0.8, 1.0);
+    ctx.spawn("l1-l1c-door", { feetPosition: { x, y: 0, z: z + 0.5 }, rotation: { yaw: 90 }, physics: { body: "static", collider: "box" }, model: { id: L1M.door }, visibleRange: { max: 60 }, castShadow: false });
+    ctx.spawn("l1-to-l1c", { feetPosition: { x, y: 0, z: z - 0.05 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.6, height: 2.4, depth: 0.8 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level1c" } });
+    ctx.spawn("l1-l1c-sign", { feetPosition: { x, y: 2.56, z: z - 0.42 }, rotation: { yaw: 180 }, castShadow: false, visibleRange: { max: 45 }, primitive: { kind: "box", width: 2.1, height: 0.66, depth: 0.03 }, material: { color: "oklch(0.78 0.04 85)", metalness: 0.4, roughness: 0.6 },
+      ui: '<div face="front" class="w-full h-full flex flex-col items-center justify-center" style="font-family:monospace;color:#1d1a14;border:12px solid #1d1a14;box-sizing:border-box;background:rgba(235,225,190,.94)"><div style="font-size:90px;letter-spacing:8px">M.E.G. TEAM CORRIDOR</div><div style="font-size:290px;font-weight:700;line-height:1">LEVEL 1.1</div><div style="font-size:74px;letter-spacing:5px">ONE HALL · POSTS STAFFED TO THE RED SIGN</div></div>' });
+    ctx.spawn("l1-l1c-lamp", { feetPosition: { x, y: 2.9, z: z - 1.2 }, visibleRange: { max: 40 }, light: { kind: "point", color: "oklch(0.96 0.02 230)", intensity: 3.2, distance: 8, shadow: { enabled: false } } });
+    ctx.spawn("l1-from-l1c", { feetPosition: { x, y: 0.1, z: z - 2.6 }, rotation: { yaw: 0 } }); // yaw 0 looks north, back toward the camp
+    // where one of the corridor's seams can let you out: six bays of open hall, far from the camp (scripts/lib/level1c-fx.js L1_SPOTS)
+    const spots = []; for (let cx = 1; cx < N - 1; cx++) for (let cz = 1; cz < N - 1; cz++) if (zoneOf(cx, cz) === "halls" && !rampCell(cx, cz) && Math.abs(cx - ARRIVE.cx) + Math.abs(cz - ARRIVE.cz) >= 6) spots.push([hash(cx, cz, 811), cx, cz]);
+    spots.sort((p, q) => p[0] - q[0]).slice(0, 6).forEach(([, cx, cz], i) => { const c = cellCenter(cx, cz); ctx.spawn("l1-from-l1c-r" + i, { feetPosition: { x: c.x + 1.5, y: 0.1, z: c.z + 1.5 }, rotation: { yaw: hash(cx, cz, 812) * 360 } }); });
+  }
   if (!s.megCamp) { s.megCamp = true; // the M.E.G. waypoint: the camp, its fire, its lamps, and three agents
     if (ctx.place.objects["meg-cloth"]) ctx.destroy("meg-cloth");
     const a = cellCenter(ARRIVE.cx, ARRIVE.cz);

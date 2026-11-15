@@ -1,0 +1,28 @@
+# spawn-scene v2 yaml x0z0
+"l1c-back":
+  "behavior": "scripts/level-door.js"
+  "feetPosition": { "x": 0.75, "y": 0, "z": 0 }
+  "physics": { "body": "static", "trigger": true }
+  "primitive": { "kind": "box", "width": 0.8, "height": 2.4, "depth": 1.6 }
+  "state": { "to": "level1" }
+  "visible": false
+"l1c-back-door":
+  "castShadow": false
+  "feetPosition": { "x": 0.16, "y": 0, "z": 0 }
+  "model": { "id": "/cdn/value.020545cb36957131cc5f5eab3f6c2c38511e55076fb5e5542b93aff45e424288.glb" }
+  "physics": { "body": "static", "collider": "box" }
+  "rotation": { "yaw": 180 }
+  "visibleRange": { "max": 60 }
+"l1c-back-sign":
+  "feetPosition": { "x": 0.05, "y": 2.75, "z": 0 }
+  "rotation": { "yaw": -90 }
+  "vector": "<svg viewBox='0 0 260 40' width='1.8m'><text x='130' y='29' text-anchor='middle' font-family='sans-serif' font-size='24' fill='#1d2a10' letter-spacing='4'>LEVEL 1 · WAY OUT</text></svg>"
+  "visibleRange": { "max": 40 }
+"l1c-from-l1":
+  "feetPosition": { "x": 3.2, "y": 0.1, "z": 0 }
+  "rotation": { "yaw": -90 }
+"l1c-door-floor":
+  "feetPosition": { "x": 4, "y": -0.3, "z": 0 }
+  "physics": "static"
+  "primitive": { "kind": "box", "width": 8, "height": 0.3, "depth": 3.6 }
+  "visible": false

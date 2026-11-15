@@ -1,6 +1,7 @@
 // Briefings are shown before accepting a job. Keys include the NPC, because two people may ask the same question.
 import { wireCount } from './level21-quests.js'
 const OFFERS = {
+  'l1c-meg-ines': ["There is, and nobody on my roster can do it. We keep a logger at the cordon, end of Sector 3. It counts what crosses out of Sector 4. I read it every third day. It has been nine. Six people built a hut across the hall at the end of Sector 2 and they don't let lime jackets through. The Tunnel Gang. They're hungry and badly armed and I don't want them shot. You're not in a jacket. Get past them however you can live with, read me that logger, and come back. Will you?", "Ines of M.E.G. Team Corridor needs the crossing logger at the Sector 3 cordon read. The Tunnel Gang blocks the hall at the end of Sector 2: pay Blade's toll, talk to him [Speech 35], treat his man's leg [Medicine 30], find the service gap in the south wall, or fight."],
   'meg-callum': ["Seven cans are missing from my crates. Ask the doctor or look around the stores, and find out where they went. Can you do that?", "Callum is missing seven cans. Ask Dr. Ortiz, examine the crates, or find someone else who knows the camp."],
   'meg-ortiz': ["A runner drank bad water. Callum has the only tin of purification tablets, and I need it for the patient. Will you speak to him?", "Dr. Ortiz needs Callum's purification tablets for a sick runner. Talk, bargain, or find another way to get them."],
   'l0-bntg-kade': ["There's a sealed station on the far east side of Level 0. Find our seal and report back; if you can reach it, I'll give you a card and the rest of the job. Interested?", "Kade wants a route surveyed to the sealed station. Find the B.N.T.G. seal on Level 0's far east wall, past the lights, then report back."],
@@ -39,6 +40,7 @@ export function jobOffer(npc, choice) {
 
 // Existing saves get the same context without having to restart a quest.
 const JOURNAL_OFFERS = {
+  'walk-the-line': 'l1c-meg-ines',
   'short-rations': 'meg-callum', 'bad-water': 'meg-ortiz', 'the-zenith-survey': 'l0-bntg-kade',
   'spotlight-on-sedco': 'l11-walker-1', 'the-paper-bird-s-blessing': 'l11-trader-kael',
   'capital-infrastructure-the-night-shift': 'l11-walker-3', 'the-golden-bumper': 'l10-meg-cooper:harvest',
