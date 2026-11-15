@@ -312,7 +312,7 @@ def build_roof():
         for lay, (w, y) in enumerate(((.34, .0), (.29, .045), (.24, .09))):
             o = Vector((0, y + .02, 0)); sweep("kawara", ch(w, .04, .006), p0 + o, p1 + o, seg=1, tile=.6, sa=40)
         sweep("kawara", circ(.085, 12, .07), p0 + Vector((0, .155, 0)), p1 + Vector((0, .155, 0)), seg=1, tile=.6, sa=50)
-        for i in range(n + 1):
+        for i in range(0, n + 1, 2):
             c = p0 + d * (Lr * i / n) + Vector((0, .155, 0)); sweep("kawara", circ(.092, 10, .077), c - d * .018, c + d * .018, seg=1, tile=.5, sa=50)
     ridge((-13.1, 4.86, -13.1), (13.1, 4.86, -13.1))
     for s in (-1, 1): ridge((s * 13.1, 4.86, -13.1), (s * 17.62, roofY(17.62) - .03, -17.62))
@@ -328,7 +328,7 @@ def build_roof():
             bpy.context.view_layer.objects.active = ms[0]
             if len(ms) > 1: bpy.ops.object.join()
             o = bpy.context.view_layer.objects.active; o.parent = None; bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
-            dm = o.modifiers.new("d", "DECIMATE"); dm.ratio = min(1, 1600 / max(1, len(o.data.polygons))); bpy.ops.object.modifier_apply(modifier="d")
+            dm = o.modifiers.new("d", "DECIMATE"); dm.ratio = min(1, 1000 / max(1, len(o.data.polygons))); bpy.ops.object.modifier_apply(modifier="d")
             vs = [v.co for v in o.data.vertices]; lo = Vector([min(v[i] for v in vs) for i in range(3)]); hi = Vector([max(v[i] for v in vs) for i in range(3)])
             sc = .42 / max(hi.z - lo.z, 1e-6); ctr = Vector(((lo.x + hi.x) / 2, (lo.y + hi.y) / 2, lo.z))
             foot = Vector((s * 17.66, roofY(17.66) + .08, -17.66)); yaw = math.atan2(s, 1)   # face outward along the hip
