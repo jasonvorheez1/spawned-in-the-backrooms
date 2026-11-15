@@ -9,27 +9,934 @@ l132-duke:
   rotation: {yaw: 45}
   state: {dlg: l132-duke, faceYaw: 45, faction: lumiria, friendly: true, hp: 100, invulnerable: true, maxHp: 100, name: The Duke of Morigont, nextAt: 0, role: duke, stop: 0, voice: l132-duke}
   tags: [npc, friendly, l132, usable]
+l132-router:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: false
+  feetPosition: {x: 3.6, y: 1.94, z: -43.95}
+  id: l132-router
+  model: /cdn/value.2ee6d65e80f6bdb605e09f0ddf35522299c2c9aca1c14b28e52653eb02a03d3a.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 360}
+  scale: 1.6
+  state: {kind: router, name: Router, "on": false, verb: Inspect}
+  tags: [l132, usable, l132-top]
 l132-shop-a:
   feetPosition: {x: 0, y: 0, z: -40}
   id: l132-shop-a
-  material: {kind: scripted, script: engine/blueprint}
-  physics: none
-  primitive: {depth: 11, height: 7, kind: box, width: 16}
-  tags: [blueprint]
+  model: {id: /cdn/value.0882e91ad30c06c026715f90b46021f89bfc87e778caf4aa5feb3576380269df.glb, materials: {ceil_in: {repeat: [1, 1], roughness: 0.85, texture: cdn/texture-white-acoustic-ceiling-tiles.png, wrap: repeat}, floor_in: {repeat: [1, 1], roughness: 0.55, texture: cdn/texture-grey-commercial-carpet-tiles.png, wrap: repeat}, jamb: {repeat: [1, 1], roughness: 0.85, texture: cdn/texture-oak-wood-planks-dark.png, wrap: repeat}, wall_in: {repeat: [1, 1], roughness: 0.85, texture: cdn/texture-beige-slatwall-retail-panel.png, wrap: repeat}}}
+  rotation: {yaw: 0}
+  scale: {x: 1, y: 1.32, z: 1}
+  state: {name: RadioShed}
+  tags: [l132, l132-shop]
+l132-shop-a-boombox:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: false
+  feetPosition: {x: -4.5, y: 1.02, z: -39.8}
+  id: l132-shop-a-boombox
+  model: /cdn/value.b65239e4484936755ff171a40f1ea0104ad73cf5d0d2b21261bab60345e000f9.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 360}
+  scale: 1
+  state: {info: ["The tape hisses, then somebody's holiday, taped over somebody's wedding."], name: Boombox, verb: Press play}
+  tags: [l132, usable, l132-top]
+l132-shop-a-camera:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: false
+  feetPosition: {x: 3.8, y: 1.02, z: -38.6}
+  id: l132-shop-a-camera
+  model: /cdn/value.eb9043ffee889ef53f7797e2af2908562b0e11141b0c8f8d4be5b7ddc3fc543f.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 360}
+  scale: 0.3
+  state: {info: [Through the finder the shop looks older than it is.], name: Film camera, verb: Look through}
+  tags: [l132, usable, l132-top]
+l132-shop-a-case-1:
+  castShadow: true
+  feetPosition: {x: 2.3, y: 0.02, z: -38.6}
+  id: l132-shop-a-case-1
+  model: /cdn/value.4e4232d504243753b8093ecbded15cf7a15d83caa454d9a7267753de18ec803b.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 360}
+  scale: 1
+  state: {}
+  tags: [l132]
+l132-shop-a-case-2:
+  castShadow: true
+  feetPosition: {x: 4.15, y: 0.02, z: -38.6}
+  id: l132-shop-a-case-2
+  model: /cdn/value.4e4232d504243753b8093ecbded15cf7a15d83caa454d9a7267753de18ec803b.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 360}
+  scale: 1
+  state: {}
+  tags: [l132]
+l132-shop-a-case-3:
+  castShadow: true
+  feetPosition: {x: -4.2, y: 0.02, z: -39.8}
+  id: l132-shop-a-case-3
+  model: /cdn/value.4e4232d504243753b8093ecbded15cf7a15d83caa454d9a7267753de18ec803b.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 360}
+  scale: 1
+  state: {}
+  tags: [l132]
+l132-shop-a-col-back:
+  feetPosition: {x: 0, y: 0, z: -44.24}
+  id: l132-shop-a-col-back
+  physics: static
+  primitive: {depth: 0.3, height: 4.4, kind: box, width: 13.26}
+  rotation: {yaw: 0}
+  tags: [l132]
+  visible: false
+l132-shop-a-col-fl:
+  feetPosition: {x: -3.66, y: 0, z: -35.69}
+  id: l132-shop-a-col-fl
+  physics: static
+  primitive: {depth: 0.3, height: 4.4, kind: box, width: 5.9399999999999995}
+  rotation: {yaw: 0}
+  tags: [l132]
+  visible: false
+l132-shop-a-col-fr:
+  feetPosition: {x: 3.66, y: 0, z: -35.69}
+  id: l132-shop-a-col-fr
+  physics: static
+  primitive: {depth: 0.3, height: 4.4, kind: box, width: 5.9399999999999995}
+  rotation: {yaw: 0}
+  tags: [l132]
+  visible: false
+l132-shop-a-col-l:
+  feetPosition: {x: -6.63, y: 0, z: -39.965}
+  id: l132-shop-a-col-l
+  physics: static
+  primitive: {depth: 8.55, height: 4.4, kind: box, width: 0.3}
+  rotation: {yaw: 0}
+  tags: [l132]
+  visible: false
+l132-shop-a-col-lintel:
+  feetPosition: {x: 0, y: 2.3299999999999996, z: -35.69}
+  id: l132-shop-a-col-lintel
+  physics: static
+  primitive: {depth: 0.3, height: 2.0700000000000007, kind: box, width: 1.3800000000000001}
+  rotation: {yaw: 0}
+  tags: [l132]
+  visible: false
+l132-shop-a-col-r:
+  feetPosition: {x: 6.63, y: 0, z: -39.965}
+  id: l132-shop-a-col-r
+  physics: static
+  primitive: {depth: 8.55, height: 4.4, kind: box, width: 0.3}
+  rotation: {yaw: 0}
+  tags: [l132]
+  visible: false
+l132-shop-a-col-roof:
+  feetPosition: {x: 0, y: 4.4, z: -39.965}
+  id: l132-shop-a-col-roof
+  physics: static
+  primitive: {depth: 8.55, height: 0.2, kind: box, width: 13.26}
+  rotation: {yaw: 0}
+  tags: [l132]
+  visible: false
+l132-shop-a-crt-1:
+  castShadow: true
+  feetPosition: {x: 5.9, y: 0.02, z: -36.4}
+  id: l132-shop-a-crt-1
+  model: /cdn/value.30ae8e4fd0c2e307d21943aa6fa38f3f816fcc7a10335f5a15ff865b00b84ce4.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 225}
+  scale: 1
+  state: {}
+  tags: [l132]
+l132-shop-a-door:
+  behavior: scripts/home11-door.js
+  children: [{behavior: scripts/home11-door.js, feetPosition: {x: 0, y: 0, z: 0}, id: leaf, material: {pbr: true}, physics: static, primitive: {kind: scripted, params: {d: 0.1, h: 2.28, hingeSide: left, part: leaf, seed: 100, style: wood, swing: -1, w: 1.28}, script: scripts/door-geo.js}, state: {hinge: l132-shop-a-door, kind: door, name: RadioShed door, verb: Close}, tags: [usable]}]
+  feetPosition: {x: -0.64, y: 0.02, z: -35.44}
+  id: l132-shop-a-door
+  physics: kinematic
+  rotation: {yaw: 95}
+  state: {closedYaw: 0, hinge: l132-shop-a-door, kind: door, name: RadioShed door, open: true, openYaw: 95, verb: Close}
+  tags: [usable, l132]
+l132-shop-a-headphones:
+  castShadow: false
+  feetPosition: {x: -3.7, y: 1.02, z: -39.8}
+  id: l132-shop-a-headphones
+  model: /cdn/value.87d349fb28a803101ebd00e7bb018e6420979590d2fa9e76265e08b573d3df15.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 360}
+  scale: 1
+  state: {}
+  tags: [l132, l132-top]
+l132-shop-a-laptop:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: false
+  feetPosition: {x: 2.9, y: 1.02, z: -38.6}
+  id: l132-shop-a-laptop
+  model: /cdn/value.057f996de00404bf98410b7deabf7d3b9c2fb08d17f7c440de21a7c8fcc8d5a0.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 360}
+  scale: 0.4
+  state: {kind: read, name: "Laptop · M.E.G. database", page: 1322, verb: Browse}
+  tags: [l132, usable, l132-top]
+l132-shop-a-light-0:
+  feetPosition: {x: -3.6465, y: 2.85, z: -40}
+  id: l132-shop-a-light-0
+  light: {color: oklch(0.97 0.02 240), distance: 15, intensity: 16, kind: point}
+  tags: [l132]
+l132-shop-a-light-1:
+  feetPosition: {x: 3.6465, y: 2.85, z: -40}
+  id: l132-shop-a-light-1
+  light: {color: oklch(0.97 0.02 240), distance: 15, intensity: 16, kind: point}
+  tags: [l132]
+l132-shop-a-light-2:
+  feetPosition: {x: 0, y: 2.85, z: -42.12}
+  id: l132-shop-a-light-2
+  light: {color: oklch(0.97 0.02 240), distance: 15, intensity: 16, kind: point}
+  tags: [l132]
+l132-shop-a-light-3:
+  feetPosition: {x: 0, y: 2.85, z: -37.6295}
+  id: l132-shop-a-light-3
+  light: {color: oklch(0.97 0.02 240), distance: 15, intensity: 16, kind: point}
+  tags: [l132]
+l132-shop-a-phone-1:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: false
+  feetPosition: {x: 1.75, y: 1.02, z: -38.7}
+  id: l132-shop-a-phone-1
+  model: /cdn/value.726b4ce1eb3fc52d4e35252d822b6f420f37c4c28ce628366a59b8cb7449f3e8.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 360}
+  scale: 1
+  state: {info: ["One bar. Then none. Then a text from nobody: 'u up? lol'"], name: Flip phone, verb: Flip open}
+  tags: [l132, usable, l132-top]
+l132-shop-a-phone-2:
+  castShadow: false
+  feetPosition: {x: 2.05, y: 1.02, z: -38.5}
+  id: l132-shop-a-phone-2
+  model: /cdn/value.726b4ce1eb3fc52d4e35252d822b6f420f37c4c28ce628366a59b8cb7449f3e8.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 330}
+  scale: 1
+  state: {}
+  tags: [l132, l132-top]
+l132-shop-a-plant:
+  castShadow: true
+  feetPosition: {x: -5.9, y: 0.02, z: -36.4}
+  id: l132-shop-a-plant
+  model: /cdn/value.53fa6b1388302684d3e567ca755e213843bd4d5ac5ee17c0b54fa1d579c9a019.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 180}
+  scale: 1
+  state: {}
+  tags: [l132]
+l132-shop-a-register:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: false
+  feetPosition: {x: 4.6, y: 1.02, z: -38.6}
+  id: l132-shop-a-register
+  model: /cdn/value.f2663b8e02cbce4a46bcfac7649bc914ec716a82c522683d3afa35ae62387855.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 360}
+  scale: 1
+  state: {info: ["No coins inside. A ledger of collections: who lacks what, and who would trade it."], name: Till, verb: Open}
+  tags: [l132, usable, l132-top]
+l132-shop-a-shelf-1:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: 1.3, y: 0.02, z: -43.95}
+  id: l132-shop-a-shelf-1
+  model: /cdn/value.9f3b838cc1b4403a54d96e1b80372c75c9a440c1d4e61a4760f60de82133526b.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 360}
+  scale: 1
+  state: {info: ["Pagers, a breadmaker, a talking fish. Beside them, a clay oil lamp with a barcode."], name: Boxed gadgets, verb: Look over}
+  tags: [l132, usable]
+l132-shop-a-shelf-2:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: 2.45, y: 0.02, z: -43.95}
+  id: l132-shop-a-shelf-2
+  model: /cdn/value.9f3b838cc1b4403a54d96e1b80372c75c9a440c1d4e61a4760f60de82133526b.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 360}
+  scale: 1
+  state: {info: ["Walkie-talkies, sealed. Somebody's cassette collection must be nearly whole."], name: Boxed gadgets, verb: Look over}
+  tags: [l132, usable]
+l132-shop-a-shelf-3:
+  castShadow: true
+  feetPosition: {x: 3.6, y: 0.02, z: -43.95}
+  id: l132-shop-a-shelf-3
+  model: /cdn/value.9f3b838cc1b4403a54d96e1b80372c75c9a440c1d4e61a4760f60de82133526b.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 360}
+  scale: 1
+  state: {}
+  tags: [l132]
+l132-shop-a-slat-l:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: -6.5, y: 0.02, z: -39.7}
+  id: l132-shop-a-slat-l
+  model: /cdn/value.1e06f865e3bab819652a7465866afc2c45f18e4e921be428e2aa3ee858166281.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 450}
+  scale: 1
+  state: {info: [Every plug that ever was. None of them fit each other.], name: Wall of cables and adapters, verb: Look over}
+  tags: [l132, usable]
+l132-shop-a-slat-r:
+  castShadow: true
+  feetPosition: {x: 6.5, y: 0.02, z: -41.2}
+  id: l132-shop-a-slat-r
+  model: /cdn/value.1e06f865e3bab819652a7465866afc2c45f18e4e921be428e2aa3ee858166281.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 270}
+  scale: 1
+  state: {}
+  tags: [l132]
+l132-shop-a-spinner:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: -2.2, y: 0.02, z: -38.2}
+  id: l132-shop-a-spinner
+  model: /cdn/value.be7eb6c9bc6772c442cbd253702e165b10228b7f25c091d9b7fe1a9fee5eef61.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 360}
+  scale: 1
+  state: {kind: spin, name: Battery rack, verb: Spin}
+  tags: [l132, usable]
+l132-shop-a-tvglow:
+  feetPosition: {x: -3, y: 1.4, z: -42.9}
+  id: l132-shop-a-tvglow
+  light: {color: oklch(0.85 0.08 240), distance: 6, intensity: 5, kind: point}
+  tags: [l132]
+l132-shop-a-tvwall-1:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: -4.4, y: 0.02, z: -43.9}
+  id: l132-shop-a-tvwall-1
+  model: /cdn/value.fd77a1a3758558c1ae8ee279ca68052869bee176446daf993be83dce9e44d9c8.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 360}
+  scale: 1
+  state: {info: ["Every screen shows the same channel: grey snow, and now and then a street you almost know.", The picture rolls. Nobody here minds; it restocks itself by morning.], name: Wall of televisions, verb: Watch}
+  tags: [l132, usable]
+l132-shop-a-tvwall-2:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: -1.6, y: 0.02, z: -43.9}
+  id: l132-shop-a-tvwall-2
+  model: /cdn/value.fd77a1a3758558c1ae8ee279ca68052869bee176446daf993be83dce9e44d9c8.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 360}
+  scale: 1
+  state: {info: ["Static, flecked with the square outside, seen from above."], name: Wall of televisions, verb: Watch}
+  tags: [l132, usable]
+l132-shop-a-wire-1:
+  castShadow: true
+  feetPosition: {x: 6.25, y: 0.02, z: -37.8}
+  id: l132-shop-a-wire-1
+  model: /cdn/value.8e72f7f37b80c9e96c97fa180ed93d497a4099cbdfbc464895fc5a8894c8c120.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 180}
+  scale: 1.15
+  state: {}
+  tags: [l132]
 l132-shop-b:
   feetPosition: {x: 40, y: 0, z: 0}
   id: l132-shop-b
-  material: {kind: scripted, script: engine/blueprint}
-  physics: none
-  primitive: {depth: 16, height: 6, kind: box, width: 11}
-  tags: [blueprint]
+  model: {id: /cdn/value.2726e0ba69d8039630c71076235bb8b319598ac602b628a4516d81485df8f1df.glb, materials: {ceil_in: {repeat: [1, 1], roughness: 0.85, texture: cdn/texture-white-pressed-tin-ceiling.png, wrap: repeat}, floor_in: {repeat: [1, 1], roughness: 0.55, texture: cdn/texture-black-white-checkerboard-diner-floor.png, wrap: repeat}, jamb: {repeat: [1, 1], roughness: 0.85, texture: cdn/texture-oak-wood-planks-dark.png, wrap: repeat}, wall_in: {repeat: [1, 1], roughness: 0.85, texture: cdn/texture-mint-green-diner-wall-tiles-chrome-trim.png, wrap: repeat}}}
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: -90}
+  scale: {x: 1, y: 1, z: 1}
+  state: {name: Starlite Diner}
+  tags: [l132, l132-shop]
+l132-shop-b-booth-1:
+  castShadow: true
+  feetPosition: {x: 36.4, y: 0.02, z: -5.9}
+  id: l132-shop-b-booth-1
+  model: /cdn/value.16e718586e8a4ad9bc8fee6f9deb9a8a0783a3d7735609809865f55591915948.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 90}
+  scale: 1
+  state: {}
+  tags: [l132]
+l132-shop-b-booth-1-seat-a:
+  feetPosition: {x: 36.87, y: 0.02, z: -5.140000000000001}
+  id: l132-shop-b-booth-1-seat-a
+  rotation: {yaw: 0}
+  state: {name: Diner booth, seat: {d: 0.04, gap: 0.55, w: 2, y: 0.28}, verb: Sit}
+  tags: [seat, usable, l132]
+l132-shop-b-booth-1-seat-b:
+  feetPosition: {x: 35.81, y: 0.02, z: -6.460000000000001}
+  id: l132-shop-b-booth-1-seat-b
+  rotation: {yaw: 270}
+  state: {name: Diner booth, seat: {d: 0.04, gap: 0.62, w: 2, y: 0.28}, verb: Sit}
+  tags: [seat, usable, l132]
+l132-shop-b-booth-2:
+  castShadow: true
+  feetPosition: {x: 36.4, y: 0.02, z: -3.4}
+  id: l132-shop-b-booth-2
+  model: /cdn/value.16e718586e8a4ad9bc8fee6f9deb9a8a0783a3d7735609809865f55591915948.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 90}
+  scale: 1
+  state: {}
+  tags: [l132]
+l132-shop-b-booth-2-seat-a:
+  feetPosition: {x: 36.87, y: 0.02, z: -2.6399999999999997}
+  id: l132-shop-b-booth-2-seat-a
+  rotation: {yaw: 0}
+  state: {name: Diner booth, seat: {d: 0.04, gap: 0.55, w: 2, y: 0.28}, verb: Sit}
+  tags: [seat, usable, l132]
+l132-shop-b-booth-2-seat-b:
+  feetPosition: {x: 35.81, y: 0.02, z: -3.9599999999999995}
+  id: l132-shop-b-booth-2-seat-b
+  rotation: {yaw: 270}
+  state: {name: Diner booth, seat: {d: 0.04, gap: 0.62, w: 2, y: 0.28}, verb: Sit}
+  tags: [seat, usable, l132]
+l132-shop-b-booth-3:
+  castShadow: true
+  feetPosition: {x: 36.4, y: 0.02, z: 3.2}
+  id: l132-shop-b-booth-3
+  model: /cdn/value.16e718586e8a4ad9bc8fee6f9deb9a8a0783a3d7735609809865f55591915948.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 90}
+  scale: 1
+  state: {}
+  tags: [l132]
+l132-shop-b-booth-3-seat-a:
+  feetPosition: {x: 36.87, y: 0.02, z: 3.9600000000000004}
+  id: l132-shop-b-booth-3-seat-a
+  rotation: {yaw: 0}
+  state: {name: Diner booth, seat: {d: 0.04, gap: 0.55, w: 2, y: 0.28}, verb: Sit}
+  tags: [seat, usable, l132]
+l132-shop-b-booth-3-seat-b:
+  feetPosition: {x: 35.81, y: 0.02, z: 2.6400000000000006}
+  id: l132-shop-b-booth-3-seat-b
+  rotation: {yaw: 270}
+  state: {name: Diner booth, seat: {d: 0.04, gap: 0.62, w: 2, y: 0.28}, verb: Sit}
+  tags: [seat, usable, l132]
+l132-shop-b-booth-4:
+  castShadow: true
+  feetPosition: {x: 36.4, y: 0.02, z: 5.7}
+  id: l132-shop-b-booth-4
+  model: /cdn/value.16e718586e8a4ad9bc8fee6f9deb9a8a0783a3d7735609809865f55591915948.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 90}
+  scale: 1
+  state: {}
+  tags: [l132]
+l132-shop-b-booth-4-seat-a:
+  feetPosition: {x: 36.87, y: 0.02, z: 6.46}
+  id: l132-shop-b-booth-4-seat-a
+  rotation: {yaw: 0}
+  state: {name: Diner booth, seat: {d: 0.04, gap: 0.55, w: 2, y: 0.28}, verb: Sit}
+  tags: [seat, usable, l132]
+l132-shop-b-booth-4-seat-b:
+  feetPosition: {x: 35.81, y: 0.02, z: 5.14}
+  id: l132-shop-b-booth-4-seat-b
+  rotation: {yaw: 270}
+  state: {name: Diner booth, seat: {d: 0.04, gap: 0.62, w: 2, y: 0.28}, verb: Sit}
+  tags: [seat, usable, l132]
+l132-shop-b-cloche:
+  castShadow: false
+  feetPosition: {x: 41.9, y: 0.98, z: -0.3000000000000001}
+  id: l132-shop-b-cloche
+  model: /cdn/value.64d2f93ebecd6175138979d5fac9d6994949f98ae4f4be1047298cf53d65caac.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 270}
+  scale: 1
+  state: {}
+  tags: [l132, l132-top]
+l132-shop-b-coffee:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: false
+  feetPosition: {x: 42, y: 0.98, z: -4.3}
+  id: l132-shop-b-coffee
+  model: /cdn/value.6fd5817efd4dcf472f9dfe25b04d117ca9faf65d880f5ee6d965c1ba3f407eec.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 270}
+  scale: 1
+  state: {info: ["Hot, bottomless, and a little burnt. Like a real one."], name: Coffee urn, verb: Pour}
+  tags: [l132, usable, l132-top]
+l132-shop-b-counter-1:
+  castShadow: true
+  feetPosition: {x: 41.9, y: 0.02, z: -3.3}
+  id: l132-shop-b-counter-1
+  model: /cdn/value.d101cc0389dc3f27245b75dd77016c79ceda43dd83507b05a45136333874847b.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 270}
+  scale: 1.2
+  state: {}
+  tags: [l132]
+l132-shop-b-counter-2:
+  castShadow: true
+  feetPosition: {x: 41.9, y: 0.02, z: 0.3999999999999999}
+  id: l132-shop-b-counter-2
+  model: /cdn/value.d101cc0389dc3f27245b75dd77016c79ceda43dd83507b05a45136333874847b.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 270}
+  scale: 1.2
+  state: {}
+  tags: [l132]
+l132-shop-b-door:
+  behavior: scripts/home11-door.js
+  children: [{behavior: scripts/home11-door.js, feetPosition: {x: 0, y: 0, z: 0}, id: leaf, material: {pbr: true}, physics: static, primitive: {kind: scripted, params: {d: 0.1, h: 2.28, hingeSide: left, part: leaf, seed: 101, style: wood, swing: -1, w: 1.28}, script: scripts/door-geo.js}, state: {hinge: l132-shop-b-door, kind: door, name: Starlite Diner door, verb: Close}, tags: [usable]}]
+  feetPosition: {x: 35.15, y: 0.02, z: -0.6399999999999997}
+  id: l132-shop-b-door
+  physics: kinematic
+  rotation: {yaw: 5}
+  state: {closedYaw: -90, hinge: l132-shop-b-door, kind: door, name: Starlite Diner door, open: true, openYaw: 5, verb: Close}
+  tags: [usable, l132]
+l132-shop-b-grill:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: 43.85, y: 0.02, z: -2.6000000000000005}
+  id: l132-shop-b-grill
+  model: /cdn/value.52e8c951e79935129fcfb50a305e01a547c4ea962c25fb44339c09ac673636a4.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 270}
+  scale: 1
+  state: {info: ["Hot, and scraped clean. Something was just flipped by nobody."], name: Griddle, verb: Check}
+  tags: [l132, usable]
+l132-shop-b-hatch:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: 43.9, y: 0.02, z: 1.5999999999999999}
+  id: l132-shop-b-hatch
+  model: /cdn/value.eeb98634b39070e4a360bb42bae8d93236bb9ef0ecab2fb9c226d07cf93a4aab.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 180}
+  scale: 2.1
+  state: {kind: bell, name: Serving hatch, verb: Ring}
+  tags: [l132, usable]
+l132-shop-b-jukebox:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: 39.8, y: 0.02, z: 6.65}
+  id: l132-shop-b-jukebox
+  model: /cdn/value.eb676c37706ec7e4c3e6457d46b4a565b82fc50d9cb775ec70525a1fe3fcad67.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 180}
+  scale: 0.85
+  state: {kind: jukebox, name: Jukebox, verb: Play}
+  tags: [l132, usable]
+l132-shop-b-light-0:
+  feetPosition: {x: 40, y: 2.85, z: -3.9050000000000002}
+  id: l132-shop-b-light-0
+  light: {color: oklch(0.96 0.04 60), distance: 15, intensity: 16, kind: point}
+  tags: [l132]
+l132-shop-b-light-1:
+  feetPosition: {x: 40, y: 2.85, z: 3.9050000000000002}
+  id: l132-shop-b-light-1
+  light: {color: oklch(0.96 0.04 60), distance: 15, intensity: 16, kind: point}
+  tags: [l132]
+l132-shop-b-light-2:
+  feetPosition: {x: 42.21, y: 2.85, z: -1.3532347130578254e-16}
+  id: l132-shop-b-light-2
+  light: {color: oklch(0.96 0.04 60), distance: 15, intensity: 16, kind: point}
+  tags: [l132]
+l132-shop-b-light-3:
+  feetPosition: {x: 37.47, y: 2.85, z: 1.5491782009214017e-16}
+  id: l132-shop-b-light-3
+  light: {color: oklch(0.96 0.04 60), distance: 15, intensity: 16, kind: point}
+  tags: [l132]
+l132-shop-b-piecase:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: 41.9, y: 0.02, z: 3.2}
+  id: l132-shop-b-piecase
+  model: /cdn/value.a619c121b4e830206d2c59969fdebd9d2a47dac9189109031f381cc44c28a2b3.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 180}
+  scale: 1
+  state: {info: ["Cherry, lemon, and one nobody can name. A slice is worth whatever your collection is missing."], name: Pie case, verb: Look in}
+  tags: [l132, usable]
+l132-shop-b-plant:
+  castShadow: true
+  feetPosition: {x: 43.7, y: 0.02, z: 6.4}
+  id: l132-shop-b-plant
+  model: /cdn/value.53fa6b1388302684d3e567ca755e213843bd4d5ac5ee17c0b54fa1d579c9a019.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 90}
+  scale: 1
+  state: {}
+  tags: [l132]
+l132-shop-b-register:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: false
+  feetPosition: {x: 41.9, y: 0.98, z: 1.4999999999999998}
+  id: l132-shop-b-register
+  model: /cdn/value.f2663b8e02cbce4a46bcfac7649bc914ec716a82c522683d3afa35ae62387855.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 270}
+  scale: 1
+  state: {info: ["The drawer holds a stack of handwritten swaps. 'One milkshake: one button I did not have.'"], name: Till, verb: Open}
+  tags: [l132, usable, l132-top]
+l132-shop-b-stool-1:
+  castShadow: true
+  feetPosition: {x: 41, y: 0.02, z: -4.6}
+  id: l132-shop-b-stool-1
+  model: /cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 90}
+  scale: 1
+  state: {name: Counter stool, seat: {d: 0, w: 1, y: 0.4}, verb: Sit}
+  tags: [l132, seat, usable]
+l132-shop-b-stool-2:
+  castShadow: true
+  feetPosition: {x: 41, y: 0.02, z: -3.5}
+  id: l132-shop-b-stool-2
+  model: /cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 90}
+  scale: 1
+  state: {name: Counter stool, seat: {d: 0, w: 1, y: 0.4}, verb: Sit}
+  tags: [l132, seat, usable]
+l132-shop-b-stool-3:
+  castShadow: true
+  feetPosition: {x: 41, y: 0.02, z: -2.4}
+  id: l132-shop-b-stool-3
+  model: /cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 90}
+  scale: 1
+  state: {name: Counter stool, seat: {d: 0, w: 1, y: 0.4}, verb: Sit}
+  tags: [l132, seat, usable]
+l132-shop-b-stool-4:
+  castShadow: true
+  feetPosition: {x: 41, y: 0.02, z: -0.6000000000000001}
+  id: l132-shop-b-stool-4
+  model: /cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 90}
+  scale: 1
+  state: {name: Counter stool, seat: {d: 0, w: 1, y: 0.4}, verb: Sit}
+  tags: [l132, seat, usable]
+l132-shop-b-stool-5:
+  castShadow: true
+  feetPosition: {x: 41, y: 0.02, z: 0.49999999999999994}
+  id: l132-shop-b-stool-5
+  model: /cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 90}
+  scale: 1
+  state: {name: Counter stool, seat: {d: 0, w: 1, y: 0.4}, verb: Sit}
+  tags: [l132, seat, usable]
+l132-shop-b-stool-6:
+  castShadow: true
+  feetPosition: {x: 41, y: 0.02, z: 1.6}
+  id: l132-shop-b-stool-6
+  model: /cdn/value.aafae0e5ed4c77675ec12a25bb3f8eac5c887ceaf6219d322cd50996a57e1552.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 90}
+  scale: 1
+  state: {name: Counter stool, seat: {d: 0, w: 1, y: 0.4}, verb: Sit}
+  tags: [l132, seat, usable]
 l132-shop-c:
   feetPosition: {x: -40, y: 0, z: 0}
   id: l132-shop-c
-  material: {kind: scripted, script: engine/blueprint}
+  model: {id: /cdn/value.5d3776904b9252fac495230c5e741297499836e8ca7866380653a2091f591fbe.glb, materials: {ceil_in: {repeat: [1, 1], roughness: 0.85, texture: cdn/texture-white-acoustic-ceiling-tiles.png, wrap: repeat}, floor_in: {repeat: [1, 1], roughness: 0.55, texture: cdn/texture-purple-confetti-pattern-arcade-carpet.png, wrap: repeat}, jamb: {repeat: [1, 1], roughness: 0.85, texture: cdn/texture-oak-wood-planks-dark.png, wrap: repeat}, wall_in: {repeat: [1, 1], roughness: 0.85, texture: cdn/texture-teal-sponge-painted-plaster-wall.png, wrap: repeat}}}
+  physics: {body: static, collider: mesh}
+  rotation: {yaw: 90}
+  scale: {x: 1, y: 1, z: 1}
+  state: {name: Dial-Up Cafe}
+  tags: [l132, l132-shop]
+l132-shop-c-arcade-1:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: -43.95, y: 0.02, z: -1.2000000000000002}
+  id: l132-shop-c-arcade-1
+  model: /cdn/value.f025413cd07f33ee4e744a88cdbe78e81a6057ba2b9fa1e5b77a9543ea556977.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 450}
+  scale: 1
+  state: {kind: arcade, name: Arcade cabinet, verb: Play}
+  tags: [l132, usable]
+l132-shop-c-arcade-2:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: -43.95, y: 0.02, z: -2.1000000000000005}
+  id: l132-shop-c-arcade-2
+  model: /cdn/value.f025413cd07f33ee4e744a88cdbe78e81a6057ba2b9fa1e5b77a9543ea556977.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 450}
+  scale: 1
+  state: {kind: arcade, name: Arcade cabinet, verb: Play}
+  tags: [l132, usable]
+l132-shop-c-bar:
+  castShadow: true
+  feetPosition: {x: -37.8, y: 0.02, z: -6.2}
+  id: l132-shop-c-bar
+  model: /cdn/value.53a6ef111aac797583ca330cad268f4e401bd0fe5613021c07eda571623e5ea2.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 360}
+  scale: 1
+  state: {}
+  tags: [l132]
+l132-shop-c-bean-1:
+  castShadow: true
+  feetPosition: {x: -41, y: 0.02, z: -3.4}
+  id: l132-shop-c-bean-1
+  model: /cdn/value.afa0c785ed6f8de02e08eba83bb07a5b8b9afdb7a0cd08c5469c281133c00d57.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 540}
+  scale: 1.15
+  state: {name: Bean bag, seat: {d: 0, w: 1, y: 0.05}, verb: Sit}
+  tags: [l132, seat, usable]
+l132-shop-c-bean-2:
+  castShadow: true
+  feetPosition: {x: -40.2, y: 0.02, z: -4.5}
+  id: l132-shop-c-bean-2
+  model: /cdn/value.afa0c785ed6f8de02e08eba83bb07a5b8b9afdb7a0cd08c5469c281133c00d57.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 580}
+  scale: 1.15
+  state: {name: Bean bag, seat: {d: 0, w: 1, y: 0.05}, verb: Sit}
+  tags: [l132, seat, usable]
+l132-shop-c-bean-3:
+  castShadow: true
+  feetPosition: {x: -42.2, y: 0.02, z: -4.2}
+  id: l132-shop-c-bean-3
+  model: /cdn/value.afa0c785ed6f8de02e08eba83bb07a5b8b9afdb7a0cd08c5469c281133c00d57.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 510}
+  scale: 1.15
+  state: {name: Bean bag, seat: {d: 0, w: 1, y: 0.05}, verb: Sit}
+  tags: [l132, seat, usable]
+l132-shop-c-coffee:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: false
+  feetPosition: {x: -38.2, y: 1.46, z: -6.2}
+  id: l132-shop-c-coffee
+  model: /cdn/value.6fd5817efd4dcf472f9dfe25b04d117ca9faf65d880f5ee6d965c1ba3f407eec.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 360}
+  scale: 1
+  state: {info: ["It gurgles for a long time and gives you half a cup. Patchy, like the Wi-Fi."], name: Coffee machine, verb: Pour}
+  tags: [l132, usable, l132-top]
+l132-shop-c-cork:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: false
+  feetPosition: {x: -35.62, y: 1, z: -3.3999999999999995}
+  id: l132-shop-c-cork
+  model: /cdn/value.beb7071005bd70aad16d4238ce3646be9ac16d7ad388eeb7f3a659d1b143bb04.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 180}
+  scale: 1.5
+  state: {info: ["The photography club's wall: the hollow tree in every light, the Duke mid-laugh, a cat asleep on a television.", "A note pinned under one: 'Swap you this for any photo with snow in it.'"], name: Corkboard of polaroids, verb: Look}
+  tags: [l132, usable, l132-wall]
+l132-shop-c-crt:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: -41.3, y: 0.02, z: -6.1}
+  id: l132-shop-c-crt
+  model: /cdn/value.30ae8e4fd0c2e307d21943aa6fa38f3f816fcc7a10335f5a15ff865b00b84ce4.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 270}
+  scale: 1
+  state: {kind: arcade, name: Console and television, verb: Play}
+  tags: [l132, usable]
+l132-shop-c-cube:
+  castShadow: true
+  feetPosition: {x: -40.6, y: 0.02, z: -5.5}
+  id: l132-shop-c-cube
+  model: /cdn/value.185618f9f20a119640545fa71d4eb703ad0b49b77820590eaeacb3202089bee4.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 360}
+  scale: 1
+  state: {}
+  tags: [l132]
+l132-shop-c-door:
+  behavior: scripts/home11-door.js
+  children: [{behavior: scripts/home11-door.js, feetPosition: {x: 0, y: 0, z: 0}, id: leaf, material: {pbr: true}, physics: static, primitive: {kind: scripted, params: {d: 0.1, h: 2.28, hingeSide: left, part: leaf, seed: 102, style: wood, swing: -1, w: 1.28}, script: scripts/door-geo.js}, state: {hinge: l132-shop-c-door, kind: door, name: Dial-Up Cafe door, verb: Close}, tags: [usable]}]
+  feetPosition: {x: -35, y: 0.02, z: 0.6400000000000003}
+  id: l132-shop-c-door
+  physics: kinematic
+  rotation: {yaw: 185}
+  state: {closedYaw: 90, hinge: l132-shop-c-door, kind: door, name: Dial-Up Cafe door, open: true, openYaw: 185, verb: Close}
+  tags: [usable, l132]
+l132-shop-c-lava:
+  castShadow: false
+  feetPosition: {x: -38.7, y: 1.46, z: -6.2}
+  id: l132-shop-c-lava
+  model: /cdn/value.2f0eae283b6ebd13603b9891c607686c47f142b2e36b43e6148b098ac56a24af.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 270}
+  scale: 1
+  state: {}
+  tags: [l132, l132-top]
+l132-shop-c-light-0:
+  feetPosition: {x: -40, y: 2.85, z: 3.6685000000000003}
+  id: l132-shop-c-light-0
+  light: {color: oklch(0.95 0.05 80), distance: 15, intensity: 16, kind: point}
+  tags: [l132]
+l132-shop-c-light-1:
+  feetPosition: {x: -40, y: 2.85, z: -3.6685000000000003}
+  id: l132-shop-c-light-1
+  light: {color: oklch(0.95 0.05 80), distance: 15, intensity: 16, kind: point}
+  tags: [l132]
+l132-shop-c-light-2:
+  feetPosition: {x: -42.23, y: 2.85, z: -1.365481181049299e-16}
+  id: l132-shop-c-light-2
+  light: {color: oklch(0.95 0.05 80), distance: 15, intensity: 16, kind: point}
+  tags: [l132]
+l132-shop-c-light-3:
+  feetPosition: {x: -37.5525, y: 2.85, z: 1.4986615204565737e-16}
+  id: l132-shop-c-light-3
+  light: {color: oklch(0.95 0.05 80), distance: 15, intensity: 16, kind: point}
+  tags: [l132]
+l132-shop-c-pc-1:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: -43.8, y: 0.02, z: 4.4}
+  id: l132-shop-c-pc-1
+  model: /cdn/value.c19a3a1207063b8231b343d67d98657a158515407d7c01b6c2286a1bd2d5c18c.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 360}
+  scale: 1.3
+  state: {kind: read, name: "Beige PC · M.E.G. database", page: 1322, verb: Browse the database}
+  tags: [l132, usable]
+l132-shop-c-pc-1-seat:
+  feetPosition: {x: -43.2, y: 0.02, z: 4.4}
+  id: l132-shop-c-pc-1-seat
+  rotation: {yaw: 450}
+  state: {name: Desk chair, seat: {d: 0, w: 1, y: 0.12}, verb: Sit}
+  tags: [seat, usable, l132]
+l132-shop-c-pc-2:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: -43.8, y: 0.02, z: 2.8999999999999995}
+  id: l132-shop-c-pc-2
+  model: /cdn/value.c19a3a1207063b8231b343d67d98657a158515407d7c01b6c2286a1bd2d5c18c.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 360}
+  scale: 1.3
+  state: {kind: modem, name: Beige PC, verb: Use}
+  tags: [l132, usable]
+l132-shop-c-pc-2-seat:
+  feetPosition: {x: -43.2, y: 0.02, z: 2.9}
+  id: l132-shop-c-pc-2-seat
+  rotation: {yaw: 450}
+  state: {name: Desk chair, seat: {d: 0, w: 1, y: 0.12}, verb: Sit}
+  tags: [seat, usable, l132]
+l132-shop-c-pc-3:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: -43.8, y: 0.02, z: 1.3999999999999997}
+  id: l132-shop-c-pc-3
+  model: /cdn/value.c19a3a1207063b8231b343d67d98657a158515407d7c01b6c2286a1bd2d5c18c.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 360}
+  scale: 1.3
+  state: {info: ["A chat room with one other name in it. It types: 'a/s/l?' and then 'jk. welcome to Lumiria.'"], name: Beige PC, verb: Use}
+  tags: [l132, usable]
+l132-shop-c-pc-3-seat:
+  feetPosition: {x: -43.2, y: 0.02, z: 1.3999999999999997}
+  id: l132-shop-c-pc-3-seat
+  rotation: {yaw: 450}
+  state: {name: Desk chair, seat: {d: 0, w: 1, y: 0.12}, verb: Sit}
+  tags: [seat, usable, l132]
+l132-shop-c-pc-4:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: -41.6, y: 0.02, z: 6}
+  id: l132-shop-c-pc-4
+  model: /cdn/value.c19a3a1207063b8231b343d67d98657a158515407d7c01b6c2286a1bd2d5c18c.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 450}
+  scale: 1.3
+  state: {info: ["Somebody's photo page, half loaded. The top third of a very good sunset."], name: Beige PC, verb: Use}
+  tags: [l132, usable]
+l132-shop-c-pc-4-seat:
+  feetPosition: {x: -41.6, y: 0.02, z: 5.4}
+  id: l132-shop-c-pc-4-seat
+  rotation: {yaw: 540}
+  state: {name: Desk chair, seat: {d: 0, w: 1, y: 0.12}, verb: Sit}
+  tags: [seat, usable, l132]
+l132-shop-c-pc-5:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: -40.1, y: 0.02, z: 6}
+  id: l132-shop-c-pc-5
+  model: /cdn/value.c19a3a1207063b8231b343d67d98657a158515407d7c01b6c2286a1bd2d5c18c.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 450}
+  scale: 1.3
+  state: {info: ["Solitaire, two moves from done. You leave it for whoever started it."], name: Beige PC, verb: Use}
+  tags: [l132, usable]
+l132-shop-c-pc-5-seat:
+  feetPosition: {x: -40.1, y: 0.02, z: 5.4}
+  id: l132-shop-c-pc-5-seat
+  rotation: {yaw: 540}
+  state: {name: Desk chair, seat: {d: 0, w: 1, y: 0.12}, verb: Sit}
+  tags: [seat, usable, l132]
+l132-shop-c-pc-6:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: true
+  feetPosition: {x: -38.6, y: 0.02, z: 6}
+  id: l132-shop-c-pc-6
+  model: /cdn/value.c19a3a1207063b8231b343d67d98657a158515407d7c01b6c2286a1bd2d5c18c.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 450}
+  scale: 1.3
+  state: {kind: modem, name: Beige PC, verb: Use}
+  tags: [l132, usable]
+l132-shop-c-pc-6-seat:
+  feetPosition: {x: -38.6, y: 0.02, z: 5.4}
+  id: l132-shop-c-pc-6-seat
+  rotation: {yaw: 540}
+  state: {name: Desk chair, seat: {d: 0, w: 1, y: 0.12}, verb: Sit}
+  tags: [seat, usable, l132]
+l132-shop-c-plant:
+  castShadow: true
+  feetPosition: {x: -36.3, y: 0.02, z: 5.9}
+  id: l132-shop-c-plant
+  model: /cdn/value.53fa6b1388302684d3e567ca755e213843bd4d5ac5ee17c0b54fa1d579c9a019.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 270}
+  scale: 1
+  state: {}
+  tags: [l132]
+l132-shop-c-rug:
+  castShadow: true
+  feetPosition: {x: -41.2, y: 0.02, z: -4.3}
+  id: l132-shop-c-rug
+  model: /cdn/value.455dde0ca22a985f649dee005f80bad45966342485d248a0fa95d86fb0a2d2c3.glb
   physics: none
-  primitive: {depth: 16, height: 6, kind: box, width: 11}
-  tags: [blueprint]
+  rotation: {yaw: 270}
+  scale: 1
+  state: {}
+  tags: [l132]
+l132-shop-c-sofa:
+  castShadow: true
+  feetPosition: {x: -36.15, y: 0.02, z: 3.0000000000000004}
+  id: l132-shop-c-sofa
+  model: /cdn/value.0feff3db97a7d03c96c612e304e76e62ee1a577e754a9073a4ca0d3ddfb2c023.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 180}
+  scale: 1
+  state: {name: Sofa, seat: {d: 0.05, gap: 0.65, w: 2}, verb: Sit}
+  tags: [l132, seat, usable]
+l132-shop-c-vr:
+  behavior: scripts/lib/l132-shops.js
+  castShadow: false
+  feetPosition: {x: -43.9, y: 1.02, z: -5.2}
+  id: l132-shop-c-vr
+  model: /cdn/value.0a43e1f48f4d8d160b984a97452d3ffc150031de7e9a71f470fe2d1f31c5dba5.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 450}
+  scale: 0.42
+  state: {info: ["Red wireframe hills. You lift it off after a minute, seasick and grinning."], name: VR headset, verb: Try on}
+  tags: [l132, usable, l132-top]
+l132-shop-c-vrcase:
+  castShadow: true
+  feetPosition: {x: -43.9, y: 0.02, z: -5.2}
+  id: l132-shop-c-vrcase
+  model: /cdn/value.4e4232d504243753b8093ecbded15cf7a15d83caa454d9a7267753de18ec803b.glb
+  physics: {body: static, collider: auto}
+  rotation: {yaw: 450}
+  scale: 1
+  state: {}
+  tags: [l132]
 l132-stall-0:
   feetPosition: {x: 5.74, y: 0, z: -13.86}
   id: l132-stall-0
@@ -93,3 +1000,135 @@ l132-tree:
   physics: none
   primitive: {depth: 8, height: 16, kind: box, width: 8}
   tags: [blueprint]
+l132-ware-ceramic-b-1:
+  castShadow: false
+  feetPosition: {x: 41.75, y: 0.98, z: -3.5}
+  id: l132-ware-ceramic-b-1
+  model: /cdn/value.4855edb39e5d71348b9d525fadd939ecb40086bb9ffc24c8daa9ee4a8642ae99.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 90}
+  scale: 1
+  state: {name: Plate}
+  tags: [l132, breakable, l132-top]
+l132-ware-ceramic-b-2:
+  castShadow: false
+  feetPosition: {x: 41.7, y: 0.98, z: -3.2}
+  id: l132-ware-ceramic-b-2
+  model: /cdn/value.576793eb000bea5267305695a7d529d11db108319af52abfdfcec00b9db2f3f3.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 130}
+  scale: 1
+  state: {name: Coffee cup}
+  tags: [l132, breakable, l132-top]
+l132-ware-ceramic-b-3:
+  castShadow: false
+  feetPosition: {x: 41.75, y: 0.98, z: 0.4999999999999999}
+  id: l132-ware-ceramic-b-3
+  model: /cdn/value.4855edb39e5d71348b9d525fadd939ecb40086bb9ffc24c8daa9ee4a8642ae99.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 90}
+  scale: 1
+  state: {name: Plate}
+  tags: [l132, breakable, l132-top]
+l132-ware-ceramic-b-4:
+  castShadow: false
+  feetPosition: {x: 41.7, y: 0.98, z: 0.8499999999999999}
+  id: l132-ware-ceramic-b-4
+  model: /cdn/value.576793eb000bea5267305695a7d529d11db108319af52abfdfcec00b9db2f3f3.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 290}
+  scale: 1
+  state: {name: Coffee cup}
+  tags: [l132, breakable, l132-top]
+l132-ware-ceramic-b-booth1-1:
+  castShadow: false
+  feetPosition: {x: 36.45, y: 0.78, z: -6}
+  id: l132-ware-ceramic-b-booth1-1
+  model: /cdn/value.4855edb39e5d71348b9d525fadd939ecb40086bb9ffc24c8daa9ee4a8642ae99.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 37}
+  state: {name: Plate}
+  tags: [l132, l132-top, breakable]
+l132-ware-ceramic-b-booth1-2:
+  castShadow: false
+  feetPosition: {x: 36.45, y: 0.78, z: -5.78}
+  id: l132-ware-ceramic-b-booth1-2
+  model: /cdn/value.576793eb000bea5267305695a7d529d11db108319af52abfdfcec00b9db2f3f3.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 74}
+  state: {name: Coffee cup}
+  tags: [l132, l132-top, breakable]
+l132-ware-ceramic-b-booth2-1:
+  castShadow: false
+  feetPosition: {x: 36.45, y: 0.78, z: -3.5}
+  id: l132-ware-ceramic-b-booth2-1
+  model: /cdn/value.4855edb39e5d71348b9d525fadd939ecb40086bb9ffc24c8daa9ee4a8642ae99.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 37}
+  state: {name: Plate}
+  tags: [l132, l132-top, breakable]
+l132-ware-ceramic-b-booth2-2:
+  castShadow: false
+  feetPosition: {x: 36.45, y: 0.78, z: -3.28}
+  id: l132-ware-ceramic-b-booth2-2
+  model: /cdn/value.576793eb000bea5267305695a7d529d11db108319af52abfdfcec00b9db2f3f3.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 74}
+  state: {name: Coffee cup}
+  tags: [l132, l132-top, breakable]
+l132-ware-ceramic-b-booth3-1:
+  castShadow: false
+  feetPosition: {x: 36.45, y: 0.78, z: 3.1}
+  id: l132-ware-ceramic-b-booth3-1
+  model: /cdn/value.4855edb39e5d71348b9d525fadd939ecb40086bb9ffc24c8daa9ee4a8642ae99.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 37}
+  state: {name: Plate}
+  tags: [l132, l132-top, breakable]
+l132-ware-ceramic-b-booth3-2:
+  castShadow: false
+  feetPosition: {x: 36.45, y: 0.78, z: 3.3200000000000003}
+  id: l132-ware-ceramic-b-booth3-2
+  model: /cdn/value.576793eb000bea5267305695a7d529d11db108319af52abfdfcec00b9db2f3f3.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 74}
+  state: {name: Coffee cup}
+  tags: [l132, l132-top, breakable]
+l132-ware-ceramic-b-booth4-1:
+  castShadow: false
+  feetPosition: {x: 36.45, y: 0.78, z: 5.6000000000000005}
+  id: l132-ware-ceramic-b-booth4-1
+  model: /cdn/value.4855edb39e5d71348b9d525fadd939ecb40086bb9ffc24c8daa9ee4a8642ae99.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 37}
+  state: {name: Plate}
+  tags: [l132, l132-top, breakable]
+l132-ware-ceramic-b-booth4-2:
+  castShadow: false
+  feetPosition: {x: 36.45, y: 0.78, z: 5.82}
+  id: l132-ware-ceramic-b-booth4-2
+  model: /cdn/value.576793eb000bea5267305695a7d529d11db108319af52abfdfcec00b9db2f3f3.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 74}
+  state: {name: Coffee cup}
+  tags: [l132, l132-top, breakable]
+l132-ware-ceramic-c-1:
+  castShadow: false
+  feetPosition: {x: -37.5, y: 1.46, z: -6.15}
+  id: l132-ware-ceramic-c-1
+  model: /cdn/value.576793eb000bea5267305695a7d529d11db108319af52abfdfcec00b9db2f3f3.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 300}
+  scale: 1
+  state: {name: Coffee mug}
+  tags: [l132, breakable, l132-top]
+l132-ware-ceramic-c-2:
+  castShadow: false
+  feetPosition: {x: -37.25, y: 1.46, z: -6.25}
+  id: l132-ware-ceramic-c-2
+  model: /cdn/value.576793eb000bea5267305695a7d529d11db108319af52abfdfcec00b9db2f3f3.glb
+  physics: {body: static, collider: box}
+  rotation: {yaw: 470}
+  scale: 1
+  state: {name: Coffee mug}
+  tags: [l132, breakable, l132-top]
