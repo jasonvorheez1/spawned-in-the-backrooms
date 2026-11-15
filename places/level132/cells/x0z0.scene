@@ -1,11 +1,14 @@
 # spawn-scene v2 yaml x0z0
 l132-duke:
-  feetPosition: {x: 9, y: 0, z: 9}
+  behavior: [scripts/l132-duke-npc.js]
+  feetPosition: {x: 9, y: 0.04, z: 9}
   id: l132-duke
-  material: {kind: scripted, script: engine/blueprint}
-  physics: none
-  primitive: {depth: 1.2, height: 2.6, kind: box, width: 1.2}
-  tags: [blueprint]
+  layout: {box: {max: {x: 2.6, y: 2.6, z: 2.6}, min: {x: -2.6, y: 0, z: -2.6}}}
+  model: {forward: "+x", id: /cdn/value.118e8b05644a06b8aaefc83afe558939108bf42b210d0ab43c3d9d347983c43d.glb}
+  physics: {body: kinematic, collider: capsule}
+  rotation: {yaw: 45}
+  state: {dlg: l132-duke, faceYaw: 45, faction: lumiria, friendly: true, hp: 100, invulnerable: true, maxHp: 100, name: The Duke of Morigont, nextAt: 0, role: duke, stop: 0, voice: l132-duke}
+  tags: [npc, friendly, l132, usable]
 l132-shop-a:
   feetPosition: {x: 0, y: 0, z: -40}
   id: l132-shop-a
