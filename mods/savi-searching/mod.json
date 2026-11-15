@@ -1,0 +1,14 @@
+{
+  "name": "savi-searching",
+  "displayName": "Savi Searching",
+  "description": "Savi researches before she builds. Name a character, game, show, place or event, or say \"savi search <subject>\": she searches the web, pulls official art, sprites and fan art, reads every gif frame by frame and summarises every video, writes a research brief into the world, then plans before she touches anything.",
+  "tags": [
+    "savi",
+    "research",
+    "workflow",
+    "reference",
+    "art"
+  ],
+  "visibility": "public",
+  "version": "1.0.0"
+}
