@@ -1656,6 +1656,7 @@ function fitPaws(body, w, left, both) {
 
 export function update(ctx, dt) {
   clockHeal(ctx) // future-dated stamps from another room's clock (lib/clock-heal.js)
+  { const s0 = ctx.self.state; if (s0.hp != null) { if (Number.isFinite(s0.hp)) ctx.self.session.hpOk = s0.hp; else { ctx.log('[hp-guard] non-finite hp', String(s0.hp), 'restored', ctx.self.session.hpOk ?? 100); s0.hp = ctx.self.session.hpOk ?? 100 } } } // Nov 15: hp once went to a broken number on Level 2; never let it stick
   preloadTick(ctx) // a level door within reach starts its level's models downloading (lib/preload-next.js)
   laterTick(ctx) // reload steps (later())
   forgiveTick(ctx) // the angry cool off an in-game hour after your last offence (lib/forgive.js)
