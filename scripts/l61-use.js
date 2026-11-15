@@ -8,6 +8,7 @@ import { errandStep, errandDone } from "./lib/quests.js";
 import { setStep61, BUS_TRAY as BUS } from "./lib/level61-quests.js";
 import { carryAcross } from "./lib/carry.js";
 import { rollCheck } from "./lib/npc-talk.js";
+import { canCarry } from "./lib/stats.js";
 import SNACKS from "./lib/data/snacks.yml";
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
@@ -29,6 +30,26 @@ const KEYS = ["clip", "liq", "slice", "burger", "gib"];
 const keyOf = (id) => KEYS.find((k) => String(id).includes(`-${k}-`) || String(id).endsWith(`-${k}`));
 const PICKUP = { clip: [-19.2, 0.86, -29.65], liq: [-11.75, 0.865, -25.2], slice: [5.4, 1.49, -29.4], burger: [19.4, 1.065, -28.4], gib: [1.9, 1.065, 28.4] };
 const NAME = { clip: "Clippers", liq: "Liquorette", slice: "Slice Palace", burger: "Burger Bop", gib: "Gib's Grub" };
+function byDoor(ctx, p) {
+  const a = p?.worldFeetPosition ?? p?.feetPosition, b = ctx.self.worldFeetPosition ?? ctx.self.feetPosition;
+  return p?.state && !p.state.dead && a && b && Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z) <= 3;
+}
+export function crossService(ctx, { by, at }) {
+  const p = ctx.place.players.find((who) => who.id === by), to = ctx.self.state.to;
+  if (!byDoor(ctx, p) || p.state.l61ServiceAt !== at || !ctx.getObject(to)) return;
+  const route = "level61#" + to;
+  ctx.emit("screenFlash", { color: "#000000", duration: 0.55, intensity: 1 }, { audience: { player: p.id } });
+  carryAcross(ctx, p, route);
+  ctx.cross(p, route);
+}
+export function closeService(ctx, { at }) {
+  const s = ctx.self.state;
+  if (s.closeAt !== at) return;
+  s.closeAt = 0;
+  s.verb = "Open";
+  const hinge = ctx.getObject(ctx.self.id + "/hinge");
+  if (hinge) animate(ctx, hinge.id, { "rotation.yaw": 0 }, { duration: 0.48, easing: "easeInOutQuad" });
+}
 
 const board = (key, n) => `<div face="front" width="1.8m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Courier New',monospace;background:#101418;color:#7affb0;text-align:center"><div style="font-size:54px;color:#ffd84a">NOW SERVING</div><div style="font-size:150px;font-weight:700;letter-spacing:6px;text-shadow:0 0 18px #3f9">${String(n).padStart(3, "0")}</div><div style="font-size:34px;color:#9fb8c8">${NAME[key].toUpperCase()}</div></div>`;
 
@@ -85,14 +106,18 @@ export const ears = {
       return;
     }
     if (s.kind === "serviceDoor") {
-      if (now - (w.l61ServiceAt ?? -1e9) < 1100) return;
-      const destination = ctx.getObject(s.to);
-      if (!destination) return;
+      if (!byDoor(ctx, who) || now - (w.l61ServiceAt ?? -1e9) < 1100 || !ctx.getObject(s.to)) return;
       w.l61ServiceAt = now;
-      ctx.emit("screenFlash", { color: "#000000", duration: 0.55, intensity: 1 }, { audience: { player: who.id } });
-      snd("heavy-metal-door-creak-open", 0.35, 9);
-      carryAcross(ctx, who, `level61#${s.to}`);
-      ctx.cross(who, `level61#${s.to}`);
+      const hinge = ctx.getObject(ctx.self.id + "/hinge");
+      if (!hinge) { crossService(ctx, { by, at: now }); return; }
+      if (now >= (s.closeAt ?? 0)) {
+        animate(ctx, hinge.id, { "rotation.yaw": 82 }, { duration: 0.45, easing: "easeOutCubic" });
+        snd("heavy-metal-door-creak-open", 0.35, 9);
+      }
+      s.verb = "Step through";
+      s.closeAt = now + 1450;
+      ctx.after(0.42, "crossService", { by, at: now });
+      ctx.after(1.45, "closeService", { at: s.closeAt });
       return;
     }
     if (s.kind === "level6") {
@@ -234,6 +259,9 @@ export const ears = {
     const tray = s.tray?.[uid];
     if (s.kind === "vend" && tray) {
       if (!tray.down) { tell("DISPENSING..."); return; }
+      if (w.payout) { tell("Give it a moment."); return; }
+      const carry = canCarry(w, tray.tok);
+      if (!carry.ok) { tell(carry.msg ?? "Your bag is full."); return; }
       const t = { ...s.tray }; delete t[uid]; s.tray = t;
       w.grab = { at: now, tok: tray.tok };
       ctx.after(0.45, "takeItem", { id: tray.item });

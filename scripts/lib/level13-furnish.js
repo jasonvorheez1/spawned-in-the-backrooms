@@ -110,7 +110,20 @@ function layFlat(ctx, a) {
 
 export function layFurnish(ctx) {
   const st = ctx.place.state;
-  if (st.fv === V) return;
+  if (st.fv === V) {
+    if (st.bedUseV !== V) {
+      for (const a of APTS) {
+        if (!a.open || ["lurk", "empty", "tenant"].includes(a.kind)) continue;
+        const bed = ctx.getObject(`l13f-${a.id}-bed`);
+        if (!bed) continue;
+        bed.tags = [...new Set([...(bed.tags ?? []), "usable"])];
+        bed.behavior = ["scripts/field-fixture.js"];
+        Object.assign(bed.state, { kind: "field-rest", name: "Apartment bed", verb: "Rest", info: "A brief rest. Lingering in a flat still slows you down." });
+      }
+      st.bedUseV = V;
+    }
+    return;
+  }
   const open = APTS.filter((a) => a.open);
   if (st.fvV !== V) { for (const id of Object.keys(ctx.place.objects)) if (id.startsWith("l13f-") && !id.includes("/")) ctx.destroy(id); st.fvV = V; st.fvI = 0; return; }
   const i = st.fvI ?? 0;

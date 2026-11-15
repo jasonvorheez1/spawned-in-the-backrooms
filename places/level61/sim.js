@@ -13,7 +13,7 @@ import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
 
 import { rbox } from "../../scripts/lib/rbox.js";
-import { layService } from "../../scripts/lib/level61-service.js";
+import { layService, wireServiceDoors } from "../../scripts/lib/level61-service.js";
 import { workbenchSpec, ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
 import CIGS from "../../scripts/lib/data/cigs.yml";
 const CIG = (k) => CIGS[k]?.model;
@@ -853,7 +853,8 @@ export function tick(ctx) {
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const st = ctx.place.state;
-  if ((st.builtV ?? 0) < V) { if (layStep(ctx)) { st.builtV = V; st.crewV = 0; } else return; }
+  if ((st.builtV ?? 0) < V) { if (layStep(ctx)) { st.builtV = V; st.crewV = 0; st.serviceHingesV = 0; } else return; }
+  if (!st.serviceHingesV) { wireServiceDoors(ctx); st.serviceHingesV = 1; }
   if ((st.campBenchV ?? 0) < 1) { st.campBenchV = 1; ensureBenches(ctx, l61Benches()); }
   if ((st.crewV ?? 0) < 2) { // 2: facelings learn names, mimic, keep a temper (scripts/l61-staff.js)
     st.crewV = 2;

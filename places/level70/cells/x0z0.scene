@@ -3409,12 +3409,11 @@ l70-house-fridge:
     roll: 0
     yaw: 180
   scale: 1
-  tags:
-  - l70
-  - l70-town
+  tags: ["l70","l70-town","container"]
   visible: true
   visibleRange:
     max: 65
+  state: {"name":"Burns Crescent refrigerator","items":"beans,beans","fixedStock":true,"scavved":true}
 l70-house-light-hall:
   feetPosition:
     x: -36.6
@@ -3647,12 +3646,11 @@ l70-house-sofa:
     roll: 0
     yaw: 180
   scale: 1
-  tags:
-  - l70
-  - l70-town
+  tags: ["l70","l70-town","seat"]
   visible: true
   visibleRange:
     max: 65
+  state: {"name":"Living-room sofa","seat":{"w":2,"gap":0.75,"y":0.31}}
 l70-house-stove:
   castShadow: false
   feetPosition:
@@ -3676,12 +3674,12 @@ l70-house-stove:
     roll: 0
     yaw: 180
   scale: 1
-  tags:
-  - l70
-  - l70-town
+  tags: ["l70","l70-town","usable"]
   visible: true
   visibleRange:
     max: 65
+  behavior: scripts/field-fixture.js
+  state: {"kind":"field-stove","name":"Kitchen stove","verb":"Heat a tin","info":"Heat beans for the cold outside","c":{"x":-39.6,"y":1.4,"z":-20.59}}
 l70-house-table:
   castShadow: false
   feetPosition:

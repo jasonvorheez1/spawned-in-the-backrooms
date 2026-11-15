@@ -103,6 +103,24 @@ export function lay(ctx) {
   ctx.place.state.l70townIds = ids;
 }
 export function tick(ctx) {
+  const s = ctx.place.state;
+  if (s.kitchenUseV !== V) {
+    const stove = ctx.getObject("l70-house-stove"), fridge = ctx.getObject("l70-house-fridge"), sofa = ctx.getObject("l70-house-sofa");
+    if (stove && fridge && sofa) {
+      stove.tags = [...new Set([...(stove.tags ?? []), "usable"])];
+      stove.behavior = ["scripts/field-fixture.js"];
+      Object.assign(stove.state, { kind: "field-stove", name: "Kitchen stove", verb: "Heat a tin", info: "Heat beans for the cold outside", c: { x: HS.x + 0.4, y: 1.4, z: HS.z - 2.59 } });
+      if (!fridge.tags.includes("container")) {
+        fridge.tags = [...fridge.tags, "container"];
+        Object.assign(fridge.state, { name: "Burns Crescent refrigerator", items: "beans,beans", fixedStock: true });
+      }
+      if (!sofa.tags.includes("seat")) {
+        sofa.tags = [...sofa.tags, "seat"];
+        Object.assign(sofa.state, { name: "Living-room sofa", seat: { w: 2, gap: 0.75, y: 0.31 } });
+      }
+      s.kitchenUseV = V;
+    }
+  }
   const b = ctx.place.objects["l70-cellar-bulb"]; if (!b) return;
   const r = ctx.random(); b.light = { ...b.light, intensity: r < 0.12 ? 0.25 : r < 0.3 ? 1.1 : 1.9 }; // the bulb's bad contact
 }

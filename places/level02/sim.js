@@ -365,6 +365,18 @@ export function tick(ctx) {
     }
   }
   if (!("l02-gw-v1-0" in ctx.place.objects) || !("l02-gd-cloth0" in ctx.place.objects)) layGrid(ctx); // Nov 12: the basement's shifting walls and crew dressing went missing in Shelly's room; lay back whatever is gone, the current layout kept
+  if (!ctx.place.state.crewStockV) {
+    const cooler = ctx.getObject("l02-gd-cooler"), toolbox = ctx.getObject("l02-gd-box");
+    if (cooler && toolbox) {
+      for (const [prop, name, items] of [[cooler, "Crew lunch cooler", "purified_water,ration"], [toolbox, "Crew toolbox", "tape,bobbypin"]]) {
+        prop.tags = [...new Set([...(prop.tags ?? []), "container"])];
+        prop.state.name = name;
+        prop.state.items ??= items;
+        prop.state.fixedStock = true;
+      }
+      ctx.place.state.crewStockV = 1;
+    }
+  }
   landCase(ctx, s, now);
   joists(ctx, s.phase !== "clean");
   gridTick(ctx);

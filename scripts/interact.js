@@ -1,4 +1,6 @@
 import { clearSight } from "./lib/sight.js";
+import { hands } from "./desk-item.js";
+export { handsOff } from "./desk-item.js";
 import { hostileReason, explainHostility, recordIncident } from "./lib/forgive.js";
 import {upgradeNearby,upgradeProp,containerPose,toggleLamp} from './lib/prop-interactions.js'
 import { screen } from './lib/screen.js'
@@ -200,7 +202,7 @@ export function openLoot(ctx, c) {
     c.state.lock = ''; c.state.name = sk === 'science' ? 'Unlocked locker' : 'Opened crate'
     note(ctx, `[${SKN[sk]} ${lv}] ${sk === 'science' ? 'You crack the locker' : 'You pick the lock'}`); snd(ctx, 'lock-picking-click', 0.5)
   }
-  if (!c.tags?.includes('storage') && !c.state.scavved && c.state.items !== undefined) { // Scavenge and Luck: a chance of one extra find, once per container
+  if (!c.tags?.includes('storage') && !c.state.fixedStock && !c.state.scavved && c.state.items !== undefined) { // Scavenge and Luck: a chance of one extra find, once per container
     c.state.scavved = true
     if (ctx.random() < derived(s).scav) c.state.items = [c.state.items, (ctx.self.place === 'level1' ? rollItemL1(ctx) : ctx.self.place === 'level2' ? rollItemL2(ctx) : ctx.self.place === 'level3' ? rollItemL3(ctx) : rollItem(ctx, poolOf(ctx.self.place)))].filter(Boolean).join(',')
     const cl = spotCloth(ctx, derived(s).clothFind) // Observation (Perception) spots a wearable tucked in the junk
@@ -490,7 +492,9 @@ function lootAction(ctx, d) {
     }
     c.state.refillAt = ctx.now() + REFILL_MS
   }
-  c.state.items = items.join(',')
+  const left = items.join(',')
+  if (c.state.fixedStock && left !== String(c.state.items ?? '')) hands(ctx, ctx.self)
+  c.state.items = left
   if (c.state.refillAt > ctx.now() && !c.tags?.includes('storage')) ledger(ctx, c)
   s.lootList = c.state.items
   if (c.tags?.includes('storage') && c.state.saveKey) s[c.state.saveKey] = c.state.items
@@ -535,6 +539,19 @@ export function onInput(ctx, input) {
 }
 
 export function update(ctx, dt) {
+  const actor = ctx.self, poseAt = actor.state.fixturePoseUntil
+  if (actor.isLocal !== false && poseAt) {
+    const now = ctx.now(), v = actor.velocity
+    const moving = Math.hypot(v?.x ?? 0, v?.z ?? 0) > 0.55
+    if (poseAt <= now || moving || actor.state.dead) {
+      actor.state.fixturePoseUntil = 0
+      if (actor.anim) actor.anim.fixtureRest = null
+      if (moving && actor.state.fieldRestPending > now) {
+        actor.state.fieldRestPending = 0
+        note(ctx, 'You stop resting.')
+      }
+    }
+  }
   if(ctx.self.state.level!=null&&ctx.self.isLocal!==false)upgradeNearby(ctx)
   { // in a car the wheel went back (E inside, or the car let go): step out beside the driver's door
     const car = ctx.self.parent, mm = mem(ctx)

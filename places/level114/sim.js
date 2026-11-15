@@ -28,6 +28,20 @@ function box(ctx, id, x0, y0, z0, x1, y1, z1, mat, solid = true) {
 }
 function put(ctx, id, m, x, z, yaw, extra = {}) { const [w, h, d] = m.size;
   ctx.spawn(id, { tags: ["l114"], feetPosition: { x, y: 0, z }, rotation: { yaw }, model: { id: m.id, ...(m.forward ? { forward: m.forward } : {}), ...(m.materials ? { materials: m.materials } : {}) }, layout: { box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } }, physics: { body: "static", collider: "box" }, ...extra }); }
+function wireTv(ctx) {
+  const tv = ctx.getObject("tv");
+  if (!tv) return false;
+  const p = tv.feetPosition;
+  tv.rotation = { yaw: 90 };
+  tv.behavior = ["scripts/l114-use.js"];
+  Object.assign(tv.state, { kind: "television", name: "Television", verb: "Turn on", info: "A signal beneath the static", c: { x: p.x - 0.26, y: p.y + 0.65, z: p.z } });
+  if (!ctx.getObject("tv/screen")) ctx.spawn("screen", {
+    parent: tv.id, tags: ["l114"], feetPosition: { x: 0, y: 0.59, z: -0.252 }, rotation: { yaw: 180 },
+    primitive: { kind: "plane", width: 0.58, height: 0.43 }, material: { kind: "scripted", script: "scripts/mat-l13-static.js" },
+    visible: false, castShadow: false,
+  });
+  return true;
+}
 function build(ctx) {
   for (const o of ctx.query({ tags: ["l114"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id);
   const t = 0.12;
@@ -54,7 +68,7 @@ function build(ctx) {
   put(ctx, "chair", F("chair"), W - 0.72, -0.2, 90, { physics: undefined });
   put(ctx, "toychest", F("chest"), -W + 0.55, 0.62, 180, { tags: ["l114", "container", "furniture"], state: { name: "Toy Chest", verb: "Search", kind: "home", items: "battery,almond" } });
   put(ctx, "rug", F("rug"), 0.1, 0.4, 8, { physics: undefined });
-  put(ctx, "tv", F("tv"), W - 0.32, 0.9, -90, { tags: ["l114", "usable"], state: { name: "Television", verb: "Turn On", info: "nothing happens" } });
+  put(ctx, "tv", F("tv"), W - 0.32, 0.9, 90, { tags: ["l114", "usable"] });
   put(ctx, "shelf", F("shelf"), 0.6, -D + 0.22, 180, { tags: ["l114", "container", "furniture"], state: { name: "Bookshelf", verb: "Search", kind: "home", items: "almond,bar,battery" } });
   put(ctx, "lamp", F("lamp"), -W + 0.3, D - 0.35, 0);
   ctx.spawn("switch", { tags: ["l114", "usable"], audience: "all", feetPosition: { x: DOOR.x - DOOR.w / 2 - 0.22, y: 1.15, z: D - 0.01 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 0.08, height: 0.12, depth: 0.015 }, material: { color: "oklch(0.95 0.01 90)", roughness: 0.4 }, behavior: "scripts/l114-use.js", state: { kind: "switch", name: "Light Switch", verb: "Switch Off", info: "on" } });
@@ -72,7 +86,8 @@ function build(ctx) {
 }
 export function tick(ctx) {
   const s = ctx.place.state, now = ctx.now();
-  if (s.v114 !== V) { build(ctx); s.v114 = V; s.lit = true; }
+  if (s.v114 !== V) { build(ctx); s.v114 = V; s.lit = true; s.tvUseV = 0; }
+  if (!s.tvUseV && wireTv(ctx)) s.tvUseV = 1;
   const lit = s.lit !== false, room = ctx.place.players.filter((p) => Math.abs(p.feetPosition.x) < W && Math.abs(p.feetPosition.z) < D);
   const light = ctx.place.objects["ceil-light"];
   if (light && light.state.on !== lit) { light.state.on = lit; light.light = lit ? { kind: "point", color: "oklch(0.92 0.07 85)", intensity: 7, distance: 10, shadow: { enabled: true } } : null; const lg = ctx.place.objects["lamp-glow"]; if (lg) lg.light = lit ? { kind: "point", color: "oklch(0.85 0.1 70)", intensity: 1.6, distance: 5 } : null; light.material = { color: lit ? "oklch(0.97 0.03 90)" : "oklch(0.5 0.01 90)", emissive: "oklch(0.97 0.05 90)", emissiveIntensity: lit ? 1.6 : 0 }; }
