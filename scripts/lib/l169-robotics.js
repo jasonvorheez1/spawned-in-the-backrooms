@@ -61,6 +61,17 @@ function spawnBot(ctx, id, pos, face) {
   });
 }
 
+// a unit walks its post toward the nearest player (meg-agent walks state.rounds), so it closes inside sight (meg.yml sight) and the fight starts; rewritten only when the player moved T.stalk m
+function stalk(o, ps) {
+  if (!ps.length || o.state?.follow) return;
+  const f = o.feetPosition; let p = null, bd = Infinity;
+  for (const q of ps) { if (q.state?.dead) continue; const d = Math.hypot(q.feetPosition.x - f.x, q.feetPosition.z - f.z); if (d < bd) { bd = d; p = q; } }
+  if (!p) return;
+  const r = o.state.rounds?.[0], at = p.feetPosition;
+  if (r && Math.hypot(r.x - at.x, r.z - at.z) < T.stalk) return;
+  o.state.rounds = [{ x: at.x, y: at.y, z: at.z, dwell: 600, act: null, look: { x: at.x, z: at.z } }]; o.state.ri = 0;
+}
+
 function quest(ctx, L) {
   const O = L.robotics;
   for (const p of ctx.place.players) {
@@ -84,7 +95,7 @@ export function roboTick(ctx, L) {
     if (dead) {
       if (!o.state.credited) { o.state.credited = true; o.state.diedAt = now; for (const p of ps) if (p.state?.[Q.key] === 1 && near(p.feetPosition, b.feetPosition, T.credit)) { p.state.l169botK = (p.state.l169botK ?? 0) + 1; setQuest(p.state, Q.id, { name: Q.name, step: `Put down frenzied Backrooms Robotics units in the open desert (${Math.min(T.need, p.state.l169botK)}/${T.need})`, mark: mk(O) }); } }
       if (now - (o.state.diedAt ?? now) > T.returnMs || d > 200) ctx.destroy(b.id);
-    } else if (d > T.far) ctx.destroy(b.id); else living++;
+    } else if (d > T.far) ctx.destroy(b.id); else { living++; stalk(o, ps); }
   }
   quest(ctx, L);
   if (!ps.length) return;

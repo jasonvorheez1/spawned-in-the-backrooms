@@ -80,7 +80,7 @@ trail:                          # the arrival lane: stacked cairns up the track 
 
 # Backrooms Robotics frenzied units (scripts/lib/l169-robotics.js). enamel = body paint; neck = the cloth that tells them apart at range
 robots:
-  rules: { first: 30000, every: 80000, jitter: 60000, questEvery: 40000, maxAlive: 3, packMax: 2, minR: 30, maxR: 42, far: 130, returnMs: 3600000, need: 3, credit: 50, xp: 220, cents: 7500 }
+  rules: { first: 30000, every: 80000, jitter: 60000, questEvery: 40000, maxAlive: 3, packMax: 2, minR: 30, maxR: 42, far: 130, returnMs: 3600000, need: 3, credit: 50, stalk: 4, xp: 220, cents: 7500 }
   variants:
     - { v: 1, tag: Deadeye, arm: revolver, hp: 80, w: 4, sex: m, enamel: "#c8402e", neck: bandana, neckc: "#f2e9d0", bottom: "#3a2a1e" }
     - { v: 2, tag: Buckshot, arm: coach_gun, hp: 95, w: 3, sex: m, enamel: "#e0a92a", neck: cape, neckc: "#2f6b45", bottom: "#4a3320" }
