@@ -1,22 +1,22 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9202,
-  "updatedAt": "2026-11-15T17:35:46.833Z",
-  "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Global scripts and shared registries coordinate play while place scenes and simulations compose local spaces and stories, including Level 1.1, Kyoto Dreams and Lumiria. A separate Director Savi mod supplies a creator-approved trailer workflow.",
+  "basedOnSpecVersion": 9211,
+  "updatedAt": "2026-11-15T17:57:54.728Z",
+  "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Global scripts and shared registries coordinate play while place scenes and simulations compose local spaces and stories, including the expanded Level 1.1 Corrupted Corridor, Kyoto Dreams and Lumiria. A separate Director Savi mod supplies a creator-approved trailer workflow.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes and anomalies; momentsV gates wall moments/room-prop regeneration; objects.scene hosts shared controllers.",
     "places/bonus + places/testlab (3D) - vaporwave mall with shops, staff, arcade, homes and salon; Test Range has loot/enemy bays and HIT SQUAD pad.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; sim builds tunnels/doors and staffs camps; t5-a2 leads to Level 178.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; scenes own geometry, sims/cutscenes local beats.",
-    "places/level1 + places/level1c + places/level2 + places/level4 + places/level26 (3D) - Level 1 M.E.G. camp and signed entrance to 620 m Level 1.1 corridor; Level 2 halls and Level 26 S.S. Fun.",
+    "places/level1 + places/level1c + places/level2 + places/level4 + places/level26 (3D) - Level 1 M.E.G. camp and signed entry to the 620 m Corrupted Corridor; Level 1.1 sim lays M.E.G./Tunnel Gang cast, caches, aid cabinets, footlockers, backpacks and a ringing payphone.",
     "places/level9 + places/level10 + places/level11 + places/level61 + places/level70 (3D) - Suburbs, farm, city/Base Beta/strip mall/clinic, Snackrooms checkpoint and Froidetown.",
     "places/level169 + places/level132 (3D) - Level 169 desert, Ferry's house/trail/basement and Field Office 7; Level 132 Duchy of Morigont, Lumiria town, collection barter and generated countryside.",
-    "places/level178 + places/levelrun + remaining authored levels (3D) - Kyoto Dreams residents/house quests/searchable containers; Level ! Chapter 2 chase finale and other authored destinations."
+    "places/level178 + remaining authored levels (3D) - Kyoto Dreams residents/house quests/searchable containers; Level ! Chapter 2 chase finale and other authored destinations."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera, ordered behaviors and input actions; fall-guard precedes movement; radio, barter and phone are player behaviors.",
-    "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, authored placements and generation/tick behavior; Level 1.1 and Level ! sims coordinate their local stories.",
+    "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, authored placements and generation/tick behavior; Level 1.1 and Level ! sims coordinate local stories.",
     "places/level169/config.yaml + scripts/terrain169.js; places/level132/config.yaml + scripts/terrain132.js - seeded height/material generators and place terrain marks.",
     "places/level169/sim.js + scripts/lib/data/level169.yml + house/Ferry/Friends/road/Robotics helpers - desert setpieces, schedules, routes, quests and units.",
     "places/level132/sim.js + scripts/lib/data/level132.yml + scripts/lib/l132-*.js - town/countryside lay and tick orchestration for stalls, shops, land, people, Duke, quests and barter.",
@@ -32,7 +32,7 @@
     "scripts/lib/containment.js - Level 109 persistent pen/loose-foe and door books; sim supplies room IDs/boxes and spawnFoe adapter.",
     "scripts/lib/prop-interactions.js + interactive-props data - shared usable-prop/container migration and geometry specs; scripts/interact.js dispatches.",
     "scripts/lib/barter-deal.js + scripts/lib/screen.js + scripts/phone.js + phone-ui.js - shared barter valuation, wrist-panel exclusivity and phone apps.",
-    "scripts/lib/level1c.js + level1c-fx.js + level1c-quest.js - Level 1.1 dimensions/sectors, walker effects and quest lifecycle shared by sim, player and dialogue; scripts/lib/voices.js resolves voice takes and warms its table for talk."
+    "scripts/lib/level1c.js + level1c-fx.js + level1c-quest.js - Level 1.1 dimensions/sectors, walker effects and quest lifecycle; scripts/lib/voices.js resolves per-NPC voice prompts from npc-voices.yml and recorded takes."
   ],
   "notableExports": [
     "scripts/lib/places.js - PLACES, PLACE_NAMES, PLACE_LABELS, LEVEL_TITLES.",
@@ -42,7 +42,7 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - journal/advancement/reward helpers; scripts/lib/containment.js - pen/door operations; scripts/lib/run-opts.js - OPTS, DEFAULTS, RATE, PRESETS, runOf, noStory, noNpcs and related helpers.",
     "scripts/lib/dialogue.js - DLG, dlgReady, warmDialogue, archOf, entryOf, BYE_CHOICE, rootChoices, childChoices, nodeOf, greetingOf, lineOf, barkOf; scripts/talk.js - conversation handlers.",
-    "scripts/lib/l132-shops.js - RANGE, ears, lay, tick; scripts/lib/level169-quest.js - questTick, useThing; scripts/lib/voices.js - warmVoices; places/thehub/sim.js - cadence, tick."
+    "scripts/lib/l132-shops.js - RANGE, ears, lay, tick; scripts/lib/level169-quest.js - questTick, useThing; scripts/lib/voices.js - warmVoices, hasVoice, voiceKey; places/thehub/sim.js - cadence, tick."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable player.state progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, saved place/position, currency and related progress.",
@@ -52,10 +52,10 @@
     "scripts/lib/run-opts.js + scripts/main-menu.js - player.state.run expedition picks; run options set story/NPC presence and need-drain multipliers; hub-thing.js owns player hubLoose pickup timestamps.",
     "scripts/db.js + scripts/main-menu.js - SQL saves table owns named save-slot snapshots; player.state is live run state.",
     "scripts/main-menu.js + tut0-cut.js + tutorial.js - player tutorial beat and Field Guide state/preferences, including seen prompt IDs; barter.js and phone.js own their player-state panels/apps.",
-    "places/level1c/sim.js + scripts/lib/level1c-quest.js - place state builtV/l1cPh/l1cDead; player state holds per-walker sector/quest/passage/fall progress."
+    "places/level1c/sim.js + scripts/lib/level1c-quest.js - place state builtV/l1cPh/xV/l1cDead; player state holds per-walker sector/quest/passage/fall progress."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused target actions.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused targets.",
     "templates/player.js runs scripts/fall-guard.js before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
@@ -65,8 +65,8 @@
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold handlers call carryAcross for held props/followers; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone (Level 1.1 sectors, Level 178 house, Level 132 Lumiria); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass.",
     "scripts/level-door.js onTriggerEnter resolves threshold/partner → destination marker and carryAcross; Level 1 ↔ Level 1.1 paired markers and scripts/l1c-use.js seam return keep the crossing linked.",
-    "places/level1c/sim.js tick lays versioned geometry/cast, updates walkers/sectors and questTick1c; level1c.js supplies geometry/rules and player.js applies zone sanity drains/effects.",
-    "scripts/talk.js → scripts/lib/dialogue.js and scripts/lib/voices.js; first player tick while standing warms dialogue and recorded-voice tables, then dlgReady loads authored YAML and actedVoice resolves takes; scripts/lib/tutorial.js selects Field Guide prompts and tutorial-ui.js renders moment-of-need cards."
+    "places/level1c/sim.js tick lays versioned geometry/cast, then xV lays searchable supplies, payphone note/audio and modelled seams; scripts/l1c-use.js consumes use/note interactions, foes/sectors and questTick1c update the corridor; level1c.js supplies plan and player.js applies zone effects.",
+    "scripts/talk.js → scripts/lib/dialogue.js + scripts/lib/voices.js; npc-voices.yml assigns distinct prompts to named Level 1.1 M.E.G. and Tunnel Gang cast, while first standing tick warms authored dialogue and recorded voice takes."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
@@ -76,7 +76,7 @@
     "scripts/lib/l169-road.js + l169-road-geo.js + l169-travel.js + l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
     "places/level132/sim.js + l132-{stalls,shops,land,people,duke,quests,barter}.js + barter-deal.js - staged town and keeper trades use eight goods categories; first gift then balanced currency-free barter.",
     "scripts/phone.js + phone-ui.js + screen.js - one shared wrist phone; apps include keeper contacts/restock texts, camera/photos/notes, flashlight and radio.",
-    "scripts/lib/dialogue.js loads authored YAML lazily into shared DLG; scripts/talk.js consumes choice/line/bark helpers and warms recorded voice takes on first standing tick; scripts/lib/tutorial.js selects contextual and moment-of-need Field Guide lessons."
+    "scripts/lib/dialogue.js loads authored YAML lazily into shared DLG; scripts/talk.js consumes choice/line/bark helpers and warms recorded voice takes on first standing tick; scripts/lib/tutorial.js selects contextual and moment-of-need Field Guide prompts."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists; Level 26 placements/barrage use uploaded models.",
@@ -91,7 +91,7 @@
     "places/thehub/sim.js backfills loose-key fixtures for already-laid rooms when hub-loosekey-0 is absent; keep this migration check alongside the normal lay path.",
     "Level 13 shell is authored in cells/x0z0.scene; sim.js returns if l13-floor is absent. Preserve matching floor ID and scene wall/threshold geometry; LETH remains in player.state.leth13.",
     "Level 169 uses x/z, north = -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth align with level169.yml. Sim layout and well versions are separate.",
-    "Level 132 uses metres, north = -Z and ground y=0; keep terrain marks/config, l132-land.yml, scene anchors and generated props aligned. Shop interiors draw at visibleRange 32/50 m (fixtures); palace torches are 90 m. Barter is currency-free; l132-shops.yml V versions its generated fixtures.",
-    "Level 1.1 geometry uses hall distance along +X (0–620 m), north at -Z, with sector boundaries in level1c.js; keep scene door/arrival and Level 1 paired doorway/seam return markers aligned. Level 1 sim re-spawns l1-to-hub when its trigger is missing even after the seeded flag is set."
+    "Level 132 uses metres, north = -Z and ground y=0; keep terrain marks/config, l132-land.yml, scene anchors and generated props aligned. Shop interiors draw at visibleRange 32/50 m (fixtures); palace torches are 90 m. Barter is currency-free.",
+    "Level 1.1 geometry uses hall distance along +X (0–620 m), north at -Z, with sector boundaries in level1c.js; xV gates extra props independently of builtV, so preserve its one-time lay path and the paired doorway/seam-return markers."
   ]
 }
