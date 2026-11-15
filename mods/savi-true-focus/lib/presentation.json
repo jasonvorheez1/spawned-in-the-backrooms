@@ -1,0 +1,14 @@
+{
+  "portrait": {
+    "asset": "/cdn/value.98905faf66a25874b32491ea2e9bdcaff9f3e4a23c855627f186638b0211a5a8.png",
+    "assetStatus": "prepared",
+    "bindingStatus": "awaiting-platform-hook",
+    "targets": [
+      "native-assistant-message-avatar",
+      "native-assistant-typing-avatar"
+    ],
+    "scope": "active-true-focus-conversation",
+    "restorePreviousOnExit": true,
+    "platformReport": "d093dc6d-44f5-427f-8063-bb2f28d181c0"
+  }
+}

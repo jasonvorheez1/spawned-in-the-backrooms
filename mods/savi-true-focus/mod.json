@@ -1,0 +1,20 @@
+{
+  "name": "savi-true-focus",
+  "displayName": "Savi True Focus",
+  "description": "Savi True Focus: source-backed research, concise plans, real progress evidence and replanning, with a Savi-only focus suit, held book and custom gestures. Separate from daily Lock-in; no AI model upgrade.",
+  "tags": [
+    "savi",
+    "workflow",
+    "research",
+    "verification",
+    "building"
+  ],
+  "visibility": "public",
+  "version": "1.0.2",
+  "objects": [
+    {
+      "id": "savi-true-focus-controller",
+      "template": "templates/controller.js#controller"
+    }
+  ]
+}

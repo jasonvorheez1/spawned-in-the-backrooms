@@ -1,0 +1,50 @@
+{
+  "avatarModel": "/cdn/value.dbcd78d28e9bc5f5b2fcd40af0d4dcc0415114a793e4b9f7a6e869a8b2d4b319.glb",
+  "suitModel": "/cdn/value.d6d5e149f519d9ccafca488a65ac92696692fb04a922a3018efa6a5fc7b9bd5b.glb",
+  "bookModel": "/cdn/value.9e6622c4303a471996bd85fc5eeb625b41225cb1c96f6e46a62caaee3a52359a.glb",
+  "avatarForward": "-z",
+  "handBone": "hand_l",
+  "hideParts": [
+    "Savi_TShirt_001",
+    "Savi_pants_001",
+    "Savi_Hair_Tie_Wrist",
+    "Savi_Hair_Tie_Gathered"
+  ],
+  "bookAttachment": {
+    "position": {
+      "x": -0.006582553498446941,
+      "y": 0.13458412885665894,
+      "z": -0.011008468456566334
+    },
+    "rotation": {
+      "x": 0.70611172914505,
+      "y": 0.7040098905563354,
+      "z": -0.03758496418595314,
+      "w": 0.06605841964483261
+    },
+    "scale": 1
+  },
+  "clips": {
+    "read": "FocusRead",
+    "turn": "FocusPageTurn",
+    "think": "FocusThink",
+    "bookTurn": "PageTurn",
+    "walk": "FocusWalk",
+    "jog": "FocusJog"
+  },
+  "durations": {
+    "read": 4,
+    "turn": 2.4,
+    "think": 3.2,
+    "bookTurn": 2.4,
+    "walk": 10.875,
+    "jog": 10.875
+  },
+  "proof": "/cdn/value.fa0ac29f63afe5f9680583c02c15ec191373284918eef49dee0c59bfab7dff45.png",
+  "nativeGarmentsRemoved": [
+    "Savi_TShirt_001",
+    "Savi_pants_001",
+    "Savi_Hair_Tie_Wrist",
+    "Savi_Hair_Tie_Gathered"
+  ]
+}

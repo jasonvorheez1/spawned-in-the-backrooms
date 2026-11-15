@@ -5,3 +5,5 @@ bdm-obj:
   template: mods/bulk-data-manager/templates/bdm-obj.js#bdm_obj
 favi-brain:
   template: mods/favi/templates/brain.js#brain
+savi-true-focus-controller:
+  template: mods/savi-true-focus/templates/controller.js#controller
