@@ -59,7 +59,7 @@ function t0Ui(ctx, player) {
 </style>${FILM}<div class="tb" style="top:0"></div><div class="tb" style="bottom:0"></div>${fin ? `<div class="tbk"></div><div class="tt">THE WAY BACK</div><div class="ts">SOMEWHERE WET</div>` : ""}${caps}`
 }
 export function t0Fade(ctx, player) {
-  const f = player.state.t0fade; if (!f || ctx.now() - f > 3000) return ""
+  const f = player.state.t0fade; if (!f || ctx.now() - f > 3000 || f > ctx.now() + 100) return "" // a stamp in the future is another room's clock: never a fade
   return `<style>@keyframes t0f{from{opacity:1}to{opacity:0}}</style><div style="position:fixed;inset:0;background:#000;z-index:60;pointer-events:none;animation:t0f 2.6s ease-in both;animation-delay:${f - ctx.now()}ms"></div>`
 }
 

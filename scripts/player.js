@@ -1,3 +1,4 @@
+import { clockHeal } from "./lib/clock-heal.js"
 import { xpNeed, migrateXp } from './lib/progression.js'
 export { xpNeed } from './lib/progression.js'
 import { migrate, wakePlace, wakeLog, canSaveHere } from "./lib/save.js"
@@ -1654,6 +1655,7 @@ function fitPaws(body, w, left, both) {
 }
 
 export function update(ctx, dt) {
+  clockHeal(ctx) // future-dated stamps from another room's clock (lib/clock-heal.js)
   preloadTick(ctx) // a level door within reach starts its level's models downloading (lib/preload-next.js)
   laterTick(ctx) // reload steps (later())
   forgiveTick(ctx) // the angry cool off an in-game hour after your last offence (lib/forgive.js)
