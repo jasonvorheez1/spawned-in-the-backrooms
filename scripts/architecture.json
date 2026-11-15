@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9246,
-  "updatedAt": "2026-11-15T19:14:38.310Z",
+  "basedOnSpecVersion": 9256,
+  "updatedAt": "2026-11-15T19:25:30.330Z",
   "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state holds the character while solo and multiplayer runs retain separate story, quest and resume state. Global scripts and shared registries coordinate play, while place scenes and simulations compose local spaces and stories; third-person bodies share combat poses with rig-aware locomotion.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0 yellow maze, routes and anomalies; momentsV gates wall moments/room-prop regeneration; objects.scene hosts shared controllers.",
+    "places/main (3D) - Level 0 yellow maze, routes and anomalies; momentsV gates wall moments/room-prop regeneration, and sim.tick returns ceiling-stuck enemies above y=1.6 to floor-level cells; objects.scene hosts shared controllers.",
     "places/bonus + places/testlab (3D) - vaporwave mall with shops, staff, arcade, homes and salon; Test Range has loot/enemy bays and HIT SQUAD pad.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; sim builds tunnels/doors and staffs camps; t5-a2 leads to Level 178.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; scenes own geometry, sims/cutscenes local beats.",
     "places/level1 + places/level1c + places/level2 + places/level4 + places/level26 (3D) - Level 1 M.E.G. camp and signed entry to the 620 m Corrupted Corridor; Level 1.1 sim lays cast, caches and supplies.",
     "places/level9 + places/level10 + places/level11 + places/level61 + places/level70 (3D) - Suburbs, farm, city/Base Beta/strip mall/clinic, Snackrooms checkpoint and Froidetown.",
     "places/level169 + places/level132 (3D) - Level 169 desert, Ferry's house/trail/basement and Field Office 7; Level 132 Duchy of Morigont, Lumiria town, collection barter and generated countryside.",
-    "places/level178 + places/level01 + places/level02 + places/level114 + places/level12 + places/level13 + places/level21 + places/level27 + places/level3 + places/level31 + places/level5 + places/level6 + places/level7 + places/spamton + pla…"
+    "places/level178 + places/level01 + places/level02 + places/level114 + places/level12 + places/level13 + places/level21 + places/level27 + places/level3 + places/level31 + places/level5 + places/level6 + places/level7 + places/spamton + places/gamma (3D) - authored destination levels and special/test spaces."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera and ordered behaviors/actions; fall-guard precedes movement; radio, barter and phone are player behaviors.",
@@ -42,7 +42,7 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - journal/advancement/reward helpers; scripts/lib/containment.js - pen/door operations; scripts/lib/run-opts.js - OPTS, DEFAULTS, RATE, PRESETS, runOf, noStory, noNpcs, isMulti, mpRoom, MODE_SLOT, isStoryKey.",
     "scripts/lib/mp-guard.js - shootable, multiRoom, spared; scripts/lib/dialogue.js - DLG, dlgReady, warmDialogue, archOf, entryOf, BYE_CHOICE, rootChoices, childChoices, nodeOf, greetingOf, lineOf, barkOf.",
-    "scripts/lib/l132-shops.js - RANGE, ears, lay, tick; scripts/lib/level169-quest.js - questTick, useThing; scripts/lib/voices.js - warmVoices, hasVoice, voiceKey; scripts/critter.js - updateSchedule, blinkEnd, blinkNow, twitchEnd, onInput, u…"
+    "scripts/lib/l132-shops.js - RANGE, ears, lay, tick; scripts/lib/level169-quest.js - questTick, useThing; scripts/lib/voices.js - warmVoices, hasVoice, voiceKey; scripts/critter.js - updateSchedule, blinkEnd, blinkNow, twitchEnd, onInput, update; scripts/lib/tutorial.js - inOrientation, GUIDE_CHAPTERS, orientation, GUIDE_LESSONS, tipsMuted, currentTip, guideTick, guideInput."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable character player.state: progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance/look, currency and gear shared across Solo/Multiplayer.",
@@ -55,9 +55,9 @@
     "places/level1c/sim.js + scripts/lib/level1c-quest.js - place state builtV/l1cPh/xV/l1cDead; player state holds per-walker sector/quest/passage/fall progress."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused i…",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused interaction, and its update clears focus when the look ray is absent or the target is beyond range.",
     "templates/player.js runs scripts/fall-guard.js before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
-    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; camera derives eye height from worn body/model and critter-head; scripts/player.js builds the local first-…",
+    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; camera derives eye height from worn body/model and critter-head; scripts/player.js builds the local first-person viewmodel.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
     "scripts/main-menu-ui.js mode action → scripts/main-menu.js switchMode → SQL MODE_SLOT snapshots; isStoryKey fields swap while character/gear/look persist, then Multiplayer routes to Bonus and Solo to its saved place.",
     "scripts/main-menu.js Multiplayer start → skips tutorial/story and goes to The Bonus Rooms; scripts/lib/run-opts.js noStory treats multiplayer as story-off and isMulti identifies its run.",
@@ -66,17 +66,17 @@
     "scripts/main-menu.js requests furry bodyStyle; scripts/lib/critter-model.js setStyle clears HUMAN for the critter body, while scripts/critter.js can instead render the avatar selected by player.state.look.spawnAv.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold handlers call carryAcross for held props/followers; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone (Level 1.1 sectors, Level 178 house, Level 132 Lumiria); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass.",
-    "scripts/lib/body3.js stance derives equipped long-gun aim/ready pose and armed state; for any held long gun it returns LeftHand reach IK attached to session.heldObj (including worn/custom bodies) → scripts/critter.js merges bones and turns third-person armed bodies toward the camera; scripts/humanoid-locomotion.js selects rifle sidestep/back-step gait from movement direction."
+    "scripts/lib/body3.js reads combat-anims.yml and held weapon/session/camera aim → shared third-person pose for player and NPC bodies; long-gun aim solves the grip hand forward and low, keeps the support hand on the held gun and levels head/neck to clear snouts."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
     "scripts/lib/data/weapons.yml + scripts/player.js + ballistics.js + knock.js + loot.js - weapon variants share combat and rarity/level gates; weights and upgrade rolls vary by level.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
-    "scripts/crawl.js + scripts/player.js + humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait; held crouch initiates crawl and tight spaces trigger automatic crawl; armed bodies steered to camera use directiona…",
+    "scripts/crawl.js + scripts/player.js + humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait; held crouch initiates crawl and tight spaces trigger automatic crawl; camera-steered bodies use directional sidesteps/back-steps, with separate matched walk and run clips.",
     "scripts/lib/l169-road.js + l169-road-geo.js + l169-travel.js + l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
     "places/level132/sim.js + l132-{stalls,shops,land,people,duke,quests,barter}.js + barter-deal.js - staged town and keeper trades use eight goods categories; first gift then balanced currency-free barter.",
     "scripts/phone.js + phone-ui.js + screen.js - one shared wrist phone; apps include keeper contacts/restock texts, camera/photos/notes, flashlight and radio.",
-    "scripts/lib/dialogue.js loads authored YAML lazily into shared DLG; scripts/talk.js consumes choice/line/bark helpers and warms recorded voice takes on first standing tick; scripts/lib/tutorial.js selects contextual Field Guide prompts."
+    "scripts/lib/body3.js + scripts/lib/data/combat-anims.yml - human/furry third-person combat poses vary by weapon family; long guns share aim/ready and left-hand gun reach, with separate head-level and low-forward grip correction."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists; Level 26 placements/barrage use uploaded models.",
