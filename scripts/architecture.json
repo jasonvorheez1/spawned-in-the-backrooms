@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8687,
-  "updatedAt": "2026-11-15T02:10:09.307Z",
+  "basedOnSpecVersion": 8693,
+  "updatedAt": "2026-11-15T02:10:39.304Z",
   "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices, radio tuning and resume location. Shared registries and handlers coordinate global play, while per-place simulations, authored cell scenes and procedural builders compose local spaces and stories. Level 169 combines desert routes, a scheduled cast and frenzied Backrooms Robotics units; Level 178 is Kyoto Dreams, a fixed-morning machiya whose terrain, detailed scene kit and tuned layout data work together.",
   "scriptPaths": [],
   "places": [
@@ -12,14 +12,14 @@
     "places/level1 + places/level4 + places/level26 (3D) - M.E.G. camps and authored office mazes; Level 26's S.S. Fun has cabin 23, Partygoer decks/lockdown and aboard gate; Level 1 includes Dina's radio.",
     "places/level9 + places/level11 + places/level61 + places/level70 (3D) - seeded Suburbs, Level 11 city/Base Beta/strip mall/clinic and Chapter 2 trail, Snackrooms food court/checkpoint and Froidetown winter market/civic town.",
     "places/level169 (3D, 'Welcome to the Desert') - seeded desert, Ferry's house/trail/pantry/basement, seven scheduled Friends, checkpoints/ship and Field Office 7 with Backrooms Robotics and frenzied units.",
-    "places/level178 (3D, 'Kyoto Dreams') - fixed early-morning Class 0 machiya around a courtyard hot spring; generated cell scene holds the detailed structure and kit props, with positions/tuning in scripts/lib/data/level178.yml."
+    "places/level178 (3D, 'Kyoto Dreams') - fixed early-morning Class 0 machiya around a courtyard hot spring; x0z0.scene now authors 375 fixed shell, shoji/partition, tatami, kitchen, furnishing and garden/lantern placements, tuned with scripts/lib/data/level178.yml."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer entry, camera/player setup, ordered behaviors and input actions; fall-guard runs before locomotion/player behavior and scripts/radio.js is on the player.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local config, authored placements and place generation/tick behavior; selected sims compose shared helpers.",
     "places/level169/config.yaml + scripts/terrain169.js - seeded height/material generator and desert marks; config binds terrain and scrub dressing, while cell scenes hold placed flora models.",
-    "places/level169/sim.js + scripts/lib/data/level169.yml + scripts/lib/l169-house.js + scripts/lib/l169-ferry.js + scripts/lib/l169-friends.js + scripts/lib/l169-road.js + scripts/lib/l169-robotics.js + scripts/l169-outpost-geo.js - dynamic desert house, cast, road, ship and Field Office/robotics systems.",
-    "places/level178/config.yaml + scripts/terrain178.js + places/level178/cells/x0z0.scene - terrain entry and ground/pool shape, plus authored machiya structure and fitted kit placements; config selects atmosphere, frozen time and spawn.",
+    "places/level169/sim.js + scripts/lib/data/level169.yml + scripts/lib/l169-house.js + scripts/lib/l169-ferry.js + scripts/lib/l169-friends.js + scripts/lib/l169-road.js + scripts/lib/l169-robotics.js + scripts/l169-outpost-geo.js - dynamic …",
+    "places/level178/config.yaml + scripts/terrain178.js + places/level178/cells/x0z0.scene - terrain entry and ground/pool shape plus 375 fixed machiya scene placements (shell through fittings/garden); config selects atmosphere, frozen time and spawn.",
     "scripts/lib/data/level178.yml + art/kyoto/build_arch.py + art/kyoto/build_props.py - Kyoto layout/tuning source and Blender asset builders; art/kyoto/assets.txt catalogs the kit, while built models are placed in the scene.",
     "places/level13/cells/x0z0.scene + places/level13/sim.js - cell scene owns apartment shell and permanent architectural fixtures; sim handles lethargy and delegates furnishing, foes, people, dressing and tape.",
     "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js - title/settings, new-expedition choices, five-slot save manager and story/tutorial lifecycle; scripts/ui.js composes the in-game HUD and wrist panels."
@@ -27,7 +27,7 @@
   "shared": [
     "scripts/lib/places.js - canonical per-place names, labels and HUD titles, including Level 178 / Kyoto Dreams; consumed by feed, quest names and scripts/ui.js.",
     "scripts/lib/grid-path.js - configurable 4-neighbor grid BFS/caching/cell selection shared by Level 0, 1, 2, 2.1, 3, Boiler and 6 path adapters.",
-    "scripts/lib/ambush-smiler.js - common pursuit/lurk/wake/retreat/bite behavior configured by scripts/lib/l34-smiler.js and scripts/lib/l9-smiler.js; scripts/lib/carry.js + scripts/lib/companion.js transfer held props/followers and manage co-located followers.",
+    "scripts/lib/ambush-smiler.js - common pursuit/lurk/wake/retreat/bite behavior configured by scripts/lib/l34-smiler.js and scripts/lib/l9-smiler.js; scripts/lib/carry.js + scripts/lib/companion.js transfer held props/followers and manage co…",
     "scripts/lib/hub.js + preload data/scripts and scripts/lib/thehub.js + scripts/lib/hubkeys.js - separate Bonus shared-room routing and The Hub tunnel/door/key registry.",
     "scripts/lib/containment.js - Level 109 persistent pen/loose-foe, open-door and remembered-door-position books; sim supplies room IDs/boxes and spawnFoe adapter.",
     "scripts/lib/pg-society.js + scripts/lib/data/pg-society.yml - Level 26 Partygoer role/routes, sight-bound relay and deck alert/search/recovery; scripts/partygoers.js reads rules and owns actor behavior/traps.",
@@ -42,7 +42,7 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - shared journal/advancement/reward helpers; containment.js - containment state/pen/door operations; ch2-quest.js - Chapter 2 stages and dialogue helpers.",
     "scripts/lib/run-opts.js - OPTS, DEFAULTS, PICK_DEFAULTS, RATE, PRESETS, runOf, needsMul, sanityMul, noStory, noNpcs, cleanPick, KEEP, SKIP; scripts/main-menu.js - SLOTS.",
-    "scripts/lib/radio.js - STATIONS, STATION, stationOf, onAir; scripts/lib/l169-friends.js - stopsOf, planAt, slateText, layFriends, tickFriends; l169-house.js - layTrail, layHouse; l169-robotics.js - layRobotics, roboTick; scripts/terrain178.js - heightAt, materialAt."
+    "scripts/lib/radio.js - STATIONS, STATION, stationOf, onAir; scripts/lib/l169-friends.js - stopsOf, planAt, slateText, layFriends, tickFriends; l169-house.js - layTrail, layHouse; l169-robotics.js - layRobotics, roboTick; scripts/terrain178…"
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable player.state progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, saved place/position, currency and related player progress.",
@@ -52,21 +52,21 @@
     "scripts/lib/run-opts.js + scripts/main-menu.js - player.state.run owns expedition picks; run options determine story/NPC presence and hunger/thirst/sanity drain multipliers.",
     "scripts/db.js + scripts/main-menu.js - SQL saves table owns named save-slot snapshots by player owner and slot; player.state remains the live/current run state.",
     "scripts/radio.js - player.state.radioOn/radioSt retain tuned station and power; radioOpen is the current wrist-tab state, with stream/hush object IDs kept in session.",
-    "Level 169: l169-friends.js owns live cast schedule/hostility/chatter; l169-robotics.js owns unit schedule and credits quest kills in player.state.l169bot/l169botK; scripts/lib/data/level169.yml owns robot timing, variants, paint, weapons, crew and rules."
+    "Level 169: l169-friends.js owns live cast schedule/hostility/chatter; l169-robotics.js owns unit schedule and credits quest kills in player.state.l169bot/l169botK; scripts/lib/data/level169.yml owns robot timing, variants, paint, weapons, …"
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focusable tagged props and dispatches their handlers.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focusable tagged props and di…",
     "templates/player.js runs scripts/fall-guard.js update before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; periodic saves exclude intake, bonus and tutorial0.",
     "scripts/main-menu-ui.js actions → scripts/main-menu.js → player.state.run or SQL saves; new-run reset uses run-opts KEEP/SKIP and options gate story/tutorial lifecycle; load resolves destination through wakePlace.",
-    "scripts/lib/run-opts.js → main-menu story gates Dina/Chapter 2/cutscenes; global sim.js removes tagged NPCs only when every player in a place chose noNpcs, and Phoebe only when every player chose noStory; needsMul feeds crafting and survival drains.",
+    "scripts/lib/run-opts.js → main-menu story gates Dina/Chapter 2/cutscenes; global sim.js removes tagged NPCs only when every player in a place chose noNpcs, and Phoebe only when every player chose noStory; needsMul feeds crafting and surviv…",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone; scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names, including Level 178.",
     "scripts/main-menu.js errandTick → scripts/lib/errands.js place-matched jobs; carried items/kills/world events advance errands and quest dialogue handlers → journal, player.state.errands/qtrack, feed, reputation and rewards.",
     "scripts/lib/data/craft.yml food recipes consume raw meat or carried snack IDs and produce IDs defined in snacks.yml; scripts/lib/manuals.js gates recipe learning through player.state.recipes.",
-    "places/level169/config.yaml → scripts/terrain169.js terrain and flora; places/level169/sim.js lays versioned level169.yml setpieces and ticks Friends/road/S.S. Fun/quest/robotics; l169-robotics.js reads robot rules/variants and spawns dressed cat-body frenzied units.",
-    "l169-robotics.js puts the complete worn outfit in each robot's body.state.look and builds its critter body from that look → critter-model/cat-wardrobe renders the chassis and hat, while shared NPC look/clothes handling can read the worn equipment."
+    "places/level169/config.yaml → scripts/terrain169.js terrain and flora; places/level169/sim.js lays versioned level169.yml setpieces and ticks Friends/road/S.S. Fun/quest/robotics; l169-robotics.js reads robot rules/variants and spawns dres…",
+    "l169-robotics.js puts the complete worn outfit in each robot's body.state.look and builds its critter body from that look → critter-model/cat-wardrobe renders the chassis and hat, while shared NPC look/clothes handling can read the worn eq…"
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
@@ -75,8 +75,8 @@
     "art/cigs/build.py + art/fnv/build.py + art/xmas-clean/build.py and NIF converters, plus art/cat-wardrobe/fit.py + tailclear.py + art/level70-stall/parts.py - fitted GLBs/prop catalogs and body-specific garment/prop fitting.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
-    "scripts/lib/l169-road.js + scripts/lib/l169-road-geo.js + scripts/lib/l169-travel.js + scripts/lib/l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards facing their approach and animated gates.",
-    "art/kyoto/build_arch.py + build_props.py + kit.py + scripts/lib/data/level178.yml - authored machiya architecture and prop kit share Blender helpers and layout positions; varied shoji/fusuma, rooms, spring, kitchen, lanterns and furnishings assemble into the Level 178 scene."
+    "scripts/lib/l169-road.js + scripts/lib/l169-road-geo.js + scripts/lib/l169-travel.js + scripts/lib/l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards facing their approach and animated …",
+    "art/kyoto/build_arch.py + build_props.py + kit.py + scripts/lib/data/level178.yml - authored machiya architecture and prop kit share Blender helpers and layout positions; varied shoji/fusuma, rooms, spring, kitchen, lanterns and furnishing…"
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -87,10 +87,10 @@
   ],
   "migrationNotes": [
     "Global sim.js runs every 250ms with a shared 40-eligible-object budget across live places; queues are machine-local snapshots, refilled when empty and discarded when a place has no players. It skips player roots and local-audience objects.",
-    "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together. The Hub cells own fixed fixture/furniture IDs; keep matching scene placements with them.",
+    "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs, destinations and coordinates together. The Hub cells own fixed fixture/furniture IDs; keep matching scene placements w…",
     "Level 13's building shell is authored in cells/x0z0.scene; sim.js returns if l13-floor is absent and no longer regenerates the shell. Preserve matching floor ID and scene wall/threshold geometry; LETH remains in player.state.leth13.",
     "Level 169 uses x/z with north at -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth must align. level169.yml holds tuned positions/rules; sim layout version and well version are separate.",
-    "Faulty Units uses player.state.l169bot/l169botK and place.state.botNext/botSeq; kill credit is a 50 m radius and requires three credited kills. Keep robot rules/variant paint in level169.yml and preserve each robot's full worn outfit in body.state.look for model rendering and gear handling.",
-    "Level 178 positions in scripts/lib/data/level178.yml use metres, north = -Z, house floor y=0.45; keep the authored cell placements and hot-spring basin aligned with scripts/terrain178.js ground pool cut (y=-1.7) and courtyard/path thresholds."
+    "Faulty Units uses player.state.l169bot/l169botK and place.state.botNext/botSeq; kill credit is a 50 m radius and requires three credited kills. Keep robot rules/variant paint in level169.yml and preserve each robot's full worn outfit in bo…",
+    "Level 178 positions in scripts/lib/data/level178.yml use metres, north = -Z, house floor y=0.45; keep the authored cell placements and hot-spring basin aligned with scripts/terrain178.js ground pool cut (y=-1.7) and courtyard/path threshol…"
   ]
 }
