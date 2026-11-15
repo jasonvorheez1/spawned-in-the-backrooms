@@ -1,5 +1,5 @@
 # Level 132 bazaar: eight stalls round the tree. at = resolved world spot of each ware (raycast onto the stall); regenerate with /workspace/l132s/gen.py
-v: 3
+v: 4
 size: [3.6, 3, 2.6]
 lamp: { intensity: 2.2, distance: 7, y: 2.1, f: 1.0 }
 sign: { h: 0.95, x: -1.55, y: 1.95, f: 1.45 }
@@ -48,7 +48,7 @@ wares:
   - { id: l132-ware-cloth-4-2, k: 4, model: /cdn/value.c4c3346b10fed13c5e7d552aa9702ce2f198b4554e9c437e33116e2e2af120bc.glb, name: "Bolts of silk", kind: silk, h: 0.3, ground: 0, at: [-6.234, 0.747, 13.221] }
   - { id: l132-ware-metal-4-3, k: 4, model: /cdn/value.f2f514924cc636d74b25ddf65dac59eaf9e99b817e13e88c2e2c341d72dac275.glb, name: "Tray of spices", kind: spice_tray, h: 0.09, ground: 0, at: [-5.587, 0.746, 13.489] }
   - { id: l132-ware-cloth-4-4, k: 4, model: /cdn/value.d15fe0dcd57ca354fef682b81f31389e47623541ceb5eba23ff059c32156f982.glb, name: "Sack of saffron-gold", kind: turmeric, h: 0.5, ground: 1, at: [-3.623, 0, 14.627] }
-  - { id: l132-ware-metal-4-5, k: 4, model: /cdn/value.bf372ff2ea69195ddfd4909b03bf9a5eb264533afb814f77900da766e241eefe.glb, name: "Jewelled brass lamp", kind: brass_lamp, h: 0.26, ground: 0, at: [-5.911, 0.746, 13.355] }
+  - { id: l132-ware-metal-4-5, k: 4, model: /cdn/value.bf372ff2ea69195ddfd4909b03bf9a5eb264533afb814f77900da766e241eefe.glb, name: "Jewelled brass lamp", kind: brass_lamp, h: 0.26, ground: 0, at: [-7.112, 0, 12.209] }
   - { id: l132-ware-metal-4-6, k: 4, model: /cdn/value.f2f514924cc636d74b25ddf65dac59eaf9e99b817e13e88c2e2c341d72dac275.glb, name: "Tray of spices", kind: spice_tray, h: 0.09, ground: 0, at: [-5.839, 0.75, 12.789] }
   - { id: l132-ware-cloth-4-7, k: 4, model: /cdn/value.d15fe0dcd57ca354fef682b81f31389e47623541ceb5eba23ff059c32156f982.glb, name: "Sack of turmeric", kind: turmeric, h: 0.6, ground: 1, at: [-7.551, 0, 12.35] }
   - { id: l132-ware-glass-5-0, k: 5, model: /cdn/value.663a2586de4d3e4fafa0ac6f2d4f9e2c0998193f32e69e9f87811e241237ae4f.glb, name: "Beige home computer", kind: computer, h: 0.45, ground: 0, at: [-12.768, 1, 6.804] }
