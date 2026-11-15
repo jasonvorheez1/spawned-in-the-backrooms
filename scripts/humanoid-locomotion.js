@@ -123,6 +123,8 @@ function pacesOf(ctx, gait) {
 // A gait clip's rate: the body's speed over the clip's pace, so the feet cover what the body covers. A running clip
 // (`running`: the Run and the Sprint) past its pace plays at the square root of that ratio. Standing (or with no pace to
 // read) the clip plays as authored. This `speed` is the rate the engine plays: nothing overrules it.
+const STRAFE = { left: 'cdn/clip-rig-running-strafe-left-5398f2c6-loop.glb', right: 'cdn/clip-rig-running-strafe-right-75d4e6cf-loop.glb', back: 'cdn/clip-rig-walking-backwards-f8e0ddf3-loop.glb' }
+function strafeOf(g) { const x = g.mx ?? 0, z = g.mz ?? 0; if (Math.abs(x) > 0.2 && Math.abs(x) >= Math.abs(z) * 0.9) return x > 0 ? 'right' : 'left'; return z < -0.2 ? 'back' : null }
 function paceRate(speed, pace, running) {
   if (!(speed > 0.1) || !(pace > 0)) return 1
   const ratio = speed / pace
@@ -227,6 +229,7 @@ export function onInput(ctx, input) {
   const mode = turnTo(ctx)
   const gait = gaitOf(ctx)
   const walking = moveX || moveZ
+  gait.mx = moveX; gait.mz = moveZ // the keys' own direction: a gun-drawn body that faces the look picks its legs from it (strafeOf)
   const viewYaw = (Math.atan2(sin, cos) * 180) / Math.PI
   const bodyYaw = bodyYawOf(ctx, gait) ?? viewYaw
   if ((mode === 'movement' || mode === 'walk') && walking) {
@@ -323,9 +326,12 @@ export function update(ctx, dt) {
   // the switch in time (blendIn), so no steady speed ever wears two gaits: two clips with two periods drift against each
   // other and the legs fight. A speed on a threshold switches once: a rung is held down to HOLD of its threshold for
   // HOLD_SECONDS, so a wandering speed never flickers and a speed that settles in the hold band (Shift let go) hands over.
-  const walkClip = clips.walk || 'Walk'
-  const runClip = clips.run || 'Run'
-  const sprintClip = clips.sprint || 'Sprint'
+  // Shelly Nov 15 'completely revamp 3rd person gun holding': a gun drawn turns the body to the look (turnTo 'camera', scripts/critter.js), so a
+  // sidestep or a back-step wears its own legs instead of a forward walk sliding sideways
+  const sd = mode === 'camera' && steered0 ? strafeOf(gait) : null
+  const walkClip = sd ? STRAFE[sd] : clips.walk || 'Walk'
+  const runClip = sd ? STRAFE[sd] : clips.run || 'Run'
+  const sprintClip = sd ? STRAFE[sd] : clips.sprint || 'Sprint'
   const paces = pacesOf(ctx, gait)
   const walkPace = paces[walkClip]
   const runPace = paces[runClip]
@@ -391,7 +397,7 @@ export function update(ctx, dt) {
   const walkRate = Math.max(1 / PACE_BAND, paceRate(clipSpeed, walkPace))
   const sprintRate = paceRate(clipSpeed, sprintPace, true)
   ctx.self.anim.idle = { clip: clips.idle || 'Idle', loop: 'loop', weight: idleWeight, blendIn: 0.15, ...(human && !steered ? { speed: idleRate(ctx) } : {}) }
-  ctx.self.anim.walk = { clip: walkClip, loop: 'loop', weight: walkShare, speed: walkRate, blendIn: 0.15 }
+  ctx.self.anim.walk = { clip: walkClip, loop: 'loop', weight: walkShare, speed: sd && sd !== 'back' ? 0.75 : walkRate, blendIn: 0.15 }
   ctx.self.anim.run = { clip: runClip, loop: 'loop', weight: rung === 'run' ? 1 : 0.001, speed: runRate, blendIn: 0.15 }
   if (hasSprint) ctx.self.anim.sprint = { clip: sprintClip, loop: 'loop', weight: rung === 'sprint' ? 1 : 0.001, speed: sprintRate, blendIn: 0.15 }
   else if (ctx.self.anim.sprint) ctx.self.anim.sprint = null
