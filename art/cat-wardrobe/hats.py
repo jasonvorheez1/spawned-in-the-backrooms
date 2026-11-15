@@ -27,7 +27,7 @@ R = {
   "wwhelmet":   dict(fit="wrap", band=0.50, ease=1.08, tilt=-4, at=0.55, rim="wide", squash=1.15, orient=dict(yaw=180)),   # Shelly Nov 13 "wearing the helmet backwards": Tripo shell came in front on +Y   # Nov 13 refit 2: rode high and flat on the crown (Shelly "your fitting is bad"); rim down at the brow, rounder shell   # at: the Tripo shell has a padded liner, so the cavity probe read a tiny hole and blew it up to 3 m (Shelly Nov 13 "your fitting is bad")   # Nov 13 M.E.G. Wild Warriors helmet (Tripo): a combat shell down to the brow
   "bntgcap":    dict(fit="wrap", band=0.32, ease=0.98, tilt=-12, at=0.5, rim="back"),   # Nov 13 B.N.T.G. courier flat cap (Tripo), brass scale badge front
   "cowboy":     dict(fit="perch", w=1.38, seat=0.5, sink=0.012, tilt=-3),   # Nov 15 refit: at w 1.95 the crown opening was as wide as the skull and the hat dropped to the eyes; now the opening sits on the upper dome, brim level   # Nov 15 Backrooms Robotics gunslingers (art/cowboy-hat/build.py): pinched crown, sides rolled up
-  "hachimaki":  dict(fit="wrap", band=0.42, ease=0.97, tilt=-6, at=0.5, squash=3.2),   # Nov 15 Kyoto Dreams headband (Tripo): a cloth band hugging the brow, knot at the back; under the ears' roots so any haircut or ribbon rides over it
+  "hachimaki":  dict(fit="wrap", band=0.50, ease=1.0, tilt=-6, at=0.5, squash=3.2, ring=True),   # Nov 15 Kyoto Dreams headband (Tripo): a cloth band hugging the brow, knot at the back; under the ears' roots so any haircut or ribbon rides over it
   "pilgrimhat": dict(fit="perch", w=1.75, seat=0.85, sink=0.07, tilt=-8),   # Nov 12 Brother Wat: felt pilgrim hat, scallop shell on the front; wrap sank the brim over the eyes
 }
 CLEARS = dict(wrap=0.014, perch=0.004, band=0.006, enclose=0.0)   # wrap leaves room for the pressed-flat hair
@@ -165,7 +165,7 @@ for sex in ("f", "m"):
                 else:
                     sx, sy = 2 * hw * e / W, (y1 - y0) * e / D
                     hi = max(sx, sy); lo = max(min(sx, sy), hi / 1.15); sx, sy = (hi, lo) if sx >= sy else (lo, hi); sz = (hi * lo) ** 0.5
-                zr = max(zb, H["top"] + 0.01 - sz * dep) if dep else max(zb, H["top"] + 0.025 - sz * hgt)
+                zr = zb if r.get("ring") else max(zb, H["top"] + 0.01 - sz * dep) if dep else max(zb, H["top"] + 0.025 - sz * hgt)   # ring: a headband has no crown to rest, its lower edge sits on the band line
             S = (sx, sy, sz)
             M = Matrix.Translation(Vector((r.get("dx", 0), (y0 + y1) / 2 + r.get("dy", 0), zr))) @ Matrix.Rotation(rad(r.get("roll", 0)), 4, "Y") @ Matrix.Rotation(rad(r.get("tilt", 0)), 4, "X") @ Matrix.Diagonal(Vector((sx, sy, sz, 1)))
             xf(hat, M)
