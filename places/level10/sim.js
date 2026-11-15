@@ -53,7 +53,7 @@ const FURN = {
   ptable: ["/cdn/value.e9f7840a7c258a02a184a57ee3e04ad1548e3915df342de6dde49271013f4640.glb", "+z", [0.9, 0.76, 0.9]],
   colacrate: ["/cdn/value.c65f1bf3fb1305109ac73110e57b3a2db7ad85f0d15f4453f6cfdf6a959dc4e3.glb", "+z", [0.35, 0.27, 0.51]],
   rug: ["/cdn/value.54d55c312978863b7bd69030a8c670f4e2d3313700e01b64ca90bc35a3cae46c.glb", "+z", [2.6, 0.04, 1.8]],
-  shelf: ["/cdn/value.d86244329c78a1af95aa40497523939bd9cc0e9d77b353d36202157ac9073d3e.glb", "+x", [1.4, 1.9, 0.45]],
+  shelf: ["/cdn/value.d86244329c78a1af95aa40497523939bd9cc0e9d77b353d36202157ac9073d3e.glb", null, [1.4, 1.9, 0.45]],
   cabinet: ["/cdn/value.c7871eb32277ddeef6c32064d3e1ef1ba141d383958ab4e7e37894b3be67e08b.glb", "+x", [0.9, 1.1, 0.42]],
   toolbox: ["/cdn/value.9d8c68159e95179d0e7e42aa72a680c2c66ff482b0faffd34bd4477c591226f6.glb", "+x", [0.55, 0.3, 0.25]],
   lantern: ["/cdn/value.c10572b2de804fd98cf1690adb38d1337fc5d9a43e100401319716ff9611058b.glb", null, [0.2, 0.34, 0.2]],
@@ -82,7 +82,7 @@ const ROOMS = [ // [id, piece, x, y, z, yaw, container name, loot]; yaw 0 faces 
   ["barn-tools", "toolbox", -44.2, 0.62, -58.6, 180, "Red toolbox", "weapon:crowbar,tape,wire"],
   ["barn-crate-a", "colacrate", -40, 0.62, -58.8, 10, "Crate of bottles", "almond,almond"],
   ["barn-crate-b", "colacrate", -40, 0.89, -58.75, -6],
-  ["barn-lantern", "lantern", -46.4, 2.52, -59.05, 0],
+  ["barn-lantern", "lantern", -46.4, 2.53, -59.05, 0],
   // the family's stable home (floor y 1.79): the table they ate at, her chair, their cupboard
   ["st-rug", "rug", -57.6, 1.795, -107.6, 0],
   ["st-table", "ptable", -57.6, 1.79, -107.6, 0],
@@ -601,7 +601,7 @@ export function tick(ctx) {
     s.fieldFixtureV = 0;
   }
   if ((s.towerV ?? 0) < TW.v) { layTower(ctx); s.towerV = TW.v; }
-  if ((s.interiorsV ?? 0) < 1) { layInteriors(ctx); s.interiorsV = 1; }
+  if ((s.interiorsV ?? 0) < 2) { layInteriors(ctx); s.interiorsV = 2; }
   if ((s.campBenchV ?? 0) < 1) {
     s.campBenchV = 1;
     ensureBenches(ctx, [
