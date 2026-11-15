@@ -1547,7 +1547,7 @@ function viewmodel(ctx, moving, sprinting) {
   const cs = !hb && !l.modelUrl && !HUMAN && isNewCat(l) ? critterSpec(l) : null // cats (Shelly Nov 12: 'you didnt have to make an entirely new model'): the first-person arm IS her own cat body, its sleeve on it
   const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '') || (cs ? 'cat2:' + JSON.stringify([l.sex, l.fur, l.topw, l.top, l.skin, l.pattern, l.heightS, l.buildS]) : '')
   // cats (Shelly Nov 12 "make the first person arms match the cat charcters"): her fur colour, a round paw with pink beans, her sleeve
-  const arm = hb || ply ? { hidden: true } : { species: l.species ?? 'cat', fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v39' + JSON.stringify(tune ?? null)
+  const arm = hb || ply ? { hidden: true } : { species: l.species ?? 'cat', fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v40' + JSON.stringify(tune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     if (w.plyObj) { ctx.destroy(w.plyObj); w.plyObj = null }
@@ -1597,7 +1597,7 @@ function viewmodel(ctx, moving, sprinting) {
           feetPosition: { x: f.x + .02, y: f.y - .32, z: f.z + .11 } })
       }
     }
-    else if (ply) child.push({ id: 'plyarm', model: ply, rotation: { yaw: 180, pitch: 0, roll: 0 }, feetPosition: { x: -0.067, y: -1.23, z: 0.46 }, /* a plymodel's rest arm runs along its own +Z: turned 180 it points ahead, the hand at the grip, the shoulder just below-right of the eye (Shelly Nov 15: first person showed no arm) */ castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
+    else if (ply) child.push({ id: 'plyarm', model: ply, rotation: { yaw: 180, pitch: 0, roll: 0 }, feetPosition: { x: -0.03, y: -1.16, z: 0.5 }, /* a plymodel's rest arm runs along its own +Z: turned 180 it points ahead, the hand at the grip, the shoulder just below-right of the eye (Shelly Nov 15: first person showed no arm) */ castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
     w.vm = ctx.spawn({
       feetPosition: { attach: 'camera', x: 0.2, y: -0.2, depth: 0.42, fov: 55 }, audience: 'local', scope: 'session', castShadow: false, visibleInFirstPerson: true,
       primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: arm, ...((fp?.muzzle ?? wp.muzzle) ? { sockets: { muzzle: fp?.muzzle ?? wp.muzzle } } : {}) }, children: child
