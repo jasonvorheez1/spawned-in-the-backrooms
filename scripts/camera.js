@@ -71,7 +71,8 @@ export function update(ctx, dt) {
   // you drive and do not sit on keeps its scale.
   const height = body.id === ctx.player?.id ? 2 * body.bounds?.obb.halfExtents.y : undefined
   // a critter body: the eye is its pupils (critter2-geo.js EY = 1.39 m on the model), not a share of a height its ears stretch
-  const critter = body.id === ctx.player?.id && (ctx.self.session.critterId === body.id ? ctx.self.session.critter : (ctx.self.session.critterId = body.id, ctx.self.session.critter = !!ctx.getObject(body.id + '/critter-head')))
+  const critterKey = body.id + '|' + (body.model?.id ?? body.model ?? '') // keyed by the worn model too: switching to a plymodel re-reads the eye
+  const critter = body.id === ctx.player?.id && (ctx.self.session.critterId === critterKey ? ctx.self.session.critter : (ctx.self.session.critterId = critterKey, ctx.self.session.critter = !!ctx.getObject(body.id + '/critter-head')))
   const eyeHeight = critter ? finiteNumber(CAMERA.critterEye, 1.39) * finiteNumber(body.effectiveScale?.y, 1) : finiteNumber(CAMERA.eyeHeight, 1.6) * (height > 0 ? height / BODY_HEIGHT : finiteNumber(body.effectiveScale?.y, 1))
   const sat = body.id === ctx.player?.id && body.state?.sit && body.state.sit.phase !== 'up'
   const resting = body.state?.fixturePoseUntil > ctx.now()
