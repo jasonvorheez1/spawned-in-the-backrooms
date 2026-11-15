@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9220,
-  "updatedAt": "2026-11-15T18:23:16.875Z",
+  "basedOnSpecVersion": 9225,
+  "updatedAt": "2026-11-15T18:31:06.782Z",
   "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state holds the character while solo and multiplayer runs retain separate story, quest and resume state. Global scripts and shared registries coordinate play, while place scenes and simulations compose local spaces and stories. Multiplayer mode starts without story in the Bonus Rooms and uses party-shared rooms beyond the mall.",
   "scriptPaths": [],
   "places": [
@@ -21,7 +21,7 @@
     "places/level169/sim.js + scripts/lib/data/level169.yml + house/Ferry/Friends/road/Robotics helpers - desert setpieces, schedules, routes, quests and units.",
     "places/level132/sim.js + scripts/lib/data/level132.yml + scripts/lib/l132-*.js - town/countryside lay and tick orchestration for stalls, shops, land, people, Duke, quests and barter.",
     "places/level178/config.yaml + scripts/terrain178.js + x0z0.scene + sim.js - Kyoto terrain, house, residents, arrival quest, finds, containers and breakable sweep.",
-    "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js + scripts/ui.js - title/save lifecycle, Solo/Multiplayer switch, expedition choices and HUD/menu surface.",
+    "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js + scripts/ui.js - title/save lifecycle, Solo/Multiplayer switch, expedition choices and HUD; the Game Rules button is outside the HUD (retained in god-mode tabs).",
     "mods/director-savi/commands/director-savi.md → skills/director-savi.md - separate trailer planning, filming and delivery workflow."
   ],
   "shared": [
@@ -55,9 +55,9 @@
     "places/level1c/sim.js + scripts/lib/level1c-quest.js - place state builtV/l1cPh/xV/l1cDead; player state holds per-walker sector/quest/passage/fall progress."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused tool use.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused tool actions.",
     "templates/player.js runs scripts/fall-guard.js before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
-    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose.",
+    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose; seated salon chooses a clear raycasted front angle and tracks turn/seat changes.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
     "scripts/main-menu-ui.js mode action → scripts/main-menu.js switchMode → SQL MODE_SLOT snapshots; isStoryKey fields swap while character/gear/look persist, then Multiplayer routes to Bonus and Solo to its saved place.",
     "scripts/main-menu.js Multiplayer start → skips tutorial/story and goes to The Bonus Rooms; scripts/lib/run-opts.js noStory treats multiplayer as story-off and isMulti identifies its run.",
@@ -66,7 +66,7 @@
     "scripts/main-menu.js requests furry bodyStyle; scripts/lib/critter-model.js setStyle clears HUMAN for the critter body, while scripts/critter.js can instead render the avatar selected by player.state.look.spawnAv.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold handlers call carryAcross for held props/followers; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone (Level 1.1 sectors, Level 178 house, Level 132 Lumiria); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass.",
-    "places/level1c/sim.js tick lays versioned geometry/cast, then xV lays supplies, payphone note/audio and seams; scripts/l1c-use.js consumes interactions and questTick1c updates the corridor. scripts/salon-ui.js sends dress actions to scripts/critter.js, which writes player.state.look; the Custom Model tab selects models only, and worn models shed cw-* cat accessory objects."
+    "places/level1c/sim.js tick lays versioned geometry/cast, then xV lays supplies, payphone note/audio and seams; xV is separate from builtV. Salon/creator model tab → scripts/ui.js plyUpload → scripts/lib/plyimport.js converts and uploads GLB, then dress(modelUrl) → scripts/critter.js writes player.state.look.modelUrl; scripts/ui.js no longer appends Game Rules to the HUD."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
@@ -92,6 +92,6 @@
     "scripts/lib/mp-guard.js only spares NPC-tagged, non-overboard targets in rooms with a multiplayer player; shootable includes attackOnSight, killable, l8-hostile, born-hostile Ezra/Tobit and Lightless faction.",
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with sim-created hub-from-l178.",
     "Level 169 uses x/z, north = -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth align with level169.yml. Sim layout and well versions are separate.",
-    "Level 1.1 geometry uses hall distance along +X (0–620 m), north at -Z, with sector boundaries in level1c.js; xV gates extra props independently of builtV, and the doorway/seam-return markers stay paired. Salon custom-model picks do not select garments; scripts/critter.js removes cw-* cat child objects while a spawn avatar or other custom model is worn."
+    "Level 1.1 geometry uses hall distance along +X (0–620 m), north at -Z, with sector boundaries in level1c.js; xV gates extra props independently of builtV, and the doorway/seam-return markers stay paired."
   ]
 }
