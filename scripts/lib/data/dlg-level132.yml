@@ -1,0 +1,216 @@
+# Lumiria, the Duchy of Morigont's town (places/level132). Nobody uses money: goods are worth what a collection lacks.
+# A choice with do: "l132:offer:<npc>" is a barter (talk.js -> scripts/lib/l132-barter.js). Nobody here is hostile, ever.
+l132-duke:   # the Duke of Morigont: amiable, spontaneous, theatrical; delighted by what you carry
+  hi: "Ah! A new face! And new pockets! Welcome, welcome to Morigont. Come here, let me look at you. What are you carrying? No, don't tell me. Show me!"
+  back: ["You came back! Ha! I knew you would. Everyone does, eventually.", "My favourite stranger. What have you found since I saw you last?"]
+  bye: "Go, go, shop! And if you find something wonderful, I want to see it first."
+  ask:
+    - q: "Have a look at what I'm carrying."
+      a: "Oh, may I? Oh, how marvellous. Hold still. Yes, yes. I'll trade you something from my sleeve for that. Don't look so worried, it's a fair trade, I promise."
+      do: "l132:offer:l132-duke"
+    - q: "What do you collect?"
+      a: "Everything, my dear guest! Crowns, clocks, music boxes, one very old shoe. But my best collection is collectors. Ha! I mean their stories, of course."
+    - q: "Tell me about the festival."
+      a: "Once a season I pick five collectors, the finest in the Duchy, and invite them up to my palace. Music, lanterns, a feast. Oh, it's the best night of the year. For me, anyway."
+    - q: "Who are you, really?"
+      a: "The Duke! Of Morigont. I speak every language, I've lost count of my birthdays, and I've never once been bored. Well. Once. It was a Tuesday."
+    - q: "How do I leave?"
+      a: "Leaving already? Hm. Fine, fine. The hollow tree in the square. Walk right into it. It goes where you need it to. Come back soon, I'll miss your pockets."
+  barks:
+    idle: ["Lovely. Lovely!", "Ooh, what's that one?"]
+    hi: ["Ah! My favourite stranger!"]
+    close: ["Closer, closer. Let me see."]
+    drawn: ["Ha! Put that away, you'll scare the urns."]
+l132-teodora:   # pottery stall: precise, house-proud, a little vain
+  hi: "Careful near the urns, they're older than both of us put together. Hello. I'm Teodora. Pottery, mostly Grecian. The shelf restocks itself every morning and I still dust it."
+  back: ["Back for an urn? Everybody comes back for an urn.", "Mind the amphora. Oh. You did. Good."]
+  bye: "Come back when you've found something nice."
+  ask:
+    - q: "What do you collect?"
+      a: "Lids. Just the lids. Pots are easy, every shop has pots. A good lid with the right glaze? That's rare. I've got forty-one."
+    - q: "What's missing from it?"
+      a: "Saffron. I know, it's not a lid. I keep my best lid on a jar and the jar's empty and it bothers me every single day. Anouk has saffron. Anouk will not trade it to me."
+    - q: "What would you trade for spice?"
+      a: "For a pouch of real spice? Pick any urn on this table. Any one. Well. Not the blue one."
+      do: "l132:offer:l132-teodora"
+    - q: "Tell me about the Duke."
+      a: "He bought a vase off me once and gave me a clock that only runs backwards. I love it. He has very good taste. Rosalind went to his festival last spring, you know. I miss her hats. Oh, no, wait. That was her sister."
+    - q: "How do I leave?"
+      a: "Through the tree. Everyone says it. Nobody I know has done it, mind. Why would you?"
+l132-benny:   # phone stall: fast-talking, cheerful, a gadget nerd
+  hi: "Hey hey! New phone? Old phone? Phone from nineteen-ninety-eight that only plays one game? I've got 'em all. Benny. Phones."
+  back: ["You're back! Did you get signal yet? No? Nobody does.", "Look at this one. No, this one. It folds!"]
+  bye: "Keep it charged!"
+  ask:
+    - q: "What do you collect?"
+      a: "Phones that still turn on. Sounds easy. It is not easy. Half the stock comes in dead, half comes in from the future. I've got a flip phone that's warm all the time. I don't ask."
+    - q: "What's missing from it?"
+      a: "A real computer. A big beige one, with the hum. Dex has three. Three! He says they're for games. I say he's hoarding."
+    - q: "What would you take for a phone?"
+      a: "Got a computer? Even a little one? You bring me a machine with a keyboard and you can walk off with any phone on this table. Even the gold one. Okay, maybe not the gold one."
+      do: "l132:offer:l132-benny"
+    - q: "Tell me about the Duke."
+      a: "Nice guy! Took a selfie with him once. The picture came out, uh. Blurry. Everything around him's blurry. He invited Pell from the bike shop to the festival. Pell never came back, so I guess the palace is pretty great."
+    - q: "How do I leave?"
+      a: "Tree in the middle. Just walk in. Me? Nah. Where else am I gonna get phones like these?"
+l132-margo:   # remedy stall: grandmotherly, dry humour
+  hi: "Sit down for a second, dear, you look peaky. I'm Margo. Tonics, salves, a few things in bottles I won't vouch for. Something for whatever's wrong with you."
+  back: ["Still peaky. Here, smell this. No? Suit yourself.", "Hello again, dear."]
+  bye: "Drink water. Real water. Mind yourself."
+  ask:
+    - q: "What do you collect?"
+      a: "Little bottles. Apothecary glass, cobalt, amber, the ones with the cork still in. Two hundred and six. My late husband said I was a hoarder. Well. He's late, isn't he?"
+    - q: "What's missing from it?"
+      a: "A proper clay jar. For the willow bark. Glass sweats it. Teodora's got shelves of them and she knows I want one, the little madam."
+    - q: "I could bring you a jar."
+      a: "Could you? Oh, dear. Bring me a good clay pot and you can have any bottle on this table. Even the green one. Especially the green one, actually, I don't know what's in it."
+      do: "l132:offer:l132-margo"
+    - q: "Tell me about the Duke."
+      a: "Charming man. Lovely manners. He's asked me up to the palace twice. I said I had a cold. Both times. Hah. At my age you pick your parties."
+    - q: "How do I leave?"
+      a: "The tree, dear. Wrap up warm, wherever it sends you."
+l132-silas:   # record stall: laid-back, slow, soft-spoken
+  hi: "Hey. Silas. Records. Shellac, vinyl, a couple cylinders nobody can play. Take your time. Music doesn't rush."
+  back: ["Hey. Listen to this one.", "You again. Cool. Cool."]
+  bye: "Stay easy."
+  ask:
+    - q: "What do you collect?"
+      a: "First pressings. Anything, any year. There's a record in that crate from a band that hasn't formed yet. Sounds great. Kind of sad."
+    - q: "What's missing from it?"
+      a: "A hat. Hm. Yeah. I know. Thing is, there's a cover, a guy in a pork pie hat, and I wanna take that picture. Rosalind's got the hat. She wants a mango for it. I don't have a mango."
+    - q: "What would you trade for a hat?"
+      a: "A good hat? Man. Pick a record. Any record. I'll even put it in a sleeve."
+      do: "l132:offer:l132-silas"
+    - q: "Tell me about the Duke."
+      a: "He hums along to everything I play. Knows every song. Even the ones from the future. Heh. That's the Duke. He took my old neighbour up the hill for the festival. Quiet street now. Nice and quiet."
+    - q: "How do I leave?"
+      a: "The tree. Some folks go. I stay. Got all I need right here."
+l132-anouk:   # spice stall: warm, loud, laughs easily
+  hi: "Smell that? Ha! Cardamom, sumac, saffron, the good stuff. I'm Anouk. Come, smell this one. No, closer!"
+  back: ["Ha! The nose returns!", "You smell like the diner. Come, I fix that."]
+  bye: "Go, go! Come back hungry!"
+  ask:
+    - q: "What do you collect?"
+      a: "Spices from every kitchen that ever was. I have pepper from a ship that sank four hundred years ago. It still bites! Ha!"
+    - q: "What's missing from it?"
+      a: "Ugh. Margo's tonic. The bitter one with the anise. It's not even for me, I want the bottle for my shelf. She knows I want it. She smiles at me. Every day she smiles."
+    - q: "What would you trade for a tonic?"
+      a: "A tonic from Margo's table? For that? I give you saffron. Real saffron! Don't tell Teodora I said that."
+      do: "l132:offer:l132-anouk"
+    - q: "Tell me about the Duke."
+      a: "He eats peppercorns like candy. Crazy man. Fun man! Every festival he takes five of the best collectors. I'm not the best yet. Good! Hah. I mean, good, I'm still learning."
+    - q: "How do I leave?"
+      a: "The big tree. In and out, very simple. But eat first! Nobody leaves my stall hungry."
+l132-dex:   # cartridge and old computer stall: shy, stammers, lights up about games
+  hi: "Oh! Uh, h-hi. I'm Dex. Games. Cartridges, discs, a couple of old, um, computers. You can try anything. The red one sticks a bit."
+  back: ["Oh, hey. D-did you beat the cartridge yet?", "Hi again. Um. I got a new one in."]
+  bye: "B-bye. Blow on it if it doesn't load."
+  ask:
+    - q: "What do you collect?"
+      a: "Every game for every machine. Um. Ever. I'm at, uh, eleven thousand. Not that I'm counting. I'm counting."
+    - q: "What's missing from it?"
+      a: "A phone game. From the, um, old phones, the snake one. It only exists on the phone. Benny has the phone. Benny won't let me borrow it because I, I didn't give it back last time."
+    - q: "Would you trade for a phone?"
+      a: "Oh. Oh wow. Y-yes. For a phone you can have any cartridge. Even the gold one. I mean it. Okay. Probably."
+      do: "l132:offer:l132-dex"
+    - q: "Tell me about the Duke."
+      a: "He's, um, really good at games. Like, scary good. He asked me if I'd come to the festival when I hit twelve thousand. So I'm, uh. Taking my time."
+    - q: "How do I leave?"
+      a: "The tree. It's like a warp pipe. You don't know where it goes until you're in."
+l132-rosalind:   # hat stall: elegant, arch, theatrical in her own way
+  hi: "Darling. Stop. Turn your head. No. Other way. Yes. You need a hat. Everyone does. Rosalind. Hats. Since forever."
+  back: ["Darling, you're still bareheaded. It's a crime.", "Oh, it's you. Try the cloche."]
+  bye: "Chin up. It shows off the brim."
+  ask:
+    - q: "What do you collect?"
+      a: "Hats with stories. A bowler from a bank job. A bonnet from a wedding that never happened. Every hat on this stand has been somewhere I haven't."
+    - q: "What's missing from it?"
+      a: "Fruit. Laugh, go on. I want a mango. Not to eat, darling, to sit in a straw hat for the photograph. It's the whole look. Gus keeps the mangoes and Gus keeps saying next week."
+    - q: "What would you trade for fruit?"
+      a: "Bring me something ripe and round and I'll put a hat on you myself. Any hat. I'll even tilt it."
+      do: "l132:offer:l132-rosalind"
+    - q: "Tell me about the Duke."
+      a: "That crown, darling. I've offered him four hats for it. He laughs. My sister went to his festival, you know, two springs ago. She must love it up there. She never writes."
+    - q: "How do I leave?"
+      a: "The tree. Wear something nice, you never know who's on the other side."
+l132-gus:   # fruit stall: big, gentle, slow and happy
+  hi: "Heya, friend. Gus. Fruit. Apples from every orchard there ever was. Have one. Go on, it's good."
+  back: ["Heya! Want a pear? I got a pear.", "Hm hm. Good to see ya."]
+  bye: "Eat your greens. Or reds. All of 'em."
+  ask:
+    - q: "What do you collect?"
+      a: "Apples. One of every kind. Got six hundred and twelve. Some of 'em don't have names yet, so I named 'em. That one's Doris."
+    - q: "What's missing from it?"
+      a: "Aw. A record. My grandpa used to play this one song at harvest, the fiddle one. Silas has it. I just wanna hear it once. Silas wants a hat. I ain't got a hat."
+    - q: "What would you trade for a record?"
+      a: "Bring me music and you can take the best fruit off this cart. The mango, even. Don't tell Rosalind."
+      do: "l132:offer:l132-gus"
+    - q: "Tell me about the Duke."
+      a: "He buys my apples by the cartload. Says he's feeding the festival. Five folks every spring and all those apples. They must eat good up there, never come down for seconds."
+    - q: "How do I leave?"
+      a: "Walk in the tree, friend. Take an apple for the road."
+l132-wendell:   # RadioShed clerk: nervous, over-helpful, nerdy
+  hi: "Welcome to the RadioShed, can I, oh, sorry, I startled you. Wendell. Cables, kits, scanners, a pager or two. We have a battery for everything. Everything."
+  back: ["Oh, hi! Did that cable work? It did? Great. Great!", "Hi again! We got more resistors. Sorry. I'm excited."]
+  bye: "Thanks for shopping at the RadioShed! Sorry. I always say that."
+  ask:
+    - q: "What do you collect?"
+      a: "Old computers. The beige towers. I have nine running in the back and they all, um, talk to each other. I think. I'm not sure what about."
+    - q: "What's missing from it?"
+      a: "A phone that can dial out. Just one. I've got a modem and nothing to call. Benny and Mateo both have phones, and they both, ha, they both like me less since the fuse thing."
+    - q: "What would you trade for a phone?"
+      a: "Anything in the back room! Okay, anything that isn't plugged in. Bring me a phone and I'll find you something with a cable."
+      do: "l132:offer:l132-wendell"
+    - q: "Tell me about the Duke."
+      a: "He came in for batteries once. Bought them all. Every single battery. He said the palace gets dark at the festival. I said, sir, that's a lot of batteries. He laughed for a very long time."
+    - q: "How do I leave?"
+      a: "Uh, the tree? In the square? I've never, um. I just sell the flashlights."
+l132-del:   # Starlite Diner cook: brassy, tired, kind underneath
+  hi: "Sit anywhere, hon. I'm Del. The grill's on, the jukebox is on, the coffee's been on since the sixties. What're you having?"
+  back: ["Back again? Usual? You don't have a usual. Pick one.", "Hon, you look starved."]
+  bye: "Don't be a stranger. Unless you want to be. Your call."
+  ask:
+    - q: "What do you collect?"
+      a: "Jukebox records. Every forty-five that box ever played. I've got 'em filed by heartbreak. Top shelf's the bad ones."
+    - q: "What's missing from it?"
+      a: "Ugh. A hat. A paper diner hat, the folded kind, from the real Starlite, the first one. Rosalind found one and she wants the moon for it."
+    - q: "What would you trade for a hat?"
+      a: "Bring me a hat and I'll fix you a plate and give you the pie that keeps coming back. Literally. It comes back. Fruit's on me either way."
+      do: "l132:offer:l132-del"
+    - q: "Tell me about the Duke."
+      a: "Tips with spoons. Antique spoons. Hah. Lovely man. Took my old fry cook up to the palace for the festival. Best fry cook I ever had. Never did get a postcard."
+    - q: "How do I leave?"
+      a: "Through the big tree, hon. Eat something first."
+l132-mateo:   # Dial-Up Cafe owner: easygoing, dry, Spanish accent
+  hi: "Bienvenido to the Dial-Up. Coffee's real, internet's, mm, theoretical. I'm Mateo. Grab a chair, the screens are free."
+  back: ["Connection's down. It's always down. Coffee?", "Hey, welcome back."]
+  bye: "Ciao. If the Wi-Fi comes back, I'll tell everyone. Loudly."
+  ask:
+    - q: "What do you collect?"
+      a: "Phones. Rotary, brick, flip, those new glass ones. I have one from every year someone answered the phone. Nobody calls, but I keep them charged."
+    - q: "What's missing from it?"
+      a: "A real dial-up modem. The one that screams. You know the sound. I named the cafe after it and I've never owned one. Is ridiculous, I know."
+    - q: "What would you trade for a modem?"
+      a: "For a machine that screams like that? Any phone off my wall. I'm serious. Okay, not the red one. The red one is my mother's."
+      do: "l132:offer:l132-mateo"
+    - q: "Tell me about the Duke."
+      a: "He comes in, orders one espresso, stays six hours, uses every screen. Reads the M.E.G. database like it's a comic book. Laughs at it. Five people go up every festival. Is an honour. Everyone says so."
+    - q: "How do I leave?"
+      a: "The tree. But first, maybe check the database. Somebody must have written where it goes. Somebody, someday."
+l132-odalys:   # wanderer, newly arrived: earnest, bookish, frazzled, writing for the M.E.G. database
+  hi: "Oh, hi, sorry, one second, I'm in the middle of a sentence. Okay. Hi! Odalys. I just got here three days ago. I'm writing all of it up for the M.E.G. database. If the Wi-Fi would just stay on."
+  back: ["It dropped again. Of course it dropped again.", "Oh! Hi. Don't mind me, I'm uploading. Sort of. Not really."]
+  bye: "Okay, bye! I'm putting you in the write-up. Not by name, don't worry."
+  ask:
+    - q: "What are you writing?"
+      a: "Everything. The shops that copy real shops, the barter, the tree, the man in the mask. It's the friendliest place I've ever been and I can't figure out why that makes me nervous."
+    - q: "What's wrong with the Wi-Fi?"
+      a: "It comes and goes. Mateo says the router's in the RadioShed and Wendell says it's in the cafe and I think they're both scared of it. Could you go look? I'll owe you. Really owe you."
+      do: "l132:quest:wifi"
+    - q: "What do you collect?"
+      a: "Ha. Me? Notes, I guess. Is that a collection? Everyone here has one and I felt left out. I'd love a phone, honestly. This laptop's borrowed and I've got nothing to record on."
+    - q: "I could trade you something."
+      a: "Really? I don't have much. A tonic Margo gave me, I didn't know what to say no. You can have it for a phone. Any phone."
+      do: "l132:offer:l132-odalys"
+    - q: "Tell me about the Duke."
+      a: "He read my draft over my shoulder. Called it delightful. Then he asked if I'd like to come to the palace for the festival. I said, um, maybe. Everyone here says yes. Nobody I asked has been back to say how it was."
