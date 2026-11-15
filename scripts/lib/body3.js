@@ -111,7 +111,7 @@ export function aimPose(me, fam, mode, pitch = 0) {
   if (ss.aim3 !== key) { ss.aim3 = key; me.anim.aim = key ? { ...chan(G[mode] ?? G.aim) } : null; ss.aimP3 = null }
   const step = !key ? 0 : mode === 'ready' ? (G.readyPitch ?? 0) : Math.round(pitch / RAD / 6) * 6 // ready: the aim hold dipped low (readyPitch), so the gun stays seated in both hands
   // Shelly Nov 13: "hipfire makes my character's head face down": the low-ready dip bends the whole upper body, head too; hold neck and head at rest over it
-  const hold = key && mode === 'ready'
+  const hold = key && (mode === 'ready' || fam === 'long') // Nov 15: the rifle sight take dropped the head onto the stock, a snout went through it (Shelly); head and neck stay level over every rifle pose
   if (!!ss.headUp3 !== !!hold) { ss.headUp3 = !!hold; me.anim.headUp = hold ? { clip: HEAD_LEVEL, weight: 60, loop: 'loop', blend: 'override', blendIn: 0.2, blendOut: 0.2 } : null }
   if (ss.aimP3 !== step) {
     ss.aimP3 = step
