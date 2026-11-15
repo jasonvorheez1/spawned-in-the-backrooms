@@ -20,7 +20,8 @@ function reachable(ctx, by) {
     && gap(where(p), s.c ?? where(ctx.self)) <= REACH ? p : null;
 }
 function canRest(ctx, p) {
-  const room = ctx.self.state.room;
+  const { room, plate } = ctx.self.state;
+  if (plate) return ctx.getObject(plate)?.state?.owner === (p.userId ?? p.id);
   if (!room) return true;
   const ps = p.state;
   const lease = ctx.place.state.l5rent?.[room];
@@ -32,7 +33,10 @@ function sound(ctx, clip, volume = 0.4) {
 }
 function startRest(ctx, p) {
   const ps = p.state, now = ctx.now(), conf = F.rest;
-  if (!canRest(ctx, p)) { tell(ctx, p, "Ask the concierge for a room of your own."); return; }
+  if (!canRest(ctx, p)) {
+    tell(ctx, p, ctx.self.state.plate ? "This cot belongs to the office's owner." : "Ask the concierge for a room of your own.");
+    return;
+  }
   if (now - (ps.fieldRestAt ?? -1e12) < conf.cooldown * 1000) { tell(ctx, p, "You've rested recently."); return; }
   if ((ps.fieldRestPending ?? 0) > now) return;
   const at = now + conf.seconds * 1000;
@@ -50,7 +54,7 @@ export function finishRest(ctx, { by, at, from, hp }) {
     tell(ctx, raw, "Your rest was interrupted.");
     return;
   }
-  const ps = p.state, conf = ctx.self.state.room ? F.guest : F.rest;
+  const ps = p.state, conf = ctx.self.state.room || ctx.self.state.plate ? F.guest : F.rest;
   const level = ps.level ?? 1, health = maxHp(level, ps), sanity = maxSan(level, ps);
   ps.hp = Math.min(health, (ps.hp ?? health) + conf.hp);
   ps.sanity = Math.min(sanity, (ps.sanity ?? sanity) + conf.sanity);

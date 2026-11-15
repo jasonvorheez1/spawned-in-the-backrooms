@@ -14,6 +14,32 @@ const board = (heading, sub, width, paper = false) => `<svg viewBox='0 0 240 76'
   </g>
 </svg>`;
 
+const SERVICE_DOORS = [
+  ["clip", -14.19, -27.65, "STOCKROOM", "stock-in"],
+  ["stock", -6.19, 40.25, "FOOD COURT", "slice-in"],
+  ["slice", 13.76, -24.6, "SERVICE", "clip-in"],
+];
+export function wireServiceDoors(ctx) {
+  for (const [key, x, z, name, to] of SERVICE_DOORS) {
+    const id = "l61-service-door-" + key, old = ctx.getObject(id);
+    if (old?.state.hinged) continue;
+    if (old) ctx.destroy(id);
+    ctx.spawn(id, {
+      feetPosition: { x, y: 0, z }, rotation: { yaw: 90 }, castShadow: false,
+      tags: ["usable"], behavior: USE,
+      state: { kind: "serviceDoor", to: "l61-service-" + to, name, verb: "Open", info: "A painted service door.", hinged: true, c: { x: x - 0.08, y: 1.1, z } },
+      children: [{
+        id: "hinge", feetPosition: { x: -0.565, y: 0, z: 0 },
+        children: [
+          { feetPosition: { x: 0.565, y: 0, z: 0 }, primitive: rbox(1.13, 2.19, 0.078, 0.014), physics: { body: "kinematic", collider: "box" }, material: PAINT },
+          { feetPosition: { x: 0.905, y: 0.98, z: -0.078 }, primitive: rbox(0.17, 0.045, 0.14, 0.013), material: STEEL },
+          { feetPosition: { x: 0.565, y: 1.76, z: -0.055 }, vector: board(name, "", 0.65, true) },
+        ],
+      }],
+    });
+  }
+}
+
 export function layService(ctx, { box, wallZ, light, vend, PLASTER, CEIL, WAINSCOT }) {
   const sp = (id, spec) => ctx.spawn("l61-" + id, { castShadow: false, ...spec });
   const label = (id, x, y, z, yaw, title, sub, width, paper) => sp(id, {
@@ -109,20 +135,6 @@ export function layService(ctx, { box, wallZ, light, vend, PLASTER, CEIL, WAINSC
   });
 
   // A service door is allowed to land at the wrong restaurant. Public storefronts stay reliable.
-  const doors = [
-    ["clip", -14.19, -27.65, 90, "STOCKROOM", "stock-in"],
-    ["stock", -6.19, 40.25, 90, "FOOD COURT", "slice-in"],
-    ["slice", 13.76, -24.6, 90, "SERVICE", "clip-in"],
-  ];
-  for (const [id, x, z, yaw, name, to] of doors) sp("service-door-" + id, {
-    feetPosition: { x, y: 0, z }, rotation: { yaw },
-    primitive: rbox(1.13, 2.19, 0.078, 0.014), physics: { body: "static", collider: "box" }, material: PAINT,
-    tags: ["usable"], behavior: USE, state: { kind: "serviceDoor", to: "l61-service-" + to, name, verb: "Open", info: "A painted service door." },
-    children: [
-      { feetPosition: { x: 0.34, y: 0.98, z: -0.078 }, primitive: rbox(0.17, 0.045, 0.14, 0.013), material: STEEL },
-      { feetPosition: { x: 0, y: 1.76, z: -0.055 }, vector: board(name, "", 0.65, true) },
-    ],
-  });
   for (const [id, x, z, yaw] of [["stock-in", -8.35, 40.25, 90], ["slice-in", 11.96, -24.6, 90], ["clip-in", -15.75, -27.65, 90]]) sp("service-" + id, {
     feetPosition: { x, y: 0.06, z }, rotation: { yaw },
   });

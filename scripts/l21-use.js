@@ -6,15 +6,20 @@ import { raycast } from "builtin/physics";
 import L from "./lib/data/level21.yml";
 import { N, EDGE_X, LANE, cellAt, cellCenter, openings, isEdge } from "./lib/level21.js";
 import { stepToward } from "./lib/maze21path.js";
-import { npcState, npcMul, dmgAfterArmor } from "./lib/stats.js";
+import { canCarry, npcState, npcMul, dmgAfterArmor } from "./lib/stats.js";
+import { hands } from "./desk-item.js";
+import { maxHp } from "./player.js";
 import { setEdgesStep } from "./lib/level21-quests.js";
 import { addRep, repOf } from "./lib/rep.js";
 import { errandStep, errandDone } from "./lib/quests.js";
+export { handsOff } from "./desk-item.js";
 
 export const updateSchedule = { every: { seconds: 0.1 } };
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const H = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
+const COIL_WATER = `fx
+pop water burst=15..20 on=disc(.025) life=.22..0.36 v=<0,-.8,0> acc=grav() size=.008..0.015 col=<.78,.91,1> a=.75>0 sz=$size r=sprite(soft-disc,alpha,velocity,.025)`;
 
 const GOKNAR = [
   "Stop at the line. Hands. Okay.",
@@ -51,17 +56,26 @@ export const ears = {
     }
 
     if (s.kind === "cooler") {
+      const feet = who.worldFeetPosition ?? who.feetPosition;
+      if (!feet || w.dead || Math.hypot(feet.x - pos.x, feet.y - pos.y, feet.z - pos.z) > 3) return;
       if (now - (cool[uid] ?? -1e9) < 30000) {
         ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.1, z: pos.z }, text: "REFILLING JUG...", color: "#60b0e0", size: 0.9 }, { audience: { player: who.id } });
         return;
       }
       cool[uid] = now;
       snd("water-pour-splash-short", 0.65);
+      hands(ctx, who);
+      ctx.emit("fx", { position: { ...pos, y: pos.y + 0.8, z: pos.z - 0.18 }, script: COIL_WATER }, { audience: { nearby: pos, radius: 10 } });
       w.thirst = Math.min(100, (w.thirst ?? 100) + 42);
-      w.hp = Math.min(w.maxHp ?? 100, (w.hp ?? 80) + 10);
-      ctx.emit("flash", { target: who.id, color: "#40d8ff", duration: 0.35 });
-      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.4, z: pos.z }, text: "+42 THIRST", color: "#50d0ff", size: 1.1 }, { audience: { player: who.id } });
-      ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.1, z: pos.z }, text: "+10 HP", color: "#ff8080", size: 0.9 }, { audience: { player: who.id } });
+      const max = maxHp(w.level ?? 1, w);
+      w.hp = Math.min(max, (w.hp ?? max) + 10);
+      const stock = w.snacks?.purified_water ?? 0;
+      const carry = stock < 2 && canCarry(w, "purified_water").ok;
+      if (carry) {
+        w.snacks = { ...w.snacks, purified_water: stock + 1 };
+        w.pickedAt = now;
+      }
+      w.notice = { text: carry ? "You drink and fill a bottle for the road." : "You drink from the collector.", at: now };
       return;
     }
 

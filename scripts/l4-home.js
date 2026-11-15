@@ -5,17 +5,47 @@ import { notify } from "./lib/notify.js";
 import { heard } from "./lib/hear.js";
 import { carryAcross } from "./lib/carry.js";
 import { setStep61 } from "./lib/level61-quests.js";
+import { animate } from "builtin/tween";
+import { hands } from "./desk-item.js";
+import { canCarryAll } from "./lib/stats.js";
+import { queuePayout } from "./lib/quests.js";
+import { itemSpec } from "./lib/vend-item.js";
+export { handsOff } from "./desk-item.js";
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const BAND = [82, 96], JUGS = 3, REFILL = 120000; // her pick: a jug back every 2 minutes, three on the shelf
 const say = (who, text, ctx) => notify(ctx, who, text); // scripts/lib/notify.js, shared
 const snd = (ctx, clip, v = 0.6) => heard(ctx, { clip: G(clip), position: { ...ctx.self.worldFeetPosition, y: 1 }, volume: v, maxDistance: 12 });
+function near(ctx, p) {
+  const a = p?.worldFeetPosition ?? p?.feetPosition, b = ctx.self.worldFeetPosition ?? ctx.self.feetPosition;
+  return p?.state && !p.state.dead && a && b && Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z) <= 3;
+}
 function jugs(ctx) { const s = ctx.self.state, now = ctx.now(); const add = Math.floor((now - (s.jugAt ?? 0)) / REFILL);
-  if ((s.jugs ?? JUGS) < JUGS && add > 0) { s.jugs = Math.min(JUGS, (s.jugs ?? JUGS) + add); s.jugAt = now; } return s.jugs ?? JUGS; }
+  if ((s.jugs ?? JUGS) < JUGS && add > 0) { s.jugs = Math.min(JUGS, (s.jugs ?? JUGS) + add); s.jugAt = (s.jugAt ?? 0) + add * REFILL; } return s.jugs ?? JUGS; }
+function drawJug(ctx) {
+  const count = jugs(ctx);
+  if (count === JUGS) ctx.self.state.jugAt = ctx.now();
+  ctx.self.state.jugs = Math.max(0, count - 1);
+}
+const cotState = (id) => ({ kind: "field-rest", plate: id + "-plate", name: "Office cot", verb: "Rest", info: "For the person who claimed the office" });
+
+export function wireOfficeCots(ctx) {
+  for (const row of ctx.query({ tags: ["homekit"], center: { x: 0, y: 0, z: 0 }, radius: 120 })) {
+    const o = ctx.getObject(row.id);
+    if (!o || o.state.broke || o.state.kind === "field-rest") continue;
+    const { width, depth } = o.primitive ?? {};
+    const home = o.tags.find((tag) => tag.startsWith("home-"));
+    if (!home || width !== 0.8 || depth !== 1.9) continue;
+    Object.assign(o.state, cotState(home.slice(5)));
+    o.tags = [...o.tags, "usable"];
+    o.behavior = ["scripts/field-fixture.js"];
+  }
+}
+
 function homeKit(ctx, room, on) {
   for (const o of ctx.query({ tags: [`home-${room.id}`], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id);
   if (!on) return;
   const k = room.kit, tag = ["homekit", `home-${room.id}`];
-  ctx.spawn({ tags: tag, feetPosition: k.cot, rotation: { yaw: k.yaw }, physics: "static", primitive: { kind: "box", width: 0.8, height: 0.42, depth: 1.9 }, material: { color: "oklch(0.45 0.05 140)", roughness: 0.95 },
+  ctx.spawn({ tags: [...tag, "usable"], behavior: "scripts/field-fixture.js", state: cotState(room.id), feetPosition: k.cot, rotation: { yaw: k.yaw }, physics: "static", primitive: { kind: "box", width: 0.8, height: 0.42, depth: 1.9 }, material: { color: "oklch(0.45 0.05 140)", roughness: 0.95 },
     children: [{ feetPosition: { x: 0, y: 0.42, z: -0.7 }, primitive: { kind: "box", width: 0.6, height: 0.12, depth: 0.35 }, material: { color: "oklch(0.9 0.01 90)" } },
       { feetPosition: { x: 0, y: 0.42, z: 0.25 }, primitive: { kind: "box", width: 0.78, height: 0.05, depth: 1.2 }, material: { color: "oklch(0.55 0.1 30)", roughness: 1 } }] });
   ctx.spawn({ tags: tag, feetPosition: k.desk, rotation: { yaw: k.yaw }, physics: "static", primitive: { kind: "box", width: 1.4, height: 0.74, depth: 0.7 }, material: { color: "oklch(0.55 0.05 60)", texture: "cdn/texture-worn-hardwood-grain.png", roughness: 0.6 },
@@ -23,9 +53,38 @@ function homeKit(ctx, room, on) {
       { feetPosition: { x: 0.45, y: 1.08, z: 0 }, primitive: { kind: "cone", radius: 0.14, height: 0.14 }, material: { color: "oklch(0.85 0.08 85)", emissive: "oklch(0.85 0.1 80)", emissiveIntensity: 1.5 },
         light: { kind: "point", color: "oklch(0.85 0.09 75)", intensity: 2.2, distance: 6 } }] });
 }
+function vendDrop(ctx, token) {
+  const s = ctx.self.state;
+  const id = ctx.spawn({ parent: ctx.self.id, feetPosition: { x: 0.12, y: 0.84, z: -0.22 }, castShadow: false, lifetime: 155, ...itemSpec(token) });
+  s.tray = { id, token, readyAt: ctx.now() + 1250 };
+  s.verb = "Check tray";
+  animate(ctx, id, { "feetPosition.z": [-0.22, -0.44], "feetPosition.y": [0.84, 0.25], "rotation.roll": [0, 70] }, { duration: 1.25, easing: "easeInQuad" });
+  ctx.after(1.25, "vendReady", { id });
+}
+export function vendReady(ctx, { id }) {
+  const s = ctx.self.state;
+  if (s.tray?.id !== id) return;
+  s.verb = "Collect";
+  snd(ctx, "vending-machine-clunk-item-drop", 0.7);
+}
+function collectTray(ctx, who) {
+  const s = ctx.self.state, tray = s.tray;
+  if (!tray) return false;
+  if (!ctx.getObject(tray.id)) { s.tray = null; s.verb = "Push the button"; return false; }
+  if (ctx.now() < tray.readyAt) { say(who, "The coil's still turning.", ctx); return true; }
+  const check = canCarryAll(who.state, [...(who.state.payout?.items ?? []), tray.token]);
+  if (!check.ok) { say(who, check.msg ?? "Your bag is full.", ctx); return true; }
+  s.tray = null; s.verb = "Push the button";
+  ctx.destroy(tray.id);
+  hands(ctx, who);
+  queuePayout(who.state, { items: [tray.token], text: tray.token === "bar" ? "Granola bar · In your bag" : "Almond water · In your bag" });
+  return true;
+}
+
 export const ears = {
   press: (ctx, { by }) => {
     const s = ctx.self.state, who = ctx.getObject(by), now = ctx.now(), uid = who?.userId ?? by;
+    if (!near(ctx, who)) return;
     if (s.kind === "claim") {
       if (s.owner === uid) { say(who, `Office ${s.label}. Home. The cooler's yours, the cot's yours.`, ctx); return; }
       if (s.owner) { say(who, `Office ${s.label} · ${s.ownerName}'s place. Knock.`, ctx); return; }
@@ -40,12 +99,16 @@ export const ears = {
       const plate = ctx.getObject(s.plate), owner = plate?.state.owner;
       if (!owner) { say(who, "Claim this office first: the plate by its door.", ctx); return; }
       if (owner !== uid) { say(who, `${plate.state.ownerName}'s cooler. Hands off.`, ctx); return; }
+      if (s.fillBy && s.fillBy !== by && near(ctx, ctx.getObject(s.fillBy))) { say(who, "The spout is already running.", ctx); return; }
       if (s.fillBy === by) { // the stop: judge where the line sits
-        const f = s.fill ?? 0; s.fillBy = null; s.jugs = jugs(ctx) - 1; if (s.jugs < JUGS && !(s.jugAt > now - REFILL)) s.jugAt = now;
-        if (f >= BAND[0] && f <= BAND[1]) { s.streak = (s.streak ?? 0) + 1; const bonus = s.streak % 3 === 0 ? 1 : 0; who.state.almonds = (who.state.almonds ?? 0) + 1 + bonus;
+        const f = s.fill ?? 0; s.fillBy = null; s.fill = 0;
+        if (f >= BAND[0] && f <= BAND[1]) { const bonus = ((s.streak ?? 0) + 1) % 3 === 0 ? 1 : 0;
+          const carry = canCarryAll(who.state, bonus ? ["almond:grey", "almond:grey"] : ["almond:grey"]);
+          if (!carry.ok) { say(who, carry.msg ?? "Your bag is full.", ctx); return; }
+          drawJug(ctx); s.streak = (s.streak ?? 0) + 1; who.state.almonds = (who.state.almonds ?? 0) + 1 + bonus;
           snd(ctx, "glass-bottle-cap-screw-tight", 0.7); say(who, bonus ? `Perfect fill, three in a row. +2 almond water.` : `Clean fill at ${Math.round(f)}%. +1 almond water.`, ctx); }
         else { s.streak = 0; snd(ctx, "water-pour-splash-short", 0.6); say(who, `${Math.round(f)}%: half a bottle. You pour it back. Stop between ${BAND[0]} and ${BAND[1]}.`, ctx); }
-        s.fill = 0; return;
+        return;
       }
       if (jugs(ctx) <= 0) { say(who, "The jug's dry. A fresh one gurgles up in a couple of minutes.", ctx); return; }
       s.fillBy = by; s.fill = 0; s.rate = 38 + ctx.random() * 26; s.fillAt = now; snd(ctx, "water-cooler-glug-bubbles", 0.7);
@@ -58,16 +121,16 @@ export const ears = {
       say(who, "Cold, sweet, faintly almond. Thirst +30.", ctx); return;
     }
     if (s.kind === "vend") {
+      if (collectTray(ctx, who)) return;
       if (who?.state?.l61GuildQ === 2 && !who.state.l61VendSurvey) {
         who.state.l61VendSurvey = 1;
-        who.state.payout = { xp: 25, items: [] };
+        queuePayout(who.state, { xp: 25 });
         setStep61(ctx, who, "guild", 3, "Four Hundred and Thirteen · Logged Level 4's B4 vending drop · Return to Level 6.1 (Guild or M.E.G.)");
       }
       if (now < (s.next ?? 0)) { say(who, "The coil's empty. It hums, restocking from nowhere.", ctx); return; }
-      s.next = now + 150000; snd(ctx, "vending-machine-clunk-item-drop", 0.8); const r = ctx.random();
+      s.next = now + 150000; snd(ctx, "vending-machine-spiral-coil-motor-turning-whir", 0.55); const r = ctx.random();
       if (r < 0.2) { say(who, "You press B4. The glass gives like water and pulls you in. You smell fries.", ctx); carryAcross(ctx, who, "level61#l61-from-l4"); ctx.cross(who, "level61#l61-from-l4"); return; } // Level 6.1's way in (wiki: any button on a Level 4 vending machine)
-      if (r < 0.45) { who.state.almonds = (who.state.almonds ?? 0) + 1; say(who, "A bottle of almond water thunks down. +1", ctx); }
-      else if (r < 0.85) { who.state.hunger = Math.min(100, (who.state.hunger ?? 100) + 30); say(who, "A granola bar from a brand that never existed. Hunger +30.", ctx); }
+      if (r < 0.85) { vendDrop(ctx, r < 0.45 ? "almond" : "bar"); say(who, "Something's dropping into the tray. Press again to collect it.", ctx); }
       else say(who, "The coil turns. Nothing falls. Something behind the glass waves.", ctx);
       return;
     }
@@ -79,8 +142,12 @@ export function update(ctx, dt) {
   const s = ctx.self.state;
   if (s.kind !== "cooler") return ctx.sleep();
   if (!s.fillBy) { jugs(ctx); return ctx.sleep(10); }
+  const filling = ctx.getObject(s.fillBy);
+  if (!near(ctx, filling) || ctx.getObject(s.plate)?.state?.owner !== (filling.userId ?? filling.id)) {
+    s.fillBy = null; s.fill = 0; return;
+  }
   s.fill = Math.min(100, (s.fill ?? 0) + s.rate * dt * (0.75 + 0.5 * Math.sin((ctx.now() - s.fillAt) / 180))); // the flow surges and sags
-  if (s.fill >= 100) { const who = ctx.getObject(s.fillBy); s.fillBy = null; s.fill = 0; s.streak = 0; s.jugs = jugs(ctx) - 1; s.jugAt = ctx.now();
+  if (s.fill >= 100) { const who = filling; s.fillBy = null; s.fill = 0; s.streak = 0; drawJug(ctx);
     heard(ctx, { clip: G("water-splash-spill-on-carpet"), position: { ...ctx.self.worldFeetPosition, y: 0.5 }, volume: 0.7, maxDistance: 12 });
     say(who, "It overflows onto the carpet. The jug's wasted.", ctx); }
 }
