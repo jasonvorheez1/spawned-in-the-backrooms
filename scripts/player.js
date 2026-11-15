@@ -78,6 +78,7 @@ const ZONE_RESOLVERS = {
   level184: () => 'l184_field',
   level26: () => 'l26_ship',
   level27: () => 'l27_springs',
+  level132: () => 'l132_lumiria', // the Duchy of Morigont: a safe town
   level178: () => 'l178_house', // Kyoto Dreams: one calm house, never Level 0's maze zones
   level34: () => 'l34_sewer',
   levelrun: () => 'lrun_halls',
@@ -1826,7 +1827,7 @@ function tickStats(ctx, t, moving) {
   if (!s.crouch && s.aware) s.aware = 0
   // sanity: the halls eat it, the dark eats it faster, the safe room gives it back
   let drain = ({
-    level61: 0, level11: 0, level10: 0, bonus: 0, intake: 0, home11: 0, thehub: 0, testlab: 0, level27: 0, level178: 0,
+    level61: 0, level11: 0, level10: 0, bonus: 0, intake: 0, home11: 0, thehub: 0, testlab: 0, level27: 0, level178: 0, level132: 0,
     level7: zone === 'l7_sea' || zone === 'l7_ocean' ? 0.75 : 0.22,
     level6: w.nvg ? 0.32 : 1.15,
     level4: DRAIN4[zone.slice(3)],

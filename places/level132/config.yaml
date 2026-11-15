@@ -1,0 +1,31 @@
+# Level 132 "The Duchy of Morigont": Lumiria, the Town of Technology, at the duchy's centre. Peaceful, Class 0.
+# One centre (0,0), one ground height (y = 0) inside the town. Every tuned number: scripts/lib/data/level132.yml.
+mode: 3d
+terrain:
+  kind: heightmap
+  seed: 132
+  generator: scripts/terrain132.js
+  materials:
+    - { albedo: cdn/texture-terrain-lush-summer-meadow-grass-short.png, id: grass, textureScale: 2.2, tint: oklch(0.9 0.09 128) }
+    - { albedo: cdn/texture-terrain-old-rounded-river-cobblestone-street-warm-grey.png, id: cobble, textureScale: 2.4, tint: oklch(0.92 0.02 80) }
+    - { albedo: cdn/texture-terrain-packed-dry-country-dirt-road.png, id: dirt, textureScale: 2.6, tint: oklch(0.9 0.04 75) }
+    - { albedo: cdn/texture-terrain-pale-chalk-cliff-rock-face.png, id: chalk, textureScale: 4, tint: oklch(0.95 0.01 90) }
+  decorations: null
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: 0, y: 0, z: 46 }
+defaultSpawnRotation: { yaw: 0 }
+worldBounds: { bottom: -60 }
+atmosphere:
+  look: { script: mods/awakening/look.js, params: { mistBase: 0, mistDensity: 0.006, mistReach: 160, bloomThreshold: 1, bloomStrength: 0.32, vignette: 0.14, aoStrength: 0.8, sharpen: 0.25 } }
+  sky: { kind: realistic, model: hosek }
+  timeOfDay: 16.4
+  cycle: { frozen: 16.4 }
+  clouds: { enabled: true, density: 0.3, opacity: 0.55, altitude: 1100, thickness: 320, speed: 0.6 }
+  fog: { kind: linear, near: 60, far: 420, color: oklch(0.93 0.03 85) }
+  sun: { orbit: { noonYaw: 215, maxElevation: 62 }, light: { intensity: 1.6, color: oklch(0.9 0.09 75), shadow: { enabled: true, softness: 1 } } }
+  ambient: { light: { color: oklch(0.88 0.04 85), intensity: 0.7 } }
+  hemisphere: { skyColor: oklch(0.86 0.05 235), groundColor: oklch(0.62 0.07 120), intensity: 0.55 }
+  wind: { direction: 160, speed: 1.4 }
+  stars: { enabled: false }
+lighting: mods/awakening/lighting.js
+acoustics: { reverb: 0.04 }

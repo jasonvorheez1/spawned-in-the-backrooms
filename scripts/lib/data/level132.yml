@@ -1,0 +1,24 @@
+# Level 132 "The Duchy of Morigont" · Lumiria, the Town of Technology. Metres, north = -Z, ground y = 0 in town.
+# Every lane builds to THIS centre and THIS ground. Savi's picks unless marked (Shelly).
+layoutV: 1
+centre: [0, 0, 0]
+ground: 0
+arrive: { x: 0, y: 0, z: 46, yaw: 0 }          # the south road, facing the tree
+square: { radius: 27 }                          # cobbles
+tree: { x: 0, z: 0, trunkR: 3.2, height: 16 }   # the hollow tree, the exit (canon: Level 10 or Level 121)
+stalls: { ring: 15, count: 8, size: [3.6, 3, 2.6] }   # stall k at angle 22.5 + 45k deg, front faces the tree
+shops:                                           # walk-in, door faces the centre
+  electronics: { x: 0, z: -40, w: 16, d: 11, h: 7, door: [0, -34.5], name: "RadioShed" }
+  diner:       { x: 40, z: 0, w: 11, d: 16, h: 6, door: [34.5, 0], name: "Starlite Diner" }
+  cafe:        { x: -40, z: 0, w: 11, d: 16, h: 6, door: [-34.5, 0], name: "Dial-Up Cafe" }
+keep: { x: 110, z: -110, y: 9, gate: [98, -98] }   # the Duke's Palace, a Norman keep; gate shut except festivals
+roads:
+  south: [[0, 27], [0, 46], [4, 90], [-6, 160]]
+  keep:  [[19, -19], [55, -52], [98, -98]]
+  west:  [[-27, 6], [-90, 20], [-180, 10]]         # to Pollisville (signpost only, for now)
+  east:  [[27, -6], [90, -24], [180, -16]]         # to Luscio
+  north: [[-10, -27], [-30, -90], [-20, -180]]     # to Fosran
+edge: 380
+faction: { id: lumiria, name: "Lumiria" }
+duke: { x: 9, z: 9, yaw: 225 }                    # he strolls the square; barter by collection, never coin
+exits: { tree: ["level10"] }                      # Level 121 is not built
