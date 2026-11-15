@@ -16,7 +16,7 @@ export function penOf(wp, key) {
 // damage through armor: DR is cut by penetration, then the hit is reduced by a share that grows with DR and shrinks as the hit grows
 export function mitigated(dr, dmg, pen = 0) {
   if (!(dmg > 0)) return dmg
-  const e = Math.max(0, (dr ?? 0) * (1 - pen)), r = Math.min(C.armor.maxRed, e / (e + C.armor.k * dmg + C.armor.c))
+  const e = Number.isFinite(dr) ? Math.max(0, dr * (1 - (Number.isFinite(pen) ? pen : 0))) : 0, r = Math.min(C.armor.maxRed, e / (e + C.armor.k * dmg + C.armor.c))
   return Math.max(1, Math.round(dmg * (1 - r)))
 }
 // each hit's own roll: 90% to 110%

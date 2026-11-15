@@ -66,7 +66,7 @@ export function wornTokens(look) {
 export function wornDR(look) {
   if (!look) return 0
   const l = fullLook(look); let dr = 0
-  for (const slot of SLOTS) { const row = rowData(slot, l[slot], colourOf(l, slot)); if (!row) continue; dr += row.dr * (look.cnd ? drMul(armorCnd(look, tokOf(l, slot))) : 1) } // a worn-down piece gives less (lib/condition.js)
+  for (const slot of SLOTS) { const row = rowData(slot, l[slot], colourOf(l, slot)); if (!row) continue; { const m = look.cnd ? drMul(armorCnd(look, tokOf(l, slot))) : 1; const add = (row.dr ?? 0) * m; if (Number.isFinite(add)) dr += add } } // Nov 15: a row with no dr made hp NaN on Level 2 // a worn-down piece gives less (lib/condition.js)
   return Math.round(Math.min(dr, CL.drCap ?? 99) * 10) / 10
 }
 // each worn garment with its slot, DR and condition, for wear and the inventory
