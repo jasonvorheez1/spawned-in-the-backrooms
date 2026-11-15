@@ -207,20 +207,34 @@ export function update(ctx, dt) {
   const sk = ctx.self.session.salonCam ??= { k: 0 }, salonWant = ps?.salonOpen && st && st.phase === 'sat' && down >= 3200 ? 1 : 0
   sk.k += (salonWant - sk.k) * Math.min(1, dt * 4)
   const spl = ctx.player
+  if (sk.k <= 0.01) sk.key = null
   if (sk.k > 0.01 && spl) {
     ctx.self.hideLocalPlayer = false
     const wp = spl.worldFeetPosition ?? spl.feetPosition, r0 = spl.worldRotation ?? spl.rotation
-    const by = (typeof r0 === 'number' ? r0 : r0?.yaw ?? 0) * Math.PI / 180, a = by + 1.25 + (ps?.wrSpin || 0) * Math.PI / 180
+    const by = (typeof r0 === 'number' ? r0 : r0?.yaw ?? 0) * Math.PI / 180, spin = (ps?.wrSpin || 0) * Math.PI / 180
     const b = { x: wp.x, y: wp.y + 1.0, z: wp.z } // chest of the seated body
-    const dir = { x: -Math.sin(a), y: 0.17, z: -Math.cos(a) }, dl = Math.hypot(dir.x, dir.y, dir.z) // in front and a little up: forward is (-sin, -cos)
-    const nd = { x: dir.x / dl, y: dir.y / dl, z: dir.z / dl }, r0p = { x: b.x + nd.x * 0.7, y: b.y + nd.y * 0.7, z: b.z + nd.z * 0.7 } // start clear of the chair you sit in
-    const wall = raycast(ctx, r0p, nd, { distance: 2.0, radius: 0.15, physicsOnly: true, bodies: 'static', ignoreEntities: [spl.id, st?.id].filter(Boolean) })
-    const reach = wall ? Math.max(1.3, 0.7 + wall.distance - 0.25) : 2.6 // a wall or a mirror cuts the eye in before it can sit inside it
+    // Shelly Nov 15 'fix the camera in salon': props without colliders (dryers, stations) swallowed the eye; pick the clearest angle once per sit/turn, counting drawn geometry too
+    const ckey = Math.round(wp.x * 10) + ':' + Math.round(wp.z * 10) + ':' + (ps?.wrSpin || 0)
+    if (sk.key !== ckey) {
+      sk.key = ckey; let best = null
+      for (const off of [1.25, 0.7, 1.8, 0.2, 2.4, -0.4]) {
+        const aa = by + off + spin, d0 = { x: -Math.sin(aa), y: 0.17, z: -Math.cos(aa) }, l0 = Math.hypot(d0.x, d0.y, d0.z), n0 = { x: d0.x / l0, y: d0.y / l0, z: d0.z / l0 }
+        const s0 = { x: b.x + n0.x * 0.45, y: b.y + n0.y * 0.45, z: b.z + n0.z * 0.45 }
+        const hit = raycast(ctx, s0, n0, { distance: 2.4, radius: 0.12, hits: 'both', ignoreEntities: [spl.id, st?.id].filter(Boolean) })
+        const r = hit ? 0.45 + hit.distance - 0.2 : 2.6
+        if (!best || r > best.r + 0.05) best = { off, r }
+        if (r >= 2.6) break
+      }
+      sk.off = best.off; sk.reach = Math.max(0.9, best.r)
+    }
+    const a = by + sk.off + spin
+    const dir = { x: -Math.sin(a), y: 0.17, z: -Math.cos(a) }, dl = Math.hypot(dir.x, dir.y, dir.z)
+    const reach = sk.reach
     const out = { x: b.x + dir.x / dl * reach, y: b.y + dir.y / dl * reach + 0.1, z: b.z + dir.z / dl * reach }
     const k = sk.k * sk.k * (3 - 2 * sk.k), e0 = ctx.self.feetPosition
     ctx.self.feetPosition = { x: e0.x + (out.x - e0.x) * k, y: e0.y + (out.y - e0.y) * k, z: e0.z + (out.z - e0.z) * k }
     // aim a little to the body's right of centre so the body sits clear of the menu on the left of the screen
-    const rx = Math.cos(a), rz = -Math.sin(a), tgt = { x: b.x + rx * 0.75, y: b.y + 0.1, z: b.z + rz * 0.75 }
+    const sh = Math.min(0.75, reach * 0.3), rx = Math.cos(a), rz = -Math.sin(a), tgt = { x: b.x + rx * sh, y: b.y + 0.1, z: b.z + rz * sh }
     const dx = tgt.x - out.x, dy = tgt.y - out.y, dz = tgt.z - out.z
     const look = { yaw: Math.atan2(-dx, -dz) * RAD_TO_DEG, pitch: Math.atan2(dy, Math.hypot(dx, dz)) * RAD_TO_DEG }
     if (rot) { const dyaw = ((look.yaw - rot.yaw + 540) % 360) - 180; rot = { yaw: rot.yaw + dyaw * k, pitch: rot.pitch + (look.pitch - rot.pitch) * k } } else rot = look
