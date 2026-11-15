@@ -9,7 +9,9 @@ import * as land from "../../scripts/lib/l132-land.js";
 import * as people from "../../scripts/lib/l132-people.js";
 import * as duke from "../../scripts/lib/l132-duke.js";
 import * as quests from "../../scripts/lib/l132-quests.js";
-const PARTS = [square, stalls, shops, land, people, duke, quests];
+import * as trade from "../../scripts/lib/l132-barter.js";
+const PARTS = [square, stalls, shops, land, people, duke, quests, trade];
+export const ears = { "l132:barter": (ctx, e) => trade.barter(ctx, e) };
 export const cadence = "1s";
 export function tick(ctx) {
   for (const p of PARTS) p.lay?.(ctx, L);       // each guards itself with its own place.state version stamp
