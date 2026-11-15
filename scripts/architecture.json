@@ -1,34 +1,34 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9262,
-  "updatedAt": "2026-11-15T19:33:42.236Z",
-  "summary": "Spawned in the Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state holds the character while solo and multiplayer runs retain separate story, quest and resume state. Global scripts and shared registries coordinate play, while place scenes and simulations compose local spaces and stories; third-person bodies share combat poses with rig-aware locomotion.",
+  "basedOnSpecVersion": 9267,
+  "updatedAt": "2026-11-15T19:48:24.622Z",
+  "summary": "Spawned in the Backrooms is a multiplayer survival RPG spanning Level 0, the Bonus mall, The Hub and authored destinations. Character progress lives in player.state, while Solo and Multiplayer keep separate run/story state; global scripts and shared registries coordinate play and place scenes/sims compose local worlds. The Bonus Teleport Station now records explored destinations in a character-level atlas and can route to any visited atlas level.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0 yellow maze, routes and anomalies; momentsV gates wall moments/room-prop regeneration, and sim.tick returns ceiling-stuck enemies above y=1.6 to floor-level cells; objects.scene hosts shared controllers.",
-    "places/bonus + places/testlab (3D) - vaporwave mall with shops, staff, arcade, homes and salon; Test Range has loot/enemy bays and HIT SQUAD pad.",
+    "places/main (3D) - Level 0 yellow maze, routes and anomalies; momentsV gates wall moments/room-prop regeneration, sim handles ceiling-stuck enemies, objects.scene hosts shared controllers.",
+    "places/bonus + places/testlab (3D) - shared vaporwave mall with shops, staff, arcade, homes and Teleport Station; Test Range has loot/enemy bays and HIT SQUAD pad.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; sim builds tunnels/doors and staffs camps; t5-a2 leads to Level 178.",
-    "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; scenes own geometry, sims/cutscenes local beats.",
-    "places/level1 + places/level1c + places/level2 + places/level4 + places/level26 (3D) - Level 1 M.E.G. camp and signed entry to the 620 m Corrupted Corridor; Level 1.1 sim lays cast, caches and supplies.",
+    "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; scenes and sims own local beats.",
+    "places/level1 + places/level1c + places/level2 + places/level4 + places/level26 (3D) - Level 1 M.E.G. camp, far-west Level 0 entry/arrival, and Corrupted Corridor; Level 1.1 sim lays cast, caches and supplies.",
     "places/level9 + places/level10 + places/level11 + places/level61 + places/level70 (3D) - Suburbs, farm, city/Base Beta/strip mall/clinic, Snackrooms checkpoint and Froidetown.",
-    "places/level169 + places/level132 (3D) - Level 169 desert, Ferry's house/trail/basement and Field Office 7; Level 132 Duchy of Morigont, Lumiria town, collection barter and generated countryside.",
-    "places/level178 + places/level01 + places/level02 + places/level114 + places/level12 + places/level13 + places/level21 + places/level27 + places/level3 + places/level31 + places/level5 + places/level6 + places/level7 + places/spamton + pla…"
+    "places/level169 + places/level132 + places/level178 (3D) - Level 169 desert/house/trail/Field Office 7, Level 132 Duchy of Morigont/Lumiria and barter, Level 178 Kyoto terrain/house/residents/arrival quest.",
+    "places/level01, level02, level114, level12, level13, level21, level27, level3, level31, level5, level6, level7, spamton, level1c and other numbered place configs - authored Backrooms destinations and side locations, each with local cells and where present a sim."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera and ordered behaviors/actions; fall-guard precedes movement; radio, barter and phone are player behaviors.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, authored placements and generation/tick behavior; Level 1.1 and Level ! sims coordinate local stories.",
-    "places/level169/config.yaml + scripts/terrain169.js; places/level132/config.yaml + scripts/terrain132.js - seeded height/material generators and place terrain marks.",
+    "places/level169/config.yaml + scripts/terrain169.js; places/level132/config.yaml + scripts/terrain132.js - seeded terrain generators and place terrain marks.",
     "places/level169/sim.js + scripts/lib/data/level169.yml + house/Ferry/Friends/road/Robotics helpers - desert setpieces, schedules, routes, quests and units.",
     "places/level132/sim.js + scripts/lib/data/level132.yml + scripts/lib/l132-*.js - town/countryside lay and tick orchestration for stalls, shops, land, people, Duke, quests and barter.",
     "places/level178/config.yaml + scripts/terrain178.js + x0z0.scene + sim.js - Kyoto terrain, house, residents, arrival quest, finds, containers and breakable sweep.",
-    "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js + scripts/ui.js - title/save lifecycle, Solo/Multiplayer switch, expedition choices and HUD; main-menu-ui renders the Spawned in the Backrooms title; Game Rules button is outside the HUD.",
-    "scripts/player.js + scripts/critter.js - local first-person viewmodel/avatar setup and player-look body scaling; scripts/lib/vmpose.js supplies viewmodel pose policy."
+    "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js + scripts/ui.js - title/save lifecycle, Solo/Multiplayer switch, expedition choices and HUD.",
+    "scripts/hub.js + scripts/lib/hub.js - Bonus mall counters and Teleport Station actions; shared hub library owns room routing, home access and atlas policy."
   ],
   "shared": [
-    "scripts/lib/places.js - canonical place names/labels/HUD titles; consumed by feed, quest names and scripts/ui.js.",
+    "scripts/lib/places.js - canonical place names/labels/HUD titles; consumed by feed, quest names and scripts/ui.js; also defines valid atlas destinations.",
     "scripts/lib/grid-path.js - configurable 4-neighbor grid BFS/cache/cell selection shared by Level 0, 1, 2, 2.1, 3, Boiler and 6 adapters.",
     "scripts/lib/ambush-smiler.js - common pursuit/lurk/wake/retreat/bite behavior configured by l34-smiler.js and l9-smiler.js; companion.js/carry.js handle followers and held-prop transfers.",
-    "scripts/lib/hub.js + scripts/lib/thehub.js + scripts/lib/hubkeys.js - Bonus room routing, Hub tunnel/door/key registry; hub-thing picks up loose keys and hub-route guides the Tenth Tunnel; multiplayer leaves Bonus into mpRoom().",
+    "scripts/lib/hub.js + scripts/lib/thehub.js + scripts/lib/hubkeys.js - Bonus solo/multiplayer room routing, home/atlas eligibility, Hub tunnel/door/key registry; hub-thing and hub-route consume local registries.",
     "scripts/lib/mp-guard.js - multiplayer-room detection and nonlethal NPC-down rule; scripts/player.js and scripts/meg-agent.js invoke spared().",
     "scripts/lib/containment.js - Level 109 persistent pen/loose-foe and door books; sim supplies room IDs/boxes and spawnFoe adapter.",
     "scripts/lib/prop-interactions.js + interactive-props data - shared usable-prop/container migration and geometry specs; scripts/interact.js dispatches.",
@@ -40,9 +40,9 @@
     "scripts/lib/ambush-smiler.js - stepAmbushSmiler; l34-smiler.js and l9-smiler.js - configured update handlers.",
     "scripts/lib/companion.js - PERKS, perkOf, isMine, followersOf, loyaltyScale, whyNot, recruit/adopt/dismiss/order, weapon handoff, tick, bring; carry.js - carryAcross.",
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
-    "scripts/lib/quests.js - journal/advancement/reward helpers; scripts/lib/containment.js - pen/door operations; scripts/lib/run-opts.js - OPTS, DEFAULTS, RATE, PRESETS, runOf, noStory, noNpcs, isMulti, mpRoom, MODE_SLOT, isStoryKey.",
-    "scripts/lib/mp-guard.js - shootable, multiRoom, spared; scripts/lib/dialogue.js - DLG, dlgReady, warmDialogue, archOf, entryOf, BYE_CHOICE, rootChoices, childChoices, nodeOf, greetingOf, lineOf, barkOf.",
-    "scripts/lib/l132-shops.js - RANGE, ears, lay, tick; scripts/lib/level169-quest.js - questTick, useThing; scripts/lib/voices.js - warmVoices, hasVoice, voiceKey; scripts/lib/preload-next.js - preloadTick; scripts/critter.js - updateSchedule…"
+    "scripts/lib/quests.js - journal/advancement/reward helpers; scripts/lib/containment.js - pen/door operations; scripts/lib/run-opts.js - run/mode helpers and keys.",
+    "scripts/lib/hub.js - HUB_ROOM, HUB_PLACE, isHubRoom, soloRoom, HOMES, LEVEL_NAMES, lastLevel, toHub, toSolo, ATLAS_SKIP, atlasKey, atlasable, ATLAS_ORDER, noteAtlas.",
+    "scripts/lib/mp-guard.js - shootable, multiRoom, spared; scripts/lib/dialogue.js - dialogue registry and choice/line helpers; scripts/lib/preload-next.js - preloadTick."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable character player.state: progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance/look, currency and gear shared across Solo/Multiplayer.",
@@ -51,32 +51,32 @@
     "scripts/lib/manuals.js + scripts/player.js - player.state.recipes learned IDs; legacy manuals grants recipe kinds; reading a manual learns one recipe.",
     "scripts/lib/run-opts.js + scripts/main-menu.js - mode and run picks; run/quest/story/resume keys are swapped per mode through SQL save slots 91/92, while character, level, gear, cash and look remain on player.state.",
     "scripts/db.js + scripts/main-menu.js - SQL saves table owns named save-slot snapshots and hidden Solo/Multiplayer mode snapshots; live character state remains player.state.",
-    "scripts/main-menu.js + tut0-cut.js + tutorial.js - player tutorial beat and Field Guide state/preferences, including seen prompt IDs; barter.js and phone.js own their player-state panels/apps.",
-    "places/level1c/sim.js + scripts/lib/level1c-quest.js - place state builtV/l1cPh/xV/l1cDead; player state holds per-walker sector/quest/passage/fall progress; scripts/lib/preload-next.js owns player-session preAt/preDone/preClips/preHere wa…"
+    "scripts/main-menu.js + tut0-cut.js + tutorial.js - tutorial beat and Field Guide state/preferences; barter.js and phone.js own their player-state panels/apps.",
+    "scripts/lib/hub.js noteAtlas, called by scripts/player.js on place arrival - player.state.atlas maps canonical destination to first-seen date and visit count; unlike run/story keys it persists across modes."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused i…",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused interactions.",
     "templates/player.js runs scripts/fall-guard.js before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
-    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; camera derives eye height from worn body/model and critter-head; scripts/player.js builds local first-pers…",
+    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; player.js builds local first-person viewmodel and avatar setup.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
-    "scripts/main-menu-ui.js mode action → scripts/main-menu.js switchMode → SQL MODE_SLOT snapshots; isStoryKey fields swap while character/gear/look persist, then Solo resumes its place and Multiplayer skips tutorial/story and routes to Bonus.",
+    "scripts/main-menu-ui.js mode action → scripts/main-menu.js switchMode → SQL MODE_SLOT snapshots; isStoryKey fields swap while character/gear/look persist; Multiplayer skips tutorial/story and routes to Bonus.",
     "scripts/lib/run-opts.js mpRoom(party/user) → scripts/lib/hub.js toSolo → party room mp-<party> (or user room); player wake avoids resuming a Multiplayer save in a solo room.",
     "scripts/lib/mp-guard.js multiRoom → scripts/player.js damage and scripts/meg-agent.js death handling → ordinary NPCs are restored at 30% HP, stunned and shown DOWN; shootable/born-hostile/killable NPCs still die.",
-    "scripts/main-menu.js requests furry bodyStyle; scripts/lib/critter-model.js setStyle clears HUMAN for the critter body, while scripts/critter.js can instead render the avatar selected by player.state.look.spawnAv.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold handlers call carryAcross for held props/followers; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone (Level 1.1 sectors, Level 178 house, Level 132 Lumiria); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass.",
-    "scripts/player.js update → preloadTick(ctx) every tick; scripts/lib/preload-next.js scans every 2 s, emits player-audience preload for its animation clips once per session, current-place models once per place visit and destination models o…",
-    "scripts/lib/body3.js reads combat-anims.yml and held weapon/session/camera aim → shared third-person pose for player and NPC bodies; long-gun aim solves the grip hand forward and low, keeps the support hand on the held gun and levels head/…"
+    "scripts/player.js update detects place arrival → scripts/lib/hub.js noteAtlas writes player.state.atlas once per arrival (tutorial0 aliases main); old saved place is backfilled when absent.",
+    "Bonus Teleport Station choice → scripts/hub.js validates atlasable(destination) and s.atlas entry → board(ctx, s, destination, false) routes to a visited level; last-level, Test Range and unlocked homes retain their dedicated choices.",
+    "scripts/player.js update → preloadTick(ctx) every tick; scripts/lib/body3.js reads combat-anims.yml and held weapon/session/camera aim → shared third-person pose for player and NPC bodies."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
     "scripts/lib/data/weapons.yml + scripts/player.js + ballistics.js + knock.js + loot.js - weapon variants share combat and rarity/level gates; weights and upgrade rolls vary by level.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
-    "scripts/crawl.js + scripts/player.js + humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait; held crouch initiates crawl and tight spaces trigger automatic crawl; camera-steered bodies use directional stride …",
+    "scripts/crawl.js + scripts/player.js + humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "scripts/lib/l169-road.js + l169-road-geo.js + l169-travel.js + l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
     "places/level132/sim.js + l132-{stalls,shops,land,people,duke,quests,barter}.js + barter-deal.js - staged town and keeper trades use eight goods categories; first gift then balanced currency-free barter.",
     "scripts/phone.js + phone-ui.js + screen.js - one shared wrist phone; apps include keeper contacts/restock texts, camera/photos/notes, flashlight and radio.",
-    "scripts/lib/body3.js + scripts/lib/data/combat-anims.yml - human/furry third-person combat poses vary by weapon family; long guns share aim/ready and left-hand gun reach, with separate head-level and low-forward grip correction."
+    "scripts/lib/body3.js + scripts/lib/data/combat-anims.yml - human/furry third-person combat poses vary by weapon family; long guns share aim/ready and left-hand gun reach with grip corrections."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists; Level 26 placements/barrage use uploaded models.",
@@ -88,10 +88,10 @@
   ],
   "migrationNotes": [
     "Solo and Multiplayer share one character but not run/story state: scripts/lib/run-opts.js isStoryKey defines the swapped key family; MODE_SLOT 91/92 are separate SQL snapshots and hidden from ordinary Save Manager slots.",
-    "Multiplayer's room ID is mp- plus sanitized party ID (or user ID); hub.js selects it only when leaving Bonus in multiplayer. Continue must not wake a multiplayer save into a solo room.",
+    "Multiplayer room ID is mp- plus sanitized party ID (or user ID); hub.js selects it only when leaving Bonus in multiplayer. Continue must not wake a multiplayer save into a solo room.",
     "scripts/lib/mp-guard.js only spares NPC-tagged, non-overboard targets in rooms with a multiplayer player; shootable includes attackOnSight, killable, l8-hostile, born-hostile Ezra/Tobit and Lightless faction.",
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with sim-created hub-from-l178.",
-    "Level 169 uses x/z, north = -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth align with level169.yml. Sim layout and well versions are separate.",
-    "Level 1.1 geometry uses hall distance along +X (0–620 m), north at -Z, with sector boundaries in level1c.js; xV gates extra props independently of builtV and doorway/seam-return markers stay paired."
+    "Level 169 uses x/z, north = -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth align with level169.yml. Level 1.1 hall distance is +X (0–620 m), north at -Z; sector boundaries and doorway/seam-return markers stay paired.",
+    "Atlas state is character-level player.state.atlas keyed by places.js IDs; tutorial0 counts as main, atlas skips scripted/non-destination places, and kiosk travel requires an existing entry. Keep discovery on arrival and destination validation aligned."
   ]
 }
