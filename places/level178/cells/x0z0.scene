@@ -2332,25 +2332,25 @@ l178-rock-9:
   scale: 0.7
   tags: [l178]
 l178-roof-0:
-  feetPosition: {x: 0, y: 0.45, z: 0}
+  feetPosition: {x: 0, y: 3.25, z: -12.136}
   id: l178-roof-0
   model: /cdn/value.ce2ff7aaa81353cc33ccf0285d292dcf4017bf6ed6214ab03cb78e0ad5dd54b9.glb
   rotation: {yaw: 0}
   tags: [l178]
 l178-roof-180:
-  feetPosition: {x: 0, y: 0.45, z: 0}
+  feetPosition: {x: 0, y: 3.25, z: 12.136}
   id: l178-roof-180
   model: /cdn/value.ce2ff7aaa81353cc33ccf0285d292dcf4017bf6ed6214ab03cb78e0ad5dd54b9.glb
   rotation: {yaw: 180}
   tags: [l178]
 l178-roof-270:
-  feetPosition: {x: 0, y: 0.45, z: 0}
+  feetPosition: {x: 12.136, y: 3.25, z: 0}
   id: l178-roof-270
   model: /cdn/value.ce2ff7aaa81353cc33ccf0285d292dcf4017bf6ed6214ab03cb78e0ad5dd54b9.glb
   rotation: {yaw: 270}
   tags: [l178]
 l178-roof-90:
-  feetPosition: {x: 0, y: 0.45, z: 0}
+  feetPosition: {x: -12.136, y: 3.25, z: 0}
   id: l178-roof-90
   model: /cdn/value.ce2ff7aaa81353cc33ccf0285d292dcf4017bf6ed6214ab03cb78e0ad5dd54b9.glb
   rotation: {yaw: 90}
