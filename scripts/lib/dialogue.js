@@ -9,32 +9,41 @@
 //          clear, flee, death, reload, lowHealth (scripts/meg-agent.js bark)
 //   gest   their answer to a wave, a gift, a dance (dance / nodance) and an insult
 // The voice each one speaks with is scripts/lib/data/npc-voices.yml (scripts/lib/voices.js).
-import D1 from "./data/dlg-levels-1-3.yml";
-import D4 from "./data/dlg-level4.yml";
-import D5 from "./data/dlg-level5.yml";
-import D7 from "./data/dlg-levels-7-8.yml";
-import D10 from "./data/dlg-levels-10-11.yml";
-import D13 from "./data/dlg-level13.yml";
-import D31 from "./data/dlg-level31.yml";
-import D70 from "./data/dlg-level70.yml";
-import D109 from "./data/dlg-level109.yml"; // Level 109 Doctors // Level 70 Froidetown
-import D169 from "./data/dlg-level169.yml"; // Level 169 Ferry's Friends
-import D178 from "./data/dlg-level178.yml"; // Level 178 Kyoto Dreams: the Sector of Amaterasu and the Order
-import D132 from "./data/dlg-level132.yml"; // Level 132 Lumiria
 import DG from "./data/dlg-generic.yml";
 import DHUB from "./data/dlg-thehub.yml"; // The Hub
-import DLRUN from "./data/dlg-levelrun.yml"; // Level ! Safe Alcove
-import D1C from "./data/dlg-level1c.yml"; // Level 1.1 Corrupted Corridor: Team Corridor and the Tunnel Gang
-const ALL = { ...DHUB, ...DLRUN, ...D1C, ...DG, ...D1, ...D4, ...D5, ...D7, ...D10, ...D13, ...D31, ...D70, ...D109, ...D169, ...D178, ...D132 };
-// people who share one script of lines (a pair of guards, a crew)
-for (const [k, v] of Object.entries({ "l61-guard-b": "l61-guard-a", "l61-amber-b": "l61-amber-a", "l61-guild-b": "l61-guild-a", "l61-guild-c": "l61-guild-a", "l1c-gang-2": "l1c-gang-1", "l1c-gang-3": "l1c-gang-1", "l1c-gang-4": "l1c-gang-1" })) ALL[k] ??= ALL[v];
+// Nov 15 (arrival weight): only the archetypes and The Hub ride the boot. Every level's own table (300 KB together) is read
+// on first need after the player stands, in the same order as before, so a later table still wins a shared key.
+const LEVELS = ["levelrun", "level1c", null, "levels-1-3", "level4", "level5", "levels-7-8", "levels-10-11", "level13", "level31", "level70", "level109", "level169", "level178", "level132"]; // null = dlg-generic's place in the order
+const LOADERS = {
+  "levelrun": () => import("./data/dlg-levelrun.yml"), "level1c": () => import("./data/dlg-level1c.yml"), "levels-1-3": () => import("./data/dlg-levels-1-3.yml"),
+  "level4": () => import("./data/dlg-level4.yml"), "level5": () => import("./data/dlg-level5.yml"), "levels-7-8": () => import("./data/dlg-levels-7-8.yml"),
+  "levels-10-11": () => import("./data/dlg-levels-10-11.yml"), "level13": () => import("./data/dlg-level13.yml"), "level31": () => import("./data/dlg-level31.yml"),
+  "level70": () => import("./data/dlg-level70.yml"), "level109": () => import("./data/dlg-level109.yml"), "level169": () => import("./data/dlg-level169.yml"),
+  "level178": () => import("./data/dlg-level178.yml"), "level132": () => import("./data/dlg-level132.yml"),
+};
+const SHARED = { "l61-guard-b": "l61-guard-a", "l61-amber-b": "l61-amber-a", "l61-guild-b": "l61-guild-a", "l61-guild-c": "l61-guild-a", "l1c-gang-2": "l1c-gang-1", "l1c-gang-3": "l1c-gang-1", "l1c-gang-4": "l1c-gang-1" }; // people who share one script of lines (a pair of guards, a crew)
+const ALL = { ...DHUB, ...DG };
 export const DLG = ALL;
+const NODES = new Map();
+let loading = null;
+// resolves once every level's table is in DLG; safe to call any number of times
+export function dlgReady() {
+  return (loading ??= Promise.all(LEVELS.map((k) => (k ? LOADERS[k]().then((m) => m?.default ?? m ?? {}).catch(() => ({})) : DG))).then((tabs) => {
+    Object.assign(ALL, DHUB, ...tabs);
+    for (const [k, v] of Object.entries(SHARED)) ALL[k] ??= ALL[v];
+    NODES.clear();
+    return ALL;
+  }));
+}
+const warm = () => { if (!loading) dlgReady(); };
+export const warmDialogue = warm;
 const short = (it) => String(it?.id ?? it ?? "").split("/").pop();
 const low = (v) => String(v ?? "").toLowerCase();
 const h32 = (s) => { let h = 2166136261; for (const c of String(s)) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; };
 const pick = (v, seed) => Array.isArray(v) ? v[(seed >>> 0) % v.length] : v;
 // the archetype an unnamed person speaks as: their faction and role
 export function archOf(it, place) {
+  warm();
   const st = it?.state ?? {}, f = low(st.faction5 ?? st.faction4 ?? st.faction), role = low(st.role), id = short(it);
   const fk = /meg|gamma|omega/.test(f) || id.startsWith("meg") || id.startsWith("gamma") || id.startsWith("omega") ? "meg"
     : /surrender/.test(f) ? "surrender" : /lightless/.test(f) || id.startsWith("l8x") ? "lightless"
@@ -44,12 +53,12 @@ export function archOf(it, place) {
   const rk = ["trader", "merchant", "quarter", "smith"].includes(role) ? "trader" : role === "medic" ? "medic" : ["scout", "guard"].includes(role) ? "scout" : "default";
   return ALL[`${fk}:${rk}`] ? `${fk}:${rk}` : ALL[`${fk}:default`] ? `${fk}:default` : "survivor:default";
 }
-export function entryOf(it, place) { const id = ALL[it?.state?.dlg] ? it.state.dlg : short(it); return ALL[id] ? { key: id, e: ALL[id] } : { key: archOf(it, place), e: ALL[archOf(it, place)] }; }
+export function entryOf(it, place) { warm(); const id = ALL[it?.state?.dlg] ? it.state.dlg : short(it); return ALL[id] ? { key: id, e: ALL[id] } : { key: archOf(it, place), e: ALL[archOf(it, place)] }; }
 // a roll written "speech 35"
 const skOf = (sk) => { const m = /^\s*([a-z]+)\s+(\d+)/i.exec(String(sk ?? "")); return m ? { skill: m[1].toLowerCase(), difficulty: +m[2] } : null; };
 // the choice tree, flattened once per entry: node ids "0", "0.1", "0.1.0"
-const NODES = new Map();
 function nodes(key) {
+  warm();
   if (NODES.has(key)) return NODES.get(key);
   const out = {}, walk = (list, pre) => (list ?? []).forEach((n, i) => { const id = pre === "" ? String(i) : `${pre}.${i}`; out[id] = n; walk(n.then, id); });
   walk(ALL[key]?.ask, ""); NODES.set(key, out); return out;
@@ -80,7 +89,8 @@ export function greetingOf(it, place, { met, rapport, following, seed }) {
 export const lineOf = (it, place, k, seed) => { const { e } = entryOf(it, place); return e?.[k] ? pick(e[k], seed ?? h32(short(it) + k)) : null; };
 // a one-liner of a kind: their own, else their archetype's, else null; {u} is what they call you
 export function barkOf(it, kind, rnd = Math.random, place) {
+  warm();
   const own = ALL[short(it)]?.barks?.[kind], arch = ALL[archOf(it, place ?? it?.place)]?.barks?.[kind], pool = own?.length ? own : arch;
   return pool?.length ? pool[Math.floor(rnd() * pool.length)] : null;
 }
-export const gestOf = (it, k, place) => ALL[short(it)]?.gest?.[k] ?? ALL[archOf(it, place ?? it?.place)]?.gest?.[k] ?? null;
+export const gestOf = (it, k, place) => (warm(), ALL)[short(it)]?.gest?.[k] ?? ALL[archOf(it, place ?? it?.place)]?.gest?.[k] ?? null;
