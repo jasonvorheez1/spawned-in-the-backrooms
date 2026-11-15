@@ -16,6 +16,15 @@ l169-friend-1:   # Odalys Brandt, cook
     - q: "Would you take more people in?"
       a: "Yes. Every time. Nobody gets turned away from my table. Tobin will show you his arithmetic. I'll show you a pot that has never once come up empty."
   barks:
+    spot: ["Out of my kitchen!", "Put it down, love. Now.", "Not in my house!"]
+    hostile: ["You eat at my table and do this?", "Thief! Tobin, the pan!", "I'll teach you manners myself!"]
+    hit: ["Ah! My arm!", "That's my stirring hand!", "You little..."]
+    kill: ["Stay down.", "And stay out of my kitchen."]
+    allyDown: ["Tobin! No!", "Leave them alone!", "Somebody get the kit!"]
+    hurt: ["I'm cut, I'm cut.", "Ugh. Not like this."]
+    death: ["My pot...", "Oh, love..."]
+    relief: ["There. Wash your hands, all of you.", "Supper's late now."]
+    clear: ["Is it over? Somebody check the door."]
     idle: ["Needs salt.", "Who moved my ladle?", "Beans are on."]
     hi: ["Hello, love.", "Come in, come in."]
 
@@ -35,6 +44,15 @@ l169-friend-2:   # Tobin Achterberg, quartermaster
     - q: "Would you take more people in?"
       a: "No. Eight bottles an hour and seven of us, plus what goes north to the checkpoints. One more is fine. Ten more and somebody goes thirsty. Odalys thinks I'm being hard. I'm being accurate."
   barks:
+    spot: ["That's off my count!", "Hey! Shelf six!", "I saw that."]
+    hostile: ["Three tins! I counted!", "You're on the ledger now!", "Put back what you took!"]
+    hit: ["Ow! Forty-one, forty-two...", "Agh, my ribs!", "That's going in the book!"]
+    kill: ["Minus one.", "Count's settled."]
+    allyDown: ["Odalys, get up!", "That's one of ours!", "No, no, no!"]
+    hurt: ["I'm bleeding on the ledger.", "Need a bandage, now."]
+    death: ["Count... it...", "Tell Ferry..."]
+    relief: ["Everyone accounted for?", "Recounting. Don't touch anything."]
+    clear: ["Shelves are safe. For now."]
     idle: ["Forty-one. Forty-two.", "Who took a blanket?", "That's the wrong shelf."]
     hi: ["Morning. Or evening.", "Yes?"]
 
@@ -56,6 +74,15 @@ l169-friend-3:   # Senna Okoro, road guide
     - q: "Would you take more people in?"
       a: "I'm the one who brings them, so yes. I'm not going to walk past someone on the track because Tobin's shelf is tight."
   barks:
+    spot: ["Wrong road, friend.", "I see you. Hands open.", "Stop right there."]
+    hostile: ["I walked you here and you rob us?", "You won't make Checkpoint A.", "Run. The sun's waiting for you."]
+    hit: ["Ngh! Lucky shot.", "My leg, my leg!", "Not the face!"]
+    kill: ["That's the end of your road.", "Desert takes the rest."]
+    allyDown: ["Pim! Get behind me!", "They hurt Dov!", "Somebody's down!"]
+    hurt: ["I can walk on it. Barely.", "Wrap it, wrap it."]
+    death: ["Walk... at night...", "Cold water..."]
+    relief: ["Breathe. Drink something cold.", "Road's clear again."]
+    clear: ["Nobody follow them past the well."]
     idle: ["Wheel's pulling left.", "Dark in a few hours.", "Wraps, lamp, bottles."]
     hi: ["Evening.", "You made it up."]
 
@@ -75,6 +102,15 @@ l169-friend-4:   # Halvard Pruitt, checkpoint keeper
     - q: "Would you take more people in?"
       a: "I'd rather stock the road so they don't need us. A house fills up. A road doesn't. Tobin and I agree on that much."
   barks:
+    spot: ["Halt! Name and business!", "Step back from the map!", "Checkpoint's closed to you."]
+    hostile: ["You're not on any list I keep!", "Logged, and now punished!", "I'll write your name in red!"]
+    hit: ["Gah! My spectacles!", "That's assault, that's in the log!", "Ow!"]
+    kill: ["Entry closed.", "Struck from the log."]
+    allyDown: ["Man down at the house!", "Ines! Talk to me!", "No! Not on my watch!"]
+    hurt: ["I need to sit.", "Where's my pencil, I'm logging this."]
+    death: ["Twenty... nine...", "Close... the gate..."]
+    relief: ["Log it. All of it.", "Incident report, tonight."]
+    clear: ["Perimeter's quiet. Write that down."]
     idle: ["B needs a lid.", "Twenty-nine. Or thirty-one.", "Where's my pencil?"]
     hi: ["Hello.", "Mind the map."]
 
@@ -94,6 +130,15 @@ l169-friend-5:   # Ines Varga, weather keeper
     - q: "Would you take more people in?"
       a: "I don't have a side. I write down the hour. Ask me again after Odalys and Tobin have had it out over supper."
   barks:
+    spot: ["Something's wrong. Look.", "Storm's coming, and it's you.", "Don't."]
+    hostile: ["You chose the wrong hour!", "I read the sky, I read you too!", "Get out of the light!"]
+    hit: ["Ah! The chalk!", "It burns!", "Stop it!"]
+    kill: ["Clear skies.", "Gone, like heat at dusk."]
+    allyDown: ["Halvard! Oh no.", "They're not moving!", "Help them!"]
+    hurt: ["Light's going grey.", "I'm alright. I think."]
+    death: ["The slate...", "Sunrise... soon..."]
+    relief: ["I'll chalk it on the slate. Bad day.", "The air's settling."]
+    clear: ["Quiet. Like before a storm."]
     idle: ["Light's changing.", "Chalk, chalk...", "An hour yet."]
     hi: ["Oh, hello.", "Read the slate?"]
 
@@ -113,6 +158,15 @@ l169-friend-6:   # Dov Kessler, fixer
     - q: "Would you take more people in?"
       a: "This house was built for four. There are seven of us and I'm the one who keeps it standing. I'm with Tobin. Feed them, water them, point them north."
   barks:
+    spot: ["Hey. Hands where I can see 'em.", "Back off, I've got a wrench.", "Don't make me fix you."]
+    hostile: ["You break it, I break you!", "Should've oiled the door shut!", "Come here!"]
+    hit: ["Ow! Son of a...", "That's a tooth!", "Agh, my good hand!"]
+    kill: ["Fixed.", "That's that broke."]
+    allyDown: ["Senna! Stay with me!", "Who's hit? Who's hit?", "Get them inside!"]
+    hurt: ["I'm patched. Mostly.", "Ribs. Feels like ribs."]
+    death: ["Oil... the hinge...", "Huh."]
+    relief: ["Who slammed the door? Never mind.", "Okay. Back to work."]
+    clear: ["Gonna need to fix that window now."]
     idle: ["That belt's going.", "Who slammed this?", "Oil. Where's the oil."]
     hi: ["Door.", "Yeah?"]
 
@@ -132,5 +186,14 @@ l169-friend-7:   # Pim Laurier, newcomer
     - q: "Do they want you here?"
       a: "Odalys and Senna do. Tobin and Dov count bottles when I walk in. Nobody's been unkind. I just know I'm the eighth mouth if anyone else turns up."
   barks:
+    spot: ["W-what are you doing?", "Hey! That's not yours!", "Guys? Guys!"]
+    hostile: ["I trusted you!", "Two weeks and this happens!", "Get away from them!"]
+    hit: ["Ow! Ow!", "I'm hit, I'm hit!", "That really hurt!"]
+    kill: ["Did... did I do that?", "Oh. Oh no."]
+    allyDown: ["No! Odalys!", "They're down! Somebody!", "Wake up, please!"]
+    hurt: ["I'm shaking.", "I want to sit down."]
+    death: ["Two weeks...", "Stars..."]
+    relief: ["Is everyone okay? Please be okay.", "My hands won't stop shaking."]
+    clear: ["Is that it? Is it really over?"]
     idle: ["Lot of stars.", "North's that way.", "Two weeks."]
     hi: ["Oh. Hi.", "Hey."]

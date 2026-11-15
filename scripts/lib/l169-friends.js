@@ -115,7 +115,8 @@ export function tickFriends(ctx, L) {
     }
     if (s.dead) s.dead = false;
     if ((s.hp ?? 1) < (s.maxHp ?? 1)) s.hp = s.maxHp; // essential: the house never loses anyone
-    if (s.hostile) s.hostile = false;
+    if (s.hostile) { const t = ctx.now(); s.hostileAt ??= t; if (t - s.hostileAt > 90000) { s.hostile = false; delete s.hostileAt; } } // a thief gets 90 s of their anger (Shelly, Nov 15: combat dialogue), then the house forgives
+    else if (s.hostileAt) delete s.hostileAt;
     const cur = s.rounds?.[(s.ri ?? 0) % (s.rounds?.length || 1)];
     if (cur && s.stop !== cur.name) s.stop = cur.name;
     if (cur?.seat !== undefined) { // a chair or a bedroll: settle onto it once

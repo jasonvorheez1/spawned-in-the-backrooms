@@ -82,6 +82,14 @@ people:
       day: [[0, north], [5, help], [6, meal], [7, help], [9, sleep], [15, help], [18, meal], [19, north]] }
 # the house talks among itself. Never about the player.
 chatter:
+  - [[l169-friend-3, "someone was in the pantry last night."], [l169-friend-2, "two tins short. i checked twice."], [l169-friend-4, "nobody signed in at a."], [l169-friend-3, "then they came over the ridge. i'll walk it at dusk."]]
+  - [[l169-friend-7, "would you really fight someone? for beans?"], [l169-friend-1, "for the beans, no. for this table, yes."], [l169-friend-7, "okay. that makes sense."]]
+  - [[l169-friend-6, "front lock's bent."], [l169-friend-4, "forced?"], [l169-friend-6, "forced. somebody leaned hard."], [l169-friend-4, "i'll log it."], [l169-friend-6, "log won't fix it."]]
+  - [[l169-friend-5, "you shouted at that drifter."], [l169-friend-2, "he had my compass in his coat."], [l169-friend-5, "senna's compass."], [l169-friend-2, "the house's compass. it's on the ledger."]]
+  - [[l169-friend-1, "dov, your hand."], [l169-friend-6, "it's nothing. door bit me."], [l169-friend-1, "doors don't bite."], [l169-friend-6, "this one does."], [l169-friend-1, "sit. i'll wrap it."]]
+  - [[l169-friend-3, "if anyone ever comes at the house, you go to the basement."], [l169-friend-7, "and you?"], [l169-friend-3, "i stand at the door."], [l169-friend-7, "...i'll stand with you."]]
+  - [[l169-friend-4, "i still say we take in whoever walks up."], [l169-friend-2, "and when one robs us?"], [l169-friend-4, "then we take in the next one."], [l169-friend-2, "you're impossible."], [l169-friend-4, "i'm hospitable."]]
+  - [[l169-friend-5, "heat's rising early today."], [l169-friend-3, "how early?"], [l169-friend-5, "early enough to cook a careless walker."], [l169-friend-3, "then nobody leaves till dark."]]
   - [[l169-friend-1, "whose turn is the dishes?"], [l169-friend-6, "tobin's."], [l169-friend-2, "i did them tuesday."], [l169-friend-1, "there is no tuesday out here."], [l169-friend-2, "then i did them last."]]
   - [[l169-friend-5, "the pantry door squeaks again."], [l169-friend-6, "i oiled it."], [l169-friend-5, "it squeaks in a new place."], [l169-friend-6, "then i'll oil the new place."]]
   - [[l169-friend-4, "how many bottles went north this week?"], [l169-friend-2, "thirty-one."], [l169-friend-4, "i logged twenty-nine."], [l169-friend-2, "senna took two on the cart."], [l169-friend-3, "they were for my own walk."]]
