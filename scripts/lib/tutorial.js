@@ -1,11 +1,15 @@
 // The opening follows the player's position and inventory. Later lessons use the same state as the systems they teach.
 import { canOpen, hasHalogen, openWrist, screen } from "./screen.js"
 import W from "./weapons.js"
+import { canSaveHere } from "./save.js"
 
 export const inOrientation = (place) => String(place ?? "").startsWith("tutorial0")
 const hasSlot = (s) => Object.values(s.quickSlots ?? {}).some(Boolean)
 const hasRecipe = (s) => Boolean(s.recipes || s.manuals)
-const hasSupplies = (s) => Boolean(s.scrap?.wire || s.almonds)
+// a new body already carries 2 almond water (player.js), so only what the carton gives counts as "found"
+const hasSupplies = (s) => Boolean(s.scrap?.wire || s.pickedAt || (s.almonds ?? 0) > 2)
+const hasKey = (s) => Object.values(s.hubKeys ?? {}).some((n) => n > 0)
+const needsOn = (s) => s.run?.needs !== "off"
 export const GUIDE_CHAPTERS = ["Find supplies", "Cross the hall", "Get equipped", "Check your gear", "Find the way out"]
 
 export function orientation(s, place, p) {
@@ -26,6 +30,17 @@ export function orientation(s, place, p) {
 
 // A lesson can be added here without changing the opening or teaching newer saves the same lesson again.
 export const GUIDE_LESSONS = [
+  // Moment-of-need prompts (now: true): one line, shown the moment its state first holds, ahead of the slower lessons. A new one is a row.
+  { id: "now-search", now: true, group: "Survival", title: "Search it", keys: ["E · Search", "R · Take all"], text: "Look at a container and press E. Nothing is used until you pick it in Inventory.", when: (s) => s.focus?.verb === "Search" },
+  { id: "now-weapon", now: true, group: "Equipment", title: "Draw and holster", keys: ["Hold R · Holster / draw", "Left mouse · Swing"], text: "Hold R to put your weapon away or draw it. A click draws it too. People talk easier with it away.", when: (s) => Boolean(s.weapons) || Boolean(s.equipped && s.equipped !== "fists") || Boolean(s.holstered) },
+  { id: "now-key", now: true, group: "Navigation", title: "Match the key's bow", keys: ["I · Inventory"], text: "A Level Key opens one Hub door: the one wearing the same ring mark as the key's bow. Crossing spends it.", when: (s) => hasKey(s) },
+  { id: "now-sanity", now: true, group: "Survival", title: "Sanity is slipping", keys: ["I · Aid"], text: "The SAN bar drops in the dark and near entities. Low, you start seeing things. At 0 every attribute drops. Almond water brings it back.", when: (s, place, ses) => (ses?.guideSanTop ?? 0) - (s.sanity ?? 0) >= 5 },
+  { id: "now-thirst", now: true, group: "Survival", title: "Water is dropping", keys: ["I · Aid"], text: "WATER falls as you travel, faster when you sprint. Drink from Inventory before the bar turns red.", when: (s) => needsOn(s) && (s.thirst ?? 100) < 92 },
+  { id: "now-hunger", now: true, group: "Survival", title: "Food is dropping", keys: ["I · Aid"], text: "FOOD falls slowly as you travel. Eat from Inventory before the bar turns red.", when: (s) => needsOn(s) && (s.hunger ?? 100) < 92 },
+  { id: "now-save", now: true, group: "Survival", title: "Save what you found", keys: ["Backspace · Menu"], text: "Open the menu and pick Save Manager to keep this expedition in a slot. You can save in any level that stays put.", when: (s, place) => Boolean(s.pickedAt) && canSaveHere(place) },
+  { id: "now-oldcompass", now: true, group: "Navigation", title: "Wind the old compass", keys: ["I · Misc"], text: "Use it from Inventory or a quick slot to open it. Use it again to switch what the needle seeks. Each read spends a winding.", when: (s) => (s.compass ?? 0) > 0 },
+  { id: "now-compass", now: true, group: "Navigation", title: "Read the compass strip", keys: ["P · Journal"], text: "The strip by your health shows where you face. A pip on it points to your tracked objective.", when: (s) => Boolean(s.t0Done || s.madeChar) },
+  { id: "now-phone", now: true, group: "Equipment", title: "Your phone is on M", keys: ["M · Phone"], text: "Mail, notes, camera, flashlight and radio live on the phone. Raise it with M, lower it the same way.", when: (s, place) => Boolean(s.t0Done) && hasHalogen(s, place) },
   { id: "hub", group: "Navigation", title: "Read the Hub doors", keys: [], text: "Check the destination and key requirement before crossing. A keyed door spends one matching Level Key. Keep a return route in mind.", when: (s, place) => place === "thehub" },
   { id: "tracking", group: "Navigation", title: "Track a route", keys: ["P · Journal"], text: "Select a quest and read its current objective. Track up to three. For a quest in another area, the marker points to the next exit on the route.", when: (s) => Object.keys(s.quests ?? {}).length > 0 },
   { id: "movement", group: "Navigation", title: "Move and change the view", keys: ["WASD · Move", "Space · Jump", "Middle mouse · View"], text: "Use Shift for short sprints. Tap the middle mouse button to change camera view. Hold and drag it to look around your character." },
@@ -45,6 +60,8 @@ const BY_ID = Object.fromEntries(GUIDE_LESSONS.map((lesson) => [lesson.id, lesso
 const TIP_MS = 16000
 const TIP_GAP = 18000
 const TIP_GLANCE = 3500
+const NOW_GAP = 4000
+const ready = (lesson, seen, s, place, ses) => lesson.when && !seen.includes(lesson.id) && lesson.when(s, place, ses)
 export const tipsMuted = (s) => s.guideMuted ?? (s.run?.tutorial === "skip")
 const canShow = (s, place, now) => screen(s, place) === "play" && !s.dead && !s.ads &&
   !s.pick && !s.building && !s.os && !s.l26cut && !s.noclip &&
@@ -59,19 +76,25 @@ export function currentTip(s, place, now) {
 export function guideTick(ctx, s) {
   const place = ctx.self.place
   if (inOrientation(place) || !place || place === "intake" || place === "bonus" || s.level == null || !(s.t0Done || s.madeChar) || tipsMuted(s) || s.uiPrefs?.hudMinimal) return false
-  const seen = s.guideSeen ?? [], now = ctx.now(), tip = s.guideTip
+  const seen = s.guideSeen ?? [], now = ctx.now(), tip = s.guideTip, ses = ctx.session
+  if ((s.sanity ?? 0) > (ses.guideSanTop ?? 0)) ses.guideSanTop = s.sanity
   if (tip) {
     const age = now - tip.at
+    // a slower lesson on screen gives way to a moment-of-need prompt
+    const bump = !BY_ID[tip.id]?.now && age >= TIP_GLANCE && canShow(s, place, now) && GUIDE_LESSONS.find((lesson) => lesson.now && ready(lesson, seen, s, place, ses))
+    if (bump) { s.guideSeen = seen.includes(tip.id) ? seen : [...seen, tip.id]; s.guideTip = { id: bump.id, at: now, place }; return true }
     if (age >= TIP_MS || tip.place !== place || !canShow(s, place, now)) {
       if (age >= TIP_GLANCE && BY_ID[tip.id] && !seen.includes(tip.id)) s.guideSeen = [...seen, tip.id]
       s.guideTip = null
       ctx.session.guideNext = now + (age >= TIP_GLANCE ? TIP_GAP : 2500)
+      ctx.session.guideNowNext = now + (age >= TIP_GLANCE ? NOW_GAP : 1500)
     }
     return true
   }
   const pending = GUIDE_LESSONS.some((lesson) => lesson.when && !seen.includes(lesson.id))
-  if (pending && now >= (ctx.session.guideNext ?? 0) && canShow(s, place, now)) {
-    const lesson = GUIDE_LESSONS.find(({ id, when }) => when && !seen.includes(id) && when(s, place))
+  if (pending && canShow(s, place, now)) {
+    const slow = now >= (ses.guideNext ?? 0)
+    const lesson = now >= (ses.guideNowNext ?? 0) ? GUIDE_LESSONS.find((row) => (row.now || slow) && ready(row, seen, s, place, ses)) : null
     if (lesson) s.guideTip = { id: lesson.id, at: now, place }
   }
   return pending
