@@ -1,3 +1,4 @@
+import { noStory } from "./lib/run-opts.js";
 // Level 11 & Level 34 Chapter 2 prop interactions: Clinic dead-drop, IS LAB bench, Level 34 relay, barricaded satchel, Level ! doorway & alcove exit.
 import { heard } from "./lib/hear.js";
 import { carryAcross } from "./lib/carry.js";
@@ -240,8 +241,8 @@ export const ears = {
     }
 
     if (s.kind === "levelrun-to-109") {
-      if (!w.ch2Done) { heard(ctx, { clip: CLIP_LOCKED, position: pos, volume: 0.7, maxDistance: 10 }); w.notice = { text: w.lrunRescued ? "Phoebe is still watching you. Talk to her first." : "The handle will not turn.", at: now }; return; }
-      startCh3(ctx, who);
+      if (!w.ch2Done && !noStory(w)) { heard(ctx, { clip: CLIP_LOCKED, position: pos, volume: 0.7, maxDistance: 10 }); w.notice = { text: w.lrunRescued ? "Phoebe is still watching you. Talk to her first." : "The handle will not turn.", at: now }; return; }
+      if (!noStory(w)) startCh3(ctx, who); // story off: the door is just a door (Shelly Nov 15)
       heard(ctx, { clip: CLIP_DOOR, position: pos, volume: 0.6, maxDistance: 12 });
       carryAcross(ctx, who, "level109");
       ctx.cross(who, "level109");
