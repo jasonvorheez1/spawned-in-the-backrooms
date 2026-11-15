@@ -1,27 +1,27 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 8996,
-  "updatedAt": "2026-11-15T14:02:33.389Z",
-  "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Shared registries and handlers coordinate global play while cell scenes and local simulations compose spaces and stories; Kyoto Dreams and Lumiria are authored destinations with local residents, quests and interactive setpieces.",
+  "basedOnSpecVersion": 9029,
+  "updatedAt": "2026-11-15T14:14:49.987Z",
+  "summary": "The Backrooms is a multiplayer survival RPG spanning Level 0, the mall, The Hub and authored destinations; player.state carries progression, gear, quests, run choices and resume location. Shared registries and handlers coordinate global play while cell scenes and local simulations compose spaces and stories, including the Kyoto Dreams and Lumiria destinations.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes and anomalies; momentsV gates wall moments and room-prop regeneration, and objects.scene hosts shared controllers.",
     "places/bonus + places/testlab (3D) - vaporwave mall with shops, simulated staff, arcade, homes and salon; Test Range has loot/enemy bays and HIT SQUAD pad.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; sim builds tunnels/doors and staffs camps; t5-a2 leads to Level 178.",
-    "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; scene owns geometry, sim/cutscenes supply route props and local beats.",
+    "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; scenes own geometry, sims/cutscenes supply route props and local beats.",
     "places/level1 + places/level4 + places/level26 (3D) - M.E.G. camps and office mazes; Level 26's S.S. Fun has cabin 23, Partygoer decks/lockdown and aboard gate; Level 1 includes Dina's radio.",
-    "places/level9 + places/level10 + places/level11 + places/level61 + places/level70 (3D) - Suburbs, Bumper Crop farm, city/Base Beta/strip mall/clinic, Snackrooms food court/checkpoint and Froidetown winter market; Level 10 has a hollow-tree arrival from Level 132.",
-    "places/level169 + places/level132 (3D) - Level 169 desert, Ferry's house/trail/pantry/basement and Field Office 7; Level 132 is peaceful Lumiria in the Duchy of Morigont, with seeded countryside, town square, stalls/shops and a hollow oak exit to Level 10.",
-    "places/level178 (3D, Kyoto Dreams) - authored machiya/courtyard spring with resident rounds; Hub threshold is its exit, house props support A Place to Rest and follow-on quests, and kitchen cabinets now hold searchable food while separate hidden drawers are removed."
+    "places/level9 + places/level10 + places/level11 + places/level61 + places/level70 (3D) - Suburbs, Bumper Crop farm, city/Base Beta/strip mall/clinic, Snackrooms food court/checkpoint and Froidetown winter market.",
+    "places/level169 + places/level132 (3D) - Level 169 desert, Ferry's house/trail/pantry/basement and Field Office 7; Level 132 is Lumiria in the Duchy of Morigont, with seeded countryside, town square, stalls, three furnished walk-in shops, the Duke and Palace.",
+    "places/level178 + remaining authored level*/bonus places (3D) - Level 178 is Kyoto Dreams, with machiya/courtyard, residents, house quests and searchable containers; levels 2, 3, 5, 7, 12, 13 and others hold authored destinations and setpieces."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera setup, ordered behaviors and input actions; fall-guard runs before movement and radio is on the player.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, authored placements and generation/tick behavior; selected sims compose shared helpers.",
     "places/level169/config.yaml + scripts/terrain169.js and places/level132/config.yaml + scripts/terrain132.js - seeded height/material generators and place-specific terrain marks.",
     "places/level169/sim.js + scripts/lib/data/level169.yml + house/Ferry/Friends/road/Robotics helpers - dynamic desert setpieces, cast schedules, routes, quests and units.",
-    "places/level132/sim.js + scripts/lib/data/level132.yml + scripts/lib/l132-*.js - local lay/tick orchestration; square module builds the oak exit, fixtures and usable square props from l132-square.yml.",
+    "places/level132/sim.js + scripts/lib/data/level132.yml + scripts/lib/l132-*.js - local lay/tick orchestration; square, stalls, shops, land, people, Duke, quests and barter are components.",
+    "scripts/lib/l132-shops.js + scripts/lib/data/l132-shops.yml and scripts/lib/l132-duke.js + scripts/lib/data/l132-duke.yml - Level 132's data-driven three shops and Duke/Palace setpiece.",
     "places/level178/config.yaml + scripts/terrain178.js + x0z0.scene + sim.js - terrain and authored Kyoto house, resident rounds, arrival quest, one-time finds, searchable containers and breakable sweep.",
-    "scripts/lib/level178-quests.js - Kyoto quest registry/steps; entry points are sim tick, npc-starters dialogue choices, talk.js reply handler and l178-prop.js prop-use handler.",
     "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js + scripts/ui.js - title/save lifecycle, expedition choices and shared HUD/menu surface, including the Game Rules Manager panel splice and rules actions."
   ],
   "shared": [
@@ -42,7 +42,7 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - journal/advancement/reward helpers; containment.js - pen/door operations; ch2-quest.js - Chapter 2 stages/dialogue helpers.",
     "scripts/lib/run-opts.js - OPTS, DEFAULTS, PICK_DEFAULTS, RATE, PRESETS, runOf, needsMul, sanityMul, noStory, noNpcs, cleanPick, KEEP, SKIP; scripts/main-menu.js - SLOTS.",
-    "scripts/lib/l132-barter.js - CATS, WANTS, NAMES, bookOf, holds, pieces, barter, keep, dukeOffer, tick; places/level132/sim.js - ears, cadence, tick; scripts/l132-sq-prop.js - ears.press."
+    "scripts/lib/l132-barter.js - CATS, WANTS, NAMES, bookOf, holds, pieces, barter, keep, dukeOffer, tick; l132-shops.js - ears.press, lay, tick; l132-duke.js - lay, tick; l132-duke-gate.js - ears.press."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable player.state progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, saved place/position, currency and related progress.",
@@ -52,10 +52,10 @@
     "scripts/lib/run-opts.js + scripts/main-menu.js - player.state.run owns expedition picks; run options determine story/NPC presence and hunger/thirst/sanity drain multipliers.",
     "scripts/db.js + scripts/main-menu.js - SQL saves table owns named save-slot snapshots by player owner and slot; player.state remains live/current run state.",
     "scripts/main-menu.js + scripts/lib/tut0-cut.js + scripts/lib/tutorial.js - player.state.t0n/t0cut/t0Done/t0fade track tutorial beats; guideSeen/guideTip/guideMuted track Field Guide state/preferences.",
-    "scripts/lib/compass.js + scripts/player.js own compass charge/dial state; Level 178 quest keys and Level 132 player.state.l132 (bag, kept collection, first-gift marker) store per-player place progress; Level 132 place.state.squareV marks the square's generated layout version."
+    "scripts/lib/compass.js + scripts/player.js own compass charge/dial state; Level 178 quest keys and player.state.l132 (bag, kept collection, first-gift marker) store per-player progress; Level 132 place.state holds component version stamps and shop tabletop settling IDs, while the Duke actor owns stroll/face timing."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focused tagged props and dispatches use.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV and radio behaviors; scripts/interact.js finds focused tagged props and dispatches their use.",
     "templates/player.js runs scripts/fall-guard.js before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; body3 uses camera aim + combat-anims.yml for third-person pose.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on place arrival.",
@@ -65,8 +65,8 @@
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold door handlers call carryAcross → held props and nearby following companions cross; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone (Level 178 maps to l178_house; Level 132 to l132_lumiria); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles, markers and compass place names.",
     "scripts/level-door.js onTriggerEnter resolves threshold ID/partner → destination marker and carryAcross; l132-tree-exit maps to level10#l10-from-l132, and Level 10 sim lays that arrival marker on the road.",
-    "places/level132/sim.js calls component lay hooks, then sweepProps and ticks while occupied; l132-square.js reads l132-square.yml and lays tagged props; usable press → scripts/l132-sq-prop.js ears.press → player.state.reading/thirst/notice and page/sound effects.",
-    "places/level178/sim.js ticks quests and one-time finds; level178.yml feeds weapon spawns, containers grant gear, read-kind props → player.state.reading → scripts/ui.js pages panel; dialogue audio resolves via voices.js."
+    "places/level132/sim.js runs component lay hooks then (when occupied) sweepProps and ticks; l132-shops.js builds one shop per call from l132-shops.yml, and shop usable props dispatch ears.press for reading, audio, notices and jukebox state.",
+    "places/level132/sim.js → l132-duke.js lays Duke/Palace/gate/torches and schedules strolls; tagged NPC with dlg l132-duke → scripts/interact.js/talk.js dialogue, while Palace gate Knock → l132-duke-gate.js notice/sound."
   ],
   "behaviorFamilies": [
     "places/bonus mall sims/shopper/salon + places/level61/sim.js and scripts/lib/level61-extra.js - authored commercial interiors and simulated staff/services; menus/staff vary by venue and Level 6.1 fixtures are fitted separately.",
@@ -76,7 +76,7 @@
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + scripts/humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait selection; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "scripts/lib/l169-road.js + scripts/lib/l169-road-geo.js + scripts/lib/l169-travel.js + scripts/lib/l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
-    "places/level132/sim.js + scripts/lib/l132-{square,stalls,shops,land,people,duke,quests}.js - componentized place-wide lay/tick; square fixture positions/models/interactions are varied through scripts/lib/data/l132-square.yml and emitted with stable l132-sq-* IDs."
+    "places/level132/sim.js + scripts/lib/l132-{square,stalls,shops,land,people,duke,quests}.js - componentized place-wide lay/tick; square and three shops build data-driven fixtures/usable props, while Duke route and Palace geometry come from l132-duke.yml."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists, while Level 26 placements/barrage use uploaded models.",
@@ -91,7 +91,7 @@
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with the sim-created hub-from-l178 marker.",
     "Level 13's building shell is authored in cells/x0z0.scene; sim.js returns if l13-floor is absent and no longer regenerates the shell. Preserve matching floor ID and scene wall/threshold geometry; LETH remains in player.state.leth13.",
     "Level 169 uses x/z with north at -z and 1:10 map scale; terrain marks, track, house, road sites, Field Office 7 and ship berth must align. level169.yml holds tuned positions/rules; sim layout version and well version are separate.",
-    "Level 178 positions in level178.yml use metres, north = -Z, house floor y=0.45; preserve shell2 frames/pivots, usable IDs/coordinates and basin collider dimensions. Cabinet IDs now carry container state/items directly; do not restore the removed separate hidden drawer props.",
-    "Level 132 layout data and terrain use metres, north = -Z, town ground y=0; keep level132.yml, terrain132.js and scene blueprint anchors aligned. Hollow oak exit ID targets Level 10's l10-from-l132 marker; square layout is guarded by squareV and uses stable prop/seat IDs."
+    "Level 178 positions in level178.yml use metres, north = -Z, house floor y=0.45; preserve shell2 frames/pivots, usable IDs/coordinates and basin collider dimensions. Cabinet IDs carry container state/items directly.",
+    "Level 132 layout/terrain and l132-shops.yml/l132-duke.yml use metres, north = -Z, town ground y=0; keep terrain, scene blueprint anchors and data aligned. Shop builds are incremental under shopsV and table pieces are tracked in shopsTops; dukeV guards dynamic Palace/Duke props, with l132-tree-exit targeting Level 10's l10-from-l132 marker."
   ]
 }
