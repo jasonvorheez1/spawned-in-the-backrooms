@@ -2818,7 +2818,7 @@ l178-spring-rim:
   physics: {body: static, collider: mesh}
   tags: [l178, l178-garden]
 l178-stair:
-  feetPosition: {x: -8.6, y: 0.45, z: -10.2}
+  feetPosition: {x: -8.6, y: 0.45, z: -10.9}
   id: l178-stair
   model: /cdn/value.3907b899fbbbeefad3e8c1da746d7251f6c80ebb983abbc345ba4ed5fa009fc7.glb
   physics: {body: static, collider: mesh}
