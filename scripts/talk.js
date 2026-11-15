@@ -47,6 +47,7 @@ import { questChoices, realtyChoice } from './lib/npc-starters.js'
 import { zenithChoice } from './lib/zenith-quest.js'
 import { l1Choice } from './lib/level1-quests.js'
 import { jobOffer, choicePage } from './lib/quest-dialogue.js'
+import { dukeOffer } from './lib/l132-barter.js' // Lumiria: the Duke inspects what you carry
 
 const short = (it) => String(it.id).split('/').pop()
 const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z)
@@ -286,6 +287,10 @@ function send(ctx, d) {
   const l31 = passed && typeof n.do === 'string' && n.do.startsWith('l31:') ? l31Order(ctx, n.do.slice(4)) : null // Level 31 snack bar: the order feeds you, or the clerk refuses
   const reply = l31?.say ?? (passed ? pk(n.a) : (pk(n.fail) ?? 'No.'))
   say(ctx, it, reply, passed ? (n.mood ?? (n.do ? 'happy' : 'calm')) : 'annoyed'); logLine(ctx, it, 'n', reply)
+  if (passed && typeof n.do === 'string' && n.do.startsWith('l132:offer:')) { // Lumiria barter: the Duke trades from his sleeve; a townsfolk offer goes to the barter lane
+    const npc = n.do.slice(11)
+    if (npc === 'l132-duke') note(ctx, dukeOffer(ctx, ctx.self)); else ctx.emit('l132:offer', { by: ctx.self.id, npc }, { place: 'level132' })
+  }
   setRapport(ctx, it, clamp(rapportOf(ctx, it) + (passed ? (pc ? 6 : 2) : -4), -100, 100))
   if (typeof n.do === 'string' && (n.do === 'l109heal' || n.do.startsWith('l109buy:'))) { // Nurse Petra: paid care and the supply cage (prices in l109-outpost.yml)
     const item = n.do.startsWith('l109buy:') ? n.do.slice(8) : null, cost = item ? L109.shop[item] : L109.heal.cost
