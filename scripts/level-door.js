@@ -16,11 +16,11 @@ const PAIR = {
   "l61-to-l11": "level11#l11-from-l61", "l11-to-l61": "level61#l61-from-l11",
   "l9-to-l8": "level8#l8-from-l9", "l8-to-l9": "level9#l9-from-l8", "l9-to-l11": "level11#lv10-arrive", "l9-to-l10": "level10#l10-from-l11",
   "lv10-backroad": "level10#l10-from-l11", "l10-road-north": "level11#lv10-arrive", "l10-road-south": "level11#lv10-arrive", "l10-lake-deep": "level7#l7-from-l10",
-  "l132-tree-exit": "level10#l10-from-l132", // Lumiria's hollow tree lets you out on the Level 10 road
+  "l132-tree-exit": "level10#l10-from-l132", "l10-to-l132": "level132#l132-arrive", // Lumiria's hollow tree lets you out on the Level 10 road
 };
 // how each threshold noclips (scripts/noclip-ui.js clipCard): you fall through the floor, clip through a wall, or just glitch across
 const KIND = {
-  "l1-to-hub": "glitch", "hub-to-l1": "glitch", "l178-to-hub": "glitch", "l132-tree-exit": "glitch",
+  "l1-to-hub": "glitch", "hub-to-l1": "glitch", "l178-to-hub": "glitch", "l132-tree-exit": "glitch", "l10-to-l132": "glitch",
   "l1-onward": "floor", "l2-to-l3": "floor", "l6-to-l7": "floor", "l6-to-l61": "floor", "l6-wire-trip": "floor", "l21-cave": "floor",
   "l2-back": "wall", "l3-back": "wall", "l6-back": "wall", "l7-back": "wall", "l61-to-l6": "wall", "l8-to-l21": "wall", "l21-down": "wall", "l5-to-l6": "wall",
   "l61-to-l11": "wall", "l11-to-l61": "wall", "l61-vent-in": "floor", "l10-lake-deep": "water", "l10-canola-in": "glitch",

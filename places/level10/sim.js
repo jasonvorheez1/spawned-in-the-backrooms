@@ -63,7 +63,12 @@ function lay(ctx) {
   // 1. ARRIVALS AND LEVEL EXITS
   // ==========================================
   sp("l10-from-l11", { feetPosition: T(0, 30, 0.2), rotation: { yaw: 0 } });
-  sp("l10-from-l132", { feetPosition: T(0, 14, 0.2), rotation: { yaw: 0 } }); // out of Lumiria's hollow tree (scripts/lib/l132-square.js), a little up the same road
+  // Lumiria's hollow tree, standing on the verge: step into its hollow and you come out on Lumiria's south road; walking out of Lumiria's tree lands you here
+  sp("l10-from-l132", { feetPosition: T(3.2, 10, 0.2), rotation: { yaw: 0 } });
+  sp("l10-l132-tree", { feetPosition: T(8, 10, -0.15), rotation: { yaw: -90 }, model: { id: "/cdn/value.cf5b6cf6844d4e91b0dd364b673d86656fbc81d2884226b8b8d03467607cd2b1.glb" }, castShadow: true, receiveShadow: true });
+  sp("l10-l132-tree-col", { primitive: { kind: "box", width: 3.2, height: 7, depth: 5.2 }, visible: false, physics: "static", feetPosition: T(9, 10, 0) });
+  sp("l10-to-l132", { ...DOOR("level132#l132-arrive", 1.6, 2.2, 1.2), feetPosition: T(6.8, 10, 0), tags: ["usable"], state: { to: "level132#l132-arrive", name: "Hollow tree", verb: "Step inside" } });
+  sp("l10-l132-tree-glow", { feetPosition: T(6.4, 10, 1.6), light: { kind: "point", color: "oklch(0.86 0.12 75)", intensity: 0.8, distance: 5 } });
   sp("l10-road-north", { ...DOOR("level11#lv10-arrive", 8, 4, 2), feetPosition: T(0, -282, 0) });
   sp("l10-road-south", { ...DOOR("level11#lv10-arrive", 8, 4, 2), feetPosition: T(0, 72, 0) });
   sp("l10-lake-deep", { ...DOOR("level7#l7-from-l10", 5, 1.2, 5), feetPosition: { x: 70, y: -3.9, z: -95 } });
