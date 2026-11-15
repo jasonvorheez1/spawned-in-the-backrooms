@@ -15,7 +15,7 @@ export const wMul = (c) => K.dmgFloor + (1 - K.dmgFloor) * clamp(c) / CAP
 // chance a swing or shot slips or jams
 export const jamChance = (c) => (c >= K.jamBelow ? 0 : K.jamMax * (1 - clamp(c) / K.jamBelow))
 // share of its DR a garment keeps at condition c
-export const drMul = (c) => (c < 0.5 ? 0 : K.drFloor + (1 - K.drFloor) * clamp(c) / CAP)
+export const drMul = (c) => (!Number.isFinite(c) ? 1 : c < 0.5 ? 0 : K.drFloor + (1 - K.drFloor) * clamp(c) / CAP)
 // how much a weapon wears with one use (melee swing or gun shot), before the repair-skill factor
 export const useWear = (wp) => (wp.ranged ? 0.3 : 0.6) * (wp.wear ?? 1) * D.wearMul // data/difficulty.yml
 // armor wear from one hit that got through: { token: points } for each worn piece. rows: [{ token, slot, dr }]
