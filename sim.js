@@ -20,7 +20,7 @@ function sweepNpcs(ctx, id, pl) {
   if (!npcs && !story) return;
   const now = ctx.now(); if (now - (npcSweep.get(id) ?? 0) < 1500) return; npcSweep.set(id, now);
   // story off: Phoebe only lives in the story (cutscenes, the Hub), so she isn't there at all
-  for (const r of ctx.query({ tags: [npcs ? "npc" : "phoebe"], place: id })) if (!r.id.startsWith("player/")) ctx.destroy(r.id);
+  for (const r of ctx.query({ tags: [npcs ? "npc" : "phoebe"], excludeTags: ["monster"], place: id })) if (!r.id.startsWith("player/")) ctx.destroy(r.id);
 }
 export function tick(ctx) {
   setStyle(ctx.world.state.bodyStyle); // this machine's spawns follow the BODIES pick
