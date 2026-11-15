@@ -9,6 +9,7 @@ segments:
   - { kind: host, title: "Station ID", dur: 10.48, clip: "/cdn/value.ce0270229fe2c9128a6508c3c2be63504a01dfbe58e367c4df91674ab1455ba8.mp3" }
   - { kind: host, title: "How I Got to the Basement", dur: 15.54, clip: "/cdn/value.9b093bb70af411e7ec0bdf668a54a8de5eeae78feb44d626c74f4747fc044c96.mp3" }
   - { kind: song, title: "Pixel Panic", dur: 194.14, clip: "/cdn/music-8-bit-arcade-theme-gjlotxnm.mp3" }
+  - { kind: song, title: "Hard Day's Night (8-bit)", dur: 148.3, clip: "/cdn/the-beatles-a-hard-days-night-8-bit-version-4lk68bmi.mp3" }  # moved from Kyoto Dreams Radio (Shelly, Nov 15)
   - { kind: host, title: "The Story, Again", dur: 20.32, clip: "/cdn/value.dbaa67f11998002499520f1f3991a73440297ecfa4b3701f09a6e2167e5dd989.mp3" } # new-lines-386892
   - { kind: host, title: "Thoughts on Humans", dur: 19.12, clip: "/cdn/value.da603804214fac4e8a211c2cf241b4bb23119edf98a0a674d8a7180db7c38a4d.mp3" }
   - { kind: song, title: "Coin Door", dur: 86.52, clip: "/cdn/music-8-bit-retro-arcade-1hn1wm4p.mp3" }

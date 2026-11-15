@@ -13,7 +13,6 @@ segments:
   - { kind: host, title: "Dawn Broadcast (Hana)", dur: 2.38, clip: "/cdn/value.63b046bceb2adc59139f3dc6f37884930312d93761dd7d1e08809a2695f05b09.mp3" }
   - { kind: host, title: "Dawn Broadcast (Takeshi)", dur: 3.26, clip: "/cdn/value.b8a056f010d159e149e798912316336db0992f06a27b3958cadc8e6d594c127e.mp3" }
   - { kind: host, title: "Dawn Broadcast (Hana)", dur: 6.38, clip: "/cdn/value.50b32c07c51d3f5888f3f5e9891ab649536e6ff4ccf4e74aef1e47c26e79c1c0.mp3" }
-  - { kind: song, title: "Hard Day's Night (8-bit)", dur: 148.3, clip: "/cdn/the-beatles-a-hard-days-night-8-bit-version-4lk68bmi.mp3" }
   - { kind: host, title: "How We Got Here (Takeshi)", dur: 9.17, clip: "/cdn/value.8940704844e5c81c541433166274641930b29898a4a680279724d6bfd67e34d9.mp3" }
   - { kind: host, title: "How We Got Here (Takeshi)", dur: 8.69, clip: "/cdn/value.95a0cf59753eeb0ca0caef5d97c279a4c68d40dce240bd601fc2bbfed1463069.mp3" }
   - { kind: host, title: "How We Got Here (Hana)", dur: 6.70, clip: "/cdn/value.0a58224242a2de8f8a3dbe4224ecf3496037aff5bfdc663ce481331a39025fd4.mp3" }
