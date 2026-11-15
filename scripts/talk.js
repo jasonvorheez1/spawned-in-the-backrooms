@@ -286,11 +286,12 @@ function send(ctx, d) {
   }
   const seed = Math.floor(ctx.random() * 1e9), pk = (v) => Array.isArray(v) ? v[seed % v.length] : v
   const l31 = passed && typeof n.do === 'string' && n.do.startsWith('l31:') ? l31Order(ctx, n.do.slice(4)) : null // Level 31 snack bar: the order feeds you, or the clerk refuses
-  const reply = l31?.say ?? (passed ? pk(n.a) : (pk(n.fail) ?? 'No.'))
+  const duke = passed && n.do === 'l132:offer:l132-duke' ? dukeOffer(ctx, ctx.self) : null // the Duke's sleeve trade: what he says IS the trade's outcome
+  const reply = l31?.say ?? duke ?? (passed ? pk(n.a) : (pk(n.fail) ?? 'No.'))
   say(ctx, it, reply, passed ? (n.mood ?? (n.do ? 'happy' : 'calm')) : 'annoyed'); logLine(ctx, it, 'n', reply)
   if (passed && typeof n.do === 'string' && n.do.startsWith('l132:offer:')) { // Lumiria barter: the Duke trades from his sleeve; a townsfolk offer goes to the barter lane
     const npc = n.do.slice(11)
-    if (npc === 'l132-duke') note(ctx, dukeOffer(ctx, ctx.self)); else ctx.emit('l132:offer', { by: ctx.self.id, npc }, { place: 'level132' })
+    if (npc !== 'l132-duke') ctx.emit('l132:offer', { by: ctx.self.id, npc }, { place: 'level132' })
   }
   setRapport(ctx, it, clamp(rapportOf(ctx, it) + (passed ? (pc ? 6 : 2) : -4), -100, 100))
   if (typeof n.do === 'string' && (n.do === 'l109heal' || n.do.startsWith('l109buy:'))) { // Nurse Petra: paid care and the supply cage (prices in l109-outpost.yml)

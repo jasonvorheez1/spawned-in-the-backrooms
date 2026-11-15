@@ -108,6 +108,12 @@ export function tick(ctx, L) {
   const me = ctx.place.objects["l132-duke"]
   if (!me || !me.model) return
   const s = me.state, now = ctx.now()
+  const near = ctx.place.players.some((p) => p.state?.talkWith === me.id || Math.hypot(p.feetPosition.x - me.feetPosition.x, p.feetPosition.z - me.feetPosition.z) < 3) // a guest at his elbow holds him
+  if (near) {
+    if (now < (s.walkEnd ?? 0)) { animate(ctx, me, { "feetPosition.x": [{ value: me.feetPosition.x, duration: 0.2 }], "feetPosition.z": [{ value: me.feetPosition.z, duration: 0.2 }] }, { easing: "linear" }); s.walkEnd = 0 } // stop mid-stride
+    if ((s.nextAt ?? 0) < now + 6000) s.nextAt = now + 6000
+    return
+  }
   if (now < (s.nextAt ?? 0)) return
   const stops = D.duke.stops, next = ((s.stop ?? 0) + 1) % stops.length, leg = stops[next]
   const pts = [...leg.via, leg.at], xs = [], zs = []
@@ -123,5 +129,6 @@ export function tick(ctx, L) {
   const [a, b] = D.duke.pause
   s.stop = next
   s.faceYaw = stallYaw(L, leg.at)
+  s.walkEnd = now + walk * 1000
   s.nextAt = now + (walk + a + ctx.random() * (b - a)) * 1000
 }
