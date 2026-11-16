@@ -13,9 +13,12 @@ export function material(ctx) {
   const q = positionGeometry, ax = abs(q.x);
   if (ctx.params.face) {
     // Project the portrait in bind space so it follows the head through the full pose.
-    const v = q.y.mul(P("faceVScale")).add(P("faceVBias"));
+    // Nov 16 (Shelly: remake mouth, nose, eyes on the Tripo head): a head can fit its face — faceUScale narrows or widens the picture,
+    // faceLowK < 1 stretches the picture below faceSplitV down a longer muzzle so the mouth lands under the nose tip. Defaults change no other cat.
+    const vr = q.y.mul(P("faceVScale")).add(P("faceVBias")), vs = P("faceSplitV", 0.44);
+    const v = mix(vs.add(vr.sub(vs).mul(P("faceLowK", 1))), vr, step(vs, vr));
     const muzzle = smoothstep(0.30, 0.43, v).oneMinus();
-    const u = q.x.mul(float(2.75).mul(muzzle.mul(0.10).add(1))).add(0.5);
+    const u = q.x.mul(P("faceUScale", 2.75).mul(muzzle.mul(0.10).add(1))).add(0.5);
     const inside = step(0, u).mul(step(u, 1)).mul(step(0, v)).mul(step(v, 1));
     const front = smoothstep(0, 0.028, q.z.sub(P("faceNear")));
     let pic0 = ctx.texture(String(ctx.params.face)).sample(vec2(u, v));
