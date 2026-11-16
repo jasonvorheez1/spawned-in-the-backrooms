@@ -7,7 +7,7 @@ for o in list(bpy.data.objects):
     if o.name.startswith("Icosphere"): bpy.data.objects.remove(o)
 sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 520
 sc.world = bpy.data.worlds.new("w"); sc.world.color = (0.35, 0.35, 0.38)
-head = bpy.data.objects["Head"]; C = Vector((0, -0.10, 0.80))
+head = bpy.data.objects["Head"]; C = Vector((0, -0.02, 0.88))
 cam = bpy.data.objects.new("c", bpy.data.cameras.new("c")); sc.collection.objects.link(cam); sc.camera = cam; cam.data.lens = 85
 L = bpy.data.objects.new("l", bpy.data.lights.new("l", "SUN")); sc.collection.objects.link(L); L.data.energy = 3.5
 for k in KEYS:
@@ -17,6 +17,6 @@ for k in KEYS:
             if o.type == "MESH" and o.data.shape_keys and k in o.data.shape_keys.key_blocks: o.data.shape_keys.key_blocks[k].value = 1
     for nm, az in (("q", -40), ("s", -90), ("f", 0)):
         a = math.radians(az); d = Vector((math.sin(a), -math.cos(a), 0.12)).normalized()
-        cam.location = C + d * 1.1; cam.rotation_euler = (-d).to_track_quat("-Z", "Y").to_euler()
+        cam.location = C + d * 1.6; cam.rotation_euler = (-d).to_track_quat("-Z", "Y").to_euler()
         L.rotation_euler = (-(d + Vector((0.3, 0, 0.6)))).to_track_quat("-Z", "Y").to_euler()
         sc.render.filepath = f"{OUT}/{k}_{nm}.png"; bpy.ops.render.render(write_still=True)
