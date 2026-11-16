@@ -19,7 +19,7 @@ bvh = BVHTree.FromBMesh(bh)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=src)
 hairs = [o for o in bpy.data.objects if o.type == "MESH"]
-tot = 0; mx = 0
+tot = 0; mx = 0; nd = 0
 for h in hairs:
     me = h.data; W = h.matrix_world; Wi = W.inverted()
     P = [W @ v.co for v in me.vertices]
@@ -30,6 +30,7 @@ for h in hairs:
         s = (p - loc).dot(nrm)
         if s < MARGIN and s > -0.03:
             lift[i] = nrm * (MARGIN - s); hit.append(i)
+    nd += len(hit)
     kd = kdtree.KDTree(len(hit))
     for j, i in enumerate(hit): kd.insert(P[i], j)
     kd.balance()
@@ -46,5 +47,5 @@ for h in hairs:
             for i, dv in enumerate(D): kb.data[i].co += dv
     for i, dv in enumerate(D): me.vertices[i].co += dv
     n = sum(1 for f in fin if f.length > 1e-5); tot += n; mx = max([mx] + [f.length for f in fin])
-print(f"cleared {tot} verts, max {mx*1000:.1f} mm, direct {len(hit)}")
+print(f"cleared {tot} verts, max {mx*1000:.1f} mm, direct {nd}")
 bpy.ops.export_scene.gltf(filepath=out, export_format="GLB", export_apply=False, export_morph=True, export_skins=True, export_animations=False)
