@@ -28,8 +28,9 @@ m = head.modifiers.new("melt", "LAPLACIANSMOOTH"); m.vertex_group = vg.name
 m.iterations = 25; m.lambda_factor = 0.6; m.lambda_border = 0.0; m.use_volume_preserve = True; m.use_normalized = True
 for mod in head.modifiers:
   if mod.type == "ARMATURE": mod.show_viewport = False
+KV = {k.name: k.value for k in keys.key_blocks} if keys else {}
 if keys:
-  for k in keys.key_blocks: k.value = 0.0
+  for k in keys.key_blocks: k.value = 0.0   # the basis alone is smoothed; values come back before export
 dg = bpy.context.evaluated_depsgraph_get(); ev = head.evaluated_get(dg).data
 assert len(ev.vertices) == len(P)
 D = [(mw @ ev.vertices[i].co) - P[i] for i in range(len(P))]
@@ -37,11 +38,17 @@ head.modifiers.remove(m)
 for mod in head.modifiers:
   if mod.type == "ARMATURE": mod.show_viewport = True
 moved = 0
+WT = set()
+for i in range(len(P)):
+  try: vg.weight(i); WT.add(i)
+  except RuntimeError: pass
 for i, d in enumerate(D):
-  if d.length > 1e-6:
+  if i in WT and d.length > 1e-6:
     moved += 1; me.vertices[i].co = inv @ (P[i] + d)
     if keys:
       for k in keys.key_blocks: k.data[i].co = inv @ ((mw @ k.data[i].co) + d)
+if keys:
+  for k in keys.key_blocks: k.value = KV[k.name]
 head.vertex_groups.remove(vg)
 me.update()
 print("melted", moved, "max", round(max(d.length for d in D), 4), "nose", tuple(round(c, 3) for c in nose))
