@@ -1,3 +1,4 @@
+import { retextureOnce } from "../../scripts/lib/retexture.js";
 import { sweepProps } from "../../scripts/lib/breakables.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
@@ -1895,6 +1896,7 @@ const L11_VOICES = {
 // Master tick simulation loop
 const mem = { ringAt: 0, adAt: 0, lightAt: 0, lightPhase: 0 };
 export function tick(ctx) {
+  retextureOnce(ctx); // graphics pass: bare props get real surfaces
   if (!ctx.place.objects["sewer11-grate"]) { // Level 34's grate in the street (wiki: "a sewer grate in Level 11")
     ctx.spawn("sewer11-grate", { tags: ["usable"], feetPosition: { x: 3, y: 0.01, z: 66 }, primitive: { kind: "box", width: 0.9, height: 0.06, depth: 0.6 }, physics: "static", material: { texture: "cdn/texture-rusty-cast-iron-storm-drain-grate-slots.png", color: "oklch(0.35 0.03 50)", roughness: 0.7, metalness: 0.5 }, behavior: "scripts/sewer-grate.js", state: { name: "Sewer grate", verb: "Climb down", to: "level34#l34-from-l11" } });
     ctx.spawn("l11-from-l34", { feetPosition: { x: 3, y: 0.25, z: 64.5 }, rotation: { yaw: 0 } });

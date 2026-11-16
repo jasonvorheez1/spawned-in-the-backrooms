@@ -1,3 +1,4 @@
+import { retextureOnce } from "../../scripts/lib/retexture.js";
 import { stealerModel } from "../../scripts/lib/stealer-body.js";
 // Level 9 "The Suburbs": the referee. Rolls the room's seed once (place.state.l9seed: kept with everything looted here, so a reload
 // finds the same streets and the same emptied drawers; another room rolls its own), lays the streets, houses and lamps from it,
@@ -223,6 +224,7 @@ function fog(ctx, s) {
   if (Math.abs((f?.far ?? 0) - far) > 0.4) (ctx.place.atmosphere ??= {}).fog = { kind: "linear", near, far, color: k > 0.5 ? "oklch(0.2 0.015 250)" : "oklch(0.1 0.02 262)" };
 }
 export function tick(ctx) {
+  retextureOnce(ctx); // graphics pass: bare props get real surfaces
   if (ctx.place.objects["sewer9-drain"]?.behavior?.length) ctx.destroy("sewer9-drain"); // v1 led down: gone
   if (!ctx.place.objects["sewer9-drain"]) { // where Level 34's sewer lets you out (Shelly Nov 13: "a reliable way to get TO level 9", in from Level 11): exit only, nothing leads down
     ctx.spawn("sewer9-drain", { feetPosition: T(4.2, 27, 0.02), primitive: { kind: "box", width: 0.9, height: 0.06, depth: 0.6 }, physics: "static", material: { texture: "cdn/texture-rusty-cast-iron-storm-drain-grate-slots.png", color: "oklch(0.35 0.03 50)", roughness: 0.7, metalness: 0.5 } });

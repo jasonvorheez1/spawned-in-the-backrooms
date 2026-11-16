@@ -1,3 +1,4 @@
+import { retextureOnce } from "../../scripts/lib/retexture.js";
 import { pickVariant, vmul } from "../../scripts/lib/foe-variant.js";
 import { sweepProps } from "../../scripts/lib/breakables.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
@@ -570,6 +571,7 @@ function lay(ctx) {
 // the tunnel mouth to Level 2.1: the cave floor there can't be probed from the sim, so its dressing trusts the arrival's own height
 const l8Ways = () => { const d = P(46, -8.9, 0), m = P(46, -5.4, 0), l = Math.hypot(m.x - d.x, m.z - d.z) || 1; return [{ id: "l8-to-l21", at: { x: d.x, y: m.y, z: d.z }, fwd: { x: (m.x - d.x) / l, z: (m.z - d.z) / l }, trust: true }]; };
 export function tick(ctx) {
+  retextureOnce(ctx); // graphics pass: bare props get real surfaces
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level8"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx, l8Ways()); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)

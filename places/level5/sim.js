@@ -1,3 +1,4 @@
+import { retextureOnce } from "../../scripts/lib/retexture.js";
 import { sweepProps } from "../../scripts/lib/breakables.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
@@ -378,6 +379,7 @@ function keepOut(ctx) {
   }
 }
 export function tick(ctx) {
+  retextureOnce(ctx); // graphics pass: bare props get real surfaces
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level5"); // every sign dressed as its own board (scripts/lib/sign-style.js)

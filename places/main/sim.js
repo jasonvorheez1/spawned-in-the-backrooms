@@ -1,3 +1,4 @@
+import { retextureOnce } from "../../scripts/lib/retexture.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { overlapPoint } from "builtin/physics";
@@ -346,6 +347,7 @@ function shift(ctx, s, now) {
 // the flickering wall out to Level 1 isn't a door object (scripts/player.js crosses at it): the dresser gets it by hand
 const l0Ways = () => [{ id: "l0-exit", at: { x: -HALF + 0.15, y: 0, z: cellCenter(EXIT.cx, EXIT.cz).z }, fwd: { x: 1, z: 0 } }];
 export function tick(ctx) {
+  retextureOnce(ctx); // graphics pass: bare props get real surfaces
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   restyleSigns(ctx, "main"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx, l0Ways()); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)

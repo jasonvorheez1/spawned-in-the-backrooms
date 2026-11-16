@@ -1,3 +1,4 @@
+import { retextureOnce } from "../../scripts/lib/retexture.js";
 import { stealerModel } from "../../scripts/lib/stealer-body.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
@@ -51,6 +52,7 @@ pop glow n=1 r=light(<1,.55,.24>,fire()*6,7)`;
 // the tutorial's drop point isn't a door; the dresser lays M.E.G.'s welcome there too, turned toward the camp
 const l1Ways = () => { const a = cellCenter(ARRIVE.cx, ARRIVE.cz), dx = a.x - DROP.x, dz = a.z - DROP.z, l = Math.hypot(dx, dz); return [{ id: "l1-drop", at: { x: DROP.x - dx / l * 0.9, y: 0, z: DROP.z - dz / l * 0.9 }, fwd: { x: dx / l, z: dz / l } }]; };
 export function tick(ctx) {
+  retextureOnce(ctx); // graphics pass: bare props get real surfaces
   restyleSigns(ctx, "level1"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx, l1Ways()); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
