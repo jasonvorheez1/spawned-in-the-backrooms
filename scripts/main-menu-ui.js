@@ -73,6 +73,35 @@ const CSS = `<style>
 @media(max-width:640px){#mm .mm-top span:last-child{display:none}#mm .mm-shell{right:var(--spawn-chrome-reservation-right-inset,50px)}#mm .mm-top,#mm .mm-main,#mm .mm-footer{padding-left:22px;padding-right:10px}#mm .mm-row{align-items:flex-start;flex-direction:column}#mm .mm-seg{justify-content:flex-start}#mm .mm-footer span:last-child{display:none}}
 @media(max-height:570px){#mm .mm-top{padding-top:12px;padding-bottom:4px}#mm .col{padding:6px 3px}#mm h1{font-size:38px}#mm .mm-eyebrow{margin-bottom:7px}#mm .mm-subline{margin:8px 0 12px}#mm .mm-nav{gap:1px}#mm .mm-nav button{min-height:34px;padding-top:5px;padding-bottom:5px}#mm .mm-footer{padding-top:5px;padding-bottom:10px}}
 @media(prefers-reduced-motion:reduce){#mm .mm-scene,#mm .mm-lights,#mm .mm-beam,#mm .mm-dust,#mm:after,#mm .col,#mm.mm-title .mm-nav button{animation:none}#mm button{transition:none}}#mm.mm-reduced .mm-scene,#mm.mm-reduced .mm-lights,#mm.mm-reduced .mm-beam,#mm.mm-reduced .mm-dust,#mm.mm-reduced:after,#mm.mm-reduced .col,#mm.mm-reduced.mm-title .mm-nav button{animation:none}#mm.mm-reduced button{transition:none}
+#mm.mm-title:before{background:radial-gradient(ellipse 60% 55% at 50% 40%,transparent,#0b0c09cc 75%,#070806 100%),linear-gradient(0deg,#080906f0,transparent 55%)}
+#mm .tv{position:absolute;inset:clamp(14px,3vh,30px) calc(var(--spawn-chrome-reservation-right-inset,50px) + 16px) clamp(14px,3vh,30px) clamp(14px,2.5vw,32px);pointer-events:none;z-index:0;font:700 12px/1 'Courier New',monospace;letter-spacing:.14em;color:#efe6c0;text-shadow:0 0 6px #0009}
+#mm .tv i{position:absolute;width:26px;height:26px;border:2px solid #efe6c0aa}
+#mm .tv i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}#mm .tv i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}#mm .tv i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}#mm .tv i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
+#mm .tv .rec{position:absolute;left:38px;top:8px;display:flex;align-items:center;gap:8px}#mm .tv .rec b{width:11px;height:11px;border-radius:50%;background:#e2382c;box-shadow:0 0 8px #e2382c;animation:mm-rec 1.2s steps(1) infinite}
+#mm .tv .clock{position:absolute;right:38px;top:8px}#mm .tv .bat{position:absolute;right:38px;bottom:8px;opacity:.75}#mm .tv .lvl{position:absolute;left:38px;bottom:8px;opacity:.75}
+#mm .tl{position:relative;z-index:1;box-sizing:border-box;width:min(640px,100%);margin:0 auto;padding:18px 6px;text-align:center;animation:mm-enter .7s ease-out both}
+#mm .tl-pre{color:#d9cb8e;font:700 clamp(12px,1.4vw,16px)/1 'Courier New',monospace;letter-spacing:.55em;margin-left:.55em}
+#mm .tl-name{margin:6px 0 0;font:900 clamp(52px,9.5vw,128px)/.9 'Arial Black','Helvetica Neue',Arial,sans-serif;letter-spacing:-.03em;text-transform:uppercase;color:#f2d877;text-shadow:-3px 0 #d6452f88,3px 0 #3fb6c988,0 0 40px #f2d87755,0 6px 30px #000c;animation:mm-jit 6s infinite}
+#mm .tl-tag{margin:14px 0 28px;color:#cfc8a8;font:italic 400 clamp(13px,1.3vw,16px)/1.4 Georgia,serif;letter-spacing:.03em}
+#mm .tl-go{position:relative;display:flex;align-items:center;gap:16px;width:min(440px,100%);margin:0 auto;padding:16px 22px;border:0;border-radius:3px;background:#f2d877;color:#16140e;text-align:left;cursor:pointer;box-shadow:0 0 0 1px #fff3, 0 10px 40px #f2d87733;transition:transform .15s,box-shadow .15s}
+#mm .tl-go:hover,#mm .tl-go:focus-visible{transform:translateY(-2px) scale(1.015);box-shadow:0 0 0 2px #fffbe8,0 14px 50px #f2d87766;outline:0}
+#mm .tl-go .play{flex:none;width:0;height:0;border-left:18px solid #16140e;border-top:11px solid transparent;border-bottom:11px solid transparent}
+#mm .tl-go strong{display:block;font:900 22px/1.05 'Arial Black',Arial,sans-serif;text-transform:uppercase;letter-spacing:.02em}
+#mm .tl-go small{display:block;margin-top:4px;font:700 11px/1.2 'Courier New',monospace;letter-spacing:.12em;text-transform:uppercase;opacity:.75}
+#mm .tl-mode{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:min(440px,100%);margin:10px auto 0}
+#mm .tl-mode button{padding:10px 12px;border:1px solid #f2d87740;border-radius:3px;background:#0d0e0acc;color:#cfc8a8;text-align:left;cursor:pointer;transition:border-color .15s,background .15s}
+#mm .tl-mode button strong{display:block;color:#f4eed6;font:700 14px/1.1 var(--ui-font,'Segoe UI',Arial,sans-serif)}
+#mm .tl-mode button small{display:block;margin-top:3px;font-size:11px;line-height:1.3;opacity:.75}
+#mm .tl-mode button.on{border-color:#f2d877;background:#f2d8771f;cursor:default}#mm .tl-mode button.on strong:after{content:' ●';color:#f2d877;font-size:10px;vertical-align:2px}
+#mm .tl-mode button:not(.on):hover,#mm .tl-mode button:focus-visible{border-color:#f2d877aa;background:#f2d87714;outline:0}
+#mm .tl-row{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 22px;margin:22px auto 0}
+#mm .tl-row button{padding:6px 2px;border:0;border-bottom:1px solid transparent;background:none;color:#b9b293;font:700 11px/1 'Courier New',monospace;letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+#mm .tl-row button:hover,#mm .tl-row button:focus-visible{color:#fff6d2;border-bottom-color:#f2d877;outline:0}
+@keyframes mm-rec{50%{opacity:0}}
+@keyframes mm-jit{0%,93%,100%{transform:none}94%{transform:translate(2px,-1px) skewX(-3deg)}95%{transform:translate(-3px,1px)}96%{transform:none}}
+@media(max-width:640px){#mm .tv .clock,#mm .tv .bat{display:none}#mm .tl-mode{grid-template-columns:1fr}#mm .tl-tag{margin:10px 0 18px}#mm .tl-go{padding:13px 16px}}
+@media(max-height:570px){#mm .tl{padding:4px}#mm .tl-name{font-size:46px}#mm .tl-tag{margin:6px 0 10px}#mm .tl-go{padding:10px 16px}#mm .tl-row{margin-top:10px}#mm .tv .lvl,#mm .tv .bat{display:none}}
+@media(prefers-reduced-motion:reduce){#mm .tl,#mm .tl-name,#mm .tv .rec b{animation:none}}#mm.mm-reduced .tl,#mm.mm-reduced .tl-name,#mm.mm-reduced .tv .rec b{animation:none}
 </style>`
 
 function settingsView(ctx, player, prefs) {
@@ -196,6 +225,28 @@ export function mainMenu(ctx, player, launch = false) {
     content = `<div class="col">${savesView(ctx, player)}</div>`
   } else if (view === 'controls') {
     content = `<div class="col">${controlsView(ctx)}</div>`
+  } else if (!pause) {
+    // Title (Shelly Nov 16: "clearer" and "not a half life 1/gmod menu"): found-footage frame, one big way in, the mode as a clear switch, the rest in one quiet row
+    const multi = s.run?.mode === 'multi'
+    const where = multi ? 'Bonus Rooms' : (PLACE_NAMES[s.savePlace ?? player?.place] ?? 'Level 0')
+    const goSub = returning ? `${esc(where)} · Lv ${esc(s.level ?? 1)}` : (multi ? 'Bonus Rooms · with friends' : 'wake up in Level 0')
+    const mode = (v, on, label, sub) => `<button class="${on ? 'on' : ''}" ${on ? 'aria-pressed="true"' : `onclick="sendAction('mmenu',{k:'mode',v:'${v}'},{relockPointer:true})"`}><strong>${label}</strong><small>${sub}</small></button>`
+    content = `<div class="tl">
+      <div class="tl-pre">SPAWNED IN THE</div>
+      <h1 class="tl-name">Backrooms</h1>
+      <div class="tl-tag">You noclipped out of reality. Find a way back.</div>
+      <button class="tl-go" onclick="sendAction('mmenu',{k:'start'},{relockPointer:true})"><span class="play" aria-hidden="true"></span><span><strong>${returning ? 'Continue' : 'Start'}</strong><small>${goSub}</small></span></button>
+      <div class="tl-mode" role="group" aria-label="Mode">
+        ${mode('solo', !multi, 'Solo', 'the story, your own run')}
+        ${mode('multi', multi, 'Multiplayer', 'no story, explore with friends')}
+      </div>
+      <nav class="tl-row" aria-label="More">
+        <button onclick="sendAction('mmenu',{k:'view',v:'newgame'})">${returning ? 'New expedition' : 'Custom start'}</button>
+        <button onclick="sendAction('mmenu',{k:'view',v:'saves'})">Saves</button>
+        <button onclick="sendAction('mmenu',{k:'view',v:'settings'})">Settings</button>
+        <button onclick="sendAction('mmenu',{k:'view',v:'controls'})">Controls</button>
+      </nav>
+    </div>`
   } else {
     content = `<div class="col">
       ${pause ? '<h1 class="mm-pause-title">Paused</h1>' : '<h1><span>Spawned in the</span><span>Backrooms</span></h1>'}
@@ -215,5 +266,5 @@ export function mainMenu(ctx, player, launch = false) {
     </div>`
   }
 
-  return `${CSS}<div id="mm" class="${pause ? 'mm-pause' : 'mm-title'} ${prefs.motion === 'reduced' ? 'mm-reduced' : ''}" data-modal tabindex="0" ${kd ? `onkeydown="${kd}"` : ''}>${pause ? '' : CORRIDOR}<div class="mm-shell"><div class="mm-main">${content}</div>${view || pause ? `<div class="mm-footer"><span>${view ? 'Escape to go back' : 'Escape to resume'}</span></div>` : ''}</div></div>`
+  return `${CSS}<div id="mm" class="${pause ? 'mm-pause' : 'mm-title'} ${prefs.motion === 'reduced' ? 'mm-reduced' : ''}" data-modal tabindex="0" ${kd ? `onkeydown="${kd}"` : ''}>${pause ? '' : CORRIDOR}${pause || view ? '' : `<div class="tv" aria-hidden="true"><i></i><i></i><i></i><i></i><span class="rec"><b></b>REC</span><span class="clock">NOV 16 1996 &nbsp;03:12 AM</span><span class="lvl">LEVEL 0 · THE LOBBY</span><span class="bat">▮▮▯ SP</span></div>`}<div class="mm-shell"><div class="mm-main">${content}</div>${view || pause ? `<div class="mm-footer"><span>${view ? 'Escape to go back' : 'Escape to resume'}</span></div>` : ''}</div></div>`
 }
