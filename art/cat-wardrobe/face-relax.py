@@ -3,7 +3,7 @@
 # blender -b --factory-startup --python-exit-code 1 -P art/cat-wardrobe/face-relax.py -- IN.glb OUT.glb TAG [probe]
 import bpy, sys, bmesh
 from mathutils import Vector
-a = sys.argv[sys.argv.index("--")+1:]; IN, OUT, TAG = a[:3]; PROBE = len(a) > 3
+a = sys.argv[sys.argv.index("--")+1:]; IN, OUT, TAG = a[:3]; PROBE = len(a) > 3 and a[3] == 'probe'; ITERS = int(a[3]) if len(a) > 3 and a[3].isdigit() else 40
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=IN)
 for o in bpy.data.objects:
@@ -33,6 +33,9 @@ def render(tag, keys=None):
     m = bpy.data.materials.new("c"); m.use_nodes = True; m.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = 0.35
     for o in bpy.data.objects:
       if o.type == "MESH": o.data.materials.clear(); o.data.materials.append(m)
+  for o in bpy.data.objects:
+    for md in getattr(o, "modifiers", []):
+      if md.type == "ARMATURE": md.show_render = False   # the rest shape we edit, not a node pose
   if me.shape_keys:
     for k in me.shape_keys.key_blocks: k.value = 0
   cam = bpy.data.objects["C"]; c = Vector(((min(xs)+max(xs))/2, (min(ys)+max(ys))/2, (min(zs)*0.45+max(zs)*0.55)))
@@ -51,12 +54,12 @@ def zone(p):
   if (p - NOSE).length < 0.075: return 0.0                             # the approved snout stays as it is
   band = 0.18 < t < 0.62                                               # the dented band round the face and cheeks
   ear = t > 0.80
-  return 1.0 if band else (0.7 if ear else 0.0)
+  return 1.0 if band else 0.0                                  # ears: smoothing pinched the inner cup, left as sculpted
 wgt = [zone(p) for p in P]
 for _ in range(3):  # feather the edge of the zone
   wgt = [max(w, 0.6*max((wgt[j] for j in nb[i]), default=0)) for i, w in enumerate(wgt)]
 base = [p.copy() for p in P]
-for it in range(12):
+for it in range(ITERS):
   for lam in (0.5, -0.53):
     nw = list(P)
     for i in range(len(P)):
