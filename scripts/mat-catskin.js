@@ -121,7 +121,13 @@ export function material(ctx) {
     const onTip = smoothstep(-0.065, -0.048, q.z.sub(P("noseZ", 0.249)));   // wide enough for the flat snout key (tip 4 cm back)
     const noseM = smoothstep(1.0, 0.82, nDist).mul(onTip);
     const shine = smoothstep(0.24, 0.07, nx.add(0.32).mul(nx.add(0.3)).add(ny.sub(0.4).mul(ny.sub(0.4))).sqrt());
-    if (!ctx.params.faceless) col = mix(col, ctx.params.noseR != null ? C("nose") : vec3(0.07, 0.045, 0.045), noseM);   // the crew: no nose   // matte, no shine (Shelly Nov 12)
+    if (!ctx.params.faceless) col = mix(col, ctx.params.noseR != null ? C("nose") : vec3(0.07, 0.045, 0.045), noseM);
+    // Nov 16 (Shelly: hair "weird up front"): white scalp showed between short locks; under a hairstyle the head above the hairline wears the hair's root colour
+    if (ctx.params.scalp) {
+      const hv = P("scalpV", 0.66), wob = mx_noise_float(q.mul(vec3(90, 20, 90))).mul(0.03);
+      const sc = smoothstep(hv, hv.add(0.04), v.add(wob));
+      col = mix(col, C("scalp").mul(0.72), sc);
+    }   // the crew: no nose   // matte, no shine (Shelly Nov 12)
     m.colorNode = col;
     m.emissiveNode = col.mul(0.06).add(eye.mul(irisAmt.mul(pic.a).mul(inside).mul(front).mul(P("eyeGlow", 0).mul(3).add(0.35))));   // eyeGlow: an eye that shines on its own (Phoebe's white)   // a little glow so the iris reads in the dim yellow light
     m.roughness = 0.68;
