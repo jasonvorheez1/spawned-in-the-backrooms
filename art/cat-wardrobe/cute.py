@@ -11,17 +11,14 @@ for o in list(bpy.data.objects):
     if o.name.startswith("Icosphere"): bpy.data.objects.remove(o)
 sm = lambda t: 0 if t <= 0 else 1 if t >= 1 else t * t * (3 - 2 * t)
 TIP, BACK, MZ = -0.2485, -0.165, 0.795      # snout tip y, where the muzzle meets the face, muzzle centre height
+SC, SR = Vector((0, -0.150, 0.800)), 0.125   # the muzzle's root inside the face, and how far the pull reaches
 def snout(p):
-    if p.y > BACK or p.z < 0.70 or p.z > 0.90: return Vector()
-    t = (BACK - p.y) / (BACK - TIP)                        # 0 at the face, 1 at the tip
-    r = math.hypot(p.x / 0.11, (p.z - MZ) / (0.05 if p.z > MZ else 0.07))         # the muzzle's footprint
-    w = 1 - sm((r - 0.55) / 0.75)
-    if w <= 0: return Vector()
-    d = Vector((0, 0, 0))
-    d.y += (BACK - p.y) * 0.48 * w * sm(t * 2.2)                         # shorter
-    d.x += p.x * 0.10 * w * sm(1 - t)                      # cheeks a touch rounder
-    d.z += (MZ - p.z) * 0.18 * w * t                       # tip rounder, less pointy
-    return d
+    v = p - SC
+    if v.y > 0.01: return Vector()
+    q = v.length / SR
+    if q >= 1: return Vector()
+    w = (1 - sm(q)) * sm((-v.y) / 0.04)              # strongest at the tip, nothing at the cheeks and brow
+    return -v * 0.42 * w                              # every point pulled toward the root: a smaller, rounder button
 CX, CZ, AMP, SXW, SUP, SDN = 0.045, 0.528, 0.046, 0.034, 0.044, 0.034
 if CLOTH: AMP = 0.049
 def lobe(p, s):
@@ -41,6 +38,19 @@ for o in [o for o in bpy.data.objects if o.type == "MESH"]:
     mw = o.matrix_world; inv = mw.to_3x3().inverted()
     base = [v.co.copy() for v in me.vertices]
     disp = [inv @ snout(mw @ c) for c in base]
+    if o.name == "Head":
+        key = lambda c: (round(c.x, 5), round(c.y, 5), round(c.z, 5)); cl = {}; cid = [cl.setdefault(key(c), len(cl)) for c in base]
+        nbr = {}
+        for e in me.edges:
+            u, v2 = cid[e.vertices[0]], cid[e.vertices[1]]
+            if u != v2: nbr.setdefault(u, set()).add(v2); nbr.setdefault(v2, set()).add(u)
+        pos = {}; wt = {}
+        for i, c in enumerate(base):
+            pos[cid[i]] = c + disp[i]; q = ((mw @ c) - SC).length / (SR * 1.3); wt[cid[i]] = max(wt.get(cid[i], 0), 1 - sm(q))
+        sel = [c for c in pos if wt[c] > 0 and nbr.get(c)]
+        for _ in range(8):
+            pos.update({c: pos[c].lerp(sum((pos[j] for j in nbr[c]), Vector()) / len(nbr[c]), 0.45 * wt[c]) for c in sel})
+        for i in range(len(base)): disp[i] = pos[cid[i]] - base[i]
     if kb:
         old = {k.name: [d.co.copy() for d in k.data] for k in kb}
         for k in kb:
