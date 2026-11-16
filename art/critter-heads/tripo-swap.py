@@ -63,7 +63,7 @@ for v in tri.data.vertices:
 BB('scaled', [v.co for v in tri.data.vertices]); BB('old', OB); tri.data.update(); print("scale", round(s, 4))
 # Nov 16 Shelly: "move the head or adjust the body to visually make it fit" — the Tripo skull read too wide and sat on the
 # shoulders. Shrink it about the old neck base and lift it so a short neck shows between jaw and collar.
-HS = float(os.environ.get("HS", "0.84")); LIFT = float(os.environ.get("LIFT", "0.02"))
+HS = float(os.environ.get("HS", "1.1")); LIFT = float(os.environ.get("LIFT", "-0.035"))
 _oz = min(p.z for p in OB); _base = [p for p in OB if p.z < _oz + 0.03]
 piv = Vector((0, sum(p.y for p in _base) / len(_base), _oz))
 for v in tri.data.vertices: v.co = piv + (v.co - piv) * HS + Vector((0, 0, LIFT))
