@@ -124,9 +124,9 @@ export function material(ctx) {
     if (!ctx.params.faceless) col = mix(col, ctx.params.noseR != null ? C("nose") : vec3(0.07, 0.045, 0.045), noseM);
     // Nov 16 (Shelly: hair "weird up front"): white scalp showed between short locks; under a hairstyle the head above the hairline wears the hair's root colour
     if (ctx.params.scalp) {
-      const hv = P("scalpV", 0.71), wob = mx_noise_float(q.mul(vec3(90, 20, 90))).mul(0.035);
-      const sc = smoothstep(hv, hv.add(0.07), v.add(wob));
-      col = mix(col, C("scalp").mul(0.72), sc);
+      const hv = P("scalpV", 0.615), wob = mx_noise_float(q.mul(vec3(90, 20, 90))).mul(0.035);
+      const sc = smoothstep(hv, hv.add(0.025), v.add(wob));
+      col = mix(col, C("scalp").mul(0.62), sc);
     }   // the crew: no nose   // matte, no shine (Shelly Nov 12)
     m.colorNode = col;
     m.emissiveNode = col.mul(0.06).add(eye.mul(irisAmt.mul(pic.a).mul(inside).mul(front).mul(P("eyeGlow", 0).mul(3).add(0.35))));   // eyeGlow: an eye that shines on its own (Phoebe's white)   // a little glow so the iris reads in the dim yellow light
