@@ -38,7 +38,7 @@ def puff(i):
     p = W[i]; amt = 0
     for c in pads: d = p - c; amt += 0.013 * g(math.hypot(d.x, d.y, d.z * 0.45), 0.024)   # tall pads: upper and lower lip rise together, the mouth slit never opens at the corner
     for c in cheeks: amt += 0.008 * g((p - c).length, 0.036)
-    for sx in (-1, 1): amt += 0.005 * g((p - Vector((sx * 0.04, tip.y + 0.012, tip.z - 0.006))).length, 0.03)   # bridge pad→cheek, no crease
+    for sx in (): amt += 0.005 * g((p - Vector((sx * 0.04, tip.y + 0.012, tip.z - 0.006))).length, 0.03)   # bridge off: it folded a crease at the mouth corner; pads and cheeks overlap enough alone
     base = press(i, 0.3, 0.05)   # mochi: a shorter, wider dumpling muzzle...
     if amt < 1e-5: return base
     # push along the face's forward axis by position alone (no per-vertex normal): split lip/seam verts and both lips move as one, no tear
