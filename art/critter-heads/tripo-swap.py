@@ -93,9 +93,21 @@ SL = {m.name: i for i, m in enumerate(om.materials)}
 HF, IE = SL.get("headFur", 0), SL.get("innerEar", 1)
 zs_ = sorted(v.co.z for v in tri.data.vertices); ztop = zs_[-1]; zlo = zs_[0]
 EARZ = zlo + 0.66 * (ztop - zlo)   # the ears stand above the crown band
+# inner ear = the cup grown from each ear's tip through faces that face forward; a forehead patch never touches it
+OK = [f.center.z > EARZ and abs(f.center.x) > 0.07 and f.normal.y < -0.35 and abs(f.normal.x) < 0.75 for f in tri.data.polygons]
+EN = {}
+for e in tri.data.edges: EN.setdefault(tuple(sorted(e.vertices)), [])
 for f in tri.data.polygons:
-    c, n = f.center, f.normal
-    f.material_index = IE if (c.z > EARZ and abs(c.x) > 0.07 and n.y < -0.35 and abs(n.x) < 0.75) else HF
+    for k in f.edge_keys: EN.setdefault(k, []).append(f.index)
+TIPZ = EARZ + 0.55 * (ztop - EARZ)
+seen = set(i for i, f in enumerate(tri.data.polygons) if OK[i] and f.center.z > TIPZ); todo = list(seen)
+while todo:
+    i = todo.pop()
+    for k in tri.data.polygons[i].edge_keys:
+        for j in EN[k]:
+            if j not in seen and OK[j]: seen.add(j); todo.append(j)
+for f in tri.data.polygons:
+    f.material_index = IE if f.index in seen else HF
 print("innerEar faces", sum(1 for f in tri.data.polygons if f.material_index == IE), "EARZ", round(EARZ, 3))
 # weights: barycentric blend of the old triangle's vertex weights
 gname = {g.index: g.name for g in old.vertex_groups}
