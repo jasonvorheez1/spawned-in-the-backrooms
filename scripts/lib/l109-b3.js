@@ -28,6 +28,11 @@ export function stairDoorAt(seed) {
 }
 const RED = (on) => ({ kind: "point", color: "#ff3a26", intensity: on, distance: 9, shadow: { enabled: false } });
 const WARM = { kind: "point", color: "#ffe2b0", intensity: 1.6, distance: 9, shadow: { enabled: false } };
+// the cache log: Janine's cassette body with a masking-tape label in Ruiz's hand
+export function cacheTape(at) {
+  const kids = JANINE_TAPE.children.map((c, i) => i === 0 ? { ...c, material: { color: "oklch(0.86 0.04 85)", roughness: 0.95 }, ui: "<div face=\"front\" width=\"0.084m\" style=\"width:100%;height:100%;padding:1px 4px;font:10px Courier,monospace;color:#3a2f1c;line-height:1.1\">CACHE 109-C<br><span style=\"font-size:7px;color:#7a2a1a\">DAY 19 · DON'T TAPE OVER</span></div>" } : c);
+  return { ...JANINE_TAPE, children: kids, tags: ["usable"], feetPosition: at, castShadow: false, behavior: "scripts/b3-use.js", state: { kind: "b3-tape", name: "Cache tape", verb: "Play", info: "Ruiz, day 19" } };
+}
 export function buildB3(ctx, seed) {
   const sp = (id, spec) => ctx.spawn("b3-" + id, { audience: "all", ...spec, tags: ["l109-b3", ...(spec.tags ?? [])] });
   const hall = (id, at, w, d, walls, gaps, ch = 2.7) => sp(id, { feetPosition: P(at.x, 0, at.z), castShadow: false, physics: "none", material: { pbr: true },
@@ -81,7 +86,7 @@ export function buildB3(ctx, seed) {
     state: { items: "rockets,rockets,rockets,ammo", name: "M.E.G. munitions crate", verb: "Search", kind: "metal" } });
   sp("crate2", { tags: ["container"], feetPosition: P(-6.8, 0, 47.2), rotation: { yaw: -80 }, model: { id: CRATE }, layout: { box: { min: { x: -0.5, y: 0, z: -0.35 }, max: { x: 0.5, y: 0.65, z: 0.35 } } }, physics: "static",
     state: { items: "bandage,battery,ration", name: "M.E.G. field crate", verb: "Search", kind: "metal" } });
-  sp("tape", { tags: ["usable"], feetPosition: P(-6.4, 0.66, 46.0), castShadow: false, behavior: "scripts/b3-use.js", primitive: { kind: "box", width: 0.12, height: 0.03, depth: 0.08 }, material: { color: "#1b1b1b", roughness: 0.5 }, state: { kind: "b3-tape", name: "Tape", verb: "Play", info: "B3 cache log" } });
+  sp("tape", cacheTape(P(-6.4, 0.66, 46.0)));
   sp("table", { feetPosition: P(-6.4, 0, 46.2), physics: "static", primitive: { kind: "box", width: 1.4, height: 0.66, depth: 0.7 }, material: { color: "#55594a", metalness: 0.4, roughness: 0.6 } });
   sp("breaker", { tags: ["usable"], feetPosition: P(9.92, 1.35, 34.0), rotation: { yaw: yawFor(0, -1) }, castShadow: false, behavior: "scripts/b3-use.js",
     ...medLook({ part: "breaker" }),

@@ -13,7 +13,7 @@ import { spawnFoe } from "../../scripts/lib/l109-foes.js";
 import { buildRoom, roomLook } from "../../scripts/lib/l109-rooms.js";
 import { wandererTick, denOf, denLock, denLoad, denWatch, denUnload } from "../../scripts/lib/l109-wanderers.js";
 import { inside } from "../../scripts/lib/containment.js";
-import { buildB3, dressB3, placeLauncher, stairDoorAt, MORGUE, O as B3O, yawFor as yawB3 } from "../../scripts/lib/l109-b3.js";
+import { cacheTape, buildB3, dressB3, placeLauncher, stairDoorAt, MORGUE, O as B3O, yawFor as yawB3 } from "../../scripts/lib/l109-b3.js";
 import { heard } from "../../scripts/lib/hear.js";
 import { outpostLife } from "../../scripts/lib/l109-life.js";
 export const cadence = "500ms";
@@ -172,6 +172,7 @@ export function tick(ctx) {
     buildB3({ spawn: (id, spec) => { if (/^b3-cover[01]b?$/.test(id)) ctx.spawn(id, spec); } }, seed);
     dressB3(ctx); s.b3DressV = 3;
   }
+  if (s.b3TapeV !== 1 && ctx.place.objects["b3-hall"]) { s.b3TapeV = 1; if (ctx.getObject("b3-tape")) ctx.destroy("b3-tape"); ctx.spawn("b3-tape", { audience: "all", ...cacheTape({ x: B3O.x - 6.4, y: B3O.y + 0.66, z: B3O.z + 46.0 }), tags: ["l109-b3", "usable"] }); } // the black box became a cassette
   if (!s.b3gun) { s.b3gun = 1; placeLauncher(ctx); } // the M72 lies in the cage once in the room's life
   if (!ctx.place.objects["b3-stairdoor"]) { const d = stairDoorAt(seed); ctx.spawn("b3-stairdoor", { audience: "all", tags: ["usable", "l109-b3"], feetPosition: { x: d.x + 0.12, y: 0, z: d.z - DOOR_W / 2 }, rotation: { yaw: yawB3(0, 1) }, physics: { body: "static", collider: "box" }, material: { pbr: true }, behavior: "scripts/b3-use.js",
     primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "metal", part: "leaf", w: DOOR_W, h: DOOR_H, hingeSide: "left", swing: 1, seed: 5 } }, state: { kind: "b3-down", name: "Stairwell", verb: "Go Down", info: "B3" } });
