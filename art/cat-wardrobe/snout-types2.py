@@ -47,4 +47,37 @@ for name, fn in (("Snout_Flat", flat), ("Snout_Puff", puff)):
     for i in range(len(B)):
         d = fn(i); mx = max(mx, d.length); k.data[i].co = B[i] + inv @ d
     print("KEY", name, round(mx, 4))
+# the guide's "muzzle CONNECTS and contours": relax the crease where the muzzle meets brow and cheeks, on every key alike
+# (welded by position so UV-split verts move together; mask = a band around the muzzle rim, front of the face only)
+from collections import defaultdict
+grp = defaultdict(list)
+for i, p in enumerate(W): grp[(round(p.x, 5), round(p.y, 5), round(p.z, 5))].append(i)
+gid = {}; G = list(grp.values())
+for g_, idx in enumerate(G):
+    for i in idx: gid[i] = g_
+nb = defaultdict(set)
+for e in me.edges:
+    a_, b_ = gid[e.vertices[0]], gid[e.vertices[1]]
+    if a_ != b_: nb[a_].add(b_); nb[b_].add(a_)
+def mask(p):
+    v = p - SC
+    if v.y > 0.03: return 0
+    side = math.hypot(v.x / 0.085, v.z / 0.075)
+    return (1 - sm(abs(side - 1.0) / 0.55)) * (1 - sm((v.y + 0.0) / 0.03))
+M = [mask(W[idx[0]]) for idx in G]
+act = [g_ for g_ in range(len(G)) if M[g_] > 0.02]
+print("RELAX verts", len(act))
+for k in kb:
+    P = [k.data[idx[0]].co.copy() for idx in G]
+    for it in range(14):
+        Q = P[:]
+        for g_ in act:
+            n = nb[g_]
+            if not n: continue
+            avg = sum((P[j] for j in n), Vector()) / len(n)
+            Q[g_] = P[g_].lerp(avg, 0.5 * M[g_])
+        P = Q
+    for g_ in act:
+        for i in G[g_]: k.data[i].co = P[g_]
+for i, v in enumerate(me.vertices): v.co = kb["Basis"].data[i].co
 bpy.ops.export_scene.gltf(filepath=OUT, export_format="GLB", export_apply=False, export_animations=False, export_morph=True, export_skins=True, export_image_format="JPEG")
