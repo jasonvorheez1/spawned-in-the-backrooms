@@ -39,11 +39,15 @@ def blob(p, c, r):  # soft ellipsoid falloff, r = (rx, ry, rz)
     return 0.0 if d >= 1 else (1 - d * d) ** 2
 
 if DEFORM:
-    HEAD = ["Head"]
-    # 1. limbs slimmer: shrink each limb vertex toward its bone axis, blended by its weights (feet and hands untouched)
-    LIMB = {"LeftArm": .9, "RightArm": .9, "LeftForeArm": .9, "RightForeArm": .9, "LeftUpLeg": .93, "RightUpLeg": .93, "LeftLeg": .9, "RightLeg": .9}
-    seg = {n: (B(n), T(n)) for n in LIMB}
+    # Tripo's mesh is split at UV seams: every edit runs on welded positions so a seam can never open into a tear
+    rep = {}; R_ = [0] * N
     for i in range(N):
+        k = (round(P[i].x, 6), round(P[i].y, 6), round(P[i].z, 6)); R_[i] = rep.setdefault(k, i)
+    U = sorted(set(R_))
+    # 1. limbs slimmer: shrink toward each bone axis by its weights; thighs kept round, calves and arms leaner (hands and feet untouched)
+    LIMB = {"LeftArm": .9, "RightArm": .9, "LeftForeArm": .9, "RightForeArm": .9, "LeftUpLeg": .96, "RightUpLeg": .96, "LeftLeg": .91, "RightLeg": .91}
+    seg = {n: (B(n), T(n)) for n in LIMB}
+    for i in U:
         p = P[i]; d = Vector()
         for n, s in LIMB.items():
             w = W[i].get(n, 0)
@@ -51,66 +55,62 @@ if DEFORM:
             a, b = seg[n]; ab = b - a; u = max(0, min(1, (p - a).dot(ab) / ab.length_squared)); q = a + ab * u
             d += (q + (p - q) * s - p) * w
         P[i] = p + d
-    # 2. waist a touch narrower (anime slim), ribcage held
-    for i in range(N):
+    # 2. waist a touch narrower
+    for i in U:
         p = P[i]; k = blob(p, (0, 0, 0.555), (0.2, 0.2, 0.08)) * (1 - wsum(i, ["LeftUpLeg", "RightUpLeg", "LeftArm", "RightArm"]))
-        p.x *= 1 - 0.08 * k
-    # 3. outer hips: round the corner — pull the widest hip ring in a bit, carry it down the thigh so the curve is one arc
-    for i in range(N):
-        p = P[i]; ax = abs(p.x)
-        if ax < 0.05: continue
+        p.x *= 1 - 0.07 * k
+    # 3. outer hips: one soft arc from waist to thigh, no corner
+    for i in U:
+        p = P[i]
+        if abs(p.x) < 0.05: continue
         k = blob(p, (math.copysign(0.105, p.x), 0.0, 0.43), (0.06, 0.12, 0.07))
-        p.x -= math.copysign(0.012 * k, p.x)
-    # 4. bust: lift and round — move breast tissue up and slightly forward at the top, tuck the underside
-    for i in range(N):
+        p.x -= math.copysign(0.008 * k, p.x)
+    # 4. bust: high and round: the front of each breast eased onto a sphere set higher than the old cone, so the tip softens and the underside fills
+    for i in U:
         p = P[i]
         for sx in (-1, 1):
-            c = (sx * 0.033, -0.045, 0.615)
-            k = blob(p, c, (0.045, 0.05, 0.055))
-            if k <= 0: continue
-            under = ss(0.63, 0.585, p.z)   # 1 at the lower half
-            p.z += 0.018 * k
-            p.y += 0.006 * k * under    # tuck the sag back
-    # 5. head: bigger and rounder skull (anime proportions); scaled about the head centre by the Head weight
-    hc = Vector((0.0, 0.01, 0.865))
-    for i in range(N):
+            c = Vector((sx * 0.034, -0.012, 0.628)); k = blob(p, (sx * 0.034, -0.04, 0.615), (0.05, 0.05, 0.06))
+            if k <= 0 or p.y > -0.005: continue
+            d = p - c; tgt = c + d.normalized() * 0.043
+            P[i] = p + (tgt - p) * 0.75 * k
+    # 5. head: bigger, rounder skull for anime proportions (wider more than taller so the ears stay near 1 m)
+    hc = Vector((0.0, 0.02, 0.875))
+    for i in U:
         w = W[i].get("Head", 0)
         if w <= 0: continue
-        p = P[i]; P[i] = hc + (p - hc) * (1 + 0.1 * w)
-    # 6. snout: shorter, softer; pull the tip back, round it into the cheeks
-    sc = Vector((0.0, -0.1, 0.8)) ; 
-    for i in range(N):
+        p = P[i]; d = p - hc; f = 0.09 * w
+        P[i] = hc + Vector((d.x * (1 + f), d.y * (1 + f), d.z * (1 + f * 0.35)))
+    # 6. snout: shorter and softer, the chin small and tucked, the cheeks fuller so the muzzle contours into them
+    for i in U:
         p = P[i]
-        k = blob(p, (0, -0.105, 0.795), (0.06, 0.07, 0.05))
-        if k <= 0: continue
-        p.y += 0.024 * k
-    for i in range(N):  # cheeks fuller so the muzzle contours into them
-        p = P[i]
+        k = blob(p, (0, -0.108, 0.8), (0.06, 0.075, 0.055)); p.y += 0.03 * k
+        k = blob(p, (0, -0.075, 0.772), (0.045, 0.05, 0.03)); p.y += 0.012 * k; p.z += 0.006 * k
         for sx in (-1, 1):
-            k = blob(p, (sx * 0.06, -0.065, 0.8), (0.04, 0.05, 0.045))
-            p.x += sx * 0.006 * k; p.y -= 0.006 * k
-    # 7. relax: a few weighted Laplacian passes over the edited regions so nothing reads as a dent
-    nb = [[] for _ in range(N)]
-    for e in me.edges: a, b = e.vertices; nb[a].append(b); nb[b].append(a)
+            k = blob(p, (sx * 0.06, -0.06, 0.8), (0.04, 0.05, 0.045)); p.x += sx * 0.005 * k; p.y -= 0.005 * k
+    # 7. relax on the welded graph over the edited regions
+    nb = {i: set() for i in U}
+    for e in me.edges:
+        a, b = R_[e.vertices[0]], R_[e.vertices[1]]
+        if a != b: nb[a].add(b); nb[b].add(a)
     def relax(mask, it, f=0.5):
         for _ in range(it):
-            Q = [p.copy() for p in P]
-            for i in range(N):
+            Q = {i: P[i].copy() for i in U}
+            for i in U:
                 m = mask[i]
                 if m <= 0 or not nb[i]: continue
                 avg = sum((Q[j] for j in nb[i]), Vector()) / len(nb[i])
                 P[i] = Q[i] + (avg - Q[i]) * f * m
-    mask = [max(blob(p, (0, -0.1, 0.8), (0.08, 0.08, 0.06)), blob(p, (0.105, 0, 0.43), (0.07, 0.12, 0.08)), blob(p, (-0.105, 0, 0.43), (0.07, 0.12, 0.08)),
-                blob(p, (0.033, -0.045, 0.61), (0.06, 0.06, 0.07)), blob(p, (-0.033, -0.045, 0.61), (0.06, 0.06, 0.07))) for p in P]
+    mask = {i: max(blob(P[i], (0, -0.09, 0.8), (0.08, 0.08, 0.06)), blob(P[i], (0.1, 0, 0.43), (0.07, 0.12, 0.08)), blob(P[i], (-0.1, 0, 0.43), (0.07, 0.12, 0.08)),
+                blob(P[i], (0.034, -0.04, 0.615), (0.06, 0.06, 0.07)), blob(P[i], (-0.034, -0.04, 0.615), (0.06, 0.06, 0.07))) for i in U}
     relax(mask, 6, 0.45)
-    # 8. feet back on y 0
-    mz = min(p.z for p in P)
-    for i in range(N): me.vertices[i].co = P[i] - Vector((0, 0, mz))
+    # 8. feet back on 0, seams welded shut again
+    mz = min(P[i].z for i in U)
+    for i in range(N): me.vertices[i].co = P[R_[i]] - Vector((0, 0, mz))
     me.update()
 
 # --- proofs ---
 sc = bpy.context.scene; sc.render.engine = "BLENDER_EEVEE"
-sc.render.resolution_x = 600; sc.render.resolution_y = 900
+sc.render.resolution_x = 440; sc.render.resolution_y = 660
 w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[1].default_value = 0.9
 w.node_tree.nodes["Background"].inputs[0].default_value = (0.25, 0.25, 0.27, 1)
 cam = bpy.data.objects.new("c", bpy.data.cameras.new("c")); sc.collection.objects.link(cam); sc.camera = cam
@@ -121,10 +121,10 @@ def shot(name, ang, mid, dist, lens=50, el=0.0):
     L.rotation_euler = (math.radians(55), 0, ang + math.radians(25))
     sc.render.filepath = f"{OUT}/{name}.png"; bpy.ops.render.render(write_still=True)
 tag = "v" if DEFORM else "r"
+for nm, a in (("front", 0), ("q", math.radians(35)), ("side", math.radians(90))):
+    shot(f"{tag}_h_{nm}", a, 0.86, 0.7)
 for nm, a in (("front", 0), ("q", math.radians(35)), ("side", math.radians(90)), ("back", math.pi)):
-    shot(f"{tag}_b_{nm}", a, 0.5, 2.6)
-    shot(f"{tag}_h_{nm}", a, 0.86, 0.75)
-    shot(f"{tag}_t_{nm}", a, 0.55, 1.1)
+    shot(f"{tag}_t_{nm}", a, 0.55, 1.25)
 
 if DEFORM:
     g = lambda v: [round(v.x, 4), round(v.z, 4), round(-v.y, 4)]
