@@ -111,10 +111,10 @@ for k in kb[1:]:
         dd = Vector()
         for wt, oi in zip(bary(fi, loc), TRIS[fi][0]): dd += D[oi] * wt
         nk.data[vi].co = NV[vi] + dd
-# seat it where the old head was: same parent, skin, name
-oldname = old.name; bpy.data.objects.remove(old); tri.name = oldname; tri.data.name = oldname
-tri.parent = arm; tri.matrix_parent_inverse = arm.matrix_world.inverted()
-tri.modifiers.new("skin", "ARMATURE").object = arm
+# seat it where the old head was: the old object keeps its parent, skin modifier and groups; only its mesh is swapped
+tri.data.transform(omw.inverted(), shape_keys=True)
+newme = tri.data; oldname = old.name
+bpy.data.objects.remove(tri); old.data = newme; newme.name = oldname; tri = old
 print("faces", len(tri.data.polygons), "verts", len(tri.data.vertices), "keys", [k.name for k in tri.data.shape_keys.key_blocks])
 bpy.ops.object.select_all(action="SELECT")
 bpy.ops.export_scene.gltf(filepath=OUT, export_apply=False, export_skins=True, export_morph=True, export_animation_mode="ACTIONS", export_yup=True)
