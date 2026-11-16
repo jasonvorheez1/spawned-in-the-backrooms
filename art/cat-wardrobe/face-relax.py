@@ -51,10 +51,10 @@ print("front", FRONT, "nose", NOSE)
 ctr = Vector((sum(xs)/len(xs), sum(ys)/len(ys), 0))
 def zone(p):
   t = (p.z - z0) / H
-  if (p - NOSE).length < 0.075: return 0.0                             # the approved snout stays as it is
+  d = (p - NOSE).length                                                # the approved button snout keeps its core; its edge melts into the cheek
+  soft = min(1.0, max(0.0, (d - 0.03) / 0.06)); soft = soft*soft*(3 - 2*soft)
   band = 0.06 < t < 0.66                                               # the dented band round the face and cheeks
-  ear = t > 0.80
-  return 1.0 if band else 0.0                                  # ears: smoothing pinched the inner cup, left as sculpted
+  return soft if band else 0.0                                  # ears: smoothing pinched the inner cup, left as sculpted
 wgt = [zone(p) for p in P]
 earv = set(g for g, m in enumerate(members) for k in kbs if k.name.startswith("Ear_") and (k.data[m[0]].co - kbs["Basis"].data[m[0]].co).length > 1e-5)
 for _ in range(3): earv |= set(j for i in list(earv) for j in nb[i])   # the ear and two rings round its root stay as sculpted
