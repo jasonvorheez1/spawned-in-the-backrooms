@@ -236,7 +236,7 @@ def run(body, ZONES, DOC, a):
     sk.hole = np.zeros_like(sk.hole)
     # the tail's exit: where tail skin pokes out past the bell, open the cloth (one ring and column of margin) so the tail
     # passes through a clean hole instead of clipping through the fabric
-    TAILV = np.array([sum(w for k, w in vw.items() if 'tail' in k.lower()) >= 0.2 for vw in VW])
+    TAILV = np.array([sum(w for k, w in vw.items() if 'tail' in k.lower()) >= 0.6 for vw in VW])   # the tail itself, not the rump it blends into
     if TAILV.any():
         TV = V[TAILV]
         for i, g in enumerate(sk.rings):
@@ -244,11 +244,10 @@ def run(body, ZONES, DOC, a):
             if not m.any(): continue
             Rl = rel[m].copy(); Rl[:, 2] = 0; Lt = np.linalg.norm(Rl, axis=1) + 1e-9
             for j, d in enumerate(g['dirs']):
-                cone = (Rl @ d) / Lt > 0.94
-                if cone.any() and Lt[cone].max() > R[i, j] - 0.01 * S: sk.hole[i, j] = True
+                cone = (Rl @ d) / Lt > 0.985
+                if cone.any() and Lt[cone].max() > R[i, j] + 0.004 * S: sk.hole[i, j] = True
         h = sk.hole.copy()
-        for di in (-1, 0, 1):
-            for dj in (-1, 0, 1): h |= np.roll(np.roll(sk.hole, di, 0), dj, 1)
+        for dj in (-1, 1): h |= np.roll(sk.hole, dj, 1)   # one column of margin each side, no extra rows
         sk.hole = h
         print('BODYWORKS T1 skirt tail hole cells', int(sk.hole.sum()))
     # ---------- NECK ----------
