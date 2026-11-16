@@ -194,6 +194,11 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
     if (t.includes("page 413") && !q) {
       if (repOf(s, "survivors") <= -35) return { reply: "The road remembers who broke faith with wanderers, traveller. Walk awhile elsewhere.", mood: "angry" };
       setStep61(ctx, p, "guild", 1, "Quest Started: Four Hundred and Thirteen · Climb through the east suction vent and inspect the Level 3 grille plate");
+      if (s.l61L3Seen) {
+        if (!s.l61L3Logged) { s.l61L3Logged = 1; queuePayout(s, { xp: 25 }); }
+        setStep61(ctx, p, "guild", 2, "Four Hundred and Thirteen · You already inspected the Level 3 grille plate. Survey the Level 4 vending drop.");
+        return { reply: "You've seen the chalk plate beneath the Level 3 grille? Good. Then ride the lift to Level 4 and record how its office vending drop spills wanderers through our stock wall. Return with truth, not guesswork.", mood: "calm" };
+      }
       return { reply: "Four hundred and twelve thresholds fill the Book, yet two beside this very kitchen stay rumors. Go down the east suction vent to Level 3 and touch the Guild chalk plate beneath the grille. Then ride the lift to Level 4 to record how its office vending drop spills wanderers through our stock wall. Return with truth, not guesswork.", mood: "calm" };
     }
     if ((t.includes("book of ways: page 413") || t.includes("mark b4 one-way")) && q === 3) {

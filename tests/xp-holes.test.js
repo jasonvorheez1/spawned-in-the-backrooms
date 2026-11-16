@@ -55,6 +55,7 @@ function makePlayerCtx(state, objects = {}, extra = {}) {
   const ctx = {
     self,
     session: {},
+    world: { date: 0 },
     place: { id: self.place, players: [self], objects, state: {}, gravity: { y: -20 } },
     now: () => now,
     advance: (ms) => { now += ms },
@@ -95,6 +96,32 @@ test('OS terminal unlock only awards +30 XP once per host even after alarm re-lo
   os.onInput(ctx, { pressed: { os: true }, actionData: { os: { k: 'hack' } } })
   os.onInput(ctx, { pressed: { os: true }, actionData: { os: { k: 'hack_guess', v: s.os.hack.targetWord } } })
   expect(s.xp).toBe(xpAfterFirst)
+})
+
+test('Sedco shift note unlocks its terminal only after the player reads it', async () => {
+  const { ears } = await import('../scripts/quest-prop-use.js')
+  const { osUi } = await import('../scripts/os-ui.js')
+  const term = { id: 'term1', feetPosition: { x: 0, y: 0, z: 0 }, state: { host: 'SEDCO-SEC-01', lock: 'science:10' } }
+  const s = baseState({ os: { id: 'term1', host: 'SEDCO-SEC-01', lock: 'science:10', user: 'guest', app: 'login', at: 1000, term: [] } })
+  const ctx = makePlayerCtx(s, { term1: term })
+  const action = () => os.onInput(ctx, { pressed: { os: true }, actionData: { os: { k: 'sedco-note' } } })
+  expect(osUi(ctx, ctx.self)).not.toContain('Use password from shift note')
+  action()
+  expect(s.os.user).toBe('guest')
+  const note = { id: 'note', state: { kind: 'l11-sedco-note' }, feetPosition: { x: 0, y: 1, z: 0 } }
+  ears.press({ ...ctx, self: note, getObject: id => id === ctx.self.id ? ctx.self : term }, { by: ctx.self.id })
+  expect(s.reading).toBe(1102)
+  expect(osUi(ctx, ctx.self)).toContain('Use password from shift note')
+  action()
+  expect(s.os.user).toBe('admin')
+  expect(s.os.app).toBe('ctrl')
+  const xp = s.xp
+  s.os = { id: 'term1', host: 'SEDCO-SEC-01', lock: 'science:10', user: 'guest', app: 'login', term: [] }
+  action()
+  expect(s.xp).toBe(xp)
+  s.os = { id: 'term1', host: 'BETA-01', lock: 'science:10', user: 'guest', app: 'login', term: [] }
+  action()
+  expect(s.os.user).toBe('guest')
 })
 
 test('Boiler door lockpicking awards XP only once per save and unlocked locks cannot re-pay', () => {

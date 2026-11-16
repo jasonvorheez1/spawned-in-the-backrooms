@@ -118,6 +118,7 @@ export function osUi(ctx, player) {
     body = `<div class="login">${chrome('Welcome to Back OS', `<div style="padding:14px 16px;background:#c0c0c0"><div style="display:flex;gap:14px;align-items:center">${LOGO(1)}<div style="font-size:13px"><b>${esc(O.profiles[PROFILE(os.host)].owner)}</b><br>${esc(os.host)}<br><span style="color:#444">This machine asks for a password.</span></div></div>
       <div style="margin:12px 0 4px;font-size:12px">Password:</div><input id="pw" type="password" data-interactive autocomplete="off" maxlength="40" onkeydown="if(event.key==='Enter')${A({ k: 'pw', v: '__PW__' }).replace("'__PW__'", 'this.value')}">
       ${os.err ? `<div style="color:#a00;font-size:12px;margin-top:6px">${esc(os.err)}</div>` : ''}
+      ${os.host === 'SEDCO-SEC-01' && s.sedcoNote ? `<button class="btn" onclick="${A({ k: 'sedco-note' })}">Use password from shift note</button>` : ''}
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="btn" onclick="${A({ k: 'hack' })}">Hack...</button><button class="btn" onclick="${A({ k: 'login' })}">Guest</button><button class="btn" onclick="${A({ k: 'close' })}">Shut down</button></div></div>`)}</div>`
   } else if (os.app === 'hack' && os.hack) {
     const h = os.hack

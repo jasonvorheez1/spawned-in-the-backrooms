@@ -1,4 +1,15 @@
 # spawn-scene v2 yaml x0z0
+l11-sedco-shift-note:
+  behavior: scripts/quest-prop-use.js
+  castShadow: false
+  feetPosition: {x: 15.65, y: 1.095, z: 12.68}
+  id: l11-sedco-shift-note
+  material: {color: "#d8cda9", roughness: 0.95}
+  physics: none
+  primitive: {kind: box, width: 0.24, height: 0.008, depth: 0.17}
+  rotation: {yaw: -10}
+  state: {kind: l11-sedco-note, name: Folded shift note, verb: Read}
+  tags: [usable]
 l11-footbridge:
   feetPosition: {x: 42, y: 0, z: -30}
   id: l11-footbridge

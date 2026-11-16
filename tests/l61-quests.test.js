@@ -178,6 +178,24 @@ test('Four Hundred and Thirteen: Level 3 plate prop -> Base Omega -> Guild [Surv
   expect(say61(mkCtx(), mCopy, 'l61-guild-a', "How's Page 413 holding up in the Book?").mood).toBe('annoyed')
 })
 
+test('reading the Level 3 survey plate early records it without starting a quest', () => {
+  const s = { payout: { xp: 10, items: ['bandage'] } }, p = player(s)
+  const plate = { state: { kind: 'l3-guild-plate' }, feetPosition: { x: 2, y: 0, z: 2 } }
+  const c = mkCtx(0.5, { self: plate, objects: { p } })
+  propEars.press(c, { by: 'p' })
+  expect(s.reading).toBe(1103)
+  expect(s.l61GuildQ).toBeUndefined()
+  expect(s.l61L3Seen).toBe(true)
+  say61(mkCtx(), s, 'l61-guild-a', 'If 412 ways are written, what belongs on Page 413?')
+  expect(s.l61GuildQ).toBe(2)
+  expect(s.quests['four-hundred-and-thirteen'].mark.id).toBe('omega-okafor')
+  expect(s.payout.xp).toBe(35)
+  expect(s.payout.items).toContain('bandage')
+  propEars.press(c, { by: 'p' })
+  expect(s.payout.xp).toBe(35)
+  expect(s.pages.split(',').filter(x => x === '1103')).toHaveLength(1)
+})
+
 test('Camp Amber responds to Page 413 and can warn travellers after the M.E.G. sale', async () => {
   const { ears: hubEars } = await import('../scripts/hub-thing.js')
   const warning = 'I sold the survey to the M.E.G. Can Amber still warn people about B4?'

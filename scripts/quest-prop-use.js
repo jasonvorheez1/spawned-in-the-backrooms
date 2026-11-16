@@ -2,9 +2,15 @@
 import { heard } from "./lib/hear.js";
 import { setStep61 } from "./lib/level61-quests.js";
 import { setStep1 } from "./lib/level1-quests.js";
+import { queuePayout } from "./lib/quests.js";
 import { kick } from "./lib/use-kick.js";
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
+function readPage(w, id) {
+  const pages = String(w.pages ?? "").split(",").filter(Boolean);
+  if (!pages.includes(String(id))) { pages.push(String(id)); w.pages = pages.join(","); }
+  w.reading = id;
+}
 
 export const ears = {
   press: (ctx, { by }) => {
@@ -16,22 +22,29 @@ export const ears = {
     if (s.kind === "l1-ration-note") {
       kick(ctx, ctx.self, "flutter", { d: 0.4 });
       heard(ctx, { clip: G("paper-flip-card-stand"), position: pos, volume: 0.45, maxDistance: 10 });
-      const pages = String(w.pages ?? "").split(",").filter(Boolean);
-      if (!pages.includes("1101")) { pages.push("1101"); w.pages = pages.join(","); }
-      w.reading = 1101;
+      readPage(w, 1101);
       w.rationsClue = true;
       if (w.rationsQ === 1) setStep1(ctx, who, "rations", 2, "The note under Callum's supply count names Ale. Ask her about the missing cans.");
       return;
     }
 
+    if (s.kind === "l11-sedco-note") {
+      kick(ctx, ctx.self, "flutter", { d: 0.4 });
+      heard(ctx, { clip: G("paper-flip-card-stand"), position: pos, volume: 0.45, maxDistance: 10 });
+      readPage(w, 1102);
+      w.sedcoNote = true;
+      return;
+    }
+
     if (s.kind === "l3-guild-plate") {
       heard(ctx, { clip: G("paper-flip-card-stand"), position: pos, volume: 0.45, maxDistance: 10 });
+      readPage(w, 1103);
+      w.l61L3Seen = true;
       if (w.l61GuildQ === 1) {
-        if (!w.l61L3Logged) { w.l61L3Logged = 1; w.payout = { xp: 25, items: [] }; }
+        if (!w.l61L3Logged) { w.l61L3Logged = 1; queuePayout(w, { xp: 25 }); }
         setStep61(ctx, who, "guild", 2, "Four Hundred and Thirteen · Logged Level 3 suction grille · Ride the lift to Level 4's break room");
         return;
       }
-      note("GUILD OF MANY · WAY #412B: Suction vent from the Snackrooms drops above the Level 2 bulkhead. One-way unless crawled back.");
       return;
     }
 
