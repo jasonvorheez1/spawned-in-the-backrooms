@@ -90,6 +90,9 @@ if DEFORM:
         if k <= 0: continue
         d = p - mc; tgt = mc + d.normalized() * 0.039
         P[i] = p + (tgt - p) * 0.7 * k
+    for i in U:  # a small chin: the jaw corners drawn in under the round skull
+        p = P[i]; k = blob(p, (0, -0.04, 0.755), (0.11, 0.07, 0.035))
+        p.x *= 1 - 0.13 * k
     for i in U:
         p = P[i]
         for sx in (-1, 1):
@@ -110,6 +113,7 @@ if DEFORM:
     mask = {i: max(blob(P[i], (0, -0.07, 0.79), (0.08, 0.07, 0.07)), blob(P[i], (0.1, 0, 0.43), (0.07, 0.12, 0.08)), blob(P[i], (-0.1, 0, 0.43), (0.07, 0.12, 0.08)),
                 blob(P[i], (0.036, -0.04, 0.635), (0.06, 0.06, 0.07)), blob(P[i], (-0.036, -0.04, 0.635), (0.06, 0.06, 0.07))) for i in U}
     relax(mask, 6, 0.45)
+    relax({i: max(blob(P[i], (0.036, -0.055, 0.64), (0.025, 0.03, 0.025)), blob(P[i], (-0.036, -0.055, 0.64), (0.025, 0.03, 0.025))) for i in U}, 8, 0.5)
     # 8. feet back on 0, seams welded shut again
     mz = min(P[i].z for i in U)
     for i in range(N): me.vertices[i].co = P[R_[i]] - Vector((0, 0, mz))
