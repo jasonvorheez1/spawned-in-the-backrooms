@@ -70,14 +70,14 @@ for o in [o for o in bpy.data.objects if o.type == "MESH"]:
             if u != v2: nbr.setdefault(u, set()).add(v2); nbr.setdefault(v2, set()).add(u)
         pos = {}; wt = {}
         for i, c in enumerate(base):
-            q = mw @ c; t = math.exp(-0.5 * ((q.z - 0.30) / 0.075) ** 2) * sm((abs(q.x) - 0.05) / 0.05)
+            q = mw @ c; t = math.exp(-0.5 * ((q.z - 0.30) / 0.09) ** 2) * sm((abs(q.x) - 0.04) / 0.05)
             pos[cid[i]] = c + disp[i]; wt[cid[i]] = max(wt.get(cid[i], 0), t)
         sel = [c for c in pos if wt[c] > 0.02 and nbr.get(c)]
-        for _ in range(8):
+        for _ in range(20):
             avg = {c: sum((pos[j] for j in nbr[c]), Vector()) / len(nbr[c]) for c in sel}
-            pos.update({c: pos[c].lerp(avg[c], 0.5 * wt[c]) for c in sel})
+            pos.update({c: pos[c].lerp(avg[c], 0.6 * wt[c]) for c in sel})
             avg = {c: sum((pos[j] for j in nbr[c]), Vector()) / len(nbr[c]) for c in sel}
-            pos.update({c: pos[c].lerp(avg[c], -0.53 * wt[c]) for c in sel})   # Taubin: rounds without shrinking the thigh
+            pos.update({c: pos[c].lerp(avg[c], -0.64 * wt[c]) for c in sel})   # Taubin: rounds without shrinking the thigh
         for i in range(len(base)): disp[i] = pos[cid[i]] - base[i]
     if o.name == "Head":
         key = lambda c: (round(c.x, 5), round(c.y, 5), round(c.z, 5)); cl = {}; cid = [cl.setdefault(key(c), len(cl)) for c in base]
