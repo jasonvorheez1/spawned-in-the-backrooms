@@ -4,6 +4,7 @@
 # nearest-surface deltas. Scaled to the old skull width so hats and hair seat where they did.
 # usage: blender -b --factory-startup --python-exit-code 1 --python tripo-swap.py -- <body.glb> <tripo.glb> <out.glb> <proofdir> [faces]
 import bpy, sys, os, bmesh
+def BB(tag, Q): Q=list(Q); print('BB', tag, len(Q), [round(min(p[i] for p in Q),3) for i in range(3)], [round(max(p[i] for p in Q),3) for i in range(3)])
 from mathutils import Vector, Matrix
 from mathutils.bvhtree import BVHTree
 from mathutils.geometry import barycentric_transform
@@ -59,7 +60,8 @@ twid = max(p.x for p in P if p.z < zl) - min(p.x for p in P if p.z < zl)
 s = wid / max(ext(0) * 0.0 + twid, 1e-6)
 for v in tri.data.vertices:
     p = v.co; v.co = Vector((tip.x + (p.x - ttip.x) * s, tip.y + (p.y - ttip.y) * s, tip.z + (p.z - ttip.z) * s))
-tri.data.update(); print("scale", round(s, 4))
+BB('scaled', [v.co for v in tri.data.vertices]); BB('old', OB); tri.data.update(); print("scale", round(s, 4))
+BB('pre-clean', [v.co for v in tri.data.vertices])
 # clean: weld, decimate to budget, smooth
 bpy.context.view_layer.objects.active = tri; tri.select_set(True)
 bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.mesh.remove_doubles(threshold=0.0004); bpy.ops.object.mode_set(mode="OBJECT")
@@ -70,6 +72,7 @@ for u in list(tri.data.uv_layers): tri.data.uv_layers.remove(u)
 NEWUV = {n: tri.data.uv_layers.new(name=n) for n in UVL}
 tri.data.materials.clear()
 for m in om.materials: tri.data.materials.append(m)
+BB('cleaned', [v.co for v in tri.data.vertices])
 # per new vertex: nearest old triangle
 def near(p):
     loc, nrm, fi, d = bvh.find_nearest(p); return fi, loc
@@ -111,6 +114,7 @@ for k in kb[1:]:
         dd = Vector()
         for wt, oi in zip(bary(fi, loc), TRIS[fi][0]): dd += D[oi] * wt
         nk.data[vi].co = NV[vi] + dd
+BB('keyed', [v.co for v in tri.data.vertices]); BB('omw', [omw.translation]); print('omw', omw)
 # seat it where the old head was: the old object keeps its parent, skin modifier and groups; only its mesh is swapped
 tri.data.transform(omw.inverted(), shape_keys=True)
 newme = tri.data; oldname = old.name
