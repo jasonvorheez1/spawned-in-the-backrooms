@@ -1695,6 +1695,11 @@ bm-shell:
   receiveShadow: true
   state: {floor: terrazzo polished mall floor}
   tags: [bonus-mall]
+bonus-air:
+  audience: all
+  feetPosition: {x: 0, y: 0, z: 0}
+  fx: {script: "fx follow=camera\npop motes n=?mobile:50|120 on=box(<16,5,16>) wrap=16;5;16 size=.008..0.02 v=sdir()*.03 acc=curl(.1)*.06+drag(.6) col=<1,.9,.95> a=(.15..0.4)*flick(.3,.4) sz=$size r=sprite(soft-disc,add)"}
+  id: bonus-air
 bonus-ctr-clothes:
   behavior: scripts/bonus-counter.js
   feetPosition: {x: -19.4, y: 0, z: 18.5}
