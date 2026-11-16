@@ -1,0 +1,86 @@
+{
+  "name": "advanced-transform",
+  "displayName": "Advanced Transform",
+  "description": "A slim transform gizmo with Unity-style modes (E move, R rotate, T scale) on whatever you select in god mode: global or local XYZ move arrows, rotate rings with an arc grabber under the cursor and adjustable thickness, a white four-way free-move pad that can ride surfaces, End snaps to the floor, Home realigns to default orientation, per-axis and uniform scale cubes (ctrl mid-drag snaps). Ctrl+click builds a group that moves, turns, scales and deletes together; Del deletes the group; Ctrl+C / Ctrl+V copy and paste a piece or a whole group.",
+  "tags": [
+    "editor",
+    "transform",
+    "authoring"
+  ],
+  "visibility": "public",
+  "version": "2.7.0",
+  "inputs": {
+    "actions": {
+      "alt": {
+        "keys": [
+          "alt"
+        ]
+      },
+      "copy": {
+        "keys": [
+          "c"
+        ]
+      },
+      "ctrl": {
+        "keys": [
+          "ctrl"
+        ]
+      },
+      "floor": {
+        "keys": [
+          "end"
+        ]
+      },
+      "paste": {
+        "keys": [
+          "v"
+        ]
+      },
+      "marquee": {
+        "mouse": "left"
+      },
+      "realign": {
+        "keys": [
+          "home"
+        ]
+      },
+      "setSnap": {},
+      "toolMove": {
+        "keys": [
+          "e"
+        ]
+      },
+      "toolScale": {
+        "keys": [
+          "t"
+        ]
+      },
+      "setEnabled": {},
+      "toolRotate": {
+        "keys": [
+          "r"
+        ]
+      },
+      "ungroupOne": {},
+      "groupDelete": {
+        "keys": [
+          "delete"
+        ]
+      }
+    }
+  },
+  "attach": [
+    {
+      "target": {
+        "kind": "god"
+      },
+      "behavior": "god.js"
+    }
+  ],
+  "tab": {
+    "id": "transform",
+    "label": "Transform",
+    "icon": "↗",
+    "render": "panel.js"
+  }
+}
