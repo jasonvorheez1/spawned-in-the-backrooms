@@ -1,0 +1,74 @@
+{
+  "v": 1,
+  "level11": {
+    "l11-elev-btn-*": { "m": "button", "p": "button" },
+    "l11-skydeck-binoculars": { "m": "dial", "p": "dial", "s": "coin-drop-into-metal-slot-and-gear-whir" },
+    "l11-sedco-door": { "m": "tap", "s": "heavy-steel-door-latch-clunk" },
+    "l11-sedco-int-counter": { "m": "button", "p": "button", "s": "cash-register-cha-ching-bell-and-drawer" },
+    "l11-sedco-int-monitors": { "m": "screen", "p": "screen", "l": "0.3,1,0.5" },
+    "l11-dina-cache": { "m": "flap", "p": "flap", "s": "canvas-pouch-zipper-open" },
+    "l11-sunderland-satchel": { "m": "flap", "p": "flap", "s": "canvas-pouch-zipper-open" },
+    "l11-lab-bench": { "m": "screen", "p": "screen", "l": "0.4,0.8,1", "s": "radio-tuning-static-sweep" },
+    "l11-pizza-peel": { "m": "tap", "s": "wood-creak-heavy-timber-settling" },
+    "l11-pizza-box*": { "m": "flap", "p": "flap", "s": "cardboard-box-flap-open", "mat": { "color": "oklch(0.78 0.05 75)", "roughness": 0.9, "texture": "cdn/texture-corrugated-cardboard.png" } },
+    "l11-pizza-slice": { "m": "tap", "s": "cardboard-box-flap-open", "l": "1,0.6,0.25" },
+    "l11-reno-ladder": { "m": "tap", "s": "aluminum-ladder-rattle", "q": 0.03 },
+    "l11-scaf-ladder": { "m": "tap", "s": "aluminum-ladder-rattle", "q": 0.03 },
+    "l11-reno-clipboard": { "m": "tap", "s": "clipboard-paper-flip" },
+    "l11-reno-chest": { "m": "flap", "p": "flap" },
+    "l11-meg-cache": { "m": "flap", "p": "flap" },
+    "l11-vault-crate-*": { "m": "flap", "p": "flap" },
+    "l11-atm": { "m": "screen", "p": "screen", "l": "0.4,1,0.6", "s": "atm-keypad-beeps-and-cash-dispenser-whir" },
+    "l11-atm-cash": { "m": "tap", "s": "clipboard-paper-flip" },
+    "l11-vending": { "m": "button", "p": "button", "s": "vending-machine-can-drop-thunk" },
+    "l11-vending-can": { "m": "tap", "s": "vending-machine-can-drop-thunk" },
+    "l11-spamton-dumpster": { "m": "tap", "s": "dumpster-lid-slam", "q": 0.08 },
+    "l11-payphone": { "m": "dial", "p": "dial" },
+    "l11-food-pretzel": { "m": "tap", "s": "food-cart-steam-hiss", "l": "1,0.65,0.3" },
+    "l11-food-hotdog": { "m": "tap", "s": "food-cart-steam-hiss", "l": "1,0.65,0.3" },
+    "l11-harris-log": { "m": "button", "p": "button", "s": "tape-recorder-play-button-clunk" },
+    "l11-roadwork-gen": { "m": "lever", "p": "lever", "s": "diesel-generator-pull-start-sputter", "l": "1,0.7,0.3" },
+    "l11-roadwork-drill": { "m": "tap", "s": "pneumatic-drill-short-burst", "q": 0.12 },
+    "l11-market-produce-crate": { "m": "tap", "s": "apples-tumbling-in-wooden-crate" },
+    "l11-market-guide": { "m": "tap", "s": "clipboard-paper-flip" },
+    "l11-canal-pump": { "m": "dial", "p": "dial", "s": "rusty-valve-wheel-squeal" },
+    "l11-bee-clue": { "m": "tap", "s": "wood-creak-heavy-timber-settling" },
+    "l11-apt-radio": { "m": "dial", "p": "dial", "s": "vacuum-tube-radio-warm-up-static", "l": "1,0.7,0.35" },
+    "l11-apt-radiator": { "m": "dial", "p": "dial", "s": "steam-radiator-hiss-and-knock" },
+    "l11-apt-sink": { "m": "lever", "p": "lever", "s": "kitchen-tap-squeak-and-run" },
+    "l11-traffic-*": { "m": "tap", "s": "car-door-handle-locked-rattle", "q": 0.03 },
+    "l11-lot-held": { "m": "tap", "s": "car-door-handle-locked-rattle", "q": 0.03, "i": "Unlocked. The dealer's tag says HOLD, in pencil.", "t": "Glovebox: a 9-volt and a tire gauge.", "g": { "items": ["battery"], "xp": 5, "cd": 3600 } },
+    "l11-lot-sold": { "m": "tap", "s": "car-door-handle-locked-rattle", "q": 0.03, "i": "SOLD, says the windshield. Nobody came for it.", "t": "Cupholder: a warm Almond Water, unopened.", "g": { "items": ["almond"], "cd": 3600 } }
+  },
+  "level8": {
+    "l8-glow-*": { "m": "lamp", "p": "lamp", "l": "0.45,1,0.6", "s": "wet-mushroom-squelch-soft", "i": "Brightens when touched. Smells like a basement in July.", "t": "Spores up the nose. Oddly, it helps.", "g": { "sanity": 4, "cd": 900 } },
+    "l8-cocoon-*": { "m": "tap", "q": 0.14, "s": "wet-silk-tearing-slow", "i": "Silk, warm on one side.", "t": "Inside: a roll of duct tape, wrapped like a fly.", "g": { "items": ["tape"], "cd": 3600 } },
+    "l8-seep-*": { "m": "tap", "q": 0.1, "s": "tar-bubble-thick-glop" },
+    "l8-kazoo": { "m": "tap" },
+    "l8-altar": { "m": "tap" },
+    "l8-pool-*": { "m": "tap", "s": "water-pour-splash-short" },
+    "l8-dredge": { "m": "lever", "p": "lever", "s": "winch-ratchet-chain-crank" },
+    "l8-fire": { "m": "tap", "s": "campfire-log-crackle-pop", "l": "1,0.55,0.2" },
+    "l8-pot": { "m": "tap", "s": "ladle-scrape-steel-pot", "l": "1,0.6,0.3" },
+    "l8-radio": { "m": "dial", "p": "dial", "s": "radio-tuning-static-sweep", "l": "0.5,1,0.5" },
+    "l8-board": { "m": "tap", "s": "paper-notice-flutter-on-board" }
+  },
+  "level6": {
+    "l6-meg-relay": { "m": "lever", "p": "lever", "l": "1,0.6,0.2" }
+  },
+  "level7": {
+    "l7h-drawers": { "m": "tap", "s": "wooden-drawer-slide-stick-and-scrape" },
+    "l7h-armoire": { "m": "tap", "s": "armoire-door-swollen-creak" },
+    "l7x-hatch": { "m": "tap", "s": "trapdoor-wood-thunk", "q": 0.1 },
+    "l7w-lantern-*": { "m": "lamp", "p": "lamp", "l": "1,0.75,0.35", "s": "old-payphone-hook-switch-click", "i": "Wick's trimmed. Someone still tends these.", "t": "A dry match in the base. Lit.", "g": { "sanity": 3, "cd": 900 } }
+  },
+  "level13": {
+    "l13f-*-tv": { "m": "tap", "s": "crt-tv-power-on-whine", "l": "0.6,0.8,1" },
+    "l13f-*-fridge": { "m": "tap", "s": "fridge-door-seal-pop-hum" },
+    "l13f-*-bed": { "m": "tap", "s": "old-mattress-springs-creak", "q": 0.08 },
+    "l13p-*": { "m": "tap", "s": "locket-clasp-click" }
+  },
+  "level02": {
+    "*": { "m": "tap", "s": "aerosol-air-freshener-spray-hiss" }
+  }
+}
