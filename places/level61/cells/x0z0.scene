@@ -2,9 +2,10 @@
 l61-payphone-sign:
   feetPosition: {x: 5, y: 2.05, z: 21.79}
   id: l61-payphone-sign
-  material: {color: oklch(0.2 0.08 240), emissive: "#0c1e38"}
+  material: {metalness: 0, roughness: 0.8, texture: /cdn/value.d8247ce71c2e8b909a01267517b53b25aa67fb33ef7662d043b4711a824b1a6d.png}
   primitive: {depth: 0.05, height: 0.26, kind: box, width: 1.6}
-  ui: "<div face=\"front\" emissive width=\"1.6m\" style=\"width:1600px;height:260px;display:flex;align-items:center;justify-content:center;background:#0c1e38;color:#9fe8ff;font-family:Arial,sans-serif;font-weight:900;letter-spacing:6px\"><span style=\"font-size:120px\">PUBLIC PHONES</span></div>"
+  state: {signTex: PUBLIC PHONES}
+  ui: null
 l61-wetsign-a:
   feetPosition: {x: -14, y: 0, z: -6}
   id: l61-wetsign-a
