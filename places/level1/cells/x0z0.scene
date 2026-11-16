@@ -78,6 +78,7 @@ dina-satchel:
   model: {id: /cdn/value.d88351e571e391acecb993d86cbc1ca25017a4a11ae7c592ce0909c762c9db34.glb}
   physics: none
 l1-air:
+  audience: all
   feetPosition: {x: 0, y: 0, z: 0}
   fx: {script: "fx follow=camera\npop motes n=?mobile:60|140 on=box(<14,4,14>) wrap=14;4;14 size=.008..0.018 v=sdir()*.04 acc=curl(.15)*.08+drag(.6) col=<.85,.88,.9> a=(.25..0.55)*flick(.3,.4) sz=$size r=sprite(soft-disc,add)\npop mist n=?mobile:10|22 on=box(<26,.6,26>) wrap=26;1;26 size=2.5..4.5 v=sdir()*.08 acc=curl(.1)*.05+drag(.4) col=<.55,.6,.66> a=.07..0.13 rot=spin(.03) sz=$size r=sprite(smoke-puff,alpha)"}
   id: l1-air
