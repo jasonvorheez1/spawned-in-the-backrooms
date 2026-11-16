@@ -405,8 +405,13 @@ def run(body, ZONES, DOC, a):
                 srcs = [ZONES[z] for z in zn if ZONES.get(z) is not None]
                 if not srcs: continue
                 cps = []
-                for src in srcs:
+                for z_, src in [(z, ZONES[z]) for z in zn if ZONES.get(z) is not None]:
                     c_ = src.copy(); c_.data = src.data.copy(); bpy.context.scene.collection.objects.link(c_); cps.append(c_)
+                    if keepf and z_ in keepf and z_ != zn[0]:   # trim a member zone BEFORE the weld (the head's neck band): its border welds to the torso's, no tear
+                        import bmesh as _bm2
+                        b2 = _bm2.new(); b2.from_mesh(c_.data); MW2 = c_.matrix_world
+                        _bm2.ops.delete(b2, geom=[f for f in b2.faces if not keepf[z_](np.array(MW2 @ f.calc_center_median()))], context='FACES')
+                        b2.to_mesh(c_.data); b2.free(); c_.data.update()
                 bpy.ops.object.select_all(action='DESELECT')
                 for c_ in cps: c_.select_set(True)
                 bpy.context.view_layer.objects.active = cps[0]
@@ -488,9 +493,9 @@ def run(body, ZONES, DOC, a):
     collar_cut = ((0.0, _cy, z_mock), (0.0, -0.45, 1.0), True)
     collar_cap = (z_mock + 0.01 * S, True)   # one level collar 1 cm over the shoulders: the tilted cut dipped at the front and bared the shoulder tops
     # ONE welded shell, collar to hem: the yoke and chest as two shells met on stair-stepped zone borders at the same offset and tore into slivers there
-    _ZT = ('upperchest', 'shoulder_l', 'shoulder_r', 'neck', 'breast_l', 'breast_r', 'cleavage', 'upperback', 'chest', 'belly', 'side_l', 'side_r', 'armpit_front_l', 'armpit_front_r', 'armpit_back_l', 'armpit_back_r', 'upperarm_l', 'upperarm_r')
+    _ZT = ('upperchest', 'shoulder_l', 'shoulder_r', 'neck', 'head', 'breast_l', 'breast_r', 'cleavage', 'upperback', 'chest', 'belly', 'side_l', 'side_r', 'armpit_front_l', 'armpit_front_r', 'armpit_back_l', 'armpit_back_r', 'upperarm_l', 'upperarm_r')
     # the head zone spills down onto the neck base (472 verts under the collar on the cute body): it pokes through as skin teeth unless the top takes that band too
-    for nm_, ob in shell([_ZT, 'head'], OFF['top'], 'top_chest', keepf={'head': lambda p: p[2] < z_mock + 0.012 * S and math.hypot(p[0], p[1] - _cy) < 0.105 * S}, cuts={'head': [collar_cap], 'upperchest': [collar_cap, (z_underbust - 0.07 * S, False)] + sleeve_cap['upperarm_l'] + sleeve_cap['upperarm_r']}).items():
+    for nm_, ob in shell([_ZT], OFF['top'], 'top_chest', keepf={'head': lambda p: p[2] < z_mock + 0.012 * S and math.hypot(p[0], p[1] - _cy) < 0.115 * S}, cuts={'upperchest': [collar_cap, (z_underbust - 0.07 * S, False)] + sleeve_cap['upperarm_l'] + sleeve_cap['upperarm_r']}).items():
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
     for nm_, ob in shell(['foot_l', 'foot_r'], OFF['feet'], 'feet', {'feet_sole': lambda z: z < -0.5, 'feet_upper': lambda z: z >= -0.5}).items():
         CAGE[nm_] = (ob, COL['feet']); SEG[nm_] = []
