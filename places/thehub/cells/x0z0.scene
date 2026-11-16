@@ -1,4 +1,282 @@
 # spawn-scene v2 yaml x0z0
+hub-air:
+  audience: all
+  feetPosition: {x: 0, y: 0, z: 0}
+  fx: {script: "fx follow=camera\npop motes n=?mobile:50|110 on=box(<14,4,14>) wrap=14;4;14 size=.008..0.018 v=sdir()*.03 acc=curl(.1)*.06+drag(.6) col=<1,.78,.45> a=(.2..0.5)*flick(.3,.4) sz=$size r=sprite(soft-disc,add)\npop exhaust n=?mobile:8|18 on=box(<26,2,26>) wrap=26;2.5;26 size=3..5.5 v=sdir()*.08 acc=curl(.08)*.05+drag(.4) col=<.6,.48,.35> a=.04..0.08 rot=spin(.02) sz=$size r=sprite(smoke-puff,alpha)"}
+  id: hub-air
+# Fixed tunnel fixtures and camp furniture.
+hub-baylight-0:
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 1.8392307692307692, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.88 0.09 82), distance: 11, intensity: 3.5, kind: point, shadow: {enabled: false}, visibleRange: {max: 28}}, visibleRange: {max: 75}}]
+  feetPosition: {x: 9, y: 3.25, z: -10}
+  id: hub-baylight-0
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
+  visibleRange: {max: 95}
+hub-baylight-1:
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 1.8392307692307692, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.88 0.09 82), distance: 11, intensity: 3.5, kind: point, shadow: {enabled: false}, visibleRange: {max: 28}}, visibleRange: {max: 75}}]
+  feetPosition: {x: 20, y: 3.25, z: -10}
+  id: hub-baylight-1
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
+  visibleRange: {max: 95}
+hub-baylight-2:
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 2.3007692307692307, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.88 0.09 82), distance: 11, intensity: 1.6, kind: point, shadow: {enabled: false}, visibleRange: {max: 28}}, visibleRange: {max: 75}}]
+  feetPosition: {x: 27, y: 2.65, z: -6.5}
+  id: hub-baylight-2
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
+  visibleRange: {max: 95}
+hub-camp-0-keycabinet:
+  castShadow: false
+  feetPosition: {x: 24.6, y: 0.18, z: -14.4}
+  id: hub-camp-0-keycabinet
+  model: {id: /cdn/value.4ed2941b49c21a40e5eac82796224fdc356d15f0db938c695815ebb4f327cc7a.glb, offset: [-0.042, 0, -0.631]}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  tags: [hub-camp]
+  visibleRange: {max: 90}
+hub-camp-1-comms:
+  castShadow: false
+  feetPosition: {x: 10.4, y: 0.18, z: -14.05}
+  id: hub-camp-1-comms
+  model: {id: /cdn/value.6501d0251919b1495fabd9cdbd73e2ef1bbbdbb56bd8a927237d0e70f7f9c1c0.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  tags: [hub-camp]
+  visibleRange: {max: 90}
+hub-camp-1-light:
+  feetPosition: {x: 10.4, y: 1.6, z: -13.6}
+  id: hub-camp-1-light
+  light: {color: oklch(0.82 0.12 72), distance: 7, intensity: 0.9, kind: point, shadow: {enabled: false}, visibleRange: {max: 18}}
+  visibleRange: {max: 65}
+hub-camp-2-light:
+  feetPosition: {x: 14.6, y: 1.5, z: -11.4}
+  id: hub-camp-2-light
+  light: {color: oklch(0.82 0.12 72), distance: 7, intensity: 1.2, kind: point, shadow: {enabled: false}, visibleRange: {max: 18}}
+  visibleRange: {max: 65}
+hub-camp-2-maptable:
+  castShadow: false
+  feetPosition: {x: 14.6, y: 0.18, z: -11.4}
+  id: hub-camp-2-maptable
+  model: {id: /cdn/value.47f90bdfdb574c3c3d33543f4f88f4bddde9046bd1da81edd4a6413ac3e4724a.glb, materials: {glow: {color: oklch(0.9 0.08 85), emissive: oklch(0.9 0.08 85), emissiveIntensity: 3}}}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  tags: [hub-camp]
+  visibleRange: {max: 90}
+hub-camp-3-cot:
+  castShadow: false
+  feetPosition: {x: 5.4, y: 0.18, z: -14.05}
+  id: hub-camp-3-cot
+  model: {id: /cdn/value.4b7be3299db70753945e1e5a69ad3a14bb88adedb17a6b35e9de33eb980e2faa.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [hub-camp]
+  visibleRange: {max: 90}
+hub-camp-4-cot:
+  castShadow: false
+  feetPosition: {x: 5.4, y: 0.18, z: -12.95}
+  id: hub-camp-4-cot
+  model: {id: /cdn/value.4b7be3299db70753945e1e5a69ad3a14bb88adedb17a6b35e9de33eb980e2faa.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [hub-camp]
+  visibleRange: {max: 90}
+hub-camp-5-crates:
+  castShadow: false
+  feetPosition: {x: 27, y: 0.18, z: -7.2}
+  id: hub-camp-5-crates
+  model: {id: /cdn/value.b3b466f23bb9c4a393e9b0d47b11c69a1e59ba9ecd1b1a09e4192b7a017c2b1b.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  tags: [hub-camp]
+  visibleRange: {max: 90}
+hub-camp-6-crates:
+  castShadow: false
+  feetPosition: {x: 19.8, y: 0.18, z: -14}
+  id: hub-camp-6-crates
+  model: {id: /cdn/value.b3b466f23bb9c4a393e9b0d47b11c69a1e59ba9ecd1b1a09e4192b7a017c2b1b.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  tags: [hub-camp]
+  visibleRange: {max: 90}
+hub-camp-7-marker:
+  castShadow: false
+  feetPosition: {x: 8.8, y: 0.18, z: -6.8}
+  id: hub-camp-7-marker
+  model: {id: /cdn/value.db31e8cb3fa572fc99ba0add37740c4acec673e9a809e4780f5de652720e0a1b.glb}
+  physics: {body: static, collider: box}
+  receiveShadow: true
+  rotation: {yaw: 25}
+  tags: [hub-camp]
+  visibleRange: {max: 90}
+hub-doorlamp-t1-a0:
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}, visibleRange: {max: 22}}, visibleRange: {max: 75}}]
+  feetPosition: {x: 35, y: 4.5, z: -19.5}
+  id: hub-doorlamp-t1-a0
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
+  visibleRange: {max: 95}
+hub-doorlamp-t1-a1:
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}, visibleRange: {max: 22}}, visibleRange: {max: 75}}]
+  feetPosition: {x: 35, y: 4.5, z: -35.5}
+  id: hub-doorlamp-t1-a1
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
+  visibleRange: {max: 95}
+hub-doorlamp-t1-a2:
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}, visibleRange: {max: 22}}, visibleRange: {max: 75}}]
+  feetPosition: {x: 35, y: 4.5, z: -51.5}
+  id: hub-doorlamp-t1-a2
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
+  visibleRange: {max: 95}
+hub-doorlamp-t1-b0:
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}, visibleRange: {max: 22}}, visibleRange: {max: 75}}]
+  feetPosition: {x: 45, y: 4.5, z: -19.5}
+  id: hub-doorlamp-t1-b0
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
+  visibleRange: {max: 95}
+hub-doorlamp-t1-b1:
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}, visibleRange: {max: 22}}, visibleRange: {max: 75}}]
+  feetPosition: {x: 45, y: 4.5, z: -35.5}
+  id: hub-doorlamp-t1-b1
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
+  visibleRange: {max: 95}
+hub-doorlamp-t1-b2:
+  castShadow: false
+  children: [{castShadow: false, feetPosition: {x: 0, y: 0.43, z: 0}, id: drop, material: {color: oklch(0.3 0.01 80), metalness: 0.8, roughness: 0.5}, primitive: {height: 0.8776923076923077, kind: cylinder, radiusBottom: 0.012, radiusTop: 0.012}}, {feetPosition: {x: 0, y: 0.1, z: 0}, id: glow, light: {color: oklch(0.8 0.13 68), distance: 9, intensity: 5, kind: point, shadow: {enabled: false}, visibleRange: {max: 22}}, visibleRange: {max: 75}}]
+  feetPosition: {x: 45, y: 4.5, z: -51.5}
+  id: hub-doorlamp-t1-b2
+  model: {id: /cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb, materials: {glow: {color: oklch(0.95 0.06 85), emissive: oklch(0.88 0.12 75), emissiveIntensity: 5}}}
+  receiveShadow: true
+  scale: 1.3
+  visibleRange: {max: 95}
+hub-drain-122a:
+  castShadow: false
+  feetPosition: {x: 62, y: 0.002, z: -3.38}
+  id: hub-drain-122a
+  model: {id: /cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb}
+  receiveShadow: true
+  visibleRange: {max: 90}
+hub-drain-122b:
+  castShadow: false
+  feetPosition: {x: 62, y: 0.002, z: 3.38}
+  id: hub-drain-122b
+  model: {id: /cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb}
+  receiveShadow: true
+  visibleRange: {max: 90}
+hub-drain-26a:
+  castShadow: false
+  feetPosition: {x: -34, y: 0.002, z: -3.38}
+  id: hub-drain-26a
+  model: {id: /cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb}
+  receiveShadow: true
+  visibleRange: {max: 90}
+hub-drain-26b:
+  castShadow: false
+  feetPosition: {x: -34, y: 0.002, z: 3.38}
+  id: hub-drain-26b
+  model: {id: /cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb}
+  receiveShadow: true
+  visibleRange: {max: 90}
+hub-drain-2a:
+  castShadow: false
+  feetPosition: {x: -58, y: 0.002, z: -3.38}
+  id: hub-drain-2a
+  model: {id: /cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb}
+  receiveShadow: true
+  visibleRange: {max: 90}
+hub-drain-2b:
+  castShadow: false
+  feetPosition: {x: -58, y: 0.002, z: 3.38}
+  id: hub-drain-2b
+  model: {id: /cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb}
+  receiveShadow: true
+  visibleRange: {max: 90}
+hub-drain-50a:
+  castShadow: false
+  feetPosition: {x: -10, y: 0.002, z: -3.38}
+  id: hub-drain-50a
+  model: {id: /cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb}
+  receiveShadow: true
+  visibleRange: {max: 90}
+hub-drain-50b:
+  castShadow: false
+  feetPosition: {x: -10, y: 0.002, z: 3.38}
+  id: hub-drain-50b
+  model: {id: /cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb}
+  receiveShadow: true
+  visibleRange: {max: 90}
+hub-drain-74a:
+  castShadow: false
+  feetPosition: {x: 14, y: 0.002, z: -3.38}
+  id: hub-drain-74a
+  model: {id: /cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb}
+  receiveShadow: true
+  visibleRange: {max: 90}
+hub-drain-74b:
+  castShadow: false
+  feetPosition: {x: 14, y: 0.002, z: 3.38}
+  id: hub-drain-74b
+  model: {id: /cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb}
+  receiveShadow: true
+  visibleRange: {max: 90}
+hub-drain-98b:
+  castShadow: false
+  feetPosition: {x: 38, y: 0.002, z: 3.38}
+  id: hub-drain-98b
+  model: {id: /cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb}
+  receiveShadow: true
+  visibleRange: {max: 90}
+hub-fan-t1:
+  castShadow: false
+  feetPosition: {x: 40, y: 6.2, z: -45.5}
+  id: hub-fan-t1
+  model: {id: /cdn/value.078fd96137a212a702ba328bf5bfc1c1bdf41b73e5a4630ce4acdc4b3d9e39d7.glb, offset: [0, -1.804, 0]}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  visibleRange: {max: 90}
+hub-fan-t40a:
+  castShadow: false
+  feetPosition: {x: -20, y: 6.2, z: -0.85}
+  id: hub-fan-t40a
+  model: {id: /cdn/value.078fd96137a212a702ba328bf5bfc1c1bdf41b73e5a4630ce4acdc4b3d9e39d7.glb, offset: [0, -1.804, 0]}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  visibleRange: {max: 90}
+hub-fan-t40b:
+  castShadow: false
+  feetPosition: {x: -20, y: 6.2, z: 0.85}
+  id: hub-fan-t40b
+  model: {id: /cdn/value.078fd96137a212a702ba328bf5bfc1c1bdf41b73e5a4630ce4acdc4b3d9e39d7.glb, offset: [0, -1.804, 0]}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  visibleRange: {max: 90}
 hub-l1-door:
   castShadow: false
   children: [{castShadow: false, feetPosition: {x: 0, y: 0.2, z: 0.78}, id: leaf, material: {roughness: 0.9}, physics: {body: static, collider: mesh}, primitive: {kind: scripted, params: {part: leaf}, script: scripts/hub-door-geo.js, seed: 7101}}]
@@ -18,6 +296,146 @@ hub-l1-sign:
   id: hub-l1-sign
   rotation: {yaw: 180}
   vector: "<svg viewBox='0 0 200 40' width='1.4m'><text x='100' y='29' text-anchor='middle' font-family='sans-serif' font-size='26' fill='#d9c48a' letter-spacing='4'>LEVEL 1</text></svg>"
+hub-lamp-0:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: -0.12, z: -0.38}, id: glow, light: {color: oklch(0.8 0.15 68), distance: 19, intensity: 9, kind: point, shadow: {enabled: false}, visibleRange: {max: 45}}, visibleRange: {max: 90}}]
+  feetPosition: {x: -54, y: 4.45, z: -5.45}
+  id: hub-lamp-0
+  model: {id: /cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb, materials: {lens: {color: oklch(0.8 0.15 68), emissive: oklch(0.8 0.15 68), emissiveIntensity: 5}}, offset: [-0.102, -0.182, -0.219]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  tags: [hub-lamp]
+  visibleRange: {max: 120}
+hub-lamp-1:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: -0.12, z: -0.38}, id: glow, light: {color: oklch(0.8 0.15 68), distance: 19, intensity: 9, kind: point, shadow: {enabled: false}, visibleRange: {max: 45}}, visibleRange: {max: 90}}]
+  feetPosition: {x: -42, y: 4.45, z: 5.45}
+  id: hub-lamp-1
+  model: {id: /cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb, materials: {lens: {color: oklch(0.8 0.15 68), emissive: oklch(0.8 0.15 68), emissiveIntensity: 5}}, offset: [-0.102, -0.182, -0.219]}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [hub-lamp]
+  visibleRange: {max: 120}
+hub-lamp-2:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: -0.12, z: -0.38}, id: glow, light: {color: oklch(0.8 0.15 68), distance: 19, intensity: 9, kind: point, shadow: {enabled: false}, visibleRange: {max: 45}}, visibleRange: {max: 90}}]
+  feetPosition: {x: -30, y: 4.45, z: -5.45}
+  id: hub-lamp-2
+  model: {id: /cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb, materials: {lens: {color: oklch(0.8 0.15 68), emissive: oklch(0.8 0.15 68), emissiveIntensity: 5}}, offset: [-0.102, -0.182, -0.219]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  tags: [hub-lamp]
+  visibleRange: {max: 120}
+hub-lamp-3:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: -0.12, z: -0.38}, id: glow, light: {color: oklch(0.8 0.15 68), distance: 19, intensity: 9, kind: point, shadow: {enabled: false}, visibleRange: {max: 45}}, visibleRange: {max: 90}}]
+  feetPosition: {x: -18, y: 4.45, z: 5.45}
+  id: hub-lamp-3
+  model: {id: /cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb, materials: {lens: {color: oklch(0.8 0.15 68), emissive: oklch(0.8 0.15 68), emissiveIntensity: 5}}, offset: [-0.102, -0.182, -0.219]}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [hub-lamp]
+  visibleRange: {max: 120}
+hub-lamp-4:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: -0.12, z: -0.38}, id: glow, light: {color: oklch(0.8 0.15 68), distance: 19, intensity: 9, kind: point, shadow: {enabled: false}, visibleRange: {max: 45}}, visibleRange: {max: 90}}]
+  feetPosition: {x: -6, y: 4.45, z: -5.45}
+  id: hub-lamp-4
+  model: {id: /cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb, materials: {lens: {color: oklch(0.8 0.15 68), emissive: oklch(0.8 0.15 68), emissiveIntensity: 5}}, offset: [-0.102, -0.182, -0.219]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  tags: [hub-lamp]
+  visibleRange: {max: 120}
+hub-lamp-47:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: -0.12, z: -0.38}, id: glow, light: {color: oklch(0.8 0.15 68), distance: 19, intensity: 9, kind: point, shadow: {enabled: false}, visibleRange: {max: 45}}, visibleRange: {max: 90}}]
+  feetPosition: {x: 34.55, y: 4.45, z: -11.5}
+  id: hub-lamp-47
+  model: {id: /cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb, materials: {lens: {color: oklch(0.8 0.15 68), emissive: oklch(0.8 0.15 68), emissiveIntensity: 5}}, offset: [-0.102, -0.182, -0.219]}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  tags: [hub-lamp]
+  visibleRange: {max: 120}
+hub-lamp-48:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: -0.12, z: -0.38}, id: glow, light: {color: oklch(0.8 0.15 68), distance: 19, intensity: 9, kind: point, shadow: {enabled: false}, visibleRange: {max: 45}}, visibleRange: {max: 90}}]
+  feetPosition: {x: 45.45, y: 4.45, z: -23.5}
+  id: hub-lamp-48
+  model: {id: /cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb, materials: {lens: {color: oklch(0.8 0.15 68), emissive: oklch(0.8 0.15 68), emissiveIntensity: 5}}, offset: [-0.102, -0.182, -0.219]}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  tags: [hub-lamp]
+  visibleRange: {max: 120}
+hub-lamp-49:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: -0.12, z: -0.38}, id: glow, light: {color: oklch(0.8 0.15 68), distance: 19, intensity: 9, kind: point, shadow: {enabled: false}, visibleRange: {max: 45}}, visibleRange: {max: 90}}]
+  feetPosition: {x: 45.45, y: 4.45, z: -47.5}
+  id: hub-lamp-49
+  model: {id: /cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb, materials: {lens: {color: oklch(0.8 0.15 68), emissive: oklch(0.8 0.15 68), emissiveIntensity: 5}}, offset: [-0.102, -0.182, -0.219]}
+  receiveShadow: true
+  rotation: {yaw: 90}
+  tags: [hub-lamp]
+  visibleRange: {max: 120}
+hub-lamp-5:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: -0.12, z: -0.38}, id: glow, light: {color: oklch(0.8 0.15 68), distance: 19, intensity: 9, kind: point, shadow: {enabled: false}, visibleRange: {max: 45}}, visibleRange: {max: 90}}]
+  feetPosition: {x: 6, y: 4.45, z: 5.45}
+  id: hub-lamp-5
+  model: {id: /cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb, materials: {lens: {color: oklch(0.8 0.15 68), emissive: oklch(0.8 0.15 68), emissiveIntensity: 5}}, offset: [-0.102, -0.182, -0.219]}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [hub-lamp]
+  visibleRange: {max: 120}
+hub-lamp-50:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: -0.12, z: -0.38}, id: glow, light: {color: oklch(0.8 0.15 68), distance: 19, intensity: 9, kind: point, shadow: {enabled: false}, visibleRange: {max: 45}}, visibleRange: {max: 90}}]
+  feetPosition: {x: 34.55, y: 4.45, z: -59.5}
+  id: hub-lamp-50
+  model: {id: /cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb, materials: {lens: {color: oklch(0.8 0.15 68), emissive: oklch(0.8 0.15 68), emissiveIntensity: 5}}, offset: [-0.102, -0.182, -0.219]}
+  receiveShadow: true
+  rotation: {yaw: -90}
+  tags: [hub-lamp]
+  visibleRange: {max: 120}
+hub-lamp-6:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: -0.12, z: -0.38}, id: glow, light: {color: oklch(0.8 0.15 68), distance: 19, intensity: 9, kind: point, shadow: {enabled: false}, visibleRange: {max: 45}}, visibleRange: {max: 90}}]
+  feetPosition: {x: 18, y: 4.45, z: 5.45}
+  id: hub-lamp-6
+  model: {id: /cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb, materials: {lens: {color: oklch(0.8 0.15 68), emissive: oklch(0.8 0.15 68), emissiveIntensity: 5}}, offset: [-0.102, -0.182, -0.219]}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [hub-lamp]
+  visibleRange: {max: 120}
+hub-lamp-7:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: -0.12, z: -0.38}, id: glow, light: {color: oklch(0.8 0.15 68), distance: 19, intensity: 9, kind: point, shadow: {enabled: false}, visibleRange: {max: 45}}, visibleRange: {max: 90}}]
+  feetPosition: {x: 30, y: 4.45, z: 5.45}
+  id: hub-lamp-7
+  model: {id: /cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb, materials: {lens: {color: oklch(0.8 0.15 68), emissive: oklch(0.8 0.15 68), emissiveIntensity: 5}}, offset: [-0.102, -0.182, -0.219]}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [hub-lamp]
+  visibleRange: {max: 120}
+hub-lamp-8:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: -0.12, z: -0.38}, id: glow, light: {color: oklch(0.8 0.15 68), distance: 19, intensity: 9, kind: point, shadow: {enabled: false}, visibleRange: {max: 45}}, visibleRange: {max: 90}}]
+  feetPosition: {x: 42, y: 4.45, z: 5.45}
+  id: hub-lamp-8
+  model: {id: /cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb, materials: {lens: {color: oklch(0.8 0.15 68), emissive: oklch(0.8 0.15 68), emissiveIntensity: 5}}, offset: [-0.102, -0.182, -0.219]}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [hub-lamp]
+  visibleRange: {max: 120}
+hub-lamp-9:
+  castShadow: false
+  children: [{feetPosition: {x: 0, y: -0.12, z: -0.38}, id: glow, light: {color: oklch(0.8 0.15 68), distance: 19, intensity: 9, kind: point, shadow: {enabled: false}, visibleRange: {max: 45}}, visibleRange: {max: 90}}]
+  feetPosition: {x: 54, y: 4.45, z: 5.45}
+  id: hub-lamp-9
+  model: {id: /cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb, materials: {lens: {color: oklch(0.8 0.15 68), emissive: oklch(0.8 0.15 68), emissiveIntensity: 5}}, offset: [-0.102, -0.182, -0.219]}
+  receiveShadow: true
+  rotation: {yaw: 0}
+  tags: [hub-lamp]
+  visibleRange: {max: 120}
 hub-to-l1:
   behavior: scripts/level-door.js
   feetPosition: {x: -39.2, y: 0.18, z: 4.4}
@@ -27,560 +445,147 @@ hub-to-l1:
   rotation: {yaw: 0}
   state: {to: level1}
   visible: false
-# Fixed tunnel fixtures and camp furniture.
-"hub-baylight-0":
-  "id": "hub-baylight-0"
-  "feetPosition": {"x": 9, "y": 3.25, "z": -10}
-  "scale": 1.3
-  "model": {"id": "/cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb", "materials": {"glow": {"color": "oklch(0.95 0.06 85)", "emissive": "oklch(0.88 0.12 75)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 95}
-  "children": [{"id": "drop", "feetPosition": {"x": 0, "y": 0.43, "z": 0}, "primitive": {"kind": "cylinder", "radiusTop": 0.012, "radiusBottom": 0.012, "height": 1.8392307692307692}, "material": {"color": "oklch(0.3 0.01 80)", "metalness": 0.8, "roughness": 0.5}, "castShadow": false}, {"id": "glow", "feetPosition": {"x": 0, "y": 0.1, "z": 0}, "visibleRange": {"max": 75}, "light": {"kind": "point", "color": "oklch(0.88 0.09 82)", "intensity": 3.5, "distance": 11, "shadow": {"enabled": false}, "visibleRange": {"max": 28}}}]
-"hub-baylight-1":
-  "id": "hub-baylight-1"
-  "feetPosition": {"x": 20, "y": 3.25, "z": -10}
-  "scale": 1.3
-  "model": {"id": "/cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb", "materials": {"glow": {"color": "oklch(0.95 0.06 85)", "emissive": "oklch(0.88 0.12 75)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 95}
-  "children": [{"id": "drop", "feetPosition": {"x": 0, "y": 0.43, "z": 0}, "primitive": {"kind": "cylinder", "radiusTop": 0.012, "radiusBottom": 0.012, "height": 1.8392307692307692}, "material": {"color": "oklch(0.3 0.01 80)", "metalness": 0.8, "roughness": 0.5}, "castShadow": false}, {"id": "glow", "feetPosition": {"x": 0, "y": 0.1, "z": 0}, "visibleRange": {"max": 75}, "light": {"kind": "point", "color": "oklch(0.88 0.09 82)", "intensity": 3.5, "distance": 11, "shadow": {"enabled": false}, "visibleRange": {"max": 28}}}]
-"hub-baylight-2":
-  "id": "hub-baylight-2"
-  "feetPosition": {"x": 27, "y": 2.65, "z": -6.5}
-  "scale": 1.3
-  "model": {"id": "/cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb", "materials": {"glow": {"color": "oklch(0.95 0.06 85)", "emissive": "oklch(0.88 0.12 75)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 95}
-  "children": [{"id": "drop", "feetPosition": {"x": 0, "y": 0.43, "z": 0}, "primitive": {"kind": "cylinder", "radiusTop": 0.012, "radiusBottom": 0.012, "height": 2.3007692307692307}, "material": {"color": "oklch(0.3 0.01 80)", "metalness": 0.8, "roughness": 0.5}, "castShadow": false}, {"id": "glow", "feetPosition": {"x": 0, "y": 0.1, "z": 0}, "visibleRange": {"max": 75}, "light": {"kind": "point", "color": "oklch(0.88 0.09 82)", "intensity": 1.6, "distance": 11, "shadow": {"enabled": false}, "visibleRange": {"max": 28}}}]
-"hub-camp-0-keycabinet":
-  "id": "hub-camp-0-keycabinet"
-  "tags": ["hub-camp"]
-  "feetPosition": {"x": 24.6, "y": 0.18, "z": -14.4}
-  "rotation": {"yaw": 180}
-  "physics": {"body": "static", "collider": "box"}
-  "model": {"id": "/cdn/value.4ed2941b49c21a40e5eac82796224fdc356d15f0db938c695815ebb4f327cc7a.glb", "offset": [-0.042, 0, -0.631]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-camp-1-comms":
-  "id": "hub-camp-1-comms"
-  "tags": ["hub-camp"]
-  "feetPosition": {"x": 10.4, "y": 0.18, "z": -14.05}
-  "rotation": {"yaw": 180}
-  "physics": {"body": "static", "collider": "box"}
-  "model": {"id": "/cdn/value.6501d0251919b1495fabd9cdbd73e2ef1bbbdbb56bd8a927237d0e70f7f9c1c0.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-camp-1-light":
-  "id": "hub-camp-1-light"
-  "feetPosition": {"x": 10.4, "y": 1.6, "z": -13.6}
-  "visibleRange": {"max": 65}
-  "light": {"kind": "point", "color": "oklch(0.82 0.12 72)", "intensity": 0.9, "distance": 7, "shadow": {"enabled": false}, "visibleRange": {"max": 18}}
-"hub-camp-2-light":
-  "id": "hub-camp-2-light"
-  "feetPosition": {"x": 14.6, "y": 1.5, "z": -11.4}
-  "visibleRange": {"max": 65}
-  "light": {"kind": "point", "color": "oklch(0.82 0.12 72)", "intensity": 1.2, "distance": 7, "shadow": {"enabled": false}, "visibleRange": {"max": 18}}
-"hub-camp-2-maptable":
-  "id": "hub-camp-2-maptable"
-  "tags": ["hub-camp"]
-  "feetPosition": {"x": 14.6, "y": 0.18, "z": -11.4}
-  "rotation": {"yaw": 180}
-  "physics": {"body": "static", "collider": "box"}
-  "model": {"id": "/cdn/value.47f90bdfdb574c3c3d33543f4f88f4bddde9046bd1da81edd4a6413ac3e4724a.glb", "materials": {"glow": {"color": "oklch(0.9 0.08 85)", "emissive": "oklch(0.9 0.08 85)", "emissiveIntensity": 3}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-camp-3-cot":
-  "id": "hub-camp-3-cot"
-  "tags": ["hub-camp"]
-  "feetPosition": {"x": 5.4, "y": 0.18, "z": -14.05}
-  "rotation": {"yaw": 0}
-  "physics": {"body": "static", "collider": "box"}
-  "model": {"id": "/cdn/value.4b7be3299db70753945e1e5a69ad3a14bb88adedb17a6b35e9de33eb980e2faa.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-camp-4-cot":
-  "id": "hub-camp-4-cot"
-  "tags": ["hub-camp"]
-  "feetPosition": {"x": 5.4, "y": 0.18, "z": -12.95}
-  "rotation": {"yaw": 0}
-  "physics": {"body": "static", "collider": "box"}
-  "model": {"id": "/cdn/value.4b7be3299db70753945e1e5a69ad3a14bb88adedb17a6b35e9de33eb980e2faa.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-camp-5-crates":
-  "id": "hub-camp-5-crates"
-  "tags": ["hub-camp"]
-  "feetPosition": {"x": 27, "y": 0.18, "z": -7.2}
-  "rotation": {"yaw": 90}
-  "physics": {"body": "static", "collider": "box"}
-  "model": {"id": "/cdn/value.b3b466f23bb9c4a393e9b0d47b11c69a1e59ba9ecd1b1a09e4192b7a017c2b1b.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-camp-6-crates":
-  "id": "hub-camp-6-crates"
-  "tags": ["hub-camp"]
-  "feetPosition": {"x": 19.8, "y": 0.18, "z": -14}
-  "rotation": {"yaw": 180}
-  "physics": {"body": "static", "collider": "box"}
-  "model": {"id": "/cdn/value.b3b466f23bb9c4a393e9b0d47b11c69a1e59ba9ecd1b1a09e4192b7a017c2b1b.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-camp-7-marker":
-  "id": "hub-camp-7-marker"
-  "tags": ["hub-camp"]
-  "feetPosition": {"x": 8.8, "y": 0.18, "z": -6.8}
-  "rotation": {"yaw": 25}
-  "physics": {"body": "static", "collider": "box"}
-  "model": {"id": "/cdn/value.db31e8cb3fa572fc99ba0add37740c4acec673e9a809e4780f5de652720e0a1b.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-doorlamp-t1-a0":
-  "id": "hub-doorlamp-t1-a0"
-  "feetPosition": {"x": 35, "y": 4.5, "z": -19.5}
-  "scale": 1.3
-  "model": {"id": "/cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb", "materials": {"glow": {"color": "oklch(0.95 0.06 85)", "emissive": "oklch(0.88 0.12 75)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 95}
-  "children": [{"id": "drop", "feetPosition": {"x": 0, "y": 0.43, "z": 0}, "primitive": {"kind": "cylinder", "radiusTop": 0.012, "radiusBottom": 0.012, "height": 0.8776923076923077}, "material": {"color": "oklch(0.3 0.01 80)", "metalness": 0.8, "roughness": 0.5}, "castShadow": false}, {"id": "glow", "feetPosition": {"x": 0, "y": 0.1, "z": 0}, "visibleRange": {"max": 75}, "light": {"kind": "point", "color": "oklch(0.8 0.13 68)", "intensity": 5, "distance": 9, "shadow": {"enabled": false}, "visibleRange": {"max": 22}}}]
-"hub-doorlamp-t1-a1":
-  "id": "hub-doorlamp-t1-a1"
-  "feetPosition": {"x": 35, "y": 4.5, "z": -35.5}
-  "scale": 1.3
-  "model": {"id": "/cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb", "materials": {"glow": {"color": "oklch(0.95 0.06 85)", "emissive": "oklch(0.88 0.12 75)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 95}
-  "children": [{"id": "drop", "feetPosition": {"x": 0, "y": 0.43, "z": 0}, "primitive": {"kind": "cylinder", "radiusTop": 0.012, "radiusBottom": 0.012, "height": 0.8776923076923077}, "material": {"color": "oklch(0.3 0.01 80)", "metalness": 0.8, "roughness": 0.5}, "castShadow": false}, {"id": "glow", "feetPosition": {"x": 0, "y": 0.1, "z": 0}, "visibleRange": {"max": 75}, "light": {"kind": "point", "color": "oklch(0.8 0.13 68)", "intensity": 5, "distance": 9, "shadow": {"enabled": false}, "visibleRange": {"max": 22}}}]
-"hub-doorlamp-t1-a2":
-  "id": "hub-doorlamp-t1-a2"
-  "feetPosition": {"x": 35, "y": 4.5, "z": -51.5}
-  "scale": 1.3
-  "model": {"id": "/cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb", "materials": {"glow": {"color": "oklch(0.95 0.06 85)", "emissive": "oklch(0.88 0.12 75)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 95}
-  "children": [{"id": "drop", "feetPosition": {"x": 0, "y": 0.43, "z": 0}, "primitive": {"kind": "cylinder", "radiusTop": 0.012, "radiusBottom": 0.012, "height": 0.8776923076923077}, "material": {"color": "oklch(0.3 0.01 80)", "metalness": 0.8, "roughness": 0.5}, "castShadow": false}, {"id": "glow", "feetPosition": {"x": 0, "y": 0.1, "z": 0}, "visibleRange": {"max": 75}, "light": {"kind": "point", "color": "oklch(0.8 0.13 68)", "intensity": 5, "distance": 9, "shadow": {"enabled": false}, "visibleRange": {"max": 22}}}]
-"hub-doorlamp-t1-b0":
-  "id": "hub-doorlamp-t1-b0"
-  "feetPosition": {"x": 45, "y": 4.5, "z": -19.5}
-  "scale": 1.3
-  "model": {"id": "/cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb", "materials": {"glow": {"color": "oklch(0.95 0.06 85)", "emissive": "oklch(0.88 0.12 75)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 95}
-  "children": [{"id": "drop", "feetPosition": {"x": 0, "y": 0.43, "z": 0}, "primitive": {"kind": "cylinder", "radiusTop": 0.012, "radiusBottom": 0.012, "height": 0.8776923076923077}, "material": {"color": "oklch(0.3 0.01 80)", "metalness": 0.8, "roughness": 0.5}, "castShadow": false}, {"id": "glow", "feetPosition": {"x": 0, "y": 0.1, "z": 0}, "visibleRange": {"max": 75}, "light": {"kind": "point", "color": "oklch(0.8 0.13 68)", "intensity": 5, "distance": 9, "shadow": {"enabled": false}, "visibleRange": {"max": 22}}}]
-"hub-doorlamp-t1-b1":
-  "id": "hub-doorlamp-t1-b1"
-  "feetPosition": {"x": 45, "y": 4.5, "z": -35.5}
-  "scale": 1.3
-  "model": {"id": "/cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb", "materials": {"glow": {"color": "oklch(0.95 0.06 85)", "emissive": "oklch(0.88 0.12 75)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 95}
-  "children": [{"id": "drop", "feetPosition": {"x": 0, "y": 0.43, "z": 0}, "primitive": {"kind": "cylinder", "radiusTop": 0.012, "radiusBottom": 0.012, "height": 0.8776923076923077}, "material": {"color": "oklch(0.3 0.01 80)", "metalness": 0.8, "roughness": 0.5}, "castShadow": false}, {"id": "glow", "feetPosition": {"x": 0, "y": 0.1, "z": 0}, "visibleRange": {"max": 75}, "light": {"kind": "point", "color": "oklch(0.8 0.13 68)", "intensity": 5, "distance": 9, "shadow": {"enabled": false}, "visibleRange": {"max": 22}}}]
-"hub-doorlamp-t1-b2":
-  "id": "hub-doorlamp-t1-b2"
-  "feetPosition": {"x": 45, "y": 4.5, "z": -51.5}
-  "scale": 1.3
-  "model": {"id": "/cdn/value.d841ebd0eddc0df5e5fe89b2466669ed4e3aac8814e3e450f0477440d4f3d24a.glb", "materials": {"glow": {"color": "oklch(0.95 0.06 85)", "emissive": "oklch(0.88 0.12 75)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 95}
-  "children": [{"id": "drop", "feetPosition": {"x": 0, "y": 0.43, "z": 0}, "primitive": {"kind": "cylinder", "radiusTop": 0.012, "radiusBottom": 0.012, "height": 0.8776923076923077}, "material": {"color": "oklch(0.3 0.01 80)", "metalness": 0.8, "roughness": 0.5}, "castShadow": false}, {"id": "glow", "feetPosition": {"x": 0, "y": 0.1, "z": 0}, "visibleRange": {"max": 75}, "light": {"kind": "point", "color": "oklch(0.8 0.13 68)", "intensity": 5, "distance": 9, "shadow": {"enabled": false}, "visibleRange": {"max": 22}}}]
-"hub-drain-122a":
-  "id": "hub-drain-122a"
-  "feetPosition": {"x": 62, "y": 0.002, "z": -3.38}
-  "model": {"id": "/cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-drain-122b":
-  "id": "hub-drain-122b"
-  "feetPosition": {"x": 62, "y": 0.002, "z": 3.38}
-  "model": {"id": "/cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-drain-26a":
-  "id": "hub-drain-26a"
-  "feetPosition": {"x": -34, "y": 0.002, "z": -3.38}
-  "model": {"id": "/cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-drain-26b":
-  "id": "hub-drain-26b"
-  "feetPosition": {"x": -34, "y": 0.002, "z": 3.38}
-  "model": {"id": "/cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-drain-2a":
-  "id": "hub-drain-2a"
-  "feetPosition": {"x": -58, "y": 0.002, "z": -3.38}
-  "model": {"id": "/cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-drain-2b":
-  "id": "hub-drain-2b"
-  "feetPosition": {"x": -58, "y": 0.002, "z": 3.38}
-  "model": {"id": "/cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-drain-50a":
-  "id": "hub-drain-50a"
-  "feetPosition": {"x": -10, "y": 0.002, "z": -3.38}
-  "model": {"id": "/cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-drain-50b":
-  "id": "hub-drain-50b"
-  "feetPosition": {"x": -10, "y": 0.002, "z": 3.38}
-  "model": {"id": "/cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-drain-74a":
-  "id": "hub-drain-74a"
-  "feetPosition": {"x": 14, "y": 0.002, "z": -3.38}
-  "model": {"id": "/cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-drain-74b":
-  "id": "hub-drain-74b"
-  "feetPosition": {"x": 14, "y": 0.002, "z": 3.38}
-  "model": {"id": "/cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-drain-98b":
-  "id": "hub-drain-98b"
-  "feetPosition": {"x": 38, "y": 0.002, "z": 3.38}
-  "model": {"id": "/cdn/value.8a689fb9f41aec63ea6e7a0d2185bcb2394a329545f9f4d255ab825ad848ab91.glb"}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-fan-t1":
-  "id": "hub-fan-t1"
-  "feetPosition": {"x": 40, "y": 6.2, "z": -45.5}
-  "rotation": {"yaw": 0}
-  "model": {"id": "/cdn/value.078fd96137a212a702ba328bf5bfc1c1bdf41b73e5a4630ce4acdc4b3d9e39d7.glb", "offset": [0, -1.804, 0]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-fan-t40a":
-  "id": "hub-fan-t40a"
-  "feetPosition": {"x": -20, "y": 6.2, "z": -0.85}
-  "rotation": {"yaw": 90}
-  "model": {"id": "/cdn/value.078fd96137a212a702ba328bf5bfc1c1bdf41b73e5a4630ce4acdc4b3d9e39d7.glb", "offset": [0, -1.804, 0]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-fan-t40b":
-  "id": "hub-fan-t40b"
-  "feetPosition": {"x": -20, "y": 6.2, "z": 0.85}
-  "rotation": {"yaw": 90}
-  "model": {"id": "/cdn/value.078fd96137a212a702ba328bf5bfc1c1bdf41b73e5a4630ce4acdc4b3d9e39d7.glb", "offset": [0, -1.804, 0]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-lamp-0":
-  "id": "hub-lamp-0"
-  "tags": ["hub-lamp"]
-  "feetPosition": {"x": -54, "y": 4.45, "z": -5.45}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 120}
-  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
-"hub-lamp-1":
-  "id": "hub-lamp-1"
-  "tags": ["hub-lamp"]
-  "feetPosition": {"x": -42, "y": 4.45, "z": 5.45}
-  "rotation": {"yaw": 0}
-  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 120}
-  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
-"hub-lamp-2":
-  "id": "hub-lamp-2"
-  "tags": ["hub-lamp"]
-  "feetPosition": {"x": -30, "y": 4.45, "z": -5.45}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 120}
-  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
-"hub-lamp-3":
-  "id": "hub-lamp-3"
-  "tags": ["hub-lamp"]
-  "feetPosition": {"x": -18, "y": 4.45, "z": 5.45}
-  "rotation": {"yaw": 0}
-  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 120}
-  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
-"hub-lamp-4":
-  "id": "hub-lamp-4"
-  "tags": ["hub-lamp"]
-  "feetPosition": {"x": -6, "y": 4.45, "z": -5.45}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 120}
-  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
-"hub-lamp-47":
-  "id": "hub-lamp-47"
-  "tags": ["hub-lamp"]
-  "feetPosition": {"x": 34.55, "y": 4.45, "z": -11.5}
-  "rotation": {"yaw": -90}
-  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 120}
-  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
-"hub-lamp-48":
-  "id": "hub-lamp-48"
-  "tags": ["hub-lamp"]
-  "feetPosition": {"x": 45.45, "y": 4.45, "z": -23.5}
-  "rotation": {"yaw": 90}
-  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 120}
-  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
-"hub-lamp-49":
-  "id": "hub-lamp-49"
-  "tags": ["hub-lamp"]
-  "feetPosition": {"x": 45.45, "y": 4.45, "z": -47.5}
-  "rotation": {"yaw": 90}
-  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 120}
-  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
-"hub-lamp-5":
-  "id": "hub-lamp-5"
-  "tags": ["hub-lamp"]
-  "feetPosition": {"x": 6, "y": 4.45, "z": 5.45}
-  "rotation": {"yaw": 0}
-  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 120}
-  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
-"hub-lamp-50":
-  "id": "hub-lamp-50"
-  "tags": ["hub-lamp"]
-  "feetPosition": {"x": 34.55, "y": 4.45, "z": -59.5}
-  "rotation": {"yaw": -90}
-  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 120}
-  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
-"hub-lamp-6":
-  "id": "hub-lamp-6"
-  "tags": ["hub-lamp"]
-  "feetPosition": {"x": 18, "y": 4.45, "z": 5.45}
-  "rotation": {"yaw": 0}
-  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 120}
-  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
-"hub-lamp-7":
-  "id": "hub-lamp-7"
-  "tags": ["hub-lamp"]
-  "feetPosition": {"x": 30, "y": 4.45, "z": 5.45}
-  "rotation": {"yaw": 0}
-  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 120}
-  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
-"hub-lamp-8":
-  "id": "hub-lamp-8"
-  "tags": ["hub-lamp"]
-  "feetPosition": {"x": 42, "y": 4.45, "z": 5.45}
-  "rotation": {"yaw": 0}
-  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 120}
-  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
-"hub-lamp-9":
-  "id": "hub-lamp-9"
-  "tags": ["hub-lamp"]
-  "feetPosition": {"x": 54, "y": 4.45, "z": 5.45}
-  "rotation": {"yaw": 0}
-  "model": {"id": "/cdn/value.d734133cdb70ac338930eed545c3237125f1ddf4d4e1a9b72d5b953bc675be74.glb", "offset": [-0.102, -0.182, -0.219], "materials": {"lens": {"color": "oklch(0.8 0.15 68)", "emissive": "oklch(0.8 0.15 68)", "emissiveIntensity": 5}}}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 120}
-  "children": [{"id": "glow", "feetPosition": {"x": 0, "y": -0.12, "z": -0.38}, "visibleRange": {"max": 90}, "light": {"kind": "point", "color": "oklch(0.8 0.15 68)", "intensity": 9, "distance": 19, "shadow": {"enabled": false}, "visibleRange": {"max": 45}}}]
-"hub-tray-10":
-  "id": "hub-tray-10"
-  "feetPosition": {"x": -50, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-110":
-  "id": "hub-tray-110"
-  "feetPosition": {"x": 50, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-114":
-  "id": "hub-tray-114"
-  "feetPosition": {"x": 54, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-118":
-  "id": "hub-tray-118"
-  "feetPosition": {"x": 58, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-122":
-  "id": "hub-tray-122"
-  "feetPosition": {"x": 62, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-14":
-  "id": "hub-tray-14"
-  "feetPosition": {"x": -46, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-18":
-  "id": "hub-tray-18"
-  "feetPosition": {"x": -42, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-2":
-  "id": "hub-tray-2"
-  "feetPosition": {"x": -58, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-22":
-  "id": "hub-tray-22"
-  "feetPosition": {"x": -38, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-26":
-  "id": "hub-tray-26"
-  "feetPosition": {"x": -34, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-34":
-  "id": "hub-tray-34"
-  "feetPosition": {"x": -26, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-38":
-  "id": "hub-tray-38"
-  "feetPosition": {"x": -22, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-42":
-  "id": "hub-tray-42"
-  "feetPosition": {"x": -18, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-46":
-  "id": "hub-tray-46"
-  "feetPosition": {"x": -14, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-50":
-  "id": "hub-tray-50"
-  "feetPosition": {"x": -10, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-58":
-  "id": "hub-tray-58"
-  "feetPosition": {"x": -2, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-62":
-  "id": "hub-tray-62"
-  "feetPosition": {"x": 2, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
-"hub-tray-90":
-  "id": "hub-tray-90"
-  "feetPosition": {"x": 30, "y": 5, "z": -5.48}
-  "rotation": {"yaw": 180}
-  "model": {"id": "/cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb", "offset": [0, -0.34, -0.245]}
-  "castShadow": false
-  "receiveShadow": true
-  "visibleRange": {"max": 90}
+hub-tray-10:
+  castShadow: false
+  feetPosition: {x: -50, y: 5, z: -5.48}
+  id: hub-tray-10
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-110:
+  castShadow: false
+  feetPosition: {x: 50, y: 5, z: -5.48}
+  id: hub-tray-110
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-114:
+  castShadow: false
+  feetPosition: {x: 54, y: 5, z: -5.48}
+  id: hub-tray-114
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-118:
+  castShadow: false
+  feetPosition: {x: 58, y: 5, z: -5.48}
+  id: hub-tray-118
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-122:
+  castShadow: false
+  feetPosition: {x: 62, y: 5, z: -5.48}
+  id: hub-tray-122
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-14:
+  castShadow: false
+  feetPosition: {x: -46, y: 5, z: -5.48}
+  id: hub-tray-14
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-18:
+  castShadow: false
+  feetPosition: {x: -42, y: 5, z: -5.48}
+  id: hub-tray-18
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-2:
+  castShadow: false
+  feetPosition: {x: -58, y: 5, z: -5.48}
+  id: hub-tray-2
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-22:
+  castShadow: false
+  feetPosition: {x: -38, y: 5, z: -5.48}
+  id: hub-tray-22
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-26:
+  castShadow: false
+  feetPosition: {x: -34, y: 5, z: -5.48}
+  id: hub-tray-26
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-34:
+  castShadow: false
+  feetPosition: {x: -26, y: 5, z: -5.48}
+  id: hub-tray-34
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-38:
+  castShadow: false
+  feetPosition: {x: -22, y: 5, z: -5.48}
+  id: hub-tray-38
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-42:
+  castShadow: false
+  feetPosition: {x: -18, y: 5, z: -5.48}
+  id: hub-tray-42
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-46:
+  castShadow: false
+  feetPosition: {x: -14, y: 5, z: -5.48}
+  id: hub-tray-46
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-50:
+  castShadow: false
+  feetPosition: {x: -10, y: 5, z: -5.48}
+  id: hub-tray-50
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-58:
+  castShadow: false
+  feetPosition: {x: -2, y: 5, z: -5.48}
+  id: hub-tray-58
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-62:
+  castShadow: false
+  feetPosition: {x: 2, y: 5, z: -5.48}
+  id: hub-tray-62
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
+hub-tray-90:
+  castShadow: false
+  feetPosition: {x: 30, y: 5, z: -5.48}
+  id: hub-tray-90
+  model: {id: /cdn/value.e516ddf073245faf220a12c12bc1a1aee6e2978a9f8efd836e8ff0735cd0157a.glb, offset: [0, -0.34, -0.245]}
+  receiveShadow: true
+  rotation: {yaw: 180}
+  visibleRange: {max: 90}
