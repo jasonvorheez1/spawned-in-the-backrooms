@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9475,
-  "updatedAt": "2026-11-16T15:57:41.984Z",
+  "basedOnSpecVersion": 9511,
+  "updatedAt": "2026-11-16T15:58:44.612Z",
   "summary": "Spawned in the Backrooms is a multiplayer survival RPG spanning Level 0, the Bonus mall, The Hub and authored destinations. Durable character progress lives in player.state while Solo and Multiplayer separate run/story state; shared registries and helpers coordinate play, and place scenes/sims compose local worlds. Creator tools include reusable place dressing, Advanced Transform, BodyWorks rig fitting, and character/held-item posing.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes and anomalies; sim owns local beats and one-time surface dressing, while cells hold authored maze pieces and shared controllers.",
-    "places/bonus + places/testlab (3D) - vaporwave mall, shops, homes, atlas Teleport Station and BodyWorks fitting stand (its body/outfit preview is in x0z0.scene); Test Range holds loot/enemy bays and HIT SQUAD pad.",
+    "places/bonus + places/testlab (3D) - vaporwave mall, shops, homes, atlas Teleport Station and BodyWorks fitting stand (preview in x0z0.scene); mall scenes include interactive arcade/court props, while Test Range holds loot/enemy bays and HIT SQUAD pad.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; sim builds tunnels/doors and staffs camps.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; scenes and sims own local beats.",
     "places/level1 + places/level1c + places/level2 + places/level21 + places/level4 + places/level26 (3D) - Level 1 camp/procedural halls, Level 2 pipe halls, Level 2.1 Locked storage, Level 4 and Level 26; level21 sim handles local signs and dressing.",
-    "places/level8 + places/level9 + places/level10 + places/level11 + places/level61 + places/level70 (3D) - Cave System/9th Road, Suburbs, farm, city/Base Beta/strip mall/clinic, Snackrooms checkpoint and Froidetown; local sims dress signs and run level beats.",
+    "places/level8 + places/level9 + places/level10 + places/level11 + places/level61 + places/level70 (3D) - Cave System/9th Road, Suburbs, farm, city/Base Beta/strip mall/clinic, Snackrooms checkpoint and Froidetown; local sims dress signs and surfaces.",
     "places/level169 + places/level132 + places/level178 (3D) - Level 169 desert/house/trail/Field Office 7, Level 132 Duchy of Morigont/Lumiria and barter, Level 178 Kyoto terrain/house/residents/arrival quest.",
     "Other numbered and side places (3D) - authored cells and local sims define distinct levels, hubs and special rooms; tutorial, Bonus and Hub are separate destinations."
   ],
@@ -22,7 +22,7 @@
     "places/level178/config.yaml + scripts/terrain178.js + x0z0.scene + sim.js - Kyoto terrain, house, residents, arrival quest, finds, containers and breakable sweep.",
     "places/level1/sim.js + scripts/level1-geo.js + scripts/lib/wallgrid.js - Level 1.1 procedural hall geometry and lamp fixtures; wallgrid supplies corridor topology.",
     "mods/advanced-transform/god.js + panel.js + lib/adv-move.js and mods/held-gizmo/editor.js - transform and character/held-item posing tools; mods/bodyworks/tools/bw.py invokes bwlib/t1.py garment fitting cages and GLB export.",
-    "art/cat-wardrobe/cute.py + art/cat-wardrobe/snout-short.py + art/shelly-body/look.py - cat-body mesh shaping, a Blender GLB snout-shortening pass and comparison-render viewpoints for inspecting the fitted body."
+    "art/cat-wardrobe/cute.py + snout-short.py + snout-types2.py + scripts/lib/cat-wardrobe.js - cute female cat body and snout shaping assets, routed into the wearable cat model builder."
   ],
   "shared": [
     "scripts/lib/places.js - canonical place names/labels/HUD titles and valid atlas destinations; consumed by feed, quests and scripts/ui.js.",
@@ -41,8 +41,8 @@
     "scripts/lib/companion.js - PERKS, perkOf, isMine, followersOf, loyaltyScale, whyNot, recruit/adopt/dismiss/order, weapon handoff, tick, bring; carry.js - carryAcross.",
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - journal/advancement/reward helpers; scripts/lib/containment.js - pen/door operations; scripts/lib/run-opts.js - run/mode helpers and keys.",
-    "scripts/lib/hub.js - room, home and atlas helpers; scripts/lib/dina-quest.js - trail and dialogue helpers.",
-    "scripts/lib/retexture.js - retexture, retextureOnce; scripts/lib/sign-tex.js - texSigns; mods/advanced-transform/lib/adv-move.js - applyAdvMoves; mods/held-gizmo/editor.js - editor tools."
+    "scripts/lib/hub.js - room, home and atlas helpers; scripts/lib/dina-quest.js - trail and dialogue helpers; scripts/hub-ui.js - hubUi.",
+    "scripts/lib/cat-wardrobe.js - CAT_CUTE, bodyGlb, catModel, catChildren and catMorph; scripts/bonus-prop.js - ears.press; scripts/lib/retexture.js - retexture/retextureOnce; scripts/lib/sign-tex.js - texSigns."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable character player.state: progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance/look, currency and gear shared across Solo/Multiplayer.",
@@ -55,8 +55,8 @@
     "scripts/lib/hub.js noteAtlas, called by scripts/player.js on arrival - player.state.atlas first-seen dates/visit counts; place sims own local texV/signTexV completion stamps."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused interaction handlers.",
-    "templates/player.js runs scripts/fall-guard.js before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
+    "world.config.yaml actions → templates/player.js ordered locomotion/player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused interactions, with scripts/fall-guard.js before movement.",
+    "scripts/fall-guard.js holds velocity across place changes for ground streaming; grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; player.js builds local first-person viewmodel and avatar setup.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
     "scripts/main-menu-ui.js renders Continue/Start, Solo/Multiplayer and expedition/save/settings/controls links; title/pause actions → scripts/main-menu.js, which routes start and run picks.",
@@ -66,7 +66,7 @@
     "scripts/player.js zone resolver → player.state.zone; scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass.",
     "scripts/player.js place arrival → scripts/lib/hub.js noteAtlas writes player.state.atlas; Bonus Teleport Station renders discovered ATLAS_ORDER destinations.",
     "Dina diary/records/Hub lead interactions → scripts/lib/dina-quest.js learn/questVoice → player.state.trail tracker and voiced dialogue; story-off runs and Multiplayer bypass the purser.",
-    "Place sim tick → scripts/lib/retexture.js retextureOnce and scripts/lib/sign-tex.js texSigns; Level 8 and Level 2.1 pass hand-made face tables and version 3, then markerV/downYa migrate existing marker/sign placements."
+    "Bonus usable props → scripts/interact.js press dispatch → scripts/bonus-prop.js ears.press reads state.propKind, uses per-object session cooldown/rotation and writes player notice or emits sound/flash/animation; places/bonus/sim.js calls layBonusExtra for local dressing."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
@@ -75,8 +75,8 @@
     "scripts/crawl.js + scripts/player.js + humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "scripts/lib/l169-road.js + l169-road-geo.js + l169-travel.js + l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
     "places/level132/sim.js + l132-{stalls,shops,land,people,duke,quests,barter}.js + barter-deal.js - staged town and keeper trades use eight goods categories; first gift then balanced currency-free barter.",
-    "scripts/phone.js + phone-ui.js + screen.js - one shared wrist phone; apps include keeper contacts/restock texts, camera/photos/notes, flashlight and radio.",
-    "scripts/lib/retexture.js + scripts/lib/sign-tex.js + place sims - reusable bare-box/cylinder dressing and marker-to-image sign faces; Level 8/2.1 provide bespoke sign art and bump completion version 3."
+    "scripts/lib/cat-wardrobe.js + scripts/lib/critter-model.js + scripts/critter.js - cat body/look variants share the rig, material and morph builder; look.cute selects CAT_CUTE and look.snout/ears/tail apply shape keys.",
+    "scripts/lib/retexture.js + scripts/lib/sign-tex.js + place sims - reusable bare-box/cylinder dressing and marker-to-image sign faces; Level 8 and Level 2.1 supply bespoke face tables and completion versions."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists; Level 26 placements/barrage use uploaded models.",
@@ -91,7 +91,7 @@
     "Multiplayer room ID is mp- plus sanitized party ID (or user ID); hub.js selects it only when leaving Bonus in multiplayer. Continue must not wake a multiplayer save into a solo room.",
     "Tutorial finale cut ends at tut0-cut.js LEN.final = 14 s; THE WAY BACK / SOMEWHERE WET card is held over black and the crossing, then fades on Level 1 landing; retain ui.js lazy-load and main-menu.js t0lift stamp coupling.",
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with sim-created hub-from-l178.",
-    "Level 169 uses x/z, north = -z and 1:10 map scale; Level 1.1 hall distance is +X (0–620 m), north at -Z. retextureOnce waits about 8 s with a player and stamps texV; texSigns preserves sign geometry and stamps signTexV; Level 21's fridge-fit marker is geometry-sensitive.",
-    "BodyWorks mods/bodyworks/tools/bwlib/t1.py garment cages are fitted to welded skin shells: keep the shirt yoke/sleeve seam overlapped and shoulder-cap weighting, waistband and skirt waist above the hips, and exclude tail-weighted skin from skirt shaping; places/bonus/cells/x0z0.scene previews the updated fit on /cdn/value.922fcc214e88b802052c2743698100d8d17a6d4cd2a760381e12c860ed873004.glb."
+    "Level 169 uses x/z, north = -z and 1:10 map scale; Level 1.1 hall distance is +X (0–620 m), north at -Z. retextureOnce waits about 8 s with a player and stamps texV; texSigns preserves sign geometry and stamps signTexV.",
+    "BodyWorks mods/bodyworks/tools/bwlib/t1.py garment cages are fitted to welded skin shells: preserve yoke/sleeve seam overlap, shoulder-cap weighting and waistband placement. CAT_CUTE is an alternate same-rig body selected by look.cute, so retain the shared bone/morph/material contract when editing its asset or builder."
   ]
 }
