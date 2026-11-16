@@ -295,7 +295,7 @@ function compassRead(s, yaw, now) {
 // T: the wait menu, and the fade after a rest (scripts/rest.js)
 function restUi(ctx, s) {
   let out = ''
-  if (s.restFx && ctx.now() - s.restFx.at < 3500) out += `<style>@keyframes restF{0%{opacity:0}20%,70%{opacity:1}100%{opacity:0;visibility:hidden}}</style><div id="rest${s.restFx.at}" style="position:absolute;inset:0;background:#050403;display:flex;align-items:center;justify-content:center;animation:restF 3.4s forwards;color:#f2c14e;font-size:24px;letter-spacing:.12em;text-shadow:2px 2px #000">${s.restFx.text}</div>`
+  if (s.restFx && ctx.now() - s.restFx.at < 3500) out += `<style>@keyframes restF{0%{opacity:0}20%,70%{opacity:1}100%{opacity:0;visibility:hidden}}</style><div id="rest${s.restFx.at}" style="position:absolute;inset:0;background:#050403;display:flex;align-items:center;justify-content:center;animation:restF 3.4s forwards;color:#f2c14e;font-size:24px;letter-spacing:.12em;text-shadow:2px 2px #000;padding:0 calc(var(--spawn-chrome-reservation-right-inset,50px) + 24px);text-align:center;line-height:1.5"><div style="max-width:720px">${s.restFx.text}</div></div>`
   if (s.elevPanel) {
     const body = s.elevAsk
       ? `<p>The hotel does not go to floor ${esc(s.elevAsk)}. Ride anyway?</p><div class="field-controls"><button class="primary" onclick="sendAction('elevdo',{f:'yes'})">Ride</button><button onclick="sendAction('elevdo',{f:'no'})">Back</button></div>`
