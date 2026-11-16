@@ -2589,6 +2589,13 @@ esc-up-step-26:
   receiveShadow: true
   state: {dir: up, y: [{duration: 0.1761207600990182, easing: linear, value: 5.3053}, {duration: 0.001, easing: linear, value: -0.19469999999999998}, {duration: 9.334400285247968, easing: linear, value: 5.203448148148149}], z: [{duration: 0.1761207600990182, easing: linear, value: -10.185185185185185}, {duration: 0.001, easing: linear, value: -0.18518518518518517}, {duration: 9.334400285247968, easing: linear, value: -10}]}
   tags: [bonus-mall, escalator-step]
+kemono-slim-preview:
+  feetPosition: {x: 6.6, y: 5.52, z: -15.2}
+  id: kemono-slim-preview
+  layout: {box: {max: {x: 1, y: 1.2, z: 0.5}, min: {x: -1, y: 0, z: -0.5}}}
+  model: {id: /cdn/value.ada9afab0068383656909dc6ef4c8a820d6204edfb0237524bdd3d4ffc5aff95.glb}
+  rotation: {lookAt: {x: 8.05, y: 5.52, z: -13.88}}
+  tags: [preview]
 plat-clock:
   feetPosition: {x: -16, y: 8.3, z: -6.5}
   id: plat-clock
