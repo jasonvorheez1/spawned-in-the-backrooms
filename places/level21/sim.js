@@ -1,3 +1,5 @@
+import { texSigns } from "../../scripts/lib/sign-tex.js";
+const SIGN_TEX = [["PERSONNEL ONLY","/cdn/value.c23d99307fd9a90dd96af6035d77fa7d579246066e0a2ec0cd6837f818500c7d.png"]]; // hand-made sign faces, Nov 16
 import { sweepProps } from "../../scripts/lib/breakables.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
@@ -505,6 +507,7 @@ const l21CampBenches = () => {
 };
 
 export function tick(ctx) {
+  texSigns(ctx, SIGN_TEX);
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level21"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)

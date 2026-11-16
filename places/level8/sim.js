@@ -1,3 +1,5 @@
+import { texSigns } from "../../scripts/lib/sign-tex.js";
+const SIGN_TEX = [["▼ 9TH ROAD ▼","/cdn/value.29f96f06b2149bb870ec8cd547f8a695285e7d9b5856e5426ce156aa61049e3d.png"],["FLOOD GAUGE","/cdn/value.1971e375360e38cf2309e115c2f7d20c9f0395fbe89a9bca98d32ce04dfa426f.png"],["NEVER ENTER","/cdn/value.9e3ebfc5dae0050018d0aafea102215043a6cd59ec2142fd9b665f3e970ffc1a.png"],["KEEP BACK · IT IS HOT","/cdn/value.e006f46b26d5d2c3d67eb326e4c50d21f7f8feb9d4b7ff3b489de3a071e78a8a.png"],["ROAD CLOSED","/cdn/value.7d17dd5ae5ee776a7b6f90698e363461ec53e08d0a1d4e1a9f758b240e783123.png"],["THE SUBURBS","/cdn/value.fad9d7770a3986d8fb337f35e52aa805fb0f9d02e724c4cc9cce5774646a3fb4.png"],["ERRANDS","/cdn/value.530382c241c0ef13469a74ae914f3793ead1f392b39dd729c5f58bac0b728b11.png"],["CONCRETE TUNNEL","/cdn/value.34a76d3525c0024e3f71fbbedb28b3ed7cb53c17bdbedd73138b51cb918f74e9.png"]]; // hand-made sign faces, Nov 16
 import { retextureOnce } from "../../scripts/lib/retexture.js";
 import { pickVariant, vmul } from "../../scripts/lib/foe-variant.js";
 import { sweepProps } from "../../scripts/lib/breakables.js";
@@ -571,6 +573,7 @@ function lay(ctx) {
 // the tunnel mouth to Level 2.1: the cave floor there can't be probed from the sim, so its dressing trusts the arrival's own height
 const l8Ways = () => { const d = P(46, -8.9, 0), m = P(46, -5.4, 0), l = Math.hypot(m.x - d.x, m.z - d.z) || 1; return [{ id: "l8-to-l21", at: { x: d.x, y: m.y, z: d.z }, fwd: { x: (m.x - d.x) / l, z: (m.z - d.z) / l }, trust: true }]; };
 export function tick(ctx) {
+  texSigns(ctx, SIGN_TEX);
   retextureOnce(ctx); // graphics pass: bare props get real surfaces
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level8"); // every sign dressed as its own board (scripts/lib/sign-style.js)
