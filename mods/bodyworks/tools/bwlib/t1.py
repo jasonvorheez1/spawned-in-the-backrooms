@@ -169,7 +169,7 @@ def run(body, ZONES, DOC, a):
     for s, sg in SIDES:
         P = [J[f'shoulder.{s}'], J[f'elbow.{s}'], J[f'wrist.{s}']]
         a_ = add(Tube(f'top_sleeve_{s}', 'top', OFF['top'], 24, COL['top']))
-        u0s = min(0.3, 0.11 * S * 0.7 / max(float(np.linalg.norm(np.array(P[1]) - np.array(P[0]))), 1e-6))   # the yoke owns the shoulder cap to 0.8 capR: the sleeve starts just inside it, never flared over the deltoid
+        u0s = min(0.3, 0.11 * S * 0.3 / max(float(np.linalg.norm(np.array(P[1]) - np.array(P[0]))), 1e-6))   # the yoke owns the shoulder cap to 0.8 capR: the sleeve starts just inside it, never flared over the deltoid
         for u, p, tg in chain_samples(P, 0.025, u0=u0s, u1=2.0):
             r, b = frame(tg, FWD); o = recentre(p, tg, 0.025, isarm(s), 0.08)
             a_.ring(u, o, around(24, r, b), isarm(s), maxr=0.12)
@@ -186,14 +186,14 @@ def run(body, ZONES, DOC, a):
     # ---------- LEGS ----------
     pv = add(Tube('legs_pelvis', 'legs', OFF['legs'], 40, COL['legs']))
     okL = lambda n: tor_fam(n) or n.startswith('thigh')
-    for z in np.arange(z_crotch + 0.005 * S, z_waist - 0.03 * S + 1e-6, 0.015 * S):
+    for z in np.arange(z_crotch + 0.005 * S, z_waist + 0.06 * S + 1e-6, 0.015 * S):   # waistband over the hip bones: below the waist, the body's painted underwear showed above it
         m = zslab(z, 0.01, 0.25); yc = float(V[m][:, 1].mean()) if m.sum() > 10 else body.yc
         pv.ring(float(z), np.array([0, yc, z]), around(40, FWD, X), okL, hole=anyarm, maxr=0.3)
     pv.finish(1)
     LEGP = {}
     for s, sg in SIDES:
         Hh, Kk, A = J[f'hip.{s}'], J[f'knee.{s}'], J[f'ankle.{s}']
-        u_top = float((Hh[2] - z_crotch) / (Hh[2] - Kk[2])); LEGP[s] = (Hh, Kk, A, u_top)
+        u_top = float((Hh[2] - (z_crotch + 0.03 * S)) / (Hh[2] - Kk[2]))   # the leg starts 3 cm inside the seat: started at the crotch, a slit of thigh showed between them; LEGP[s] = (Hh, Kk, A, u_top)
         lg = add(Tube(f'legs_leg_{s}', 'legs', OFF['legs'], 28, COL['legs']))
         okLeg = lambda n, s=s: isleg(s)(n) or n == 'hips'
         for u, p, tg in chain_samples([Hh, Kk, A], 0.025, u0=u_top, u1=1.94):
@@ -212,7 +212,7 @@ def run(body, ZONES, DOC, a):
     sk = add(Tube('skirt_bell', 'skirt', OFF['skirt'], 48, COL['skirt']))
     z_ankle = float((J['ankle.L'][2] + J['ankle.R'][2]) / 2)
     NOARM = np.array([not (z.startswith('upperarm') or z.startswith('forearm') or z.startswith('wrist') or z.startswith('palm') or z.startswith('fingers')) for z in VZ])
-    for z in np.arange(z_waist, z_ankle + 0.02 * S - 1e-6, -0.03 * S):
+    for z in np.arange(z_waist + 0.06 * S, z_ankle + 0.02 * S - 1e-6, -0.03 * S):
         rel = V - np.array([0, body.yc, z]); m = NOARM & (np.abs(rel[:, 2]) < 0.012 * S); Rl = rel[m]; Rl[:, 2] = 0; dist = np.linalg.norm(Rl, axis=1)
         dirs = around(48, FWD, X); r = np.full(48, np.nan)
         if len(Rl) > 20:   # support function of the slab: the convex hull a cloth wraps, no notches between the legs
