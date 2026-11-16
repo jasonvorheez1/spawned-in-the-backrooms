@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9714,
-  "updatedAt": "2026-11-16T20:05:27.432Z",
+  "basedOnSpecVersion": 9737,
+  "updatedAt": "2026-11-16T20:24:32.669Z",
   "summary": "Spawned in the Backrooms is a multiplayer survival RPG spanning the Backrooms, Bonus mall, The Hub and authored destinations. Character progression is durable in player.state while run/story state is mode-separated; shared scripts and data registries support gameplay, appearance and reactive props, and place scenes plus sims compose local spaces. Creator tools include BodyWorks, Advanced Transform, character posing and the Spawn 3D Modeling Studio.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes and anomalies; cells hold maze pieces, moments and environmental dressing.",
-    "places/bonus + places/testlab (3D) - vaporwave mall with shops, homes, atlas Teleport Station and interactive props; hidden places/bonus/cells/x0y-1z5.scene holds BodyWorks/slim-body fixtures and editor-only old/new Tripo head comparison stands.",
+    "places/bonus + places/testlab (3D) - vaporwave mall with shops, homes, atlas Teleport Station and interactive props; hidden places/bonus/cells/x0y-1z5.scene holds BodyWorks/slim-body fixtures and editor-only old/new Tripo head comparison scene.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; sim builds tunnels/doors and staffs camps.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; scenes and sims own local beats.",
     "places/level4 (3D) - authored and sim-built offices, Base Omega and fixtures; scripts/l4-home.js handles fixture interactions.",
@@ -22,12 +22,12 @@
     "places/level178/sim.js + x0z0.scene - Kyoto house, residents, arrival quest, finds, containers and breakable sweep; scripts/l178-prop.js owns futon interaction and delayed Lumiria crossing.",
     "places/level31/sim.js + scripts/lib/level31.js and level31-{arcade,food,sideb}.js - one-time rink shell and delegated zone dressing/interaction behaviors.",
     "places/level1/sim.js + scripts/level1-geo.js + scripts/lib/wallgrid.js - Level 1.1 procedural hall geometry and lamp fixtures; wallgrid supplies corridor topology.",
-    "mods/modeling-studio/mod.json + god.js/player.js + lib/panel.js; mods/advanced-transform, mods/held-gizmo and mods/bodyworks - creator UI, transforms/posing and garment fitting/export; art/critter-heads/tripo-swap.py - offline Blender head replacement/neck fitting for preview GLBs."
+    "mods/modeling-studio/mod.json + god.js/player.js + lib/panel.js; mods/advanced-transform, mods/held-gizmo and mods/bodyworks - creator UI, transforms/posing and garment fitting/export; art/cat-wardrobe and art/critter-heads contain offline Blender wardrobe/head fitters, previewed in the hidden Bonus cell."
   ],
   "shared": [
     "scripts/lib/places.js - canonical place names/labels/HUD titles and valid atlas destinations; consumed by feed, quests and scripts/ui.js.",
     "scripts/lib/grid-path.js - configurable 4-neighbor grid BFS/cache/cell selection shared by Level 0, 1, 2, 2.1, 3, Boiler and 6 adapters.",
-    "scripts/lib/critter-model.js + scripts/lib/cat-wardrobe.js - common appearance/body/wardrobe builders for player and NPCs; scripts/mat-catskin.js supplies bind-space skin and per-head face projection; slim kemono remains behind SLIM_ON (currently false).",
+    "scripts/lib/critter-model.js + scripts/lib/cat-wardrobe.js - common appearance/body/wardrobe builders for player and NPCs; scripts/mat-catskin.js projects tintable fur and face textures, with neutral face assets from scripts/lib/data/critter-faces.yml; slim kemono remains behind SLIM_ON (currently false).",
     "scripts/lib/hub.js + scripts/lib/thehub.js + scripts/lib/hubkeys.js - Bonus solo/multiplayer routing, home/atlas eligibility and Hub tunnel/door key registry.",
     "scripts/lib/mp-guard.js - multiplayer-room detection and nonlethal NPC-down rule; scripts/player.js and scripts/meg-agent.js invoke spared().",
     "scripts/lib/prop-interactions.js + interactive-props data - shared usable-prop/container migration and geometry specs; scripts/interact.js dispatches.",
@@ -57,7 +57,7 @@
   "flows": [
     "world.config.yaml actions → templates/player.js ordered locomotion/player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused interactions.",
     "scripts/fall-guard.js holds velocity across place changes for ground streaming; grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
-    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; player.js builds local first-person viewmodel and avatar setup.",
+    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; player.js builds local first-person viewmodel and avatar setup, while critter appearance modules resolve body/wardrobe/face for player and NPC models.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
     "scripts/main-menu-ui.js renders Continue/Start, Solo/Multiplayer and expedition/save/settings/controls links; title/pause actions → scripts/main-menu.js, which routes start and run picks.",
     "scripts/lib/run-opts.js mpRoom(party/user) → scripts/lib/hub.js toSolo → party room mp-<party> (or user room); scripts/routing.js requests Bonus solo-room selection and threshold handlers call carryAcross for held props/followers.",
@@ -65,7 +65,7 @@
     "scripts/player.js zone resolver → player.state.zone; scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass; place arrival → hub.noteAtlas writes player.state.atlas for the Bonus Teleport Station.",
     "Dina diary/records/Hub lead interactions → scripts/lib/dina-quest.js learn/questVoice → player.state.trail tracker and voiced dialogue; story-off runs and Multiplayer bypass the purser.",
     "Level 0 scripts/moments.js → scripts/lib/payphone.js phoneRing/phoneCall; scripts/level11-use.js and scripts/l61-use.js call phoneCall for 25¢ M.E.G. hotline access; relay writes caller phoneTip/subtitle and sound/voice.",
-    "Bonus usable props → scripts/interact.js → scripts/bonus-prop.js, arcade.js, bonus-counter.js or smoothie.js; home11 fixtures → scripts/home11-door.js ears.press; Level 31 arcade/food/Side B use same press dispatch; kit registries → kit dressing.",
+    "Bonus usable props → scripts/interact.js → scripts/bonus-prop.js, arcade.js, bonus-counter.js or smoothie.js; home11 fixtures → scripts/home11-door.js ears.press; Level 31 arcade/food/Side B use same press dispatch; kit registries drive dressing.",
     "scripts/lib/sleep.js isBed/bedNear/goToBed → scripts/interact.js E focus/near-bed or scripts/rest.js T hours menu; solo advances world clock and heals, multiplayer bed rest skips clock only when all players' inBedUntil leases are current."
   ],
   "behaviorFamilies": [
@@ -76,7 +76,7 @@
     "scripts/lib/sleep.js + scripts/interact.js + scripts/rest.js + scripts/l178-prop.js - common bed detection/entry, with ordinary rest and Kyoto futon crossing as distinct outcomes.",
     "scripts/lib/l169-road.js + l169-road-geo.js + l169-travel.js + l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
     "places/level132/sim.js + l132-{stalls,shops,land,people,duke,quests,barter}.js + barter-deal.js - staged town and keeper trades use eight goods categories; first gift then balanced currency-free barter; shop props animate wares on offer.",
-    "scripts/lib/usable-kit.js + scripts/lib/kit-levels.js + scripts/usable-kit.js + bespoke prop handlers - shared press dressing adds fitted motion/sound/light; registry variants include Level 10 farm fixtures while each prop retains its own behavior."
+    "scripts/lib/usable-kit.js + scripts/lib/kit-levels.js + scripts/usable-kit.js + bespoke prop handlers - shared press dressing adds fitted motion/sound/light; registry variants include Level 10 farm fixtures while each prop retains its own interactions."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists; Level 26 placements/barrage use uploaded models.",
@@ -92,6 +92,6 @@
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with sim-created hub-from-l178.",
     "Level 169 uses x/z, north = -z and 1:10 map scale; Level 1.1 hall distance is +X (0–620 m), north at -Z. retextureOnce waits about 8 s with a player and stamps texV; texSigns preserves sign geometry and stamps signTexV.",
     "Both usable-kit dress passes require a player and throttle each place to one look per 5 s, at most 12 matched props per pass; gifts use per-user state.kcd in seconds (data cd is seconds). Bed E-entry sets waitBed; multiplayer sleep uses inBedUntil leases.",
-    "art/critter-heads/tripo-swap.py is an offline Blender head-swap fitter: HS=1.1 and LIFT=-0.035 size/place the new head around the body's neck base; MA/CK add muzzle/cheek volume, while BAND=0.08 and MUZ=0.14 limit neck blending so jaw/muzzle shape stays intact. Hidden places/bonus/cells/x0y-1z5.scene previews old vs Tripo head GLBs; scripts/mat-catskin.js faceLowK, faceSplitV and faceUScale tune portrait projection per head without changing default cats."
+    "art/critter-heads/tripo-swap.py is an offline Blender head replacement that preserves headFur/innerEar slots, head/neck weights and snout/ear shape keys; HS=1.1, LIFT=-0.05 and BACK=0.09 position around the neck base. art/cat-wardrobe/cheek-wrap.py re-exports CAT_BODY with fuller cheek-side muzzle geometry; scripts/lib/data/critter-faces.yml maps the new neutral decals, and humanoid-locomotion.js now uses upright mirrored left-strife clips."
   ]
 }
