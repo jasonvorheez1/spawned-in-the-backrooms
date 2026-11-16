@@ -31,7 +31,7 @@ export function onInput(ctx, input) {
         ` · seen from yaw ${Math.round(edit.view.yaw)}°, pitch ${Math.round(edit.view.pitch)}° · edit ${id}: fix the model and swap it in place on the same item, make THREE takes and write them to world.state.m3d.edits row ${id} as variants: [{ model: { id, forward }, note }]; the creator picks one in the Preview Window and the pick swaps it in`, { wake: true });
       return;
     }
-    s.pending = [...(s.pending ?? []), { id, mode, text, refs, sel, ...(pose ? { pose } : {}), ...(edit ? { edit } : {}), by: who, at: ctx.now() }].slice(-8);
+    s.pending = [...(s.pending ?? []), { id, mode, text, refs, sel, ...(pose ? { pose } : {}), ...(edit ? { edit } : {}), by: who, at: ctx.now() }]; // never trimmed: a slice here dropped Jev's open orders when a studio ask landed
     ctx.notifyDm(`Spawn 3D Modeling Studio ask from ${who} · ${mode === "image" ? "PAINT" : "BUILD 3D"} · "${text}"` + (pose ? ` · POSE ${pose === "a" ? "A-pose" : "T-pose"}` : "") +
       (edit ? ` · EDIT of ${edit.of} "${of.name}" (${of.spec?.model?.id ?? ""}) · region ${edit.box ? `x ${edit.box.x0.toFixed(2)}–${edit.box.x1.toFixed(2)}, y ${edit.box.y0.toFixed(2)}–${edit.box.y1.toFixed(2)} of the preview, top-left 0,0` : "whole model"}${edit.poly ? ` · lasso shape ${edit.poly.map((q) => q.x.toFixed(2) + "," + q.y.toFixed(2)).join(" ")}` : ""} · seen from yaw ${Math.round(edit.view.yaw)}°, pitch ${Math.round(edit.view.pitch)}°` : "") +
       (picked.length ? ` · selected ${picked.map((i) => `${i.id} "${i.name}"`).join(", ")}` : "") +
