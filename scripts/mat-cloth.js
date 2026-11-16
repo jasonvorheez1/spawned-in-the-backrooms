@@ -21,7 +21,7 @@ export function material(ctx) {
   const base = materialColor;
   const fine = mx_noise_float(p.mul(260)).mul(0.5).add(0.5); // thread fuzz everywhere
   let col = base.mul(float(0.92).add(fine.mul(0.12)));
-  let rough = 0.85;
+  let rough = 0.96; // Nov 16: 0.85 read as wet plastic on dark capes and beanies; plain fabric is matte
   const band = (x, w) => smoothstep(0.5 - w - 0.02, 0.5 - w, abs(fract(x).sub(0.5))).oneMinus(); // 1 inside a centred band of half-width w
   if (pat === "denim") {
     rough = 0.98; // denim is matte: at 0.85 a fold mid-stride caught a hard glare that read as pale patches (Nov 11)
