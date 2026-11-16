@@ -943,7 +943,9 @@ export function restyle(ctx, o, wardSet) {
     return true
   }
   { const f = o.model?.materials?.headFur?.params?.face // Nov 16 (Shelly "make sure it applies to everyone", "apply it to the npcs"): a standing cat whose painted face is from an older set redraws with today's
-    if (f && o.state?.wear && !o.tags?.includes('player') && !faceNow().has(f)) { o.model = bodyModel(o.state.wear); return true } }
+    if (f && o.state?.wear && !o.tags?.includes('player') && !faceNow().has(f)) { o.model = bodyModel(o.state.wear); return true }
+    // Nov 16 (Shelly: hair "weird up front"): a standing cat with a hairstyle but no hair-coloured scalp under it redraws once, so no white shows between the locks
+    if (f && o.state?.wear?.hair && !o.tags?.includes('player') && !o.model.materials.headFur.params.scalp) { const nm = bodyModel(o.state.wear); if (nm?.materials?.headFur?.params?.scalp) { o.model = nm; return true } } }
   const wardKids = () => Object.keys(ctx.place?.objects ?? {}).filter((k) => k.startsWith(o.id + '/critter-ward-'))
   if (!isH && !isF && (o.state?.headBody || (wardSet ? wardSet.has(o.id) : wardKids().length))) isH = true // wardSet: the place pass names ward parents once (a per-object scan of every key hitched the room once a second) // Nov 11: a read can name the served copy of the body file, not its listed id; split garments or a seated human head still say human
   if (!isH && !isF) return false
