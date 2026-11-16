@@ -48,8 +48,8 @@ function t0Ui(ctx, player) {
   const caps = (T0CAP[c.id] || []).map(([at, len, txt]) => `<div class="tcc" style="animation-duration:${len * PACE}ms;animation-delay:${d(at)}">${txt}</div>`).join("")
   return `<style>
 @keyframes tb-in{from{height:0}to{height:11vh}} @keyframes tcc{0%{opacity:0}12%{opacity:.9}85%{opacity:.9}100%{opacity:0}}
-@keyframes tblack{from{opacity:0}to{opacity:1}} @keyframes ttitle{0%{opacity:0;letter-spacing:.6em;filter:blur(6px)}25%{opacity:1;letter-spacing:.32em;filter:blur(0)}82%{opacity:1}100%{opacity:0}}
-@keyframes tsub{0%{opacity:0}30%{opacity:.6}82%{opacity:.6}100%{opacity:0}}
+@keyframes tblack{from{opacity:0}to{opacity:1}} @keyframes ttitle{0%{opacity:0;letter-spacing:.6em;filter:blur(6px)}25%{opacity:1;letter-spacing:.32em;filter:blur(0)}100%{opacity:1;letter-spacing:.32em}}
+@keyframes tsub{0%{opacity:0}30%{opacity:.6}100%{opacity:.6}}
 .tb{position:fixed;left:0;right:0;height:11vh;background:#000;z-index:50;animation:tb-in .7s ease-out both;animation-delay:${d(0)}}
 .tcc{position:fixed;left:0;right:0;bottom:14vh;text-align:center;z-index:53;color:#f2ead8;font:400 16px/1.4 Georgia,serif;letter-spacing:.06em;text-shadow:1px 1px 3px #000;opacity:0;animation-name:tcc;animation-fill-mode:both;animation-timing-function:ease}
 .tbk{position:fixed;inset:0;background:#000;z-index:51;opacity:0;animation:tblack ${1.1 * PACE}s ease-in both;animation-delay:${d(8600)}}
@@ -58,9 +58,13 @@ function t0Ui(ctx, player) {
 .ts{position:fixed;left:0;right:0;top:calc(41% + 64px);text-align:center;z-index:54;color:#d9cfae;font:400 13px/1 Georgia,serif;letter-spacing:.5em;opacity:0;animation:tsub ${8.2 * PACE}s ease both;animation-delay:${d(10800)}}
 </style>${FILM}<div class="tb" style="top:0"></div><div class="tb" style="bottom:0"></div>${fin ? `<div class="tbk"></div><div class="tt">THE WAY BACK</div><div class="ts">SOMEWHERE WET</div>` : ""}${caps}`
 }
+const T0CARD = `<div style="position:fixed;left:0;right:0;top:41%;text-align:center;color:#f2c14e;font:400 46px/1.1 Georgia,serif;letter-spacing:.32em;text-shadow:0 0 18px rgba(242,193,78,.35)">THE WAY BACK</div><div style="position:fixed;left:0;right:0;top:calc(41% + 64px);text-align:center;color:#d9cfae;font:400 13px/1 Georgia,serif;letter-spacing:.5em;opacity:.6">SOMEWHERE WET</div>`
 export function t0Fade(ctx, player) {
-  const f = player.state.t0fade; if (!f || ctx.now() - f > 3000 || f > ctx.now() + 100) return "" // a stamp in the future is another room's clock: never a fade
-  return `<style>@keyframes t0f{from{opacity:1}to{opacity:0}}</style><div style="position:fixed;inset:0;background:#000;z-index:60;pointer-events:none;animation:t0f 2.6s ease-in both;animation-delay:${f - ctx.now()}ms"></div>`
+  const f = player.state.t0fade
+  // Shelly Nov 16: the drop into Level 1 sat on plain black; the card holds through the crossing, then lifts with the black
+  if (f && String(ctx.place?.id ?? "").startsWith("tutorial0")) return `<div style="position:fixed;inset:0;background:#000;z-index:60;pointer-events:none">${T0CARD}</div>`
+  if (!f || ctx.now() - f > 3000 || f > ctx.now() + 100) return "" // a stamp in the future is another room's clock: never a fade
+  return `<style>@keyframes t0f{from{opacity:1}to{opacity:0}}</style><div style="position:fixed;inset:0;background:#000;z-index:60;pointer-events:none;animation:t0f 2.6s ease-in both;animation-delay:${f - ctx.now()}ms">${T0CARD}</div>`
 }
 
 // Level 26 (scripts/lib/l26-cut.js): letterbox, Phoebe's lines as captions, the level's name over the fog

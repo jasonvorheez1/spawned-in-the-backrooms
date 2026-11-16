@@ -48,6 +48,7 @@ export function update(ctx) {
   // Level 0 after the intro: the ceiling drop, then the opening route.
   const story = !noStory(st) // Shelly Nov 14: a run with the main story off skips its cutscenes and trail
   const l0 = place === "main" || place === "tutorial0"
+  if (place === "level1" && st.t0fade && !ses.t0lift) { ses.t0lift = true; const a = ctx.now() - st.t0fade; if (a > 0 && a < 60000) st.t0fade = ctx.now() } // the tutorial's title card lifts on landing, not before
   if (l0 && st.arrivePending && !st.menuOpen) { st.arrivePending = false; st.arrive = ctx.now(); ses.arr = null; if (place === "tutorial0") { st.t0n = 0; st.t0cut = null } }
   if (st.arrive) {
     if (!l0) { st.arrive = null; ses.arr = null; ctx.view.camera = null; return }

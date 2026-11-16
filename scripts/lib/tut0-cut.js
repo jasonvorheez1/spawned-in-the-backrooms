@@ -8,7 +8,7 @@ import { spawnPhoebe, dropPhoebe } from "./phoebe.js"
 import { noStory } from "./run-opts.js"
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 const SMILER_MODEL = { id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb", forward: "+x" } // scripts/smilers.js
-export const LEN = { encounter: 16.5, final: 19 } // Shelly Nov 16: the black before the name ran ~9 s; now ~2 s
+export const LEN = { encounter: 16.5, final: 14 } // Shelly Nov 16: the cut ends once the name is fully up (12 s); the card then holds through the crossing (cutscene-ui t0Fade)
 const GASP = "/cdn/value.1f5d195f954552c9304c8d13f9177b97b62b100316d004215a918c9282445aad.mp3"   // johnadams2 (Nov 9): "the cutscenes feel like bootleg mobile games": every shot is held by a person, never a tripod.
 // Savi's picks: a slow breathing drift (~1.5 cm at the eye, ~0.35 deg of aim) made of three sines, so no two seconds repeat
 const wob = (t, s) => Math.sin(t * 0.83 + s) * 0.6 + Math.sin(t * 2.1 + s * 2.3) * 0.3 + Math.sin(t * 4.7 + s * 3.7) * 0.1
