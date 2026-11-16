@@ -58,8 +58,8 @@ for sx in (-1, 1):
     else:
         open_eye(cx, cy, sx, rx, ry, small=(MOOD == "shock"))
     # brows tell the mood
-    if MOOD == "angry":  line([(cx + sx * 30, cy - 52), (cx - sx * 18, cy - 38)], INK, 5)
-    elif MOOD == "sad":  line([(cx + sx * 28, cy - 40), (cx - sx * 16, cy - 54)], INK, 4.5)
+    if MOOD == "angry":  line([(cx + sx * 30, cy - 62), (cx - sx * 18, cy - 48)], INK, 5)
+    elif MOOD == "sad":  line([(cx + sx * 28, cy - 50), (cx - sx * 16, cy - 63)], INK, 4.5)
     elif MOOD in ("shock", "ko"): arc(cx, cy - 52, 22, 10, 200, 340, INK, 4)
     elif MOOD == "hit":  line([(cx + sx * 24, cy - 44), (cx - sx * 10, cy - 34)], INK, 4)
 # nose: small rounded heart
