@@ -1,3 +1,4 @@
+import { kitPass } from "../../scripts/lib/usable-kit.js";
 // Level 1.1 "Corrupted Corridor": lays the hall, its posts, caches, the Tunnel Gang's hut and the cordon, keeps the people
 // and the entities, and tells each walker which sector they are standing in (scripts/lib/level1c.js is the plan).
 // The door, its sign and the arrival marker are fixed rows in cells/x0z0.scene.
@@ -271,6 +272,7 @@ function layExtras(ctx) {
   for (const k of ["aid0", "aid1", "locker0", "locker1", "pack0", "pack1", "pack2", "pack3"]) { const o = ctx.place.objects["l1c-x-" + k]; if (o) o.tags = [...o.tags, "l1c-x"]; }
 }
 export function tick(ctx) {
+  if (ctx.place.players?.length) kitPass(ctx, "level1c"); // every usable answers with its own part, sound and light (scripts/lib/data/usable-kit.json)
   const s = ctx.place.state;
   if ((s.builtV ?? 0) >= V && (s.xV ?? 0) < XV) { s.xV = XV; layExtras(ctx); }
   if ((s.builtV ?? 0) < V) { const ph = s.l1cPh ?? 0; LAY[ph](ctx); if (ph + 1 >= LAY.length) { s.builtV = V; delete s.l1cPh; } else s.l1cPh = ph + 1; return; }

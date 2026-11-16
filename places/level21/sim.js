@@ -1,3 +1,4 @@
+import { kitPass } from "../../scripts/lib/usable-kit.js";
 import { texSigns } from "../../scripts/lib/sign-tex.js";
 const SIGN_TEX = [["PERSONNEL ONLY","/cdn/value.c23d99307fd9a90dd96af6035d77fa7d579246066e0a2ec0cd6837f818500c7d.png"],
   ["STAIRS DOWN", "/cdn/value.ff74b90419a3d4c2df7260d9ed615e389a4c5ff2701658f5e21034ac58c7d747.png"], // chipped green enamel stencil
@@ -513,6 +514,7 @@ const l21CampBenches = () => {
 };
 
 export function tick(ctx) {
+  if (ctx.place.players?.length) kitPass(ctx, "level21"); // every usable answers with its own part, sound and light (scripts/lib/data/usable-kit.json)
   texSigns(ctx, SIGN_TEX, 3);
   if ((ctx.place.state.fridgeYawV ?? 0) < 1) { const fs = ctx.getObject("l21-sign-fridge"); if (fs) { fs.rotation = { yaw: 180 }; ctx.place.state.fridgeYawV = 1; } } // it faced the wall before Nov 16
   if ((ctx.place.state.downYawV ?? 0) < 2) { const ds = ctx.getObject("l21-down-sign"), cs = ctx.getObject("l21-cave-sign"); if (ds && cs) { ds.rotation = { yaw: -90 }; cs.feetPosition = { ...cs.feetPosition, y: 1.65 }; ctx.place.state.downYawV = 2; } } // faced the wall (read mirrored) before Nov 16

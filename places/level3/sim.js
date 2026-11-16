@@ -1,3 +1,4 @@
+import { kitPass } from "../../scripts/lib/usable-kit.js";
 import { texSigns } from "../../scripts/lib/sign-tex.js";
 const SIGN_TEX = [["M.E.G. BASE GAMMA","/cdn/value.a46149d20740807dbcf530b9d3f2ca87a95408362767a05ed5cbd2fc2ea3ea15.png"]]; // hand-made sign faces, Nov 16
 import { retexture } from "../../scripts/lib/retexture.js";
@@ -132,6 +133,7 @@ function layGammaSignage(ctx) {
 }
 
 export function tick(ctx) {
+  if (ctx.place.players?.length) kitPass(ctx, "level3"); // every usable answers with its own part, sound and light (scripts/lib/data/usable-kit.json)
   texSigns(ctx, SIGN_TEX);
   restyleSigns(ctx, "level3"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)

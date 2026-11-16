@@ -1,3 +1,4 @@
+import { kitPass } from "../../scripts/lib/usable-kit.js";
 import { retextureOnce } from "../../scripts/lib/retexture.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
@@ -347,6 +348,7 @@ function shift(ctx, s, now) {
 // the flickering wall out to Level 1 isn't a door object (scripts/player.js crosses at it): the dresser gets it by hand
 const l0Ways = () => [{ id: "l0-exit", at: { x: -HALF + 0.15, y: 0, z: cellCenter(EXIT.cx, EXIT.cz).z }, fwd: { x: 1, z: 0 } }];
 export function tick(ctx) {
+  if (ctx.place.players?.length) kitPass(ctx, "main"); // every usable answers with its own part, sound and light (scripts/lib/data/usable-kit.json)
   retextureOnce(ctx); // graphics pass: bare props get real surfaces
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   restyleSigns(ctx, "main"); // every sign dressed as its own board (scripts/lib/sign-style.js)
