@@ -7,6 +7,9 @@ import { pruneEffects } from "./lib/modifiers.js";
 const HOSTILE = ["l5-hostile", "hound", "smiler", "lurker", "stealer", "enemy", "faceling", "deathmoth"];
 import { bedNear } from "./lib/sleep.js";
 import { multiRoom } from "./lib/mp-guard.js";
+// a menu left open when the last session ended is not reopened on load: closed at spawn, and again once the saved state lands
+export function onSpawn(ctx) { closeStale(ctx); ctx.after(3, "closeStale"); }
+export function closeStale(ctx) { const s = ctx.self.state; if (s.waitOpen) s.waitOpen = false; }
 export function onInput(ctx, input) {
   const s = ctx.self.state;
   if (input.pressed.wait) { if (s.waitOpen) s.waitOpen = false; else if (canOpen(s, ctx.self.place, "rest")) openWrist(s, "rest"); if (s.waitOpen) { s.waitBed = !!bedNear(ctx); s.waitClock = clockOf(ctx).text; } return; }
