@@ -309,6 +309,172 @@ export function onSpawn(ctx) {
   }
 }
 
+
+// ---- Hand-feel for every fixture: one row per thing. m = how it moves, s = its sound, fx = a puff, eff = what it does for you.
+// eff: san/hp/food/water (modest), item (one-time token via the payout queue), cd = per-player seconds before it pays again.
+const FX = {
+  dust: `fx
+pop dust burst=8..12 on=disc(.25) life=.6..1.1 v=up(.2..0.5)+sdir()*.3 size=.08..0.16 acc=buoy(.2)+drag(1.4) col=<.62,.55,.44> a=0>.3:.3>0 sz=$size*(.6>2) r=sprite(smoke-puff,alpha)`,
+  steam: TEA_STEAM,
+  drip: `fx
+pop drip burst=10..16 on=disc(.15) life=.4..0.7 v=up(.4..1)+sdir()*.8 acc=grav() size=.012..0.02 col=<.8,.88,.95> a=.7 sz=$size floor=die r=sprite(soft-disc,alpha,velocity,.03)`,
+  leaves: `fx
+pop leaf burst=10..14 on=disc(.3) life=1..1.6 v=up(.8..1.6)+sdir()*1.2 acc=grav()*.25+drag(1.8)+curl(.6) size=.05..0.08 spin=-6..6 col=<.75,.28,.12>..<.85,.5,.15> a=1>.8:1>0 sz=$size rot=$age*$spin floor=stick r=sprite(soft-disc,alpha)`,
+  glint: `fx
+pop glint burst=5..7 on=sphere(.06) life=.4..0.7 v=sdir()*.15 size=.02..0.04 col=hdr(3,2.6,2) a=0>.2:1>0 sz=$size*(1>.2) r=sprite(soft-disc,add)`,
+  moth: `fx
+pop moth burst=1 life=1.6 v=up(.35)+sdir()*.25 acc=curl(1.4)*2+drag(1) size=.035 col=<.8,.74,.6> a=1>.85:1>0 sz=$size*(1+.4*flick(14,.8)) r=sprite(soft-disc,alpha)`,
+};
+const ACTS = {
+  "l178-story-andon-1": { m: "glow", s: "oil-lamp-wick-turned-up", line: "You turn the wick up. The scorch on the washi gets a little bigger.", eff: { san: 3, cd: 300 } },
+  "l178-story-andon-2": { m: "roll", s: "washi-paper-lantern-rustle", line: "Two rice-glue patches. You press the second one flat. Holding.", eff: { san: 2, cd: 300 } },
+  "l178-story-andon-3": { m: "glow", s: "paper-lantern-frame-creak", line: "No oil in the dish. No wick. Still lit. You stop looking for the trick." },
+  "l178-story-andon-4": { m: "glow", fx: "moth", s: "moth-wings-flutter-on-paper", line: "The moth relocates two inches and goes back to sleep." },
+  "l178-story-bottle": { m: "spin", s: "empty-glass-bottle-rolling-on-wood", line: "M.E.G. issue, Level 0 batch. Empty. The kitchen tap fills these." },
+  "l178-story-broom": { m: "roll", fx: "dust", s: "bamboo-broom-sweeping-wood-porch", line: "Three strokes. Porch looks the same. You feel better anyway.", eff: { san: 2, cd: 240 } },
+  "l178-story-bucket-1": { m: "roll", fx: "steam", s: "hand-splash-in-wooden-bucket", line: "Cedar and sulphur. You splash your face.", eff: { san: 3, water: 2, cd: 300 } },
+  "l178-story-bucket-2": { m: "pitch", fx: "drip", s: "wooden-bucket-poured-out-on-stone", line: "You tip it out on the stones so the next bather gets fresh.", eff: { san: 2, cd: 300 } },
+  "l178-story-calli-cup": { m: "roll", s: "brush-rinsed-in-ceramic-cup-clink", line: "You rinse the brush. Grey water goes a darker grey." },
+  "l178-story-calli-zabuton": { m: "squash", s: "cushion-sat-on-soft-thump", line: "Flatter now. That's on you." },
+  "l178-story-callidesk": { m: "bob", s: "ink-brush-stroke-on-rice-paper", line: "You add a forty-first. Worse than the fortieth.", eff: { san: 3, cd: 600 } },
+  "l178-story-catdish": { m: "pop", s: "dried-fish-into-ceramic-dish", line: "You top up the water. Later it's lower. Still no cat.", eff: { san: 4, cd: 900 } },
+  "l178-story-crumpled-1": { m: "pop", s: "paper-uncrumpled-smoothed", line: "Smoothed out: 永. Eternity. Five strokes, every one crossed out." },
+  "l178-story-crumpled-2": { m: "hop", s: "paper-ball-bounce-off-ceramic", line: "You lob it at the brush cup. Miss." },
+  "l178-story-donabe": { m: "rattle", fx: "steam", s: "clay-pot-lid-rattling-simmer", line: "One ladle of dashi. Scalds. Worth it.", eff: { food: 6, water: 4, cd: 900 } },
+  "l178-story-dryrack": { m: "rattle", s: "ceramic-bowls-clatter-on-rack", line: "Twelve bowls, thirteen hooks. One's out with somebody." },
+  "l178-story-flashlight": { m: "flash", s: "flashlight-click-dead-battery", line: "Click. A beam like weak tea, then nothing. You pop the battery anyway.", eff: { item: "battery" } },
+  "l178-story-futon-folded": { m: "squash", s: "futon-cotton-fold-thump", line: "You refold it. Your corners aren't square. You leave it." },
+  "l178-story-geta-2": { m: "hop", s: "wooden-geta-clack-on-stone", line: "Clack. Clack. Good shoes for announcing yourself." },
+  "l178-story-getabako": { m: "rattle", s: "wooden-shoe-cabinet-door-knock", line: "Someone chalked HUB → inside the door. It means the gate right behind you." },
+  "l178-story-go-zabuton-1": { m: "squash", s: "cushion-sat-on-soft-thump", line: "Still warm. You don't sit. It's their game." },
+  "l178-story-go-zabuton-2": { m: "squash", s: "ceramic-cup-sip-set-down", line: "Their tea's gone cold. You drink it anyway. Barley.", eff: { water: 5, cd: 900 } },
+  "l178-story-goboard": { m: "bob", s: "go-stone-placed-on-wooden-board", line: "go", eff: { san: 3, cd: 600 } },
+  "l178-story-hairpin": { m: "spin", fx: "glint", s: "lacquer-hairpin-tink", line: "Plum blossom kanzashi. You put it back exactly where it was." },
+  "l178-story-kamidana": { m: "bob", s: "two-hand-claps-shrine-bell", line: "Two bows, two claps, one bow. The rice in the little dish is fresh again.", eff: { san: 6, cd: 3600 } },
+  "l178-story-kimono-stand": { m: "roll", s: "silk-kimono-fabric-sway", line: "Smells like the spring. You smell like Level 0." },
+  "l178-story-laundry": { m: "roll", fx: "drip", s: "wet-cotton-yukata-flap", line: "Damp. Same as yesterday. Same as tomorrow." },
+  "l178-story-leaves": { m: "squash", fx: "leaves", s: "dry-maple-leaves-kicked", line: "Maple. There are no maples. It'll be re-raked by morning.", eff: { san: 1, cd: 300 } },
+  "l178-story-letter-zabuton": { m: "squash", s: "cushion-sat-on-soft-thump", line: "Two knee dents. Whoever wrote here wrote a long one." },
+  "l178-story-paperback": { m: "pop", s: "paperback-pages-riffle", line: "Ch. 9, dog-eared: DO NOT FALL ASLEEP IN WARM WATER. Someone's underlined it twice." },
+  "l178-story-ricecooker": { m: "pop", fx: "steam", s: "rice-cooker-lid-pop-hiss", line: "Just finished. Always just finished. You eat a pinch with your fingers.", eff: { food: 6, cd: 900 } },
+  "l178-story-ricesack": { m: "squash", s: "rice-sack-burlap-slump", line: "You fold the top down. When you look back it's fuller." },
+  "l178-story-rumpled": { m: "squash", s: "quilt-shaken-out-cotton", line: "You straighten it. The head dent stays in the pillow." },
+  "l178-story-scallion": { m: "rattle", s: "kitchen-knife-chopping-scallions", line: "You finish the chopping. Neat rings. You eat a few.", eff: { food: 3, cd: 600 } },
+  "l178-story-shamisen": { m: "roll", s: "shamisen-three-note-pluck-melody", line: "You tune the loose string. It goes back out by night.", eff: { san: 5, cd: 600 } },
+  "l178-story-slippers": { m: "spin", s: "house-slippers-shuffle-on-wood", line: "You turn them back toward the house. Whoever's soaking will want them." },
+  "l178-story-sneakers": { m: "hop", fx: "dust", s: "muddy-sneaker-knocked-on-step", line: "Yellow carpet in the tread. The gate behind you goes back the way they came." },
+  "l178-story-stool-1": { m: "squash", s: "wooden-bath-stool-scrape-on-tile", line: "You sit, rinse your hands, stand. House rule." },
+  "l178-story-stool-2": { m: "hop", fx: "drip", s: "wooden-bath-stool-scrape-on-tile", line: "You wipe it with your sleeve. Still wet." },
+  "l178-story-teatray": { m: "roll", s: "teacup-righted-on-lacquer-tray", line: "You right the cup and wipe the ring with your sleeve. Better." },
+  "l178-story-tray-done": { m: "rattle", s: "bowls-stacked-chopsticks-clatter", line: "You stack the bowls. Fish bones on top, like a gentleman." },
+  "l178-story-tray-full": { m: "rattle", fx: "steam", s: "chopsticks-on-rice-bowl-eating", line: "Untouched and still warm. You eat it. Nobody comes back for it.", eff: { food: 8, water: 4, cd: 3600 } },
+  "l178-story-umbrella": { m: "spin", fx: "drip", s: "wet-umbrella-shaken-out", line: "You shake it out. Water from somewhere with weather." },
+  "l178-story-yukata-fold": { m: "squash", s: "cotton-yukata-refolded", line: "You fix the towel on top. Square, like the house likes it." },
+  // the fixtures that already do something get a body to go with it
+  "kind:futon": { m: "squash", fx: "dust" },
+  "kind:closet": { m: "rattle", s: "wooden-closet-sliding-door-cloth" },
+  "kind:slippers": { s: "wooden-geta-clack-on-stone" },
+  "kind:spring": { fx: "steam", s: "hot-spring-water-ripple-step" },
+  "kind:table": { m: "rattle", fx: "steam" },
+  "kind:towels": { m: "squash" },
+  "kind:teaCup": { m: "roll" },
+  "kind:kettle": { m: "rattle", s: "iron-kettle-lid-rattle" },
+  "kind:read": { m: "pop" },
+};
+
+function sfx(ctx, name, volume = 0.4) {
+  ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-" + name + ".mp3", position: ctx.self.worldFeetPosition, volume, maxDistance: 9 });
+}
+
+// One visible move of the thing itself, from its resting pose; a press mid-move waits it out so nothing drifts.
+function move(ctx, m) {
+  const me = ctx.self, ss = me.session, now = ctx.now();
+  if (!m || now < (ss.busy ?? 0)) return;
+  ss.base ??= { y: me.feetPosition.y, yaw: me.rotation?.yaw ?? 0 };
+  const { y, yaw } = ss.base;
+  let k, d = 0.6, e = "easeOutQuad";
+  switch (m) {
+    case "bob": k = { "feetPosition.y": [y, y + 0.04, y] }; d = 0.4; break;
+    case "hop": k = { "feetPosition.y": [y, y + 0.09, y, y + 0.025, y] }; d = 0.55; break;
+    case "pop": k = { scale: [1, 1.12, 0.97, 1] }; d = 0.45; break;
+    case "squash": k = { "scale.y": [1, 0.8, 1.06, 1], "scale.x": [1, 1.08, 0.98, 1], "scale.z": [1, 1.08, 0.98, 1] }; d = 0.5; break;
+    case "roll": k = { "rotation.roll": [0, 7, -5, 2, 0] }; d = 0.8; e = "easeInOutSine"; break;
+    case "pitch": k = { "rotation.pitch": [0, -24, -24, 0] }; d = 1.1; e = "easeInOutSine"; break;
+    case "rattle": k = { "rotation.roll": [0, 2.5, -2.5, 2, -1.5, 0], "feetPosition.y": [y, y + 0.012, y, y + 0.01, y, y] }; d = 0.45; e = "linear"; break;
+    case "spin": k = { "rotation.yaw": [yaw, yaw + 25, yaw - 8, yaw] }; d = 0.7; e = "easeOutCubic"; break;
+    case "glow": case "flash": k = { scale: [1, 1.05, 1] }; d = 0.5; glow(ctx, m === "flash"); break;
+  }
+  if (!k) return;
+  ss.busy = now + d * 1000 + 60;
+  try { animate(ctx, me.id, k, { duration: d, easing: e }); } catch (err) { ctx.log("l178 move", m, String(err)); }
+}
+
+// A lamp flares (or a dead torch stutters): a short live light at the thing, gone on its own.
+function glow(ctx, stutter) {
+  const b = ctx.self.bounds, c = b?.center ?? ctx.self.worldFeetPosition;
+  ctx.spawn({ feetPosition: { x: c.x, y: c.y + 0.05, z: c.z }, lifetime: stutter ? 0.5 : 1.3, audience: "all",
+    light: { kind: "point", color: stutter ? "oklch(0.92 0.06 95)" : "oklch(0.85 0.13 70)", intensity: stutter ? 1.2 : 2.2, distance: stutter ? 4 : 6 } }, { persist: false });
+  const g = ctx.getObject(ctx.self.id + "/glow");
+  if (g) try { animate(ctx, g.id, { scale: [1, 1.35, 1] }, { duration: 1.1, easing: "easeOutSine" }); } catch {}
+}
+
+function puff(ctx, name) {
+  const script = FX[name]; if (!script) return;
+  const b = ctx.self.bounds, c = b?.center ?? ctx.self.worldFeetPosition;
+  const at = { x: c.x, y: b ? b.max.y : c.y + 0.2, z: c.z };
+  ctx.emit("fx", { position: at, script }, { audience: { nearby: at, radius: 14 } });
+}
+
+// What it does for you: small, once per cooldown per player; a one-time find goes through the normal payout queue.
+function pay(ctx, p, eff) {
+  if (!eff) return true;
+  const ps = p.state, id = ctx.self.id, now = ctx.now();
+  if (eff.item) {
+    const got = ps.l178got ?? {};
+    if (got[id]) return false;
+    const check = canCarryAll(ps, [...(ps.payout?.items ?? []), eff.item]);
+    if (!check.ok) { say(ctx, p, check.msg ?? "Your bag is full."); return false; }
+    ps.l178got = { ...got, [id]: 1 };
+    queuePayout(ps, { items: [eff.item] });
+    hands(ctx, p);
+    return true;
+  }
+  const cd = ps.l178cd ?? {};
+  if (now - (cd[id] ?? -1e12) < (eff.cd ?? 600) * 1000) return false;
+  ps.l178cd = { ...cd, [id]: now };
+  if (eff.san) { const mx = maxSan(ps.level ?? 1, ps); ps.sanity = Math.min(mx, (ps.sanity ?? mx) + eff.san); }
+  if (eff.hp) { const mx = maxHp(ps.level ?? 1, ps); ps.hp = Math.min(mx, (ps.hp ?? mx) + eff.hp); }
+  if (eff.food) ps.hunger = Math.min(100, (ps.hunger ?? 100) + eff.food);
+  if (eff.water) ps.thirst = Math.min(100, (ps.thirst ?? 100) + eff.water);
+  if (eff.food || eff.water) hands(ctx, p);
+  return true;
+}
+
+const GO_REPLY = ["Black answers at 3-3 by morning. You never see who.", "You play white. A cough from the next room.", "White to 4-4. Black's still winning.", "You take a black stone. It's warm."];
+
+function fixture(ctx, p, s, beat) {
+  const id = ctx.self.id, a = ACTS[id];
+  if (!a) return false;
+  move(ctx, a.m); puff(ctx, a.fx); sfx(ctx, a.s, 0.4);
+  const paid = pay(ctx, p, a.eff);
+  let line = a.line;
+  if (line === "go") {
+    const n = (s.moves = (s.moves ?? 0) + 1);
+    line = "Move " + n + ". " + GO_REPLY[n % GO_REPLY.length];
+  }
+  if (a.eff?.item && !paid && (p.state.l178got ?? {})[id]) line = "Battery's gone. You took it. The lens is still cracked.";
+  else if (a.eff && !a.eff.item && !paid) line = null; // already had its due: the move and the sound are the answer
+  say(ctx, p, beat ?? line ?? s.why ?? s.name);
+  return true;
+}
+
+function body(ctx, kind) {
+  const a = ACTS["kind:" + kind];
+  if (!a) return;
+  move(ctx, a.m); puff(ctx, a.fx);
+  if (a.s) sfx(ctx, a.s, 0.35);
+}
+
 export const ears = {
   press(ctx, { by } = {}) {
     const s = ctx.self.state;
@@ -323,6 +489,7 @@ export const ears = {
         sound(ctx, "paper-page-turn-soft", 0.35);
         break;
       case "qspot":
+        if (fixture(ctx, p, s, beat)) break;
         sound(ctx, "paper-page-turn-soft", 0.25);
         say(ctx, p, beat ?? s.why ?? s.name);
         break;
@@ -366,9 +533,10 @@ export const ears = {
         startRestPose(ctx, p, L.rest.fade + 0.9);
         ctx.emit("screenFlash", { color: "oklch(0.05 0.01 60)", duration: L.rest.fade, intensity: 0.55 }, { audience: { player: by } });
         sound(ctx, "futon-rustle-soft-exhale");
-        say(ctx, p, "You doze off to the sound of the spring.");
+        say(ctx, p, "Cotton smells like cedar. You're out before you finish the thought.");
         break;
     }
+    if (s.kind !== "qspot") body(ctx, s.kind);
     if (beat && s.kind !== "read" && s.kind !== "qspot") say(ctx, p, beat);
   },
 };
