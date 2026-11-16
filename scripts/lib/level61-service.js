@@ -142,3 +142,38 @@ export function layService(ctx, { box, wallZ, light, vend, PLASTER, CEIL, WAINSC
   label("mapper-vend", -12.26, 2.36, 21.81, 0, "DRINKING WATER", "Supply room", 1.46, true);
   label("mapper-amber", -26, 2.54, 21.8, 0, "CAMP AMBER", "Water, blankets, missing persons", 2.45, true);
 }
+
+// The motion layer: rides as a second behavior on every Level 6.1 usable whose purpose lives in scripts/l61-use.js.
+// That script pays, opens and plays the sound; this one makes the thing itself move on the press, within a tick.
+// One row per kind: what moves, how hard, and the small light it throws.
+const MOTION = {
+  notice: { shake: 0.04, t: 0.25 },
+  seal02: { shake: 0.09, t: 0.45, light: "#ff6a3a" },          // the bolts rattle in their hasps
+  level6: { shake: 0.06, t: 0.35 },
+  stew: { squash: "y", k: 0.12, t: 0.5, light: "#ffb05a", fx: "steam" },
+  bedroll: { squash: "y", k: 0.22, t: 0.6, snd: "canvas-bedroll-unrolled-rustle" },
+  menu: { shake: 0.05, t: 0.3 },
+  counter: { squash: "y", k: 0.04, t: 0.3, snd: "brass-service-bell-ding-single" },
+  tray: { squash: "y", k: 0.18, t: 0.3 },
+  return: { shake: 0.07, t: 0.4 },
+  snacktray: { squash: "y", k: 0.2, t: 0.3 },
+  condiment: { squash: "x", k: 0.25, t: 0.25 },
+  directory: { shake: 0.03, t: 0.25, light: "#cfe8ff" },
+  payphone: { shake: 0.05, t: 0.5, light: "#9fd0ff" },
+  vend: { shake: 0.1, t: 0.6, light: "#7fe0ff" },
+};
+const STEAM = `fx
+pop steam burst=10..14 on=disc(.25) life=1..1.6 v=up(.6..1) size=.12..0.2 acc=buoy(.6)+curl(.4)*.4+drag(1) col=<.92,.9,.86> a=0>.3:.35>.7:.15>0 sz=$size*(.6>2.2) rot=spin(.2) r=sprite(smoke-puff,alpha)`;
+export const ears = {
+  press: (ctx) => {
+    const m = MOTION[ctx.self.state?.kind]; if (!m) return;
+    const now = ctx.now(), ses = ctx.self.session; if (now < (ses.jolt ?? 0)) return; ses.jolt = now + 350;
+    const id = ctx.self.id, p = ctx.self.worldFeetPosition ?? ctx.self.feetPosition, up = { x: p.x, y: p.y + 1.1, z: p.z };
+    if (m.shake) ctx.emit("shake", { target: id, intensity: m.shake, duration: m.t });
+    if (m.squash) ctx.emit("squash", { target: id, axis: m.squash, intensity: m.k, duration: m.t });
+    if (m.snd) ctx.emit("playSound", { clip: `/cdn/moodboard-realistic-gritty/sfx-${m.snd}.mp3`, position: up, volume: 0.6, maxDistance: 10 });
+    if (m.light) ctx.spawn({ feetPosition: up, lifetime: 0.5, audience: "near", light: { kind: "point", color: m.light, intensity: 1.6, distance: 4 } });
+    if (m.fx === "steam") ctx.emit("fx", { position: up, script: STEAM });
+    ses.pressedAt = now; ctx.self.state.pressN = (ctx.self.state.pressN ?? 0) + 1;
+  },
+};
