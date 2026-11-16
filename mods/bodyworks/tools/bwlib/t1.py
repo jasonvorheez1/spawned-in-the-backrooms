@@ -110,8 +110,7 @@ def run(body, ZONES, DOC, a):
                 if ok.any(): R[:, j] = np.interp(np.arange(len(col)), np.where(ok)[0], col[ok])
             if np.isnan(R).any(): raise SystemExit('BODYWORKS T1: tube %s has no skin under it (check the rig map: is this limb mapped?)' % s.name)
             for _ in range(smooth):
-                for _ in range(6): R = 0.5 * R + 0.25 * (np.roll(R, 1, 1) + np.roll(R, -1, 1))   # several passes: one left a faceted, pleat-like silhouette
-    for _ in range(2): R[1:-1] = 0.5 * R[1:-1] + 0.25 * (R[:-2] + R[2:])
+                R = 0.5 * R + 0.25 * (np.roll(R, 1, 1) + np.roll(R, -1, 1))
                 if len(R) > 2: R[1:-1] = 0.6 * R[1:-1] + 0.2 * (R[:-2] + R[2:])
             s.R = R
             s.P = np.array([[g['o'] + g['dirs'][j] * (R[i, j] + s.off) for j in range(n)] for i, g in enumerate(s.rings)])
@@ -223,7 +222,8 @@ def run(body, ZONES, DOC, a):
     sk.finish(0)
     R = sk.R.copy()
     for i in range(1, len(R)): R[i] = np.maximum(R[i], R[i - 1])
-    R = 0.5 * R + 0.25 * (np.roll(R, 1, 1) + np.roll(R, -1, 1))
+    for _ in range(6): R = 0.5 * R + 0.25 * (np.roll(R, 1, 1) + np.roll(R, -1, 1))   # several passes: one left a faceted, pleat-like silhouette
+    for _ in range(2): R[1:-1] = 0.5 * R[1:-1] + 0.25 * (R[:-2] + R[2:])
     dz = np.array([g['o'][2] for g in sk.rings]); R += ((z_waist - dz) * 0.06)[:, None]
     sk.R = R; sk.P = np.array([[g['o'] + g['dirs'][j] * (R[i, j] + sk.off) for j in range(48)] for i, g in enumerate(sk.rings)]); sk.S = sk.P
     sk.hole = np.zeros_like(sk.hole)
