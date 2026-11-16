@@ -115,14 +115,15 @@ l7sw-wall-r:
   physics: static
   primitive: {depth: 2.2, height: 2.2, kind: box, width: 0.12}
 l7w-lantern-1:
+  behavior: [scripts/usable-kit.js]
   castShadow: false
-  children: [{behavior: scripts/prop-part.js, id: prop-motion-light, feetPosition: {x: 0, y: 0.22, z: 0}, light: {color: oklch(0.86 0.15 70), distance: 12, intensity: 2.2, kind: point, shadow: {enabled: false}, visibleRange: {max: 35}}, state: {axis: light, goal: 1, value: 1, power: 2.2}}]
+  children: [{behavior: scripts/prop-part.js, feetPosition: {x: 0, y: 0.22, z: 0}, id: prop-motion-light, light: {color: oklch(0.86 0.15 70), distance: 12, intensity: 2.2, kind: point, shadow: {enabled: false}, visibleRange: {max: 35}}, state: {axis: light, goal: 1, power: 2.2, value: 1}}]
   feetPosition: {x: -45.6, y: 1.98, z: -65.3}
   id: l7w-lantern-1
   primitive: {kind: scripted, params: {kind: lantern}, script: scripts/l7-ocean-geo.js}
-  visibleRange: {max: 40}
+  state: {c: {x: -45.6, y: 2.2, z: -65.3}, lampOn: true, name: Windfall lantern, propLamp: true, verb: Turn off}
   tags: [usable]
-  state: {"c":{"x":-45.6,"y":2.2,"z":-65.3},"lampOn":true,"propLamp":true,"name":"Windfall lantern","verb":"Turn off"}
+  visibleRange: {max: 40}
 l7w-stair:
   castShadow: true
   children: [{castShadow: false, children: [{feetPosition: {x: 0, y: 0.22, z: 0}, id: light, light: {color: oklch(0.86 0.15 70), distance: 9, intensity: 1.8, kind: point, shadow: {enabled: false}}, visibleRange: {max: 40}}], feetPosition: {x: 7.669000000000004, y: 6.782, z: 7.346000000000004}, id: lantern-0, primitive: {kind: scripted, params: {kind: lantern}, script: scripts/l7-ocean-geo.js}, visibleRange: {max: 60}}, {castShadow: false, children: [{feetPosition: {x: 0, y: 0.22, z: 0}, id: light, light: {color: oklch(0.86 0.15 70), distance: 9, intensity: 1.8, kind: point, shadow: {enabled: false}}, visibleRange: {max: 40}}], feetPosition: {x: -0.4309999999999974, y: 11.013000000000002, z: -2.554000000000002}, id: lantern-1, primitive: {kind: scripted, params: {kind: lantern}, script: scripts/l7-ocean-geo.js}, visibleRange: {max: 60}}]

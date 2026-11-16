@@ -27,14 +27,15 @@ l7w-crate-1:
   physics: static
   rotation: {yaw: -22}
 l7w-lantern-0:
+  behavior: [scripts/usable-kit.js]
   castShadow: false
-  children: [{behavior: scripts/prop-part.js, id: prop-motion-light, feetPosition: {x: 0, y: 0.22, z: 0}, light: {color: oklch(0.86 0.15 70), distance: 12, intensity: 2.2, kind: point, shadow: {enabled: false}, visibleRange: {max: 35}}, state: {axis: light, goal: 1, value: 1, power: 2.2}}]
+  children: [{behavior: scripts/prop-part.js, feetPosition: {x: 0, y: 0.22, z: 0}, id: prop-motion-light, light: {color: oklch(0.86 0.15 70), distance: 12, intensity: 2.2, kind: point, shadow: {enabled: false}, visibleRange: {max: 35}}, state: {axis: light, goal: 1, power: 2.2, value: 1}}]
   feetPosition: {x: -48.4, y: 1.98, z: -60.2}
   id: l7w-lantern-0
   primitive: {kind: scripted, params: {kind: lantern}, script: scripts/l7-ocean-geo.js}
-  visibleRange: {max: 40}
+  state: {c: {x: -48.4, y: 2.2, z: -60.2}, lampOn: true, name: Windfall lantern, propLamp: true, verb: Turn off}
   tags: [usable]
-  state: {"c":{"x":-48.4,"y":2.2,"z":-60.2},"lampOn":true,"propLamp":true,"name":"Windfall lantern","verb":"Turn off"}
+  visibleRange: {max: 40}
 l7w-snd-lap:
   audio: {clip: /cdn/moodboard-realistic-gritty/sfx-sea-water-lapping-and-sloshing-against-wooden-pier-pilings-loop.mp3, gain: 0.25, loop: true, maxDistance: 18, refDistance: 3, spatial: true}
   feetPosition: {x: -47, y: 0.5000000000000001, z: -60}
