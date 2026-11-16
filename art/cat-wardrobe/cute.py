@@ -40,11 +40,12 @@ HZ, HW = 0.335, 0.045
 def hips(p):
     if p.y > 0.03 or abs(p.x) < 0.07: return Vector()
     w = math.exp(-0.5 * ((p.z - HZ) / HW) ** 2) * sm((abs(p.x) - 0.07) / 0.06)
-    return Vector((math.copysign(0.014 * w, p.x), -0.004 * w, 0))
+    return Vector((math.copysign(0.02 * w, p.x), -0.005 * w, 0))
 # paws, to Shelly's leg guide (/cdn/image-u7rr5gfc4.webp): an oval foot front split in four chunky round toes that pop out
 FX, FY, FZ = 0.106, -0.132, 0.036
 TOES = [(-0.036, 0.004), (-0.012, 0.0), (0.012, 0.0), (0.036, 0.004)]   # x offset, how far back each toe sits
 def paws(p, nrm):
+    return Vector()   # off: the base foot already has the guide's four round toes; this sculpt faceted and tore the right foot (cmp11)
     if p.z > 0.085 or p.y > -0.06: return Vector()
     fx = FX if p.x > 0 else -FX; lx = p.x - fx; d = Vector()
     for ox, oy in TOES:
