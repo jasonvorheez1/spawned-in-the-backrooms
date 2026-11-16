@@ -48,11 +48,11 @@ export function lighting(surface, lights) {
   });
 
   // Roughness-aware Fresnel for environment & hemisphere ambient: crisp grazing reflections on marble, chrome, glass and wet stone,
-  // directional ceiling-vs-floor ambient grounding, and energy-conserved diffuse (metals stay clean instead of chalky).
+  // directional ceiling-vs-floor ambient grounding, and energy-conserved diffuse (keeping an ambient specular term so indoor metals never go black).
   const smoothness = oneMinus(rSurf);
   const envFresnel = f0.add(max(vec3(smoothness, smoothness, smoothness), f0).sub(f0).mul(pow(clamp(oneMinus(NdotV), 0, 1), 5)));
   const hemi = clamp(N.y.mul(0.18).add(0.88), 0.72, 1.04);
   const ambientDiffuse = albedo.mul(oneMinus(metalness)).mul(oneMinus(envFresnel)).mul(hemi).mul(lights.ambient).mul(1 / Math.PI);
-  const envSpec = lights.environment.mul(envFresnel).mul(oneMinus(rSurf.mul(0.45)));
+  const envSpec = envFresnel.mul(oneMinus(rSurf.mul(0.35))).mul(lights.ambient.mul(0.38 / Math.PI).add(lights.environment));
   return direct.add(ambientDiffuse.add(envSpec).mul(surface.occlusion));
 }
