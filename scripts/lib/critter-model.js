@@ -1027,7 +1027,7 @@ export function catLook(l) {
   { const ff = faceFill(l) || {}; if (ff.nose) o.nose = ff.nose; if (ff.nshape) o.nshape = ff.nshape }   // Nov 14, Shelly 'new nose types (including a pink nose)': the drawn nose takes its shape and colour
   if (l?.talk) o.talk = true
   if (l?.cute) o.cute = true   // Nov 16: the cute-pass body (CAT_CUTE)
-  if (l?.slim) o.slim = true   // Nov 16 (Shelly 'yes'): the slim anime Tripo body (CAT_SLIM), blank face; outfits not refit to it yet
+  if (l?.slim && SLIM_ON) o.slim = true   // Nov 16 (Shelly 'yes'): the slim anime Tripo body (CAT_SLIM), blank face; outfits not refit to it yet
   if (typeof l?.shadow === 'string' && l.shadow && l.shadow !== 'none') o.shadow = l.shadow   // eyeshadow
   for (const k of ['etype', 'mtype']) if (typeof l?.[k] === 'string' && l[k] && l[k] !== 'classic') o[k] = l[k]   // eye and mouth type picks (critter-faces.yml eyes/mouths)
   // eyes: the look's own colour, else one per cat picked from its fur and name so a crowd isn't one colour

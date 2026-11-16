@@ -6,7 +6,7 @@ import { plainLook, honest, wornTokens, parseCloth } from './lib/clothes.js'
 import C from './lib/data/critter.yml'
 import { standUp } from './lib/seat.js'
 const SCRIPT = 'scripts/critter2-geo.js'
-import { SNOUTS, EARS, TAILS } from './lib/cat-wardrobe.js'
+import { SNOUTS, EARS, TAILS, SLIM_ON } from './lib/cat-wardrobe.js'
 import CW from './lib/data/cat-wardrobe.yml'
 import { CAT_ARMS, CAT_CROUCH, isNewCat, catLook, seatCat, FURRY_HEAD, armSplay, bodyModel, headModel, faceMorph, bustMorph, MESH, HUMAN, setStyle, restylePlace, restyleQueue, restyleStep, STYLE_V, seatHead, clearAppearance, humanBodyMorph, humanFace, mouthAt, HEAD_ID, maskChild, seatMask, hairChild, seatHair, beardChild, seatBeard, speciesOf } from './lib/critter-model.js' // MESH (critter-models.yml): the cute Blender critters (art/critter-cute)
 const LID_SCALE = 1000 // the lids are modelled this many times too small (scripts/critter2-geo.js)
@@ -281,7 +281,7 @@ export function update(ctx) {
     if ((st3?.aiming || (st3?.armed && s3.tp)) && s3.turnTo !== 'none') { if (s3.turnTo !== 'camera') s3.turnTo = 'camera' } else if (s3.turnTo === 'camera' && !st3?.armed) s3.turnTo = null
     if (ses.pose || had) applyBones(ctx)
   }
-  { const SK = l.slim ? 1.2 : 1, h = (Number(l.heightS) || 1) * SK, w = (Number(l.buildS) || 1) * SK, k = h + ':' + w // Nov 16 (Shelly 'am i smaller now'): the slim Tripo body exports 1.0 m; the old cat stood 1.2 m, so she wears x1.2 // height and build: the whole body, everyone sees it
+  { const SK = SLIM_ON && l.slim ? 1.2 : 1, h = (Number(l.heightS) || 1) * SK, w = (Number(l.buildS) || 1) * SK, k = h + ':' + w // Nov 16 (Shelly 'am i smaller now'): the slim Tripo body exports 1.0 m; the old cat stood 1.2 m, so she wears x1.2 // height and build: the whole body, everyone sees it
     const sc = ctx.self.scale, off = !sc || typeof sc === 'number' ? (sc ?? 1) !== h || h !== w : Math.abs((sc.y ?? 1) - h) > 1e-3 || Math.abs((sc.x ?? 1) - w) > 1e-3
     if (ses.hw !== k || off) { ses.hw = k; ctx.self.scale = { x: w, y: h, z: w } } } // Shelly Nov 15: height reaches a plymodel or spawn avatar too: a re-dressed body (worn model swap, place crossing) came back at scale 1, so the scale is checked against the look, not only on a slider move
   const wornNow = !!((l.spawnAv && ctx.self.avatarUrl) || l.modelUrl || (l.model && C.models?.[l.model]))
@@ -295,7 +295,7 @@ export function update(ctx) {
     const humanNow = HUMAN || speciesOf(ses.cachedParams) === 'human'
     if (humanNow) { if (ses.flair !== 'human') { ses.flair = 'human'; ctx.self.anim.flair = null; ctx.self.anim.cute = null; ctx.self.bones = {}; ses.lids = false; ses.twitch = null } } // the human rig has no tail, ears or lids
     if (!humanNow) {
-    if (l.slim) { if (ses.flair !== 'slim') { ses.flair = 'slim'; ctx.self.anim.flair = null; ctx.self.anim.cute = null; ctx.self.jiggle = null; ctx.self.bones = {}; ses.lids = false; ses.twitch = null } } // Nov 16: the slim Tripo body is a plain mixamo rig: no tail, ear or lid bones for the cat's flair clips (they fell back to a looping walk)
+    if (SLIM_ON && l.slim) { if (ses.flair !== 'slim') { ses.flair = 'slim'; ctx.self.anim.flair = null; ctx.self.anim.cute = null; ctx.self.jiggle = null; ctx.self.bones = {}; ses.lids = false; ses.twitch = null } } // Nov 16: the slim Tripo body is a plain mixamo rig: no tail, ear or lid bones for the cat's flair clips (they fell back to a looping walk)
     else if (ses.flair !== face + FLAIR_V) { ses.flair = face + FLAIR_V; flair(ctx.self, face) }
     life(ctx, face)
     }

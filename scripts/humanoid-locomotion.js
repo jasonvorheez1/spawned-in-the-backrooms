@@ -42,7 +42,7 @@ function humanClips(ctx) {
   return ss.humClips
 }
 import { stepAngle } from 'builtin/math'
-import { liveFace } from './lib/cat-wardrobe.js'
+import { liveFace, SLIM_ON } from './lib/cat-wardrobe.js'
 
 // The body's own word, else the world's default.
 function turnTo(ctx) {
@@ -405,7 +405,7 @@ export function update(ctx, dt) {
   // the cute layer: standing still, a body sways side to side, tilts its head and breathes, layered over the Idle (critter bones; another rig just ignores it)
   { const still = rung === 'idle' && !creeping && !ctx.self.state?.crouch && !ctx.self.state?.sit && !ctx.self.state?.dead
     let h = 0; for (const c of String(ctx.self.id)) h = (h * 31 + c.charCodeAt(0)) | 0
-    if (human || ctx.self.state?.look?.slim) { if (ctx.self.anim.cute) ctx.self.anim.cute = null } else ctx.self.anim.cute = { clip: CUTE, loop: 'loop', weight: still ? 0.35 : 0.001, speed: 0.85 + (Math.abs(h) % 30) / 100, blendIn: 0.6 } }
+    if (human || (SLIM_ON && ctx.self.state?.look?.slim)) { if (ctx.self.anim.cute) ctx.self.anim.cute = null } else ctx.self.anim.cute = { clip: CUTE, loop: 'loop', weight: still ? 0.35 : 0.001, speed: 0.85 + (Math.abs(h) % 30) / 100, blendIn: 0.6 } }
   if (!ctx.self.state?.crouch && ctx.self.anim.crouch) ctx.self.anim.crouch = null
   if (ctx.self.state?.crouch) { // crouched: the crouch pair takes the body; the walk's share is the crouch-walk's
     const go = Math.min(1, Math.max(0.001, 1 - idleWeight))
