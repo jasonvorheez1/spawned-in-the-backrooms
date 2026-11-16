@@ -14,7 +14,8 @@ export const CAT_BODY2 = { f: CAT_BODY.f.glb, m: CAT_BODY.m.glb }
 // Nov 16 (Shelly 'yes' to wearing it): the cute pass on the female base (art/cat-wardrobe/cute.py + snout-short.py): short round button snout, perkier bust, rounder hips/thighs. Same mesh, bones and keys. Worn when look.cute is set; every other cat keeps CAT_BODY
 export const CAT_CUTE = { f: '/cdn/value.5c85f9937c2c419c5da4fc6b1391223512dbe030c1c93f995cdfb679359d4403.glb' }
 // Nov 16 (Shelly 'make her slimmer, more anime', 'yes' to wearing it): a new Tripo body from a blank-faced concept, Tripo-rigged (mixamo names), faces +x. No shape keys or face paint slots yet; garments not refit to it
-export const CAT_SLIM = { f: '/cdn/value.c962a4a4c551528d33eed4f4cc14468c38220eea5af67b1f156cf303f0cba7ab.glb' }
+export const CAT_SLIM = { f: '/cdn/value.3de8e3b54a40bface8c0c4e2027fdfacb448fb90a6baff8b502e48c0d7db1bce.glb' }   // art/kemono-slim/front.py: faces +z, hips over the origin, one 'fur' slot
+export const CAT_SLIM_FUR = '/cdn/value.25effe634928de41ad100cdcf8be4b66f3dc638613d816781aa177b44dc0dabd.png'   // its own Tripo colours, worn whole
 export const bodyGlb = (sex, look) => (look?.cute && CAT_CUTE[sex]) || CAT_BODY[sex].glb
 // Nov 13 body pass (art/cat-wardrobe/body-pass): female waist and hips, seat/shoulder weights re-blended, tail root relaxed, Bob/Puff/Curl tails rebuilt. CAT_PREV: the bases before it
 export const CAT_PREV = { f: '/cdn/value.e8e63dfafb7285f7362bb87c7e685d38fda0180e9f00f711ec56436ff43fa0c4.glb', m: '/cdn/value.a935fee298a38e28d69d6472997a747507062f2507ac308f0db98fa42efa1dd3.glb' }
@@ -43,14 +44,16 @@ export function paintOf(sex, look) {
 }
 // the shader params for one body
 export function skinParams(sex, look) {
-  const B = W.body[sex], p = paintOf(sex, look), o = { fur: CAT_BODY[sex].fur, top: 0, bot: 0, sock: 0, frontZ: B.front, tailR: B.tailR }
+  const slim = !!(look?.slim && CAT_SLIM[sex])   // Nov 16: the slim kemono wears the outfit painted in on her own landmarks (cat-wardrobe.yml body.slim)
+  const B = slim ? W.body.slim : W.body[sex], p = paintOf(sex, look), o = { fur: slim ? CAT_SLIM_FUR : CAT_BODY[sex].fur, top: 0, bot: 0, sock: 0, frontZ: B.front, tailR: B.tailR }
+  if (slim) { o.furMix = 1; o.tShIn = B.shIn; o.tShOut = B.shOut }
   B.tail.forEach((t, i) => { o['t' + i + 'x'] = t[0]; o['t' + i + 'y'] = t[1]; o['t' + i + 'z'] = t[2] })
   o.tLo = B.top[0]; o.tHi = B.top[1]; o.tSl = armAt(B, 0.42); o.nW = B.neck[0]; o.nF = B.neck[1]; o.nB = B.neck[2]; o.bLo = B.leg[1]; o.bHi = B.waist; o.sHi = 0
   o.tpat = 'weave'; o.bpat = 'weave'
   for (const n of ['top', 'bot', 'sock', 'trim']) put(o, n, '#ffffff')
   if (p.top) { const t = p.top; o.top = 1; o.tLo = lerp(B.top[0], B.top[1], t.hem); o.tSl = armAt(B, t.sleeve); o.nF = B.neck[1] * t.scoop; o.nB = B.neck[2] * Math.min(t.scoop, 1.1); o.tpat = t.pat; put(o, 'top', t.c); if (t.sleeve >= 0.15) { o.tShoulder = 1; o.tShIn = 0.02; o.tShTop = 0.05 } if (t.band) { o.tband = 1; put(o, 'trim', t.trim || '#d98a9a') } }
   if (p.bot) { const b = p.bot; o.bot = 1; o.bLo = legAt(B, b.leg); o.bHi = B.waist + b.rise; o.bpat = b.pat; put(o, 'bot', b.c) }
-  { const l = dressed(sex, look)   // modelled garments tuck the skin under them
+  if (!slim) { const l = dressed(sex, look)   // modelled garments tuck the skin under them (the slim body wears none: all painted)
     if (W.models[l.topw]?.[sex]) {
       o.tSl = B.arm[2] - 0.024
       o.tHi += sex === 'm' ? 0.018 : 0.012
@@ -113,7 +116,7 @@ function noseParams(look) {
   return o
 }
 export function catModel(sex, look) {
-  if (look?.slim && CAT_SLIM[sex]) return { id: CAT_SLIM[sex], forward: '+x' }
+  if (look?.slim && CAT_SLIM[sex]) return { id: CAT_SLIM[sex], forward: '+z', materials: { fur: { kind: 'scripted', script: 'scripts/mat-catskin.js', color: '#ffffff', params: skinParams(sex, look) } } }
   const params = skinParams(sex, look)
   const fur = liftFur(look?.fur || '#f3c98a')
   const faces = FACES.faces[sex === 'm' ? 'male' : 'female']
@@ -170,7 +173,7 @@ export function catMorph(look) {
 }
 // the Tripo garments a look wears, as skinned children of the cat
 export function catChildren(sex, look) {
-  if (look?.slim && CAT_SLIM[sex]) return []   // the slim body wears nothing fitted yet
+  if (look?.slim && CAT_SLIM[sex]) return []   // the slim body's outfit is painted on her (skinParams); the Tripo garments were cut for the old body
   const l = dressed(sex, look), out = []
   for (const [slot, ck] of [['topw', 'top'], ['botw', 'bottom'], ['shoes', 'shoec'], ['hat', 'hatc'], ['neck', 'neckc'], ['eyew', 'eyewc']]) {
     const g = W.models[l[slot]]; if (!g?.[sex]) continue

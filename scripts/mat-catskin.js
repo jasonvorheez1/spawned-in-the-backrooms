@@ -128,7 +128,7 @@ export function material(ctx) {
   const fStr = mx_noise_float(q.mul(vec3(700, 90, 700))).mul(0.5).add(0.5), fStr2 = mx_noise_float(q.mul(vec3(210, 30, 210))).mul(0.5).add(0.5);
   const fClump = mx_fractal_noise_float(q.mul(vec3(26, 12, 26))).mul(0.5).add(0.5);
   const furP = float(0.86).add(fStr.mul(0.08)).add(fStr2.mul(0.07)).mul(float(0.94).add(fClump.mul(0.1)));
-  const fur = mix(vec3(1, 1, 1), furT, 0.25).mul(furP).mul(materialColor);
+  const fur = mix(vec3(1, 1, 1), furT, P("furMix", 0.25)).mul(furP).mul(materialColor);
   // --- tail: a capsule line the garments leave a hole for
   const tl = [0, 1, 2, 3].map((i) => vec3(P("t" + i + "x"), P("t" + i + "y"), P("t" + i + "z")));
   const seg = (a, b) => { const pa = q.sub(a), ba = b.sub(a), h = clamp(dot(pa, ba).div(dot(ba, ba)), 0, 1); return pa.sub(ba.mul(h)).length(); };
@@ -145,7 +145,7 @@ export function material(ctx) {
   const scoop = ex.mul(ex).add(ey.mul(ey)).sqrt().sub(1).mul(min(nW, nD.max(0.012))); // >0 outside the collar hole
   const topBand = min(q.y.sub(tLo), tHi.sub(q.y));
   // The fitted top needs fabric backing above the usual shirt line at the shoulder seam.
-  const shoulder = min(min(ax.sub(P("tShIn", 0.069)), float(0.215).sub(ax)), tHi.add(P("tShTop", 0.021)).sub(q.y));
+  const shoulder = min(min(ax.sub(P("tShIn", 0.069)), P("tShOut", 0.215).sub(ax)), tHi.add(P("tShTop", 0.021)).sub(q.y));
   const upper = max(topBand, min(min(shoulder, q.y.sub(tHi.sub(0.05))), P("tShoulder").mul(2).sub(1)));
   const topD = min(upper, min(tSl.sub(ax), min(scoop, notTail)));
   // --- bottom: waist..leg hem
