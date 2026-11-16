@@ -7,7 +7,7 @@ import { seatPart } from "./lib/usable-kit.js";
 const SFX = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const DEF_SOUND = { lever: "heavy-iron-lever-throw-clank", dial: "rotary-dial-ratchet-spin", button: "brass-elevator-button-click", flap: "old-steamer-trunk-lid-creak-open", screen: "old-computer-boot-startup-chime", lamp: "old-payphone-hook-switch-click", tap: "wood-creak-heavy-timber-settling" };
 const FLASH = (c) => `fx
-pop glow burst=1 life=.9 v=<0,0,0> col=<${c}> a=1>0 r=light(<${c}>,$a*4,5)
+pop glow burst=1 life=.9 v=<0,0,0> glo=1>0 col=<${c}> r=light(<${c}>,$glo*4,5)
 pop mote burst=6..9 on=sphere(.15) life=.5..0.9 v=up(.3..0.7)+sdir()*.2 size=.03..0.06 acc=drag(1.5) col=<${c}>*2 a=1>0 sz=$size r=sprite(soft-disc,add)`;
 function move(ctx, k) {
   const id = ctx.self.id, part = k.p ? `${id}/kit-${k.p}` : null, has = part && ctx.getObject(part);
