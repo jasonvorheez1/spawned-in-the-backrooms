@@ -520,7 +520,7 @@ def run(body, ZONES, DOC, a):
                 _nkSide = (_nkW - _nkLoc).dot(_nkN)
                 if _nkSide < _nkGap: _nkV.co = _nkMI @ (_nkLoc + _nkN.normalized() * _nkGap)
             # a short lip up from the collar edge, held off the skin: the nape rose over the level edge as a sliver of skin
-            _nkE = [e for e in _nkB.edges if e.is_boundary and min((_nkMW @ x.co).z for x in e.verts) > z_mock - 0.01 * S]
+            _nkE = [e for e in _nkB.edges if e.is_boundary and min((_nkMW @ x.co).z for x in e.verts) > z_mock - 0.01 * S and max(math.hypot((_nkMW @ x.co).x, (_nkMW @ x.co).y - _cy) for x in e.verts) < 0.085 * S]
             if _nkE:
                 _nkX = _bm3.ops.extrude_edge_only(_nkB, edges=_nkE)
                 _nkNV = [g for g in _nkX['geom'] if isinstance(g, _bm3.types.BMVert)]
