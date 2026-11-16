@@ -225,7 +225,7 @@ function lay(ctx) {
   });
   sp("l21-alef-roster", {
     feetPosition: { x: bc.x - 2.9, y: 1.55, z: edgeOf(L1, 3) + 0.22 }, rotation: { yaw: 0 },
-    ...sign(0.55, 0.7, `<div face="front" width="0.55m" style="font-family:'Courier New',monospace;color:#1b1a16;background:#eae2c6;padding:8px;text-align:left;line-height:1.25"><div style="font-size:24px;font-weight:900;border-bottom:2px solid #222;margin-bottom:4px">ALEF ROSTER</div><div style="font-size:20px">JUL 20: 53<br>AUG 20: 41<br>OCT 20: 27<br>NOV 20: 14<br>---</div></div>`, "oklch(0.86 0.04 90)"),
+    primitive: { kind: "box", width: 0.48, height: 0.72, depth: 0.012 }, material: { texture: "/cdn/value.65058d6e3e1f2fcce10bc686789fc041e721fbb1d736ce7ee4990d0613a9d2ec.png", roughness: 0.85 }, castShadow: false, // painted clipboard, Nov 16
   });
   for (let i = 0; i < 14; i++) sp(`l21-alef-paper-${i}`, { feetPosition: { x: bc.x + 1.4 + (hash(i, 3, 901) - 0.5) * 4.2, y: 0.006 + i * 0.0004, z: edgeOf(L1, 1) - 1.8 + (hash(i, 5, 902) - 0.5) * 3.2 }, rotation: { yaw: hash(i, 7, 903) * 360 }, primitive: { kind: "box", width: 0.21, height: 0.002, depth: 0.29 }, material: { color: i % 4 === 0 ? "oklch(0.86 0.06 90)" : "oklch(0.9 0.012 90)", roughness: 0.95 } });
   const COT_LAYOUT = [[bc.x - 3.6, bc.z - 2.4, 90], [bc.x - 3.6, bc.z - 0.2, 90], [bc.x - 3.6, bc.z + 2.0, 90], [bc.x + 3.6, bc.z - 2.6, 15]];
@@ -485,8 +485,8 @@ function dress21(ctx) {
     if (opens.length === 1) { // a dead end: the DANGER door the wiki photographed
       const d = [0, 1, 2, 3].find((k) => k !== opens[0] && k === (opens[0] + 2) % 4), [nx, nz] = D4W[d], w = S / 2 - W - 0.06;
       if (hash(cx, cz, 731) < 0.55) ctx.spawn(`l21-danger-${cx}-${cz}`, { tags: ["l21-sign"], feetPosition: { x: c.x + nx * w, y: 1.35, z: c.z + nz * w }, rotation: { yaw: yawOf(-nx, -nz) }, visibleRange: { max: 30 }, castShadow: false,
-        primitive: { kind: "box", width: 0.5, height: 0.34, depth: 0.012 }, material: { color: "oklch(0.95 0.01 90)", roughness: 0.6 },
-        ui: `<div face="front" width="0.5m" height="0.34m" class="w-full h-full flex flex-col" style="background:#f2efe6;border:10px solid #111"><div style="background:#c8102e;color:#fff;font:900 92px sans-serif;text-align:center;letter-spacing:6px;padding:8px 0">DANGER</div><div style="color:#111;font:800 44px sans-serif;text-align:center;padding-top:26px">AUTHORIZED<br>PERSONNEL ONLY</div></div>` });
+        primitive: { kind: "box", width: 0.51, height: 0.34, depth: 0.012 }, material: { texture: "/cdn/value.4f21fb78df20237a390fd42c07d9379e4c6779c7e3375112146bcb16ba314538.png", roughness: 0.55, metalness: 0.2 }, // painted enamel plate, Nov 16
+      });
     }
     if (hash(cx, cz, 733) > 0.17) continue;
     const walls = [0, 1, 2, 3].filter((d) => !isOpen(cx, cz, d)); if (!walls.length) continue;
