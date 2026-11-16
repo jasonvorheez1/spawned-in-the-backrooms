@@ -1,0 +1,27 @@
+{
+  "name": "held-gizmo",
+  "displayName": "Feels Good Rig",
+  "description": "▶ WATCH THE TRAILER: https://spawn.co/cdn/value.29047d39ebe1e99fe5a8c178c0b22fd9b857aada052e3028d1774970467f306e.mp4 · ⚡ FeelsGoodRig ⚡ NEW: COPY HOLD → PLAYERS hands a character's gun grip to every player holding that gun (rigs with no finger bones copy as a palm cradle) · pose any rigged character in god mode: NEW: pick the BODY (shows the character's name) to slide and turn the whole character while held items like a zipline handle stay put (glasses and hats ride along), SAVE keeps the spot · move what they hold, pose each hand and finger per animation, pin either hand to a held item so the arm follows it, NEW: 📌 PIN TO CHEST holds any item right where it stands so it bends and moves with the body (UNPIN puts it back), freeze in any clip, mirror, reset a hand or just its arm, undo. · TIP for gun sway that keeps hands on the grips: parent the gun to the chest bone (Spine2), pin both hands to its grips, turn off the gun's smoothing (interpolation: null), and pivot small walk-scaled sway on the trigger grip. TIP for matching poses: add a dev-only freeze key (P) that holds your player on the idle's first frame, no sway, so you and the dummy stand on the same frame.",
+  "tags": [
+    "editor",
+    "animation",
+    "rig",
+    "poses"
+  ],
+  "visibility": "public",
+  "version": "1.26.0",
+  "attach": [
+    {
+      "target": {
+        "kind": "god"
+      },
+      "behavior": "editor.js"
+    },
+    {
+      "target": {
+        "kind": "player"
+      },
+      "behavior": "player-hold.js"
+    }
+  ]
+}
