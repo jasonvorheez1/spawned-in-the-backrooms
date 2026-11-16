@@ -89,8 +89,14 @@ def near(p):
 NV = [v.co.copy() for v in tri.data.vertices]
 hits = [near(p) for p in NV]
 # slots: each face takes the old surface's slot under its centre
+SL = {m.name: i for i, m in enumerate(om.materials)}
+HF, IE = SL.get("headFur", 0), SL.get("innerEar", 1)
+zs_ = sorted(v.co.z for v in tri.data.vertices); ztop = zs_[-1]; zlo = zs_[0]
+EARZ = zlo + 0.66 * (ztop - zlo)   # the ears stand above the crown band
 for f in tri.data.polygons:
-    fi, _ = near(f.center); f.material_index = TRIS[fi][1]
+    c, n = f.center, f.normal
+    f.material_index = IE if (c.z > EARZ and abs(c.x) > 0.07 and n.y < -0.35 and abs(n.x) < 0.75) else HF
+print("innerEar faces", sum(1 for f in tri.data.polygons if f.material_index == IE), "EARZ", round(EARZ, 3))
 # weights: barycentric blend of the old triangle's vertex weights
 gname = {g.index: g.name for g in old.vertex_groups}
 OW = [{gname[g.group]: g.weight for g in v.groups} for v in om.vertices]
