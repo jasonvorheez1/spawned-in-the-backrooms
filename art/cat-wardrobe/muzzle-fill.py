@@ -20,7 +20,7 @@ def envelope(pts, z):                                            # forward (min 
   for q in pts:
     while len(hull) >= 2:
       (z1, y1), (z2, y2) = hull[-2], hull[-1]
-      if (z2 - z1) * (q[1] - y1) - (y2 - y1) * (q[0] - z1) >= 0: hull.pop()   # keep the lower (more forward) chain
+      if (z2 - z1) * (q[1] - y1) - (y2 - y1) * (q[0] - z1) <= 0: hull.pop()   # keep the lower (more forward) chain
       else: break
     hull.append(q)
   for (z1, y1), (z2, y2) in zip(hull, hull[1:]):
