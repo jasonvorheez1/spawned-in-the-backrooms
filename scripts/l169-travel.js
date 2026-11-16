@@ -1,6 +1,7 @@
 // E opens the road board or page, and moves the visible leaf on lockers and logbooks.
 import { animate } from "builtin/tween";
 import L from "./lib/data/level169.yml";
+import { kick, snd } from "./lib/use-kick.js";
 import { go, legsFrom, takeLocker, sleepBed } from "./lib/l169-road.js";
 
 const PAGE = "cdn/moodboard-realistic-gritty/sfx-paper-notebook-page-flip.mp3";
@@ -46,12 +47,13 @@ export const ears = {
     if (!p?.state) return;
     if (st.kind === "board") {
       p.state.l169read = null;
+      kick(ctx, ctx.self, "rattle", { d: 0.7 }); snd(ctx, "sfx-weathered-wooden-sign-board-creak-in-wind.mp3", ctx.self.worldFeetPosition ?? ctx.self.feetPosition, 0.45, 12); // the board leans in its post holes
       p.state.l169board = { site: st.site, id: ctx.self.id, at: Math.round(ctx.now()), legs: legsFrom(ctx, p.state, st.site, L), msg: "" };
       guide(ctx, p);
     } else if (st.kind === "locker") {
       openLeaf(ctx);
       takeLocker(ctx, p, st.site, L);
-    } else if (st.kind === "bed") sleepBed(ctx, p, L);
+    } else if (st.kind === "bed") { kick(ctx, ctx.self, "squash", { d: 1.4 }); snd(ctx, "sfx-canvas-bedroll-crinkle-as-body-settles.mp3", ctx.self.worldFeetPosition ?? ctx.self.feetPosition, 0.5, 8); sleepBed(ctx, p, L); }
     else if (st.kind === "read") {
       openLeaf(ctx);
       p.state.l169board = null;
