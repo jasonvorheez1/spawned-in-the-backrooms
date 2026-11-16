@@ -1,3 +1,5 @@
+import { texSigns } from "../../scripts/lib/sign-tex.js";
+const SIGN_TEX = [["M.E.G. TEAM CORRIDOR","/cdn/value.2e8aa43089530430fd84f444300cac144a7734ba0ba6d571cec74b91d1266bd3.png"],["UTILITY HALLS","/cdn/value.62e90137e0db98d2fe2d119d84ea4d05db441173183af4b850f4d5824bb7fbda.png"]]; // hand-made sign faces, Nov 16
 import { retextureOnce } from "../../scripts/lib/retexture.js";
 import { stealerModel } from "../../scripts/lib/stealer-body.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
@@ -52,6 +54,7 @@ pop glow n=1 r=light(<1,.55,.24>,fire()*6,7)`;
 // the tutorial's drop point isn't a door; the dresser lays M.E.G.'s welcome there too, turned toward the camp
 const l1Ways = () => { const a = cellCenter(ARRIVE.cx, ARRIVE.cz), dx = a.x - DROP.x, dz = a.z - DROP.z, l = Math.hypot(dx, dz); return [{ id: "l1-drop", at: { x: DROP.x - dx / l * 0.9, y: 0, z: DROP.z - dz / l * 0.9 }, fwd: { x: dx / l, z: dz / l } }]; };
 export function tick(ctx) {
+  texSigns(ctx, SIGN_TEX);
   retextureOnce(ctx); // graphics pass: bare props get real surfaces
   restyleSigns(ctx, "level1"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx, l1Ways()); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)

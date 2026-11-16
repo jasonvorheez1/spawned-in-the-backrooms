@@ -1,3 +1,5 @@
+import { texSigns } from "../../scripts/lib/sign-tex.js";
+const SIGN_TEX = [["FARM RD","/cdn/value.f2b7af09e36decd73085f982e4d7b3d5b703a0cb387642e9060d2120cc1e8786.png"],["11TH AVE","/cdn/value.7d5c6a5ec8eac6eef9834289c0a678dbbe418d9ea26000e702ae43f54aecff27.png"],["METROPOLITAN BLVD","/cdn/value.2e15562766c6ff3b79af902cd96a7f008c2ee9a18fe754cb29dc719b5ddc0cd4.png"],["SEDCO SPOTLIGHT","/cdn/value.727978fcf6cbd261906daa27d3a021cf57fc7de29f7ac30aa070cc2614c5925d.png"],["B.N.T.G.","/cdn/value.16cb89d933a80019cbefa8625ae7bd22596df8afb7b2d3b29f7d8f04cfd85d7e.png"],["UNMAPPED EXITS","/cdn/value.115267fdb5912e0a6d931eeabe1effa3295671bc3ce0b63f2ac24d3091217df7.png"],["little strawberry","/cdn/value.634baeb49568b612d8a46c35f44883f46effadfbd9fef3a8a1f53291621f9a8c.png"],["ROAD WORK AHEAD","/cdn/value.454cd359ce81c11f2c7f0f3334f4e8e195253abfde9c12da2a7b8e8522223bb0.png"],["U.E.C. SETTLEMENT","/cdn/value.463c8f8639e75bd57e6ecc9a9dbe3b5e54a026edda84d464aefcfd6b01906813.png"],["NEVER SLEEPS","/cdn/value.3bfdd57bcbaae1d5d39dec2e5c1bf8ceae244735d518baa1f8ae6ede1a3711d2.png"]]; // hand-made sign faces, Nov 16
 import { retextureOnce } from "../../scripts/lib/retexture.js";
 import { sweepProps } from "../../scripts/lib/breakables.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
@@ -1896,6 +1898,7 @@ const L11_VOICES = {
 // Master tick simulation loop
 const mem = { ringAt: 0, adAt: 0, lightAt: 0, lightPhase: 0 };
 export function tick(ctx) {
+  texSigns(ctx, SIGN_TEX);
   retextureOnce(ctx); // graphics pass: bare props get real surfaces
   if (!ctx.place.objects["sewer11-grate"]) { // Level 34's grate in the street (wiki: "a sewer grate in Level 11")
     ctx.spawn("sewer11-grate", { tags: ["usable"], feetPosition: { x: 3, y: 0.01, z: 66 }, primitive: { kind: "box", width: 0.9, height: 0.06, depth: 0.6 }, physics: "static", material: { texture: "cdn/texture-rusty-cast-iron-storm-drain-grate-slots.png", color: "oklch(0.35 0.03 50)", roughness: 0.7, metalness: 0.5 }, behavior: "scripts/sewer-grate.js", state: { name: "Sewer grate", verb: "Climb down", to: "level34#l34-from-l11" } });

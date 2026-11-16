@@ -1,3 +1,5 @@
+import { texSigns } from "../../scripts/lib/sign-tex.js";
+const SIGN_TEX = [["PUBLIC PHONES","/cdn/value.d8247ce71c2e8b909a01267517b53b25aa67fb33ef7662d043b4711a824b1a6d.png"],["NO ENTRY WITHOUT CLEARANCE","/cdn/value.80d46748a6b7e724dd00c807ca9bb4389862a2a8e3fbd3ebad31dc0875f2a8ef.png"]]; // hand-made sign faces, Nov 16
 import { sweepProps } from "../../scripts/lib/breakables.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
@@ -848,6 +850,7 @@ function slim(ctx, st) {
 }
 
 export function tick(ctx) {
+  texSigns(ctx, SIGN_TEX);
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level61"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
