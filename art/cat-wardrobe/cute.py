@@ -11,14 +11,14 @@ for o in list(bpy.data.objects):
     if o.name.startswith("Icosphere"): bpy.data.objects.remove(o)
 sm = lambda t: 0 if t <= 0 else 1 if t >= 1 else t * t * (3 - 2 * t)
 TIP, BACK, MZ = -0.2485, -0.165, 0.795      # snout tip y, where the muzzle meets the face, muzzle centre height
-SC, SR = Vector((0, -0.150, 0.800)), 0.125   # the muzzle's root inside the face, and how far the pull reaches
+SC, SR = Vector((0, -0.150, 0.800)), 0.145   # the muzzle's root inside the face, and how far the pull reaches
 def snout(p):
     v = p - SC
     if v.y > 0.01: return Vector()
     q = v.length / SR
     if q >= 1: return Vector()
     w = (1 - sm(q)) * sm((-v.y) / 0.04)              # strongest at the tip, nothing at the cheeks and brow
-    return -v * 0.42 * w                              # every point pulled toward the root: a smaller, rounder button
+    return -v * 0.5 * w                              # every point pulled toward the root: a smaller, rounder button
 CX, CZ, AMP, SXW, SUP, SDN = 0.045, 0.528, 0.046, 0.034, 0.044, 0.034
 if CLOTH: AMP = 0.049
 def lobe(p, s):
