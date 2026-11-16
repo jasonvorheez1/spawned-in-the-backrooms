@@ -143,6 +143,22 @@ def run(body, ZONES, DOC, a):
             from collections import Counter
             rr = g['r']; print('DBG torso z %.3f yc %.3f %s rF %.3f rB %.3f rS %.3f' % (g['u'], g['o'][1], dict(Counter(g['kind'])), rr[0], rr[20], rr[10]))
     t.finish(2)
+    # the tail's exit through the top's hem: open the cells the tail pokes out of, like the skirt's, so the shirt
+    # never wraps a pink band around the tail root
+    _TV = V[np.array([sum(w for k, w in vw.items() if 'tail' in k.lower()) >= 0.6 for vw in VW])]
+    if len(_TV):
+        for i, g in enumerate(t.rings):
+            rel = _TV - g['o']; m = np.abs(rel[:, 2]) < 0.02 * S
+            if not m.any(): continue
+            Rl = rel[m].copy(); Rl[:, 2] = 0; Lt = np.linalg.norm(Rl, axis=1) + 1e-9
+            for j, d in enumerate(g['dirs']):
+                cone = (Rl @ d) / Lt > 0.985
+                if cone.any() and Lt[cone].max() > t.R[i, j] + 0.004 * S: t.hole[i, j] = True
+        h = t.hole.copy()
+        for dj in (-1, 1): h |= np.roll(t.hole, dj, 1)
+        for di in (-1, 1): h |= np.roll(t.hole, di, 0) & (np.arange(len(t.rings)) > 0)[:, None]
+        t.hole = h
+        print('BODYWORKS T1 top tail hole cells', int(t.hole.sum()))
     # the yoke reads T0 ZONE names, not rig roles: an auto-rigger's Head weights spill onto the collarbones (Mixamo) and
     # would punch the yoke full of holes; the zones were already cut by shape where the weights were thin
     YOKEZ = ('upperchest', 'breast_l', 'breast_r', 'cleavage', 'chest', 'upperback', 'shoulder_l', 'shoulder_r', 'upperarm_l', 'upperarm_r')
