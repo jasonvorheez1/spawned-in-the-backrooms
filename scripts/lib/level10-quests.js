@@ -144,7 +144,10 @@ export function handleDialogueQuest10(ctx, p, npc, text) {
     if (t.includes("look at that scarecrow") && !s.watcherQ) {
       if (repOf(s, "meg") <= -35) return { reply: "I don't share field work with hostiles.", mood: "angry" };
       const has24 = String(s.pages ?? "").split(",").includes("24");
-      setWatcherStep(ctx, p, has24 ? 3 : 2, "Quest Started: The Still Watcher · Search the scarecrow in the east barley field");
+      setWatcherStep(ctx, p, has24 ? 3 : 2, has24
+        ? "Quest Started: The Still Watcher · You already found Pell's log. Show it to Dr. Maeve."
+        : "Quest Started: The Still Watcher · Search the scarecrow in the east barley field");
+      if (has24) return { reply: "You found Pell's log in the coat already? I thought it had gone with her. Let me see it when you're ready; the diagram might tell us why the field keeps moving.", mood: "happy" };
       return { reply: "Thank you. A surveyor named Pell walked the east field before me and stuffed her log in its coat the night she stopped reporting. I want the log. Keep low and keep your eyes on its head when you reach in. It turns when you look away, and people who stand over it come back with headaches and gaps in their afternoon. Pell might know why.", mood: "calm" };
     }
     if (s.watcherQ === 3 && (t.includes("found document 24") || t.includes("pinning it down"))) {

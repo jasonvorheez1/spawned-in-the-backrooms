@@ -2,7 +2,7 @@ import { test, expect, mock } from 'bun:test'
 mock.module('builtin/physics', () => ({ raycast: () => null, getInputRay: () => null, overlapPoint: () => [] }))
 mock.module('builtin/tween', () => ({ animate: () => {} }))
 mock.module('builtin/nav', () => ({ findPath: () => null }))
-mock.module('../scripts/player.js', () => ({ takeToken: () => null, weaponAim: () => ({}) }))
+mock.module('../scripts/player.js', () => ({ takeToken: () => null, weaponAim: () => ({}), maxHp: () => 100, maxSan: () => 100 }))
 mock.module('../scripts/interact.js', () => ({ talk: () => {} }))
 mock.module('../scripts/mat-cloth.js', () => ({ PRINTS: {} }))
 mock.module('../scripts/lib/carry.js', () => ({ carryAcross: () => {} }))
@@ -85,6 +85,20 @@ test('The Still Watcher: crouched search keeps your nerve; Science reads the log
   f.press(L10, 'l10-scarecrow-east', 'scarecrow'); expect(f.s.sanity).toBe(65)
   f.talk(M, 'pinning it down'); expect(f.s.watcherQ).toBe(3); expect(f.has(M, 'pinning it down')).toBe(false)
   f.talk(M, 'Found document 24'); expect(f.s.watcherQ).toBe(99); expect(f.pay().items).not.toContain('compass')
+})
+
+test('Maeve acknowledges a field log discovered before her quest', () => {
+  const w = world('level10'), maeve = 'l10-meg-maeve'
+  w.s.crouch = true
+  w.press(L10, 'l10-scarecrow-east', 'scarecrow')
+  expect(w.s.pages.split(',')).toContain('24')
+  expect(w.s.watcherQ).toBeUndefined()
+  w.talk(maeve, 'scarecrow')
+  expect(w.talk(maeve, "I'll take the job.")).toContain('already')
+  expect(w.s.watcherQ).toBe(3)
+  expect(w.s.quests['the-still-watcher'].step).toContain("Bring the surveyor's log")
+  expect(w.talk(maeve, 'Found document 24')).toContain("Pell's log")
+  expect(w.s.watcherQ).toBe(99)
 })
 
 test('Spotlight on Sedco: the password from the courier, the vault drive for a second player, sixty-forty once', () => {

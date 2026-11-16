@@ -61,10 +61,17 @@ export function touch178(ctx, p, id) {
   if (n === "l178-tap" && s.l178k === 2) { step(ctx, p, "kitchens", 3); return "You swirl the rice under the tap until the water runs clear."; }
   if (n === "l178-qs-donabe" && s.l178k === 3) { step(ctx, p, "kitchens", 4); return "Rice in, lid on. The donabe starts to tick as it warms."; }
   if (n === "l178-qs-ricecooker" && s.l178u === 1) { step(ctx, p, "ingredient", 2); s.l178jar = 1; return "Wedged behind the cooker: a jar of something pale yellow. It smells like almond water and cut grass."; }
-  if (n === "l178-story-guestbook" && s.l178a === 1) { step(ctx, p, "arrangement", 2); return "Halfway down, in neat brush: 'For the Order, Sister Hinata. We would like to eat with them.'"; }
+  if (n === "l178-story-guestbook") {
+    s.l178GuestbookSeen = true;
+    if (s.l178a === 1) { step(ctx, p, "arrangement", 2); return "Halfway down, in neat brush: 'For the Order, Sister Hinata. We would like to eat with them.'"; }
+  }
   if (n === "l178-table-dining" && s.l178a === 3) { step(ctx, p, "arrangement", 4); return "You lay ten bowls, ten pairs of chopsticks. Two houses' worth."; }
   if (n === "l178-qs-catdish" && s.l178l === 3) { step(ctx, p, "longway", 4); return "The cat dish again. Same one. You walked the whole loop and it's where you left it."; }
-  if (n === "l178-qs-goboard" && s.l178b === 1) { step(ctx, p, "route", 2); return "Black stones for rooms, white for halls. Someone mapped the house on a go board."; }
+  if (n === "l178-qs-goboard") {
+    s.l178BoardSeen = true;
+    if (s.l178b === 1) step(ctx, p, "route", 2);
+    return "Black stones for rooms, white for halls. Someone mapped the house on a go board.";
+  }
   if (n === "l178-qs-callidesk" && s.l178b === 2) { step(ctx, p, "route", 3); return "You copy the board onto a clean sheet: the courtyard, the porch, the door to the Hub."; }
   if (n === "l178-qs-kamidana" && s.l178t === 3) { step(ctx, p, "station", 4); return "You set a grain of rice and a drop of spring water on the shelf. For whoever leaves next."; }
   if (SPOTS[n.replace("l178-qs-", "")]) return SPOTS[n.replace("l178-qs-", "")].why;
@@ -166,6 +173,10 @@ export function handleDialogueQuest178(ctx, p, npc, text) {
   if (npcId === "l178-order-1") {
     if (t.includes("is the order in need of anything") && !s.l178a && done(s, "l178k")) {
       step(ctx, p, "arrangement", 1);
+      if (s.l178GuestbookSeen) {
+        step(ctx, p, "arrangement", 2);
+        return { reply: "You've read Hinata's entry already? Then you know what we hope for. Would you carry the invitation to Irawan?", mood: "calm" };
+      }
       return { reply: "We need very little. But... one of us wrote something in the guestbook, by the door. An offer to the Sector. Would you read it, and carry it to Irawan for us?", mood: "calm" };
     }
     if (t.includes("the table is set for both houses") && s.l178a === 4) {
@@ -188,6 +199,10 @@ export function handleDialogueQuest178(ctx, p, npc, text) {
   if (npcId === "l178-sector-4") {
     if (t.includes("worried about the new arrivals") && !s.l178b && done(s, "l178l")) {
       step(ctx, p, "route", 1);
+      if (s.l178BoardSeen) {
+        step(ctx, p, "route", 2);
+        return { reply: "You found the map on the go board? Good. Copy it at the calligraphy desk and pin it by the Hub door, so newcomers can find the baths and kitchen.", mood: "calm" };
+      }
       return { reply: "They wander in and get lost between the baths and the kitchen. Someone mapped the house on the go board in the studio. Copy it at the calligraphy desk and pin it by the Hub door?", mood: "calm" };
     }
     if (t.includes("the map's pinned by the hub door") && s.l178b === 4) {

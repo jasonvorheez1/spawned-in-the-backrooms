@@ -2,7 +2,7 @@ import { test, expect, mock } from 'bun:test'
 mock.module('builtin/physics', () => ({ raycast: () => null, getInputRay: () => null, overlapPoint: () => [] }))
 mock.module('builtin/tween', () => ({ animate: () => {} }))
 mock.module('builtin/nav', () => ({ findPath: () => null }))
-mock.module('../scripts/player.js', () => ({ takeToken: () => null, weaponAim: () => ({}) }))
+mock.module('../scripts/player.js', () => ({ takeToken: () => null, weaponAim: () => ({}), maxHp: () => 100, maxSan: () => 100 }))
 mock.module('../scripts/interact.js', () => ({ talk: () => {} }))
 mock.module('../scripts/mat-cloth.js', () => ({ PRINTS: {} }))
 const { openDialogue, onInput } = await import('../scripts/talk.js')
@@ -125,6 +125,31 @@ test('a supply note reveals Ale before or during Short Rations without starting 
   active.s.rationsQ = 3
   read(active)
   expect(active.s.rationsQ).toBe(3)
+})
+
+test('Kyoto residents remember an early guestbook reading and go-board discovery', async () => {
+  const { ears } = await import('../scripts/l178-prop.js')
+  const { handleDialogueQuest178 } = await import('../scripts/lib/level178-quests.js')
+  const s = { l178k: 99, l178l: 99 }, p = { id: 'p', state: s, feetPosition: { x: 0, y: 0, z: 0 } }
+  const props = [
+    { id: 'l178-story-guestbook', session: {}, feetPosition: { x: 0, y: 0, z: 0 }, state: { kind: 'read', page: 1781, c: { x: 0, y: 0, z: 0 } } },
+    { id: 'l178-qs-goboard', session: {}, feetPosition: { x: 0, y: 0, z: 0 }, state: { kind: 'qspot', c: { x: 0, y: 0, z: 0 } } },
+  ]
+  const ctx = { self: props[0], place: { players: [p] }, getObject: () => null, now: () => 10000, random: () => 0.5, emit: () => {} }
+  ears.press(ctx, { by: 'p' })
+  expect(s.reading).toBe(1781)
+  expect(s.l178a).toBeUndefined()
+  ctx.self = props[1]
+  ears.press(ctx, { by: 'p' })
+  expect(s.l178b).toBeUndefined()
+  const order = handleDialogueQuest178(ctx, p, { id: 'l178-order-1' }, 'Is the Order in need of anything?')
+  expect(order.reply).toContain("read Hinata's entry")
+  expect(s.l178a).toBe(2)
+  expect(s.quests['an-arrangement'].mark.id).toBe('l178-irawan')
+  const host = handleDialogueQuest178(ctx, p, { id: 'l178-sector-4' }, 'You seem worried about the new arrivals.')
+  expect(host.reply).toContain('found the map')
+  expect(s.l178b).toBe(2)
+  expect(s.quests['a-better-route'].mark.id).toBe('l178-qs-callidesk')
 })
 
 test('Short Rations outcomes change later faction conversations and Bad Water', async () => {
