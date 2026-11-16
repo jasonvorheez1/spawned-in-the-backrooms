@@ -1144,10 +1144,10 @@ bc-vending-1:
   layout: {box: {max: {x: 0.5, y: 1.9, z: 0.45}, min: {x: -0.5, y: 0, z: -0.45}}}
   model: "/cdn/value.8845cbb69caf895635cbffeb1dc69ce931ec9613083b0306a2f50ae671906d28.glb"
   physics: "static"
-  rotation: {yaw: -90}
+  rotation: {yaw: 90}
   behavior: scripts/l61-use.js
   tags: ["usable"]
-  state: {"name":"Courtyard vending machine","kind":"vend","verb":"Dispense / Collect","info":"Cold cola · free · collect from the tray","gives":"coke","weeklyStock":24,"cooldown":20000,"c":{"x":9.64,"y":1.06,"z":23.75}}
+  state: {"name":"Courtyard vending machine","kind":"vend","verb":"Dispense / Collect","info":"Cold cola · free · collect from the tray","gives":"coke","weeklyStock":24,"cooldown":20000,"c":{"x":8.9,"y":1.06,"z":23.75}}
 bc-wordmark:
   feetPosition: {x: 0, y: 9, z: 30}
   id: bc-wordmark
@@ -2597,12 +2597,13 @@ plat-clock-rod:
   tags: [bonus-platform]
 plat-gate:
   castShadow: true
-  feetPosition: {x: -11.7, y: 5.5, z: -16.5}
+  feetPosition: {x: -11.2, y: 5.5, z: -16.6}
   id: plat-gate
-  layout: {box: {max: {x: 1.6, y: 1.35, z: 0.45}, min: {x: -1.6, y: 0, z: -0.45}}}
+  layout: {box: {max: {x: 0.2, y: 0.65, z: 0.48}, min: {x: -0.2, y: 0, z: -0.48}}}
   model: /cdn/value.18d7ac8aca0812cd28dee6bb15e49852b5262fe428ed2a1512151fdbf6210f10.glb
   physics: {body: static, collider: box}
-  rotation: {yaw: -90}
+  rotation: {yaw: 0}
+  scale: 2
   tags: [bonus-platform]
 plat-motes:
   feetPosition: {x: -16, y: 5.6, z: -12}
