@@ -11,6 +11,9 @@ export const CAT_BODY = {
 // Nov 12 lock-in (Shelly 'yea thats good'): CAT_BODY is the reshaped base (art/cat-wardrobe/rebase.py): female fuller PG chest, male wider shoulders and thicker neck. CAT_OLD: the bases before it
 export const CAT_OLD = { f: '/cdn/value.562ce0246eae9362d0d784854f5dff319bcc254c755c854e1be2c450ae9540c9.glb', m: '/cdn/value.3208bf922d1aff4faeefffab9867f3d2363af1dab60a37cc50860602d207c545.glb' }
 export const CAT_BODY2 = { f: CAT_BODY.f.glb, m: CAT_BODY.m.glb }
+// Nov 16 (Shelly 'yes' to wearing it): the cute pass on the female base (art/cat-wardrobe/cute.py + snout-short.py): short round button snout, perkier bust, rounder hips/thighs. Same mesh, bones and keys. Worn when look.cute is set; every other cat keeps CAT_BODY
+export const CAT_CUTE = { f: '/cdn/value.c20e75ace52bfa28dfb6d3a53356479b85d108d917f8ca29e12ad006acb0b532.glb' }
+export const bodyGlb = (sex, look) => (look?.cute && CAT_CUTE[sex]) || CAT_BODY[sex].glb
 // Nov 13 body pass (art/cat-wardrobe/body-pass): female waist and hips, seat/shoulder weights re-blended, tail root relaxed, Bob/Puff/Curl tails rebuilt. CAT_PREV: the bases before it
 export const CAT_PREV = { f: '/cdn/value.e8e63dfafb7285f7362bb87c7e685d38fda0180e9f00f711ec56436ff43fa0c4.glb', m: '/cdn/value.a935fee298a38e28d69d6472997a747507062f2507ac308f0db98fa42efa1dd3.glb' }
 const rgb = (hex, lin = true) => { const n = parseInt(String(hex || '#ffffff').replace('#', '').slice(0, 6).padEnd(6, 'f'), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => { const s = v / 255; return lin ? (s <= 0.04045 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4)) : s }) }
@@ -126,7 +129,7 @@ export function catModel(sex, look) {
     return { id: CAT_BODY[sex].glb, forward: '+z', materials: { fur: enamel(look.robot), fur2: enamel(R.steel), headFur: enamel(look.robot), innerEar: { color: R.brass, metalness: 0.9, roughness: 0.3 } } }
   }
   return {
-    id: CAT_BODY[sex].glb, forward: '+z',
+    id: bodyGlb(sex, look), forward: '+z',
     materials: {
       fur: skin(fur), fur2: skin('#ffffff'),
       headFur: {
