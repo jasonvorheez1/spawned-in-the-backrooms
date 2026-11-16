@@ -67,6 +67,7 @@ for it in range(ITERS):
         avg = sum((P[j] for j in nb[i]), Vector()) / len(nb[i]); nw[i] = P[i] + (avg - P[i]) * lam * wgt[i]
     P = nw
 mx = max((P[i]-base[i]).length for i in range(len(P))); print("max move m", mx)
+print("ear max move", max(((P[i]-base[i]).length for i in range(len(P)) if (P[i].z-z0)/H > 0.8), default=0))
 inv = mw.inverted()
 kb = me.shape_keys.key_blocks if me.shape_keys else None
 for g, m in enumerate(members):
