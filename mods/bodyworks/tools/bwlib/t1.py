@@ -306,7 +306,7 @@ def run(body, ZONES, DOC, a):
         if b_ - a_ < 1: print('BODYWORKS T1 WARN empty segment', name, tube); return
         SEG.setdefault(name, []).append((tb, a_, b_, mask))
     BIG = 99
-    seg('top_midriff', 'top_torso', -BIG, z_underbust + 0.015 * S)   # top_chest is a zone shell (below): a tube can't wrap the top of a bust
+    seg('top_midriff', 'top_torso', -BIG, z_underbust + 0.035 * S)   # top_chest is a zone shell (below): a tube can't wrap the top of a bust
     # top_yoke: an offset shell of the upper-chest, upper-back and shoulder zones (below), not the old x-swept tube that left
     # gaps at the collarbone and the sleeve seam on every body tried
     seg('neck_collar', 'neck_band', -9, 0.5); seg('neck_choker', 'neck_band', 0.5, 99); seg('neck_lace', 'neck_lace', -9, 99)
@@ -393,7 +393,7 @@ def run(body, ZONES, DOC, a):
     # SKIN SHELLS: the glove hand and the shoe are the T0 zones themselves, decimated and pushed out along their normals: every
     # finger, thumb, knuckle and toe is covered whatever the rig's bones say (NB's thumb bones sit 2-5 cm off its skin); the
     # skin's own weights ride along. Shoe faces split by their normal: down-facing = sole, the rest = upper.
-    def shell(zns, off, name, split=None, zmin=None, keepf=None):
+    def shell(zns, off, name, split=None, zmin=None, keepf=None, cuts=None):
         parts = []
         for zn in zns:
             if isinstance(zn, tuple):   # several zones as one skin (the hand: wrist + palm + fingers), welded before the decimate so no seam opens
@@ -432,6 +432,13 @@ def run(body, ZONES, DOC, a):
                 bm = bmesh.new(); bm.from_mesh(me); MW = ob.matrix_world
                 bmesh.ops.delete(bm, geom=[f for f in bm.faces if ((zmin is not None and (MW @ f.calc_center_median()).z < zmin) or (keepf and zn in keepf and not keepf[zn](np.array(MW @ f.calc_center_median()))))], context='FACES')
                 bm.to_mesh(me); bm.free(); me.update()
+            if cuts and zn in cuts:   # a level plane through the welded skin: a straight hem, never the zone's own stair-stepped border
+                import bmesh
+                for zc, keep_below in cuts[zn]:
+                    MI = ob.matrix_world.inverted(); co = MI @ Vector((0.0, 0.0, zc)); no = (MI.to_3x3() @ Vector((0.0, 0.0, 1.0))).normalized()
+                    bm = bmesh.new(); bm.from_mesh(me)
+                    bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=co, plane_no=no, clear_outer=keep_below, clear_inner=not keep_below)
+                    bm.to_mesh(me); bm.free(); me.update()
             parts.append(ob)
         if not parts: return {}
         bpy.ops.object.select_all(action='DESELECT')
@@ -453,9 +460,9 @@ def run(body, ZONES, DOC, a):
     # zone (heavy-set) the cap showed between yoke and sleeve, so the yoke also takes the upper arm skin near the joint
     capR = 0.11 * S
     near_sh = {f'upperarm_{s.lower()}': (lambda p, s=s: float(np.linalg.norm(p - np.array(J[f'shoulder.{s}']))) < capR) for s in 'LR'}
-    for nm_, ob in shell([('upperchest', 'shoulder_l', 'shoulder_r'), 'upperarm_l', 'upperarm_r'], OFF['top'], 'top_yoke', keepf=near_sh).items():
+    for nm_, ob in shell([('upperchest', 'shoulder_l', 'shoulder_r', 'neck'), 'upperarm_l', 'upperarm_r'], OFF['top'], 'top_yoke', keepf=near_sh, cuts={'upperchest': [(z_neck + 0.006 * S, True)]}).items():   # the neck's base closes the collar; one level plane makes the neckline a clean line
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
-    for nm_, ob in shell([('breast_l', 'breast_r', 'cleavage', 'upperback', 'chest', 'side_l', 'side_r', 'armpit_front_l', 'armpit_front_r', 'armpit_back_l', 'armpit_back_r')], OFF['top'], 'top_chest', zmin=z_underbust - 0.07 * S).items():
+    for nm_, ob in shell([('breast_l', 'breast_r', 'cleavage', 'upperback', 'chest', 'side_l', 'side_r', 'armpit_front_l', 'armpit_front_r', 'armpit_back_l', 'armpit_back_r')], OFF['top'], 'top_chest', cuts={'breast_l': [(z_underbust - 0.07 * S, False)]}).items():   # a level hem under the bust, overlapping the midriff tube
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
     for nm_, ob in shell(['foot_l', 'foot_r'], OFF['feet'], 'feet', {'feet_sole': lambda z: z < -0.5, 'feet_upper': lambda z: z >= -0.5}).items():
         CAGE[nm_] = (ob, COL['feet']); SEG[nm_] = []
