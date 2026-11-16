@@ -462,7 +462,7 @@ def run(body, ZONES, DOC, a):
     near_sh = {f'upperarm_{s.lower()}': (lambda p, s=s: float(np.linalg.norm(p - np.array(J[f'shoulder.{s}']))) < capR) for s in 'LR'}
     for nm_, ob in shell([('upperchest', 'shoulder_l', 'shoulder_r', 'neck'), 'upperarm_l', 'upperarm_r'], OFF['top'], 'top_yoke', keepf=near_sh, cuts={'upperchest': [(z_neck + 0.006 * S, True)]}).items():   # the neck's base closes the collar; one level plane makes the neckline a clean line
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
-    for nm_, ob in shell([('breast_l', 'breast_r', 'cleavage', 'upperback', 'chest', 'side_l', 'side_r', 'armpit_front_l', 'armpit_front_r', 'armpit_back_l', 'armpit_back_r')], OFF['top'], 'top_chest', cuts={'breast_l': [(z_underbust - 0.07 * S, False)]}).items():   # a level hem under the bust, overlapping the midriff tube
+    for nm_, ob in shell([('breast_l', 'breast_r', 'cleavage', 'upperback', 'chest', 'belly', 'side_l', 'side_r', 'armpit_front_l', 'armpit_front_r', 'armpit_back_l', 'armpit_back_r')], OFF['top'], 'top_chest', cuts={'breast_l': [(z_underbust - 0.07 * S, False)]}).items():   # a level hem under the bust, overlapping the midriff tube
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
     for nm_, ob in shell(['foot_l', 'foot_r'], OFF['feet'], 'feet', {'feet_sole': lambda z: z < -0.5, 'feet_upper': lambda z: z >= -0.5}).items():
         CAGE[nm_] = (ob, COL['feet']); SEG[nm_] = []
