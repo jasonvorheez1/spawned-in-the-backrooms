@@ -1,5 +1,5 @@
 {
-  "v": 2,
+  "v": 3,
   "level11": {
     "l11-elev-btn-*": { "m": "button", "p": "button" },
     "l11-skydeck-binoculars": { "m": "dial", "p": "dial", "s": "coin-drop-into-metal-slot-and-gear-whir" },
@@ -41,7 +41,7 @@
     "l11-lot-sold": { "m": "tap", "s": "car-door-handle-locked-rattle", "q": 0.03, "i": "SOLD, says the windshield. Nobody came for it.", "t": "Cupholder: a warm Almond Water, unopened.", "g": { "items": ["almond"], "cd": 3600 } }
   },
   "level8": {
-    "l8-glow-*": { "m": "lamp", "p": "lamp", "l": "0.45,1,0.6", "s": "wet-mushroom-squelch-soft", "i": "Brightens when touched. Smells like a basement in July.", "t": "Spores up the nose. Oddly, it helps.", "g": { "sanity": 4, "cd": 900 } },
+    "l8-glow-*": { "m": "lamp", "p": "lamp", "h": 0.85, "l": "0.45,1,0.6", "s": "wet-mushroom-squelch-soft", "i": "Brightens when touched. Smells like a basement in July.", "t": "Spores up the nose. Oddly, it helps.", "g": { "sanity": 4, "cd": 900 } },
     "l8-cocoon-*": { "m": "tap", "q": 0.14, "s": "wet-silk-tearing-slow", "i": "Silk, warm on one side.", "t": "Inside: a roll of duct tape, wrapped like a fly.", "g": { "items": ["tape"], "cd": 3600 } },
     "l8-seep-*": { "m": "tap", "q": 0.1, "s": "tar-bubble-thick-glop" },
     "l8-kazoo": { "m": "tap" },
