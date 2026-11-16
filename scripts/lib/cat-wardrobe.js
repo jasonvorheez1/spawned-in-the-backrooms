@@ -5,19 +5,19 @@ import FACES from './data/critter-faces.yml'
 import { PRINTS } from '../mat-cloth.js'
 
 export const CAT_BODY = {
-  f: { glb: '/cdn/value.81850c498dfe463082f25640d8f488a64422b01a253f83e94ee0f44e66d8eae9.glb', fur: '/cdn/value.1c4f4402e22ebd41f1cca9b45fc42ef2bec051041b40c8a3c40b88028a23ca58.jpg' },
-  m: { glb: '/cdn/value.a1e5daf2100eeb7152f998e2a680e231de09898896a260d4cd6aa573911e01e7.glb', fur: '/cdn/value.58ce243610699df44f4552ccfdfc667580c63c99f28103ecf2d1dd72c94657fe.jpg' }
+  f: { glb: '/cdn/value.7309ce8f660b84de170015fa6b1857820c128047d571e01cb2b657ada7b2d296.glb', fur: '/cdn/value.1c4f4402e22ebd41f1cca9b45fc42ef2bec051041b40c8a3c40b88028a23ca58.jpg' },
+  m: { glb: '/cdn/value.515f1ea15e5df790de6d31fbbda708bdf3059935a14c4072ccbd5e3d48f916cc.glb', fur: '/cdn/value.58ce243610699df44f4552ccfdfc667580c63c99f28103ecf2d1dd72c94657fe.jpg' }
 }
 // Nov 16 (Shelly, dark arcs by the nose): art/cat-wardrobe/snout-smooth.py relaxed every Snout_* key's crease into the cheek; the cute female base got head-round + snout-smooth too. Before: f a06470ad…, m 69b103f0…, cute 5c85f993…
 // Nov 16 (Shelly 'deflating balloon' + 'stray normals and blocky areas'): art/cat-wardrobe/head-round.py: lower head dropped 3 cm and filled, split verts welded, baked normals cleared. Before: f f104ebfd…, m c1fba068…
 // Nov 16 (Shelly 'the snout on the critters arent covering to their cheeks'): CAT_BODY re-exported through art/cat-wardrobe/cheek-wrap.py, the muzzle's sides filled out into the cheeks on every snout key
 // Nov 16 (Shelly 'revert ... eye and snout', 'the head fit is fine'): heads rebuilt from the pre-snout bases (851a1a9d f, a2e999a9 m, 5c85f993 cute) through head-round.py + head-trim.py only; the snout fill/smooth and the black-eye redraw are gone
-// Nov 16 (Shelly 'revert everything to before the eye and snout and lower half of head change', 'the head fit is fine'): CAT_BODY/CAT_CUTE rebuilt from the pre-cheek-wrap bases (851a1a9d f, a2e999a9 m, 5c85f993 cute) through head-round.py + head-trim.py only; faces back to the pre-Nov-16 set, eyes take look.eyes again
+// Nov 16 (Shelly 'revert everything to before the eye and snout and lower half of head change', 'the head fit is fine'): then (Shelly 'the snout update was fine too') the snout-smoothed trimmed heads came back; only the faces are back to the pre-Nov-16 set, eyes take look.eyes again
 // Nov 12 lock-in (Shelly 'yea thats good'): CAT_BODY is the reshaped base (art/cat-wardrobe/rebase.py): female fuller PG chest, male wider shoulders and thicker neck. CAT_OLD: the bases before it
 export const CAT_OLD = { f: '/cdn/value.562ce0246eae9362d0d784854f5dff319bcc254c755c854e1be2c450ae9540c9.glb', m: '/cdn/value.3208bf922d1aff4faeefffab9867f3d2363af1dab60a37cc50860602d207c545.glb' }
 export const CAT_BODY2 = { f: CAT_BODY.f.glb, m: CAT_BODY.m.glb }
 // Nov 16 (Shelly 'yes' to wearing it): the cute pass on the female base (art/cat-wardrobe/cute.py + snout-short.py): short round button snout, perkier bust, rounder hips/thighs. Same mesh, bones and keys. Worn when look.cute is set; every other cat keeps CAT_BODY
-export const CAT_CUTE = { f: '/cdn/value.40e82bb0684a0b9557132bbcd41c3e9094dcb7888a376c271fdebc112b50ea20.glb' }
+export const CAT_CUTE = { f: '/cdn/value.e6c03523e713ad07af4425d53e2cdbdcde6826216843070b5ba88b5228dabe3f.glb' }
 // Nov 16 (Shelly 'make her slimmer, more anime', 'yes' to wearing it): a new Tripo body from a blank-faced concept, Tripo-rigged (mixamo names), faces +x. No shape keys or face paint slots yet; garments not refit to it
 export const SLIM_ON = false   // Nov 16 (Shelly 'for now bring everyone back to the old critter body'): the slim kemono is shelved; true wears it again
 export const CAT_SLIM = { f: '/cdn/value.e31c04cba0cad7a6c96c4b7b16b333decd3a601f345cd4373e0ae702731d0dd9.glb' }   // art/kemono-slim/front-v3.py (reshaped on front.py's alignment): faces +z, hips over the origin, one 'fur' slot
