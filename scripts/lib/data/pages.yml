@@ -9,6 +9,24 @@
   Ale — the little one can't keep the beans down. Two more tins if you can spare them. I'll leave the empty bag by the east hall door.
 
   The strip has been folded twice, small enough to fit under the ledger.
+1102: |
+  SEDCO SPOTLIGHT — NIGHT SHIFT
+
+  If the security screen locks again, the password is spotlight, all lower case.
+  Release the storefront from the security panel. The vault still needs the cameras dealt with.
+
+  Camera four keeps staring at the station stairs. The manager says it's a wiring fault.
+  It followed me when I moved the ladder.
+
+  — N.
+1103: |
+  GUILD OF MANY — SURVEY PLATE 412B
+
+  The east suction vent in the Snackrooms drops here at the Level 3 grille.
+  Mark it one-way for anyone carrying more than they can climb with.
+
+  We found the chalk still wet when we arrived. Nobody admitted to writing it.
+  Check the Level 4 vending drop before adding this route to the Book.
 30: |
   THE CITY EDITION — TOMORROW
   A pedestrian stopped at the newsstand and took this copy. The vendor, absent since Tuesday, declined to comment.
@@ -198,6 +216,8 @@
   [ end of cached page ]
 titles:
   1101: Level 1 · Supply count
+  1102: Level 11 · Sedco shift note
+  1103: Level 3 · Guild survey plate
   30: Level 11 · Newspaper
   31: Level 114 · Broadcast transcript
   1322: M.E.G. database · public mirror

@@ -68,6 +68,12 @@ function act(ctx, s, d) {
   if (d.k === 'app' && APPS.includes(d.v) && os.app !== 'login') { s.os = { ...os, app: d.v, sel: '', q: '', menu: false }; return }
   if (d.k === 'ctrl') return ctrl(ctx, s, String(d.v || ''))
   if (d.k === 'cat') { s.os = { ...os, cat: String(d.v || ''), sel: '' }; return }
+  if (d.k === 'sedco-note') {
+    if (os.app !== 'login' || os.host !== 'SEDCO-SEC-01' || !s.sedcoNote) return
+    const r = runCmd(os, 'login spotlight', ctx.self)
+    if (r.act === 'unlock') unlock(ctx, s)
+    return
+  }
   if (d.k === 'pw' || d.k === 'login') { // the login screen: guest, or a password
     if (d.k === 'login' || !d.v) { s.os = { ...os, app: 'desktop' }; return }
     const r = runCmd(os, 'login ' + d.v, ctx.self)
