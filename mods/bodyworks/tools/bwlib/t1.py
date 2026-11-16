@@ -434,8 +434,10 @@ def run(body, ZONES, DOC, a):
                 bm.to_mesh(me); bm.free(); me.update()
             if cuts and zn in cuts:   # a level plane through the welded skin: a straight hem, never the zone's own stair-stepped border
                 import bmesh
-                for zc, keep_below in cuts[zn]:
-                    MI = ob.matrix_world.inverted(); co = MI @ Vector((0.0, 0.0, zc)); no = (MI.to_3x3() @ Vector((0.0, 0.0, 1.0))).normalized()
+                for cut_ in cuts[zn]:
+                    if len(cut_) == 3: pco, pno, keep_below = cut_   # any plane: (point, normal, keep the side the normal points away from)
+                    else: zc, keep_below = cut_; pco, pno = (0.0, 0.0, zc), (0.0, 0.0, 1.0)
+                    MI = ob.matrix_world.inverted(); co = MI @ Vector(tuple(map(float, pco))); no = (MI.to_3x3() @ Vector(tuple(map(float, pno)))).normalized()
                     bm = bmesh.new(); bm.from_mesh(me)
                     bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=co, plane_no=no, clear_outer=keep_below, clear_inner=not keep_below)
                     bm.to_mesh(me); bm.free(); me.update()
@@ -460,7 +462,13 @@ def run(body, ZONES, DOC, a):
     # zone (heavy-set) the cap showed between yoke and sleeve, so the yoke also takes the upper arm skin near the joint
     capR = 0.11 * S
     near_sh = {f'upperarm_{s.lower()}': (lambda p, s=s: float(np.linalg.norm(p - np.array(J[f'shoulder.{s}']))) < capR) for s in 'LR'}
-    for nm_, ob in shell([('upperchest', 'shoulder_l', 'shoulder_r', 'neck'), 'upperarm_l', 'upperarm_r'], OFF['top'], 'top_yoke', keepf=near_sh, cuts={'upperchest': [(z_neck + 0.006 * S, True)]}).items():   # the neck's base closes the collar; one level plane makes the neckline a clean line
+    # the cap ends on a plane square to the arm, not the sphere's stair-stepped rim (that rim read as a ragged neckline)
+    def _cap(s):
+        sh, el = np.array(J[f'shoulder.{s}'], float), np.array(J[f'elbow.{s}'], float); ax = (el - sh) / max(np.linalg.norm(el - sh), 1e-6)
+        return [(tuple(sh + ax * capR * 0.8), tuple(ax), True)]
+    sleeve_cap = {f'upperarm_{s.lower()}': _cap(s) for s in 'LR'}
+    near_sh = {k: (lambda p, f=f: True) for k, f in near_sh.items()}   # the plane does the trimming now
+    for nm_, ob in shell([('upperchest', 'shoulder_l', 'shoulder_r', 'neck'), 'upperarm_l', 'upperarm_r'], OFF['top'], 'top_yoke', keepf=near_sh, cuts=dict({'upperchest': [(z_neck + 0.006 * S, True)]}, **sleeve_cap)).items():   # the neck's base closes the collar; one level plane makes the neckline a clean line
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
     for nm_, ob in shell([('breast_l', 'breast_r', 'cleavage', 'upperback', 'chest', 'belly', 'side_l', 'side_r', 'armpit_front_l', 'armpit_front_r', 'armpit_back_l', 'armpit_back_r')], OFF['top'], 'top_chest', cuts={'breast_l': [(z_underbust - 0.07 * S, False)]}).items():   # a level hem under the bust, overlapping the midriff tube
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
