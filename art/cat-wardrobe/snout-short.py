@@ -8,7 +8,7 @@ bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(file
 for o in list(bpy.data.objects):
     if o.name.startswith("Icosphere"): bpy.data.objects.remove(o)
 sm = lambda t: 0 if t <= 0 else 1 if t >= 1 else t * t * (3 - 2 * t)
-SC = Vector((0, -0.165, 0.796)); LY, HZ = 0.5, 1.08
+SC = Vector((0, -0.165, 0.796)); LY, HZ = 0.74, 1.12   # Nov 16 #shelly 'why is my snout pushed back': 0.5 sank it into the face
 def f(p):
     v = p - SC
     if v.y > 0.004: return Vector()
@@ -18,7 +18,7 @@ def f(p):
     d = Vector((0, v.y * (LY - 1), v.z * (HZ - 1))) * w
     # blunt: the front-most 1.5 cm squashes back a little more at the centre line, so the tip reads round, not pointed
     t = sm((-v.y - 0.02) / 0.04)   # how far out along the muzzle
-    d.y += max(0, -v.y - 0.03) * 0.55 * (1 - sm(side / 0.9))
+    d.y += max(0, -v.y - 0.03) * 0.2 * (1 - sm(side / 0.9))
     d.x += v.x * 0.35 * t; d.z += v.z * 0.25 * t   # fuller near the front: a round button, not a cone
     return d
 n = 0
