@@ -1,30 +1,29 @@
 # Irises baked by art/cat-wardrobe/iris.py (pure blue = iris shading, tinted by look.eyes in mat-catskin.js).
 # Painted 2D critter faces (Shelly, Nov 11): transparent decals over tintable fur. Crop box: cell px x55..330, y178..425 of a 384x512 face cell (eyes at y~290, muzzle bottom ~395).
-# Nov 16 (Shelly "rework the eyes nose and mouth ... kemono cuteness"): female/male neutral redrawn by art/cat-wardrobe/kemono-face.py at 4x. Old: f bbdb094a…, m 02b3d444…; every mood redrawn by the same script (Shelly "make sure it applies to everyone")
-# Nov 16 v2 (Shelly "redo the eyes and mouth too"): glossy black bean eyes, no white or iris; toothy grin on smile/joy. art/cat-wardrobe/kemono-face.py
-faces:  # Nov 16 v4 (Shelly "the whites are also gone too. fix that" + ref /cdn/image-u5976x8h1.webp): white eyes, thick rim, big black pupils
+# Nov 16 (Shelly "revert everything to before the eye and snout ... change"): the faces as they stood before that day's redraws
+faces:
   female:
-    neutral: "/cdn/value.a68e55be9e6e9137fd39cf134b767f34aab4b275a080f52cf1d4c1dab708fa53.png"
-    smile: "/cdn/value.c8e2766bd693c77e1e7c964b7cf63050f6c405b6edf67ee4ca4e6bd8007d935e.png"
-    joy: "/cdn/value.6d6ccbe108bbbec6d7faa9410496b0a0c6744a74c2b8e41f592c321e4ac5597a.png"
-    sad: "/cdn/value.78c526f323d41752cf3e0c447dd6b1e653d32c583c02e59d1df2e32b78206a8c.png"
-    angry: "/cdn/value.c7e2695b2b9ef56bab71c9508cb341a487f776fdca3373ce12da2c7154e714b9.png"
-    shock: "/cdn/value.328ebe78a45fac02c76c7dfc045869f1093db1e229c896979be6a859700a1a2e.png"
-    blink: "/cdn/value.1ebb46d7cbb1d2cb026de54fe192444697234ea7adf172364f7b3948b0cf34b3.png"
-    blep: "/cdn/value.0419cdf546194d67de392de0439821877fb94c9e1ebaa1e74fbf9473ef121482.png"
-    hit: "/cdn/value.437b47a0ddc54437405f864eab397e5b50082668374092e52dcb71638e38474b.png"
-    ko: "/cdn/value.ca71951d15df21370c31bda9fd3b199df6c77566d4a93479b3c1ce46a6b8bc4c.png"
+    neutral: "/cdn/value.bbdb094ae31267bb5f09b0427e4f373803051367e8b0778940830cb93758884c.png"
+    smile: "/cdn/value.5a6874a8f99b73a977501111f3198104686cca88f4b78b148f719bcdb4d24e00.png"
+    joy: "/cdn/value.309579adc83ede5c43865c09b42a25eafb26c6c6ea2c94b1c4da38536d097987.png"
+    sad: "/cdn/value.00261ddf966eca5ab8a6f17333b7dc307a6074a6cbb28f72cc0fd95fea811c3c.png"
+    angry: "/cdn/value.f0ed194f2b2e1c69fe270cebf4e4f768783718e488dd447f3f3cab80ab8ac9b0.png"
+    shock: "/cdn/value.3b88edd53a2d37f7236900cd09e9f00c126ebf067e15f2ace287484918b5dc44.png"
+    blink: "/cdn/value.fbb8471bd862f7c84eb95ff3d12b8fa013bdefb1ba67a40a3e0e2d41cf04fcf1.png"
+    blep: "/cdn/value.07ba3af62c2361c8d856b6f4f5ff9a8220a4b117f43105f17601f20b11685ca4.png"
+    hit: "/cdn/value.f6e21998b37ec2a0c36533a03031a58d4a404fb9f584c4e274d067bdeca780a8.png"
+    ko: "/cdn/value.7e20d5d5c4c1b1e0f6c7366241f63ecf6520e2f486219a1610b48965167028fa.png"
   male:
-    neutral: "/cdn/value.c707cab8f346910f09c22b0205af492036608192ed433d9da088a3ab6ee6616a.png"
-    smile: "/cdn/value.c82c431ccbde421990a18a27c94d62f3c4f48a7e68caa012a9e36f086476bc4a.png"
-    joy: "/cdn/value.14008ae1b82221353fd4ea21f7279e6efce1a0d9b7920aed8cba579ab1ddddd9.png"
-    sad: "/cdn/value.cd2ae79e501026e810f2ece20dabb1466524d479f96b16e78b4595ef5101e2e3.png"
-    angry: "/cdn/value.9e3cd77764b7e112822e021c584ae089382ceaea9e06665a3549bd4e4e90886e.png"
-    shock: "/cdn/value.02e4a4cc6ff223d57945ade33d7491ddee0c78efaee581bc0303d4060b6c9dc5.png"
-    blink: "/cdn/value.dd68406507e7e61c88af540872de420f90149d91416556c205bac563e4cadf26.png"
-    blep: "/cdn/value.e2af09bf7e7a1cca65ceea297e11851da68d75896ffee82682f5f07332f9702a.png"
-    hit: "/cdn/value.437b47a0ddc54437405f864eab397e5b50082668374092e52dcb71638e38474b.png"
-    ko: "/cdn/value.ca71951d15df21370c31bda9fd3b199df6c77566d4a93479b3c1ce46a6b8bc4c.png"
+    neutral: "/cdn/value.02b3d444405b32d72c1fa71681f5f7670aceeaa443e93b8a7eef8b16cc43523c.png"
+    smile: "/cdn/value.49169a89ff6e9c51ad090a700f8892cbc0aac060bfb8cc934c749a79c4c4af1c.png"
+    joy: "/cdn/value.93d84b1553c8f3b378ddaa24e36871240e4994d54169c0b58d43462cd6db4eaa.png"
+    sad: "/cdn/value.60e011fc3b0adeaedd1d0ca1bc347be36906ce35b203eca60e0c3978bd6b54a9.png"
+    angry: "/cdn/value.d1570af668d8781b7f355bdcdca8a2f41fb3b09411eb1f43820f8ae92d63f79a.png"
+    shock: "/cdn/value.cac0f9091c42c16b3ba5ec6a9b6680941cca8cc42190bfb901da7c2808f04fee.png"
+    blink: "/cdn/value.ad575d5b20b8c4111f4ddca4bbc7b6c4eddd31bdb836f0418b6a0c91c6fe9a64.png"
+    blep: "/cdn/value.0b1338adc4041761ecdae44d7974b8cf951f668b48909b25d96184bd042e76c2.png"
+    hit: "/cdn/value.ab58fedf1bc4258e9ab979d607b9862306cbf0faaf4b2628036b23a3f6b051b2.png"
+    ko: "/cdn/value.376df851ed66e5d2fa5743264c5375ca89c6dd153188d6fd0dde8b8cf7bbecd4.png"
 # Eye types (Shelly #219897): whole face pictures, the neutral with its eyes redrawn (art/cat-wardrobe/face-types.py). Shown while the face rests calm.
 eyes:
   female:
