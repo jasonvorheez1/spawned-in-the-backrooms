@@ -3,7 +3,7 @@
 // and heal, but the clock only jumps once every player in this place is in bed (Savi's pick). Level 178: you drift
 // off and wake in Lumiria (Level 132), the same crossing the warm spring gives.
 const BED = /\b(bed|beds|futon|cot|cots|bunk|bunks|mattress|bedroll|bedrolls|hammock)\b/i;
-const NOT = /monitor|bunker|towel|yukata|lamp|side ?table|bedside|flower ?bed|seabed|riverbed|bed ?frame sign/i;
+const NOT = /\btag\b|\brug\b|monitor|bunker|towel|yukata|lamp|side ?table|bedside|flower ?bed|seabed|riverbed|bed ?frame sign/i;
 export function isBed(o) {
   if (!o) return false;
   const words = [o.state?.name, o.state?.kind, String(o.id ?? "").split("/").pop()?.replace(/[-_]/g, " "), ...(o.tags ?? [])].filter(Boolean).join(" ");
