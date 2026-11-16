@@ -53,8 +53,12 @@ for f in sorted(glob.glob(f"{D}/g_*_{SEX}.glb")):
         mv = np.linalg.norm(PU, axis=1) > 1e-5; moved += int(mv.sum())
         if os.environ.get("WRITE"):
             R = mi.to_3x3()
+            from mathutils import Vector
+            keys = o.data.shape_keys.key_blocks if o.data.shape_keys else []
             for i in np.nonzero(mv)[0]:
-                v = o.data.vertices[int(i)]; v.co = mi @ ((mw @ v.co) + __import__("mathutils").Vector(PU[i]))
+                dl = R @ Vector(PU[i]); i = int(i)   # the push in the mesh's own frame, onto the basis AND every key (else the export drops it)
+                o.data.vertices[i].co += dl
+                for kb in keys: kb.data[i].co += dl
     far.sort()
     rep[name] = dict(verts=tot, inside=inside, near=near, moved=moved, deepest_mm=round(deep * 1000, 1),
                      median_gap_mm=round(far[len(far) // 2] * 1000, 1) if far else None)
