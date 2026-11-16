@@ -1,5 +1,5 @@
 {
-  "v": 5,
+  "v": 6,
   "level11": {
     "l11-elev-btn-*": { "m": "button", "p": "button" },
     "l11-skydeck-binoculars": { "m": "dial", "p": "dial", "s": "coin-drop-into-metal-slot-and-gear-whir" },
@@ -86,7 +86,7 @@
     "#m-manila-stairdoor": { "m": "lever", "p": "lever", "s": "stairwell-push-bar-latch-clank", "l": "1,0.35,0.2" },
     "#m-manila-stairup": { "m": "tap", "q": 0.04, "s": "stair-tread-hollow-creak" },
     "#m-manila-filing": { "m": "flap", "p": "flap", "s": "filing-cabinet-drawer-rattle-slam" },
-    "#m-payphone": { "m": "dial", "p": "dial", "s": "payphone-coin-return-clink", "i": "Coin return sticks. Always worth a thumb.", "t": "A quarter. Warm, like someone just left.", "g": { "items": ["cash:25"], "cd": 3600 } },
+    "#m-payphone": { "m": "dial", "p": "dial", "mat": { "color": "oklch(0.62 0.01 250)", "metalness": 0.85, "roughness": 0.35, "pbr": true }, "s": "payphone-coin-return-clink", "i": "Coin return sticks. Always worth a thumb.", "t": "A quarter. Warm, like someone just left.", "g": { "items": ["cash:25"], "cd": 3600 } },
     "#m-water": { "m": "tap", "q": 0.08, "s": "wet-carpet-squelch-wring", "i": "Wring it. Tastes like a basement, counts as water.", "t": "Gritty. Your stomach files a complaint.", "g": { "thirst": 5, "sanity": -2, "cd": 900 } },
     "#m-meg-board": { "m": "flap", "p": "flap", "s": "corkboard-thumbtack-press", "t": "Your name isn't on the MISSING list. Yet.", "g": { "sanity": 2, "xp": 3, "cd": 1800 } },
     "#m-meg-locker": { "m": "flap", "p": "flap", "s": "metal-locker-door-clang" },
