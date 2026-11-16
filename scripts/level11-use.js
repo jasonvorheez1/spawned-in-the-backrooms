@@ -3,6 +3,7 @@
 // Almond Water street vending machine, Marroka Pizzeria wood-fired brick oven & baker's peel,
 // panoramic binoculars, construction ladder, supply chest, and friendly docile hound.
 
+import { phoneCall } from "./lib/payphone.js";
 import { heard } from "./lib/hear.js";
 import { setSedcoStep, setCraneStep, setMaintStep } from "./lib/level11-quests.js";
 import { setStep61 } from "./lib/level61-quests.js";
@@ -96,11 +97,12 @@ export const ears = {
         return;
       }
 
+      if ((w.cents ?? 0) >= 25) { phoneCall(ctx, s, who, false); return; } // a quarter dials the M.E.G. hotline: the way out of this level
       s.msgIdx = ((s.msgIdx ?? -1) + 1) % PHONE_MESSAGES.length;
       const msg = PHONE_MESSAGES[s.msgIdx];
 
       if (w) {
-        w.sub = { who: "PAYPHONE RECEIVER", t: msg, at: now, d: 5500 };
+        w.sub = { who: "PAYPHONE RECEIVER", t: msg + "\n(A sticker: M.E.G. HOTLINE, 25¢.)", at: now, d: 5500 };
       }
       return;
     }

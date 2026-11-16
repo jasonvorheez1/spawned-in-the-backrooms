@@ -1,5 +1,6 @@
 // Level 6.1 "The Snackrooms" - Food Court & Vending Interactions
 // Pure show-don't-tell: physical registers, flip menus, steaming trays, sound cues, and animated staff.
+import { phoneCall } from "./lib/payphone.js";
 import { heard } from "./lib/hear.js";
 import { animate } from "builtin/tween";
 import { itemSpec } from "./lib/vend-item.js";
@@ -256,7 +257,8 @@ export const ears = {
       ctx.emit("shake", { target: ctx.self.id, intensity: 0.03, duration: 0.3 });
       const coin = (ctx.self.session.coinRet ??= {});
       if (now - (coin[uid] ?? -1e12) > 20 * 60000) { coin[uid] = now; snd("payphone-coin-return-quarter-clatter", 0.55, 6); w.payout = { xp: 0, items: [...(w.payout?.items ?? []), "cash:25"], text: "Line's dead, but the coin return coughs up a Backquarter." }; return; }
-      tell("Dial tone, then a man ordering a pizza on Level 11. He's been on hold since Tuesday.", "#9fe8ff");
+      if ((w.cents ?? 0) >= 25) { phoneCall(ctx, s, ctx.getObject(by) ?? who, false); return; } // the M.E.G. hotline: a quarter for the way out
+      tell("Dial tone, then a man ordering a pizza on Level 11. He's been on hold since Tuesday. A sticker: M.E.G. HOTLINE, 25¢.", "#9fe8ff");
       return;
     }
 
