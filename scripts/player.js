@@ -106,7 +106,7 @@ const ZONE_RESOLVERS = {
   level9: (ctx, x, z) => zone9(ctx, x, z),
   level21: (_ctx, x, z) => 'l21_' + zoneAt21(x, z),
   level70: (_ctx, x, z) => 'l70_' + zoneAt70(x, z),
-  level325: (ctx, x, z) => 'l325_' + zoneAt325(x, z, ctx?.self?.feetPosition?.y ?? 0),
+  level325: (_ctx, x, z) => 'l325_' + zoneAt325(x, z),
   level31: (ctx, x, z) => 'l31_' + (ctx.self.feetPosition.y > 2.5 && x < -24.9 ? 'mezz' : zoneAt31(x, z)),
 };
 const level0Zone = (ctx, x, z) => (ctx.place?.state?.moments?.manilaAt && Math.abs(x - ctx.place.state.moments.manilaAt.x) < 5.8 && Math.abs(z - ctx.place.state.moments.manilaAt.z) < 5.8 ? 'manila' : zoneAt(x, z));

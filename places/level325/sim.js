@@ -26,7 +26,7 @@ const SHED = `fx
 pop grit rate=30 on=box(13,%h|40,13) life=2..4 v=<0,-6,0>+sdir()*1.2 size=.08..0.3 acc=grav()*.5+drag(.4) col=<.6,.58,.54> a=0>.1:.9>.8:.7>0 sz=$size floor=die r=sprite(grain,alpha)
 pop puff rate=6 on=box(14,%h|40,14) life=3..6 v=<0,-1.5,0>+sdir()*1.5 size=3..7 acc=drag(.6) col=<.72,.7,.65> a=0>.2:.28>0 sz=$size*(.6>1.8) rot=spin(.05) r=sprite(smoke-puff,alpha)`;
 const DUST = `fx
-pop wall burst=?mobile:40|90 on=disc(%r|16) life=14..34 v=radial(4..11)+up(.4..2.5) size=9..20 acc=drag(.45)+curl(.15)*.6 col=<.74,.72,.67>><.66,.64,.6> a=0>.06:.62>.6:.4>0 sz=$size*(.5>1.9) rot=spin(.03) r=sprite(smoke-puff,alpha,,,2)
+pop wall burst=?mobile:40|90 on=disc(%r|16) life=14..34 v=radial(4..11)+up(.4..2.5) size=9..20 acc=drag(.45)+curl(.15)*.6 col=<.74,.72,.67>><.66,.64,.6> a=0>.06:.62>.6:.4>0 sz=$size*(.5>1.9) rot=spin(.03) r=sprite(smoke-puff,alpha)
 pop grit burst=120..200 on=disc(%r|16) life=1.2..3 v=radial(6..22)+up(4..16) size=.1..0.4 acc=grav()+drag(.3) col=<.5,.48,.45> a=1>.8:1>0 sz=$size floor=die r=sprite(chip,alpha,velocity,.02)`;
 const THUD = `fx
 pop puff burst=10..16 on=disc(1.5) life=2..5 v=radial(1..4)+up(.5..2) size=1.5..4 acc=drag(.9) col=<.72,.7,.65> a=0>.1:.5>0 sz=$size*(.6>1.8) r=sprite(smoke-puff,alpha)
