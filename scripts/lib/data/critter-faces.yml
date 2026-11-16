@@ -1,8 +1,9 @@
 # Irises baked by art/cat-wardrobe/iris.py (pure blue = iris shading, tinted by look.eyes in mat-catskin.js).
 # Painted 2D critter faces (Shelly, Nov 11): transparent decals over tintable fur. Crop box: cell px x55..330, y178..425 of a 384x512 face cell (eyes at y~290, muzzle bottom ~395).
+# Nov 16 (Shelly "rework the eyes nose and mouth ... kemono cuteness"): female/male neutral redrawn by art/cat-wardrobe/kemono-face.py at 4x. Old: f bbdb094a…, m 02b3d444…
 faces:
   female:
-    neutral: "/cdn/value.bbdb094ae31267bb5f09b0427e4f373803051367e8b0778940830cb93758884c.png"
+    neutral: "/cdn/value.74c14506f9c843bb59d4cd0256f3267317f7ae0ced233a6ab5aa0ff9b3b4e7d6.png"
     smile: "/cdn/value.5a6874a8f99b73a977501111f3198104686cca88f4b78b148f719bcdb4d24e00.png"
     joy: "/cdn/value.309579adc83ede5c43865c09b42a25eafb26c6c6ea2c94b1c4da38536d097987.png"
     sad: "/cdn/value.00261ddf966eca5ab8a6f17333b7dc307a6074a6cbb28f72cc0fd95fea811c3c.png"
@@ -13,7 +14,7 @@ faces:
     hit: "/cdn/value.f6e21998b37ec2a0c36533a03031a58d4a404fb9f584c4e274d067bdeca780a8.png"
     ko: "/cdn/value.7e20d5d5c4c1b1e0f6c7366241f63ecf6520e2f486219a1610b48965167028fa.png"
   male:
-    neutral: "/cdn/value.02b3d444405b32d72c1fa71681f5f7670aceeaa443e93b8a7eef8b16cc43523c.png"
+    neutral: "/cdn/value.f0dcdb67fb34b491d5112d57f4616cec41d7230939f84489b70f8ff6066a7841.png"
     smile: "/cdn/value.49169a89ff6e9c51ad090a700f8892cbc0aac060bfb8cc934c749a79c4c4af1c.png"
     joy: "/cdn/value.93d84b1553c8f3b378ddaa24e36871240e4994d54169c0b58d43462cd6db4eaa.png"
     sad: "/cdn/value.60e011fc3b0adeaedd1d0ca1bc347be36906ce35b203eca60e0c3978bd6b54a9.png"

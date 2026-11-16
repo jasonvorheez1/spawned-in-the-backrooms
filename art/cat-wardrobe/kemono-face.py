@@ -39,7 +39,7 @@ for sx in (-1, 1):
     a0, a1 = (20, 60) if sx > 0 else (120, 160)
     d.arc([P(cx - rx, cy - ry), P(cx + rx, cy + ry)], a0, a1, fill=(40, 28, 32, 200), width=int(1.4 * S))
     if not male:   # two lashes flicking out at the outer corner
-        for k, (bx, by, tx, ty) in enumerate(((-0.2, -0.95, 6, -14), (0.55, -0.82, 13, -9), (0.85, -0.5, 15, -2))):
+        for k, (bx, by, tx, ty) in enumerate(((0.55, -0.82, 12, -9), (0.85, -0.5, 14, -2))):
             # a tapered lash: wide where it leaves the lid, a point at its tip, curling outward
             b0 = (cx + sx * bx * rx, cy + by * ry); tip = (b0[0] + sx * tx, b0[1] + ty)
             nxv, nyv = -(tip[1] - b0[1]), (tip[0] - b0[0]); L = (nxv * nxv + nyv * nyv) ** 0.5; nxv, nyv = nxv / L * 2.6, nyv / L * 2.6
