@@ -47,12 +47,14 @@ export function lighting(surface, lights) {
     return diffuse.add(specular.mul(light.specular)).mul(light.radiance).mul(NdotL);
   });
 
-  // Roughness-aware Fresnel for environment & hemisphere ambient: crisp grazing reflections on marble, chrome, glass and wet stone,
-  // directional ceiling-vs-floor ambient grounding, and energy-conserved diffuse (keeping an ambient specular term so indoor metals never go black).
+  // Roughness-aware Fresnel for environment & hemisphere ambient: matte walls/plaster don't mirror sky color at grazing angles,
+  // polished marble/terrazzo/glass/wet floors gleam naturally, and metals keep clean ambient specular fill indoors.
   const smoothness = oneMinus(rSurf);
   const envFresnel = f0.add(max(vec3(smoothness, smoothness, smoothness), f0).sub(f0).mul(pow(clamp(oneMinus(NdotV), 0, 1), 5)));
+  const roughnessAtten = smoothness.mul(smoothness.mul(0.65).add(0.35));
   const hemi = clamp(N.y.mul(0.18).add(0.88), 0.72, 1.04);
   const ambientDiffuse = albedo.mul(oneMinus(metalness)).mul(oneMinus(envFresnel)).mul(hemi).mul(lights.ambient).mul(1 / Math.PI);
-  const envSpec = envFresnel.mul(oneMinus(rSurf.mul(0.35))).mul(lights.ambient.mul(0.38 / Math.PI).add(lights.environment));
+  const envSpec = envFresnel.mul(roughnessAtten).mul(lights.environment)
+    .add(envFresnel.mul(lights.ambient).mul(metalness.mul(0.35 / Math.PI).add(0.06 / Math.PI)));
   return direct.add(ambientDiffuse.add(envSpec).mul(surface.occlusion));
 }

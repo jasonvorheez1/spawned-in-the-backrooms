@@ -17,8 +17,8 @@ export function material(ctx) {
   const botFade = smoothstep(0.0, 0.35, v);
   const shimmer = mx_noise_float(vec2(positionWorld.x.mul(0.35).add(time.mul(0.06)), positionWorld.z.mul(0.35))).mul(0.25).add(0.82);
 
-  const col = vec3(1.0, 0.9, 0.96);
-  const alpha = rim.mul(topFade).mul(botFade).mul(shimmer).mul(depthFade(1.2)).mul(ctx.param("alpha", 0.065));
+  const col = vec3(1.0, 0.96, 0.88);
+  const alpha = rim.mul(topFade).mul(botFade).mul(shimmer).mul(depthFade(1.2)).mul(ctx.param("alpha", 0.065)).mul(0.55);
 
   m.colorNode = col;
   m.opacityNode = alpha;

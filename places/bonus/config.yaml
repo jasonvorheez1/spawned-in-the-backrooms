@@ -11,20 +11,20 @@ atmosphere:
     script: scripts/look-bonus.js
     toneMapping: agx
     params:
-      bloomStrength: 0.34
-      bloomRadius: 0.72
-      bloomThreshold: 0.88
+      bloomStrength: 0.22
+      bloomRadius: 0.6
+      bloomThreshold: 0.96
   clouds: { enabled: false }
-  fog: { kind: linear, near: 40, far: 120, color: oklch(0.78 0.06 330) }
+  fog: { kind: linear, near: 50, far: 140, color: oklch(0.86 0.015 80) }
   moon: { enabled: false, intensity: 0 }
-  sky: { kind: color, color: oklch(0.82 0.07 230) }
+  sky: { kind: color, color: oklch(0.86 0.03 225) }
   stars: { enabled: false }
   sun:
     rotation: { pitch: -62, yaw: 28 }
-    light: { color: oklch(0.98 0.04 55), intensity: 1.35, shadow: { enabled: true, softness: 0.75 } }
+    light: { color: oklch(0.98 0.03 75), intensity: 1.5, shadow: { enabled: true, softness: 0.8 } }
   timeOfDay: 17
   wind: { direction: 0, speed: 0 }
-  environmentIntensity: 1.18
-  ambient: { light: { color: oklch(0.92 0.05 320), intensity: 0.44 } }
-  hemisphere: { skyColor: oklch(0.86 0.07 230), groundColor: oklch(0.56 0.09 330), intensity: 0.62 }
+  environmentIntensity: 0.45
+  ambient: { light: { color: oklch(0.95 0.012 75), intensity: 0.48 } }
+  hemisphere: { skyColor: oklch(0.94 0.015 220), groundColor: oklch(0.66 0.025 55), intensity: 0.46 }
 acoustics: { reverb: 0.45 }
