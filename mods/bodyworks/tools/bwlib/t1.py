@@ -473,7 +473,8 @@ def run(body, ZONES, DOC, a):
     # collarbone and a cut there bared the whole upper chest
     _nk = ZONES.get('neck'); z_collar = z_neck + 0.006 * S
     if _nk is not None and len(_nk.data.vertices):
-        z_collar = max(z_collar, min((_nk.matrix_world @ v.co).z for v in _nk.data.vertices) + 0.006 * S)
+        _zs = [(_nk.matrix_world @ v.co).z for v in _nk.data.vertices]
+        z_collar = max(z_collar, min(_zs) + 0.55 * (max(_zs) - min(_zs)))   # a crew collar part-way up the neck: the shoulder tops rise to the neck, a lower level cut bared them
     near_sh = {k: (lambda p, f=f: True) for k, f in near_sh.items()}   # the plane does the trimming now
     for nm_, ob in shell([('upperchest', 'shoulder_l', 'shoulder_r', 'neck'), 'upperarm_l', 'upperarm_r'], OFF['top'], 'top_yoke', keepf=near_sh, cuts=dict({'upperchest': [(z_collar, True)] + sleeve_cap['upperarm_l'] + sleeve_cap['upperarm_r']}, **sleeve_cap)).items():   # the neck's base closes the collar; one level plane makes the neckline a clean line
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
