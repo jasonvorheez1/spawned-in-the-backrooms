@@ -41,7 +41,9 @@ def puff(i):
     for sx in (-1, 1): amt += 0.005 * g((p - Vector((sx * 0.04, tip.y + 0.012, tip.z - 0.006))).length, 0.03)   # bridge pad→cheek, no crease
     base = press(i, 0.3, 0.05)   # mochi: a shorter, wider dumpling muzzle...
     if amt < 1e-5: return base
-    return base + (N[i] * 0.35 + Vector((0, -0.65, 0))).normalized() * amt * (1 - sm((N[i].y + 0.45) / 0.3)) * (1 - sm((-N[i].z - 0.1) / 0.3))   # front-facing, not the under-lip; mostly forward: the mouth-corner normals fold inward   # front-facing skin, faded smoothly: no ridge where it stops   # ...with puffed whisker pads and round cheeks
+    # push along the face's forward axis by position alone (no per-vertex normal): split lip/seam verts and both lips move as one, no tear
+    fwd = sm((SC.y + 0.03 - W[i].y) / 0.04)   # front of the face only, faded by depth
+    return base + Vector((0, -amt * fwd, 0))
 for name, fn in (("Snout_Flat", flat), ("Snout_Puff", puff)):
     k = kb[name]; mx = 0
     for i in range(len(B)):
