@@ -36,10 +36,10 @@ print("PADS", [tuple(round(v, 3) for v in p) for p in pads], "CHEEKS", [tuple(ro
 g = lambda d, r: math.exp(-(d / r) ** 2)
 def puff(i):
     p = W[i]; amt = 0
-    for c in pads: amt += 0.015 * g((p - c).length, 0.02)
+    for c in pads: amt += 0.013 * g((p - c).length, 0.024)
     for c in cheeks: amt += 0.008 * g((p - c).length, 0.036)
     for sx in (-1, 1): amt += 0.005 * g((p - Vector((sx * 0.04, tip.y + 0.012, tip.z - 0.006))).length, 0.03)   # bridge pad→cheek, no crease
-    base = press(i, 0.28, 0.14)   # mochi: a shorter, wider dumpling muzzle...
+    base = press(i, 0.3, 0.05)   # mochi: a shorter, wider dumpling muzzle...
     if amt < 1e-5: return base
     return base + N[i] * amt * (1 - sm((N[i].y + 0.15) / 0.35))   # front-facing skin, faded smoothly: no ridge where it stops   # ...with puffed whisker pads and round cheeks
 for name, fn in (("Snout_Flat", flat), ("Snout_Puff", puff)):
