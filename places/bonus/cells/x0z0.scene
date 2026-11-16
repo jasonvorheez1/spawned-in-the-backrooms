@@ -17,11 +17,13 @@ bc-arcade:
   receiveShadow: true
   tags: [bonus-arcade]
 bc-arcade-sign:
-  feetPosition: {x: 9.7, y: 4.1, z: -15}
+  castShadow: false
+  feetPosition: {x: 9.7, y: 3.59, z: -15}
   id: bc-arcade-sign
+  material: {roughness: 0.55, texture: /cdn/value.f85c8e1f6a51796b15f2aeff50c3db2e9ab18e1bafd411d059d5e5872bc48962.png}
+  primitive: {depth: 0.06, height: 1.02, kind: box, width: 3.4}
   rotation: {yaw: -90}
   tags: [bonus-arcade]
-  vector: "<svg viewBox='0 0 400 120' width='3.4m'><rect x='4' y='4' width='392' height='112' rx='14' fill='#1a0f2e' stroke='#38f4ff' stroke-width='5' filter='drop-shadow(0 0 8px #38f4ff)'/>\n<text x='200' y='62' text-anchor='middle' font-family='display' font-size='54' fill='#ffffff' stroke='#ff4fd8' stroke-width='2' filter='drop-shadow(0 0 8px #ff4fd8)'>MEDIA FUN</text>\n<text x='200' y='102' text-anchor='middle' font-family='serif' font-style='italic' font-size='36' fill='#ff4fd8' filter='drop-shadow(0 0 8px #ff4fd8)'>arcade</text></svg>"
 bc-art-1:
   feetPosition: {x: 23.95, y: 7.4, z: -20}
   id: bc-art-1
@@ -172,41 +174,53 @@ bc-banner-6/back:
   primitive: {height: 4.5, kind: plane, width: 1.5}
   rotation: {yaw: 180}
 bc-bay-e12:
-  feetPosition: {x: 9.82, y: 9.6, z: 12}
+  castShadow: false
+  feetPosition: {x: 9.82, y: 9.105, z: 12}
   id: bc-bay-e12
+  material: {roughness: 0.55, texture: /cdn/value.320bb2d3854965d2807fbcc3736a9858dc93a9e3927a7f7768fb2661988875ad.png}
+  primitive: {depth: 0.06, height: 0.99, kind: box, width: 5.4}
   rotation: {yaw: -90}
   tags: [bonus-court]
-  vector: "<svg viewBox='0 0 600 110' width='5.4m'><rect x='4' y='4' width='592' height='102' rx='10' fill='#1a0f2e' stroke='#ff4fd8' stroke-width='4' opacity='1'/><text x='300' y='74' text-anchor='middle' font-family='display' font-size='56' fill='#38f4ff' opacity='1' filter='drop-shadow(0 0 10px #38f4ff)'>KIDZ KORNER</text></svg>"
 bc-bay-e20:
-  feetPosition: {x: 9.82, y: 9.6, z: 20}
+  castShadow: false
+  feetPosition: {x: 9.82, y: 9.105, z: 20}
   id: bc-bay-e20
+  material: {roughness: 0.55, texture: /cdn/value.cb14c17744a71a0bf864ba1da720c61c4e3f358c96c9031c1591b5eefcce3737.png}
+  primitive: {depth: 0.06, height: 0.99, kind: box, width: 5.4}
   rotation: {yaw: -90}
   tags: [bonus-court]
-  vector: "<svg viewBox='0 0 600 110' width='5.4m'><rect x='4' y='4' width='592' height='102' rx='10' fill='#1a0f2e' stroke='#7df9ff' stroke-width='4' opacity='0.6'/><text x='300' y='74' text-anchor='middle' font-family='display' font-size='56' fill='#ff6ec7' opacity='0.35' >MOONLIGHT TANNING</text></svg>"
 bc-bay-e4:
-  feetPosition: {x: 9.82, y: 9.6, z: 4}
+  castShadow: false
+  feetPosition: {x: 9.82, y: 9.105, z: 4}
   id: bc-bay-e4
+  material: {roughness: 0.55, texture: /cdn/value.718fd0578bb95ce2fcf135b7d9b50eddb2b3f5accb123a0a40e81f7a46e5943b.png}
+  primitive: {depth: 0.06, height: 0.99, kind: box, width: 5.4}
   rotation: {yaw: -90}
   tags: [bonus-court]
-  vector: "<svg viewBox='0 0 600 110' width='5.4m'><rect x='4' y='4' width='592' height='102' rx='10' fill='#1a0f2e' stroke='#38f4ff' stroke-width='4' opacity='1'/><text x='300' y='74' text-anchor='middle' font-family='display' font-size='56' fill='#b14cff' opacity='1' filter='drop-shadow(0 0 10px #b14cff)'>CASSETTE CITY</text></svg>"
 bc-bay-w12:
-  feetPosition: {x: -9.82, y: 9.6, z: 12}
+  castShadow: false
+  feetPosition: {x: -9.82, y: 9.105, z: 12}
   id: bc-bay-w12
+  material: {roughness: 0.55, texture: /cdn/value.565c660f15c3d884774a18aea33be891b937a12634101cc1542764ffde23ffc7.png}
+  primitive: {depth: 0.06, height: 0.99, kind: box, width: 5.4}
   rotation: {yaw: 90}
   tags: [bonus-court]
-  vector: "<svg viewBox='0 0 600 110' width='5.4m'><rect x='4' y='4' width='592' height='102' rx='10' fill='#1a0f2e' stroke='#ffe66d' stroke-width='4' opacity='0.6'/><text x='300' y='74' text-anchor='middle' font-family='display' font-size='56' fill='#38f4ff' opacity='0.35' >PAGER PLANET</text></svg>"
 bc-bay-w20:
-  feetPosition: {x: -9.82, y: 9.6, z: 20}
+  castShadow: false
+  feetPosition: {x: -9.82, y: 9.105, z: 20}
   id: bc-bay-w20
+  material: {roughness: 0.55, texture: /cdn/value.e9b28823e1e26084cc6d8611ba59366100b519c38f825f20340cf89772be3c93.png}
+  primitive: {depth: 0.06, height: 0.99, kind: box, width: 5.4}
   rotation: {yaw: 90}
   tags: [bonus-court]
-  vector: "<svg viewBox='0 0 600 110' width='5.4m'><rect x='4' y='4' width='592' height='102' rx='10' fill='#1a0f2e' stroke='#ff4fd8' stroke-width='4' opacity='1'/><text x='300' y='74' text-anchor='middle' font-family='display' font-size='56' fill='#ffe66d' opacity='1' filter='drop-shadow(0 0 10px #ffe66d)'>DREAM PRETZEL</text></svg>"
 bc-bay-w4:
-  feetPosition: {x: -9.82, y: 9.6, z: 4}
+  castShadow: false
+  feetPosition: {x: -9.82, y: 9.105, z: 4}
   id: bc-bay-w4
+  material: {roughness: 0.55, texture: /cdn/value.de757192b608b88c16fefff8aeaf452ed707aa01ad71baa8718941f6d82c7833.png}
+  primitive: {depth: 0.06, height: 0.99, kind: box, width: 5.4}
   rotation: {yaw: 90}
   tags: [bonus-court]
-  vector: "<svg viewBox='0 0 600 110' width='5.4m'><rect x='4' y='4' width='592' height='102' rx='10' fill='#1a0f2e' stroke='#38f4ff' stroke-width='4' opacity='1'/><text x='300' y='74' text-anchor='middle' font-family='display' font-size='56' fill='#ff4fd8' opacity='1' filter='drop-shadow(0 0 10px #ff4fd8)'>SUNSET VIDEO</text></svg>"
 bc-bench-1:
   feetPosition: {x: -4.5, y: 0, z: 23.85}
   id: "bc-bench-1"
@@ -382,15 +396,19 @@ bc-dance:
   scale: 1.33
   tags: [bonus-arcade]
 bc-dest-1:
-  feetPosition: {x: -15.5, y: 8, z: -27.9}
+  castShadow: false
+  feetPosition: {x: -15.5, y: 7.36, z: -27.9}
   id: bc-dest-1
+  material: {roughness: 0.55, texture: /cdn/value.20a077b7a7f4817f1e37e93439e668dfe7b5bf94838efbf4a49e10c9a61094d2.png}
+  primitive: {depth: 0.06, height: 1.28, kind: box, width: 3.2}
   rotation: {yaw: 180}
-  vector: "<svg viewBox='0 0 300 120' width='3.2m'><rect x='0' y='0' width='300' height='120' rx='6' fill='#0b0d1a' stroke='#9aa3b5' stroke-width='4'/><text x='14' y='26' font-family='sans-serif' font-size='13' fill='#9aa3b5' letter-spacing='2'>DEPARTURES</text><text x='286' y='26' text-anchor='end' font-family='sans-serif' font-size='13' fill='#9aa3b5'>PLAT</text><line x1='10' y1='34' x2='290' y2='34' stroke='#2c3350' stroke-width='2'/><text x='14' y='66' font-family='display' font-size='26' fill='#ffb000' filter='drop-shadow(0 0 4 #ff8a00)'>LEVEL 0</text><text x='286' y='66' text-anchor='end' font-family='display' font-size='26' fill='#ffb000' filter='drop-shadow(0 0 4 #ff8a00)'>1</text><text x='14' y='102' font-family='display' font-size='26' fill='#ffb000' filter='drop-shadow(0 0 4 #ff8a00)'>YOUR HOMES</text><text x='286' y='102' text-anchor='end' font-family='display' font-size='26' fill='#ffb000' filter='drop-shadow(0 0 4 #ff8a00)'>1</text></svg>"
 bc-dest-2:
-  feetPosition: {x: -17, y: 8.6, z: -14}
+  castShadow: false
+  feetPosition: {x: -17, y: 7.96, z: -14}
   id: bc-dest-2
+  material: {roughness: 0.55, texture: /cdn/value.20a077b7a7f4817f1e37e93439e668dfe7b5bf94838efbf4a49e10c9a61094d2.png}
+  primitive: {depth: 0.06, height: 1.28, kind: box, width: 3.2}
   rotation: {yaw: -90}
-  vector: "<svg viewBox='0 0 300 120' width='3.2m'><rect x='0' y='0' width='300' height='120' rx='6' fill='#0b0d1a' stroke='#9aa3b5' stroke-width='4'/><text x='14' y='26' font-family='sans-serif' font-size='13' fill='#9aa3b5' letter-spacing='2'>DEPARTURES</text><text x='286' y='26' text-anchor='end' font-family='sans-serif' font-size='13' fill='#9aa3b5'>PLAT</text><line x1='10' y1='34' x2='290' y2='34' stroke='#2c3350' stroke-width='2'/><text x='14' y='66' font-family='display' font-size='26' fill='#ffb000' filter='drop-shadow(0 0 4 #ff8a00)'>LEVEL 0</text><text x='286' y='66' text-anchor='end' font-family='display' font-size='26' fill='#ffb000' filter='drop-shadow(0 0 4 #ff8a00)'>1</text><text x='14' y='102' font-family='display' font-size='26' fill='#ffb000' filter='drop-shadow(0 0 4 #ff8a00)'>YOUR HOMES</text><text x='286' y='102' text-anchor='end' font-family='display' font-size='26' fill='#ffb000' filter='drop-shadow(0 0 4 #ff8a00)'>1</text></svg>"
 bc-directory:
   feetPosition: {x: 0, y: 0, z: -31.5}
   id: bc-directory
@@ -517,10 +535,12 @@ bc-fstatue:
   model: {id: /cdn/value.eb4351da807a7988461aec04b376d7da9e1cfbe1635928e0fc1de5766472458f.glb}
   rotation: {yaw: -90}
 bc-gallery-sign:
-  feetPosition: {x: 9.7, y: 9.6, z: -13}
+  castShadow: false
+  feetPosition: {x: 9.7, y: 9.259, z: -13}
   id: bc-gallery-sign
+  material: {roughness: 0.55, texture: /cdn/value.f2c715abff5b9245b7d00add44227302c762637cb0091775819453eb8dc9a3ac.png}
+  primitive: {depth: 0.06, height: 0.682, kind: box, width: 3.9}
   rotation: {yaw: -90}
-  vector: "<svg viewBox='0 0 400 70' width='3.9m'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='#ff6ec7'/><stop offset='1' stop-color='#7df9ff'/></linearGradient></defs><rect x='4' y='4' width='392' height='62' rx='12' fill='#1a0f2e' stroke='url(#g)' stroke-width='4' filter='drop-shadow(0 0 6 #ff6ec7)'/><text x='200' y='44' text-anchor='middle' font-family='display' font-size='34' fill='#ff6ec7' filter='drop-shadow(0 0 8 #ff6ec7)'>ART GALLERY</text><text x='200' y='60' text-anchor='middle' font-family='sans-serif' font-size='10' fill='#7df9ff' letter-spacing='4'>FINE ART . SINCE 1987</text></svg>"
 bc-gbench-1:
   feetPosition: {x: 19.5, y: 5.5, z: -20}
   id: "bc-gbench-1"
@@ -1005,10 +1025,12 @@ bc-station-light:
   id: bc-station-light
   light: {color: "#cfe4ff", distance: 16, intensity: 3, kind: point}
 bc-station-sign:
-  feetPosition: {x: -9.7, y: 9.6, z: -13}
+  castShadow: false
+  feetPosition: {x: -9.7, y: 9.259, z: -13}
   id: bc-station-sign
+  material: {roughness: 0.55, texture: /cdn/value.205916af12fbd042cb3f15587409228e65c16ff496ce1b9e606d21236919e93b.png}
+  primitive: {depth: 0.06, height: 0.682, kind: box, width: 3.9}
   rotation: {yaw: 90}
-  vector: "<svg viewBox='0 0 400 70' width='3.9m'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='#7df9ff'/><stop offset='1' stop-color='#ff6ec7'/></linearGradient></defs><rect x='4' y='4' width='392' height='62' rx='12' fill='#1a0f2e' stroke='url(#g)' stroke-width='4' filter='drop-shadow(0 0 6 #7df9ff)'/><text x='200' y='44' text-anchor='middle' font-family='display' font-size='34' fill='#7df9ff' filter='drop-shadow(0 0 8 #7df9ff)'>TELEPORT STATION</text><text x='200' y='60' text-anchor='middle' font-family='sans-serif' font-size='10' fill='#ff6ec7' letter-spacing='4'>PLATFORM 1 . ALL DESTINATIONS</text></svg>"
 bc-strash-1:
   castShadow: false
   feetPosition: {x: -15.5, y: 5.5, z: -21.5}
@@ -1484,12 +1506,13 @@ bd-napkin-4:
   tags: [bonus-diner]
 bd-sign:
   castShadow: false
-  feetPosition: {x: -9.7, y: 4.1, z: -15}
+  feetPosition: {x: -9.7, y: 3.6, z: -15}
   id: bd-sign
+  material: {roughness: 0.55, texture: /cdn/value.6131d0cf0b31d246a9992002c14cc4a507b0380df9639a10e3ea7f1ba798abaa.png}
+  primitive: {depth: 0.06, height: 1, kind: box, width: 3.6}
   receiveShadow: true
   rotation: {yaw: 90}
   tags: [bonus-diner]
-  vector: "<svg viewBox='0 0 360 100' width='3.6m'><rect x='6' y='8' width='348' height='84' rx='40' fill='#1c0d2b' stroke='#b16cff' stroke-width='5' filter='drop-shadow(0 0 8 #9b4dff)'/><text x='180' y='68' font-family='serif' font-style='italic' font-size='54' fill='#ffd2ef' stroke='#ff4fb2' stroke-width='2' text-anchor='middle' filter='drop-shadow(0 0 10 #ff3fa8)'>Tom's Diner</text><path d='M70 80 H160' stroke='#c58bff' stroke-width='3' filter='drop-shadow(0 0 6 #9b4dff)'/><path d='M200 80 H290' stroke='#c58bff' stroke-width='3' stroke-dasharray='30 8' filter='drop-shadow(0 0 6 #9b4dff)'/></svg>"
 bd-sign-glow:
   castShadow: true
   feetPosition: {x: -9, y: 4.1, z: -15}
@@ -1883,10 +1906,12 @@ bonus-salon-shelf-2:
   scale: 1.8
   tags: [bonus-mall, salon-prop]
 bonus-salon-sign:
-  feetPosition: {x: 9.9, y: 3.35, z: -1}
+  castShadow: false
+  feetPosition: {x: 9.9, y: 2.85, z: -1}
   id: bonus-salon-sign
+  material: {roughness: 0.55, texture: /cdn/value.a58da257744937615d4fff4aabc9b5903c334b5220f4710f5a6c66a4207c2f3f.png}
+  primitive: {depth: 0.06, height: 1, kind: box, width: 5}
   rotation: {yaw: -90}
-  vector: "<svg viewBox='0 0 400 80' width='5m' billboard='none'><text x='200' y='58' text-anchor='middle' font-family='display' font-size='56' font-style='italic' fill='#ff71ce' filter='drop-shadow(0 0 6px #ff71ce)'>Glow Up Salon</text></svg>"
 bonus-salon-vanity-1:
   castShadow: true
   feetPosition: {x: 14.45, y: 0, z: 3.68}
