@@ -30,13 +30,13 @@ def press(i, k, wide):
     w = sm((-v.y + 0.004) / 0.012) * (1 - sm((side - 0.95) / 0.5))
     return Vector((v.x * wide * w, -v.y * k * w, 0))
 flat = lambda i: press(i, 0.58, 0.06)
-pads = [Vector((s * 0.021, tip.y + 0.008, tip.z - 0.013)) for s in (-1, 1)]   # spatial points just under the nose (the mouth has no skin verts to probe)
+pads = [Vector((s * 0.021, tip.y + 0.008, tip.z - 0.02)) for s in (-1, 1)]   # spatial points just under the nose (the mouth has no skin verts to probe)
 cheeks = [front(s * 0.058, tip.z + 0.004, 0.012) for s in (-1, 1)]
 print("PADS", [tuple(round(v, 3) for v in p) for p in pads], "CHEEKS", [tuple(round(v, 3) for v in p) for p in cheeks])
 g = lambda d, r: math.exp(-(d / r) ** 2)
 def puff(i):
     p = W[i]; amt = 0
-    for c in pads: amt += 0.013 * g((p - c).length, 0.024)
+    for c in pads: d = p - c; amt += 0.013 * g(math.hypot(d.x, d.y, d.z * 0.45), 0.024)   # tall pads: upper and lower lip rise together, the mouth slit never opens at the corner
     for c in cheeks: amt += 0.008 * g((p - c).length, 0.036)
     for sx in (-1, 1): amt += 0.005 * g((p - Vector((sx * 0.04, tip.y + 0.012, tip.z - 0.006))).length, 0.03)   # bridge pad→cheek, no crease
     base = press(i, 0.3, 0.05)   # mochi: a shorter, wider dumpling muzzle...
