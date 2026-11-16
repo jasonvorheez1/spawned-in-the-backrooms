@@ -105,18 +105,18 @@
     "#thr": { "m": "flap", "p": "flap", "s": "paper-note-unfold-crisp", "g": { "sanity": 2, "cd": 1800 } }
   },
   "level21": {
-    "l21-radio-rack": { "m": "dial", "p": "dial", "l": "1,0.65,0.2", "s": "radio-tuning-static-sweep", "t": "Alef on channel two. Somebody laughs. Then static.", "g": { "sanity": 3, "cd": 900 } },
-    "l21-berries": { "m": "tap", "q": 0.1, "s": "dry-bush-leaves-rustle" },
-    "l21-faucet-use": { "m": "dial", "p": "dial", "s": "rusty-valve-wheel-squeal", "q": 0.03 },
-    "l21-saltines": { "m": "tap", "q": 0.08, "s": "cracker-wax-sleeve-crinkle" },
-    "l21-cooler": { "m": "dial", "p": "dial", "l": "0.45,0.8,1", "s": "freezer-coil-drip-hiss" },
-    "l21-board": { "m": "flap", "p": "flap", "s": "paper-notice-flutter-on-board" },
-    "l21-blaster": { "m": "lever", "p": "lever", "s": "blasting-plunger-ratchet-crank", "l": "1,0.5,0.2" },
-    "l21-lockout-*": { "m": "lamp", "p": "lamp", "l": "1,0.25,0.15", "s": "steel-shutter-chain-rattle" },
+    "l21-radio-rack": { "i": "Alef's relay. Fault light's on. Fault light's always on.", "m": "dial", "p": "dial", "l": "1,0.65,0.2", "s": "radio-tuning-static-sweep", "t": "Alef on channel two. Somebody laughs. Then static.", "g": { "sanity": 3, "cd": 900 } },
+    "l21-berries": { "i": "Memo 13 says don't. Memo 13 was written by a man who'd eaten.", "m": "tap", "q": 0.1, "s": "dry-bush-leaves-rustle" },
+    "l21-faucet-use": { "i": "Copper swan-neck. Dry since the coil froze. Valve still turns.", "m": "dial", "p": "dial", "s": "rusty-valve-wheel-squeal", "q": 0.03 },
+    "l21-saltines": { "i": "Six hundred cartons. Somebody counted. Somebody had time.", "m": "tap", "q": 0.08, "s": "cracker-wax-sleeve-crinkle" },
+    "l21-cooler": { "i": "Coil sweats into a pan. Drink, fill a bottle.", "m": "dial", "p": "dial", "l": "0.45,0.8,1", "s": "freezer-coil-drip-hiss" },
+    "l21-board": { "i": "Ned's jobs in pen, Goknar's in grease pencil.", "m": "flap", "p": "flap", "s": "paper-notice-flutter-on-board" },
+    "l21-blaster": { "i": "Jared's plunger. Wired to the ceiling he already brought down once.", "m": "lever", "p": "lever", "s": "blasting-plunger-ratchet-crank", "l": "1,0.5,0.2" },
+    "l21-lockout-*": { "i": "Pried an inch by somebody's crowbar. Nobody finished the job.", "m": "lamp", "p": "lamp", "l": "1,0.25,0.15", "s": "steel-shutter-chain-rattle" },
     "#thr": { "m": "flap", "p": "flap", "s": "paper-note-unfold-crisp", "g": { "sanity": 2, "cd": 1800 } }
   },
   "level3": {
-    "l3-guild-plate": { "m": "lamp", "p": "lamp", "l": "1,0.75,0.3", "s": "brass-plate-knuckle-tap" },
+    "l3-guild-plate": { "i": "Brass survey pin. Chalk arrow points up the suction grille.", "m": "lamp", "p": "lamp", "l": "1,0.75,0.3", "s": "brass-plate-knuckle-tap" },
     "dina-cassette": { "m": "button", "p": "button", "s": "tape-recorder-play-button-clunk" },
     "dina-handoff": { "m": "flap", "p": "flap", "s": "clipboard-paper-flip" },
     "#thr": { "m": "flap", "p": "flap", "s": "paper-note-unfold-crisp", "g": { "sanity": 2, "cd": 1800 } }
