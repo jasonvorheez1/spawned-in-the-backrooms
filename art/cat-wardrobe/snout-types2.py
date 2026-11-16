@@ -28,14 +28,15 @@ def flat(i):
     if side >= 1.3: return Vector()
     w = sm((-v.y) / 0.03) * (1 - sm((side - 0.75) / 0.55))
     return Vector((v.x * 0.08 * w, -v.y * 0.62 * w, -v.z * 0.04 * w))
-pads = [front(s * 0.02, tip.z - 0.016) for s in (-1, 1)]
+pads = [Vector((s * 0.021, tip.y + 0.008, tip.z - 0.013)) for s in (-1, 1)]   # spatial points just under the nose (the mouth has no skin verts to probe)
 cheeks = [front(s * 0.058, tip.z + 0.004, 0.012) for s in (-1, 1)]
 print("PADS", [tuple(round(v, 3) for v in p) for p in pads], "CHEEKS", [tuple(round(v, 3) for v in p) for p in cheeks])
 g = lambda d, r: math.exp(-(d / r) ** 2)
 def puff(i):
     p = W[i]; amt = 0
     for c in pads: amt += 0.011 * g((p - c).length, 0.017)
-    for c in cheeks: amt += 0.009 * g((p - c).length, 0.032)
+    for c in cheeks: amt += 0.008 * g((p - c).length, 0.036)
+    for sx in (-1, 1): amt += 0.005 * g((p - Vector((sx * 0.04, tip.y + 0.012, tip.z - 0.006))).length, 0.03)   # bridge pad→cheek, no crease
     if amt < 1e-5 or N[i].y > 0.2: return Vector()   # front-facing skin only
     return N[i] * amt
 for name, fn in (("Snout_Flat", flat), ("Snout_Puff", puff)):
