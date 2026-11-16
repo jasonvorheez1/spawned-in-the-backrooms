@@ -4,6 +4,10 @@ import { notify } from "./lib/notify.js";
 import { noStory, noNpcs } from "./lib/run-opts.js";
 import { KEYED, sealed } from "./lib/thehub.js";
 import { hasKey, giveKey } from "./lib/hubkeys.js";
+import { kick, snd, puff, ready } from "./lib/use-kick.js";
+// each kind answers in its own body first: [motion, size, sound, puff]
+const FEEL = { ledger: ["flutter", 0.8], loosekey: ["spin", 0.5, "sfx-small-metal-key-skitters-on-concrete.mp3", "dust"], keytag: ["spin", 0.5, "sfx-small-metal-key-skitters-on-concrete.mp3", "dust"],
+  rec: ["rattle", 1.2, "sfx-cassette-recorder-play-button-clunk.mp3"], blank: ["sink", 0.6, "sfx-warm-concrete-wall-ticking-as-it-cools.mp3", "dust"], amberbox: ["hop", 1.2, "sfx-cardboard-box-flaps-opened.mp3", "dust"], note: ["flutter", 1, "sfx-paper-note-unfolded.mp3"] };
 const M = (id) => ({ place: "thehub", id });
 // A run with no story or no people has nobody to hand out Level Keys: the ones lying on the road are yours to take, one per spot per hour.
 const LOOSE_MS = 3600000;
@@ -20,6 +24,8 @@ function looseKey(ctx, p, s) {
 export const ears = {
   press(ctx, { by }) {
     const p = ctx.getObject(by), k = ctx.self.state.kind, s = p?.state; if (!s) return;
+    const fe = FEEL[k], at = ctx.self.worldFeetPosition ?? ctx.self.feetPosition;
+    if (fe) { kick(ctx, ctx.self, fe[0], { d: fe[1], yaw: ctx.self.rotation?.yaw ?? 0 }); if (fe[2]) snd(ctx, fe[2], at, 0.45, 10); if (fe[3]) puff(ctx, fe[3], { x: at.x, y: at.y + 0.2, z: at.z }); }
     if (k === "ledger") { s.hubLedger = 1; s.hubLead = 1; ctx.emit("playSound", { clip: "cdn/sfx-heavy-paper-ledger-page-turn-dry.mp3", position: ctx.self.worldFeetPosition, volume: 0.6 });
       s.ledgerOpen = 1; s.invOpen = false; return; } // the book opens on screen (scripts/ui.js ledgerUi); you find her row yourself
     const plain = noStory(s) || noNpcs(s);
@@ -35,7 +41,7 @@ export const ears = {
       return; }
     if (k === "blank") { if ((s.hubUP ?? 0) === 1) { s.hubUP = 2; s.hubBlank = 1; setQuest(s, "hub-uncharted", { name: "Uncharted Passage", step: "The blank door is warm. Tell Sato, Okafor, or Pip at Camp Amber.", mark: M("hub-meg-sato") }); tellQuest(ctx, p, "Uncharted Passage · Report back"); }
       s.hubBlank = 1; return notify(ctx, p, "No mark over it. No keyhole. The concrete is warm, like something on the other side has been leaning on it for a long time."); }
-    if (k === "amberbox") { if (s.hubAmberKit) return notify(ctx, p, "One box per face. You've had yours."); s.hubAmberKit = 1; const bag = { ...(s.snacks ?? {}) }; for (const t of ["purified_water", "bandage", "stew"]) bag[t] = (bag[t] ?? 0) + 1; s.snacks = bag;
+    if (k === "amberbox") { if (s.hubAmberKit) { if (!ready(s, "amber-water", 7200000, ctx.now())) return notify(ctx, p, "One box per face. Pip wrote your face down."); const b = { ...(s.snacks ?? {}) }; b.purified_water = (b.purified_water ?? 0) + 1; s.snacks = b; return notify(ctx, p, "Somebody topped it up with one bottle of water. GO SLOW is underlined twice now."); } s.hubAmberKit = 1; const bag = { ...(s.snacks ?? {}) }; for (const t of ["purified_water", "bandage", "stew"]) bag[t] = (bag[t] ?? 0) + 1; s.snacks = bag;
       return notify(ctx, p, "Camp Amber's newcomer box: water, a tin, a bandage. Someone has written GO SLOW on the lid."); }
     if (k === "note") return notify(ctx, p, ctx.self.state.text);
   },
