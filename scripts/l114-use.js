@@ -1,4 +1,5 @@
 // Level 114's pressables: the light switch (place.state.lit), and the far door in the void that lets you out to Level 9.
+import { animate } from "builtin/tween";
 const SFX = "/cdn/moodboard-realistic-gritty/";
 const HUM = SFX + "sfx-crt-monitor-high-pitch-whine-and-soft-electric-hum-loop.mp3";
 export const ears = {
@@ -29,9 +30,10 @@ export const ears = {
       const lit = ctx.place.state.lit === false; ctx.place.state.lit = lit; s.verb = lit ? "Switch Off" : "Switch On"; s.info = lit ? "on" : "off";
       ctx.emit("playSound", { clip: SFX + "sfx-plastic-wall-light-switch-click.mp3", position: pos, volume: 0.7 }); return; }
     if (s.kind === "janine-tape" && who) { // pocket it; HALOGEN plays it (I > Tapes)
+      animate(ctx, ctx.self, { "feetPosition.y": [pos.y, pos.y + 0.06, pos.y], "rotation.yaw": [0, 200, 180] }, { duration: 0.45, easing: "easeOutQuad" }); // it flips over in your fingers before it goes in the bag
       const st = who.state, have = String(st.holotapes ?? "").split(",").filter(Boolean);
       if (!have.includes("janine")) { st.holotapes = [...have, "janine"].join(","); st.notice = { text: "M.E.G. Interview Log 10328 · in your bag · play it on HALOGEN (I > Tapes)", at: ctx.now() }; }
-      else st.notice = { text: "You already have the interview tape.", at: ctx.now() };
+      else st.notice = { text: "Her tape's already in your bag. This is just where it sat.", at: ctx.now() };
       ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-cassette-tape-pickup-plastic-clack.mp3", position: pos, volume: 0.7 }, { audience: { player: by } });
       return; }
     if (s.kind === "sleep" && who) { // the lore exit: drift off in your old bed, wake on a Level 9 street
