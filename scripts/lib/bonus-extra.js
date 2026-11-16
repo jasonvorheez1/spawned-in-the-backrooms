@@ -53,4 +53,15 @@ export function layBonusExtra(ctx) {
   }
   // soft warm glow from the upper lounge's lava lamp (bl-lava)
   sp("bonus-fx-lava-glow", { feetPosition: { x: 22.95, y: 6.45, z: -5.14 }, light: { kind: "point", color: "#ff5cb8", distance: 4.5, intensity: 1.1, shadow: { enabled: false } } });
+  // three translucent skylight light shafts down through the central mall atrium (cheap shaderpack cone lane)
+  for (const [n, x, z, rTop, rBot] of [["1", -0.8, -14, 1.9, 4.4], ["2", 0.2, 0, 2.2, 5.0], ["3", 0.9, 14, 2.1, 4.8]]) {
+    sp(`bonus-fx-shaft-${n}`, {
+      feetPosition: { x, y: 0.2, z },
+      rotation: { pitch: 8, roll: -14 },
+      castShadow: false,
+      receiveShadow: false,
+      primitive: { kind: "cylinder", radiusTop: rTop, radiusBottom: rBot, height: 13.0, radialSegments: 24, openEnded: true },
+      material: { kind: "scripted", script: "scripts/mat-shaft.js", params: { alpha: 0.065 } },
+    });
+  }
 }

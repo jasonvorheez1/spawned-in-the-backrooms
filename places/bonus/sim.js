@@ -61,7 +61,7 @@ export function tick(ctx) {
   const s = ctx.place.state
   dinerMusic(ctx)
   if (s.peopleV !== 3) { for (const id of [...Object.keys(SHOPPERS), ...Object.keys(LOUNGERS)]) if (ctx.place.objects[id]) ctx.destroy(id); s.peopleV = 3 } // Nov 12, Shelly: no npcs in the mall but the special ones (staff + Gina); people() no longer runs
-  if (s.shineV !== 2) { layBonusExtra(ctx); s.shineV = 2 }
+  if (s.shineV !== 3) { layBonusExtra(ctx); s.shineV = 3 }
   if (s.ctrFitV !== 1) { // Shelly: the diner counter stood over Tom's head; true 0.95 m bar height his hands reach
     for (let i = 1; i <= 4; i++) { const c = ctx.place.objects["bd-counter-" + i]; if (c) c.scale = { x: 0.979, y: 0.98, z: 0.98 } }
     s.ctrFitV = 1
