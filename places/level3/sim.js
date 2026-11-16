@@ -1,3 +1,4 @@
+import { retexture } from "../../scripts/lib/retexture.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { hatches, face } from "../../scripts/lib/level3-hatch.js";
@@ -213,6 +214,7 @@ export function tick(ctx) {
     for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id]; const m = o?.model; if ((typeof m === "string" ? m : m?.id) === OLD) ctx.destroy(id); }
     layLines(ctx);
   }
+  if (s.seeded && s.texV !== 1) { s.texV = 1; retexture(ctx, { skipTags: ["sludge", "l3lamp", "l3oob", "l3sign"] }); } // graphics pass: bare props get real surfaces
   if (!s.arrive2 && s.seeded) { s.arrive2 = true; ctx.spawn("l3-from-l2", { feetPosition: { x: BACK.x + 2.4, y: 0.1, z: BACK.z }, rotation: { yaw: -90 } }); } // where the Level 2 door lets you out
   if (s.snackVent !== 3) {
     const x = BACK.x + 7.5, z = BACK.z;
