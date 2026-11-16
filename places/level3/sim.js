@@ -1,3 +1,5 @@
+import { texSigns } from "../../scripts/lib/sign-tex.js";
+const SIGN_TEX = [["M.E.G. BASE GAMMA","/cdn/value.a46149d20740807dbcf530b9d3f2ca87a95408362767a05ed5cbd2fc2ea3ea15.png"]]; // hand-made sign faces, Nov 16
 import { retexture } from "../../scripts/lib/retexture.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
@@ -130,6 +132,7 @@ function layGammaSignage(ctx) {
 }
 
 export function tick(ctx) {
+  texSigns(ctx, SIGN_TEX);
   restyleSigns(ctx, "level3"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)

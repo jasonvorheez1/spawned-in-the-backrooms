@@ -1,3 +1,5 @@
+import { texSigns } from "../../scripts/lib/sign-tex.js";
+const SIGN_TEX = [["▼ LEVEL 3","/cdn/value.630bbe63db3c2df6bcaa050e2961ef7f52cca4fd9c52cd3344afe3152ea17ead.png"],[">EXIT</div>","/cdn/value.1024556899fb74c5ca0de515faec213a95406c4a208fd1dfb283c32df29c0665.png"],["LEVEL 5 · STAIRS","/cdn/value.a675fb28f3bed6a4f16ce5953d49f06c879146004d20a89c4c36f28a7b6eb7aa.png"],["M.E.G. BASE OMEGA","/cdn/value.e2f189814216ed1444f0cc94c0875e9bd3441f52c862da148ae035cae47161ab.png"]]; // hand-made sign faces, Nov 16
 import { retextureOnce } from "../../scripts/lib/retexture.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
@@ -136,6 +138,7 @@ function layOffice(ctx) {
   ctx.spawn("l4-office-mgr", { feetPosition: { x: 0, y: 0, z: 0 }, behavior: "scripts/l4-office.js", state: { kind: "manager" } });
 }
 export function tick(ctx) {
+  texSigns(ctx, SIGN_TEX);
   retextureOnce(ctx); // graphics pass: bare props get real surfaces
   restyleSigns(ctx, "level4"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   if (ctx.place.state.posterV !== 1 && ctx.place.players?.length) { const o = ctx.place.objects["l4-fun-poster"]; if (o) { ctx.place.state.posterV = 1; o.feetPosition = { x: 30.4, y: 0.02, z: 25.8 }; } } // Nov 11: the =) poster lay outside the lift's outer wall where nobody could reach it; now it's on the break room floor (cells/x0z0.scene)

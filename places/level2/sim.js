@@ -1,3 +1,5 @@
+import { texSigns } from "../../scripts/lib/sign-tex.js";
+const SIGN_TEX = [[">LEVEL 1</div>","/cdn/value.0d1ee7c464bbacd78916eda91527aef31fee4250bca457b4e0e8d2a2dd4de0c0.png"],["font-size:600px","/cdn/value.b48208a755bf87edd9e2cbf23297046c7b9e2ea307c9560539a2dcfec254a932.png"],["OFFICE SPACE EL3A","/cdn/value.db6ba4428f95cdd79a906d671b4cb96c958a8618e2e3bcd62240ed47a6447e4f.png"],["SURVIVORS · WEST","/cdn/value.ca7ea25de40b67cdc0a0c559bac820a446ab705b44992c619a863864106e43e5.png"],["BOILER SECTOR<div","/cdn/value.147439ae95c1d75444b408126abac5a79446e29b61902cd572115f2974f1261f.png"],["PIPE MAZE<div","/cdn/value.b8b4f33fb8d437ba6151fe709254b98f90c570b09e3bbd4d542184e6a8ae55de.png"],["M.E.G. ADVISORY","/cdn/value.f63d4180330048dfab689df2012eb5ef142f4baa07a0a2987e0564b5c3de7cbb.png"]]; // hand-made sign faces, Nov 16
 import { retextureOnce } from "../../scripts/lib/retexture.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
@@ -35,6 +37,7 @@ const lit = (cx, cz) => zoneOf(cx, cz) !== "dark";
 
 const slAt = {}; // per-player sludge hiss clock, this machine's
 export function tick(ctx) {
+  texSigns(ctx, SIGN_TEX);
   retextureOnce(ctx); // graphics pass: bare props get real surfaces
   restyleSigns(ctx, "level2"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)

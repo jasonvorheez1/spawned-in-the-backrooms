@@ -1,3 +1,5 @@
+import { texSigns } from "../../scripts/lib/sign-tex.js";
+const SIGN_TEX = [["OUTPOST SEAWATCH","/cdn/value.37272d721b06ec2b8bf091a709662966f367db78553501735cb4556c8edbedae.png"],["FORT SURRENDER<div","/cdn/value.ceb70e9af2185f56656ef42ec4b9a732a52d67f0160f03e3e015f01ef13225d7.png"]]; // hand-made sign faces, Nov 16
 import { retextureOnce } from "../../scripts/lib/retexture.js";
 import { sweepProps } from "../../scripts/lib/breakables.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
@@ -949,6 +951,7 @@ function lay(ctx) {
 
 let lastFortLift = 0;
 export function tick(ctx) {
+  texSigns(ctx, SIGN_TEX);
   retextureOnce(ctx); // graphics pass: bare props get real surfaces
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level7"); // every sign dressed as its own board (scripts/lib/sign-style.js)
