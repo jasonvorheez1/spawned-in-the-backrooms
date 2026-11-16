@@ -1983,6 +1983,14 @@ bs-furniture:
   feetPosition: {x: 17, y: 0, z: 13}
   id: bs-furniture
   tags: [bonus-shop]
+bw-fitting-body:
+  children: [{feetPosition: {x: 0, y: -0.06, z: 0}, id: plinth, material: {color: oklch(0.86 0.03 300), metalness: 0.2, roughness: 0.35}, primitive: {height: 0.06, kind: cylinder, radialSegments: 40, radiusBottom: 0.5, radiusTop: 0.45}}]
+  feetPosition: {x: 10.2, y: 5.52, z: -9.8}
+  id: bw-fitting-body
+  model: {forward: "+z", id: /cdn/value.e27f20a0704144602ecf83e9175b441f311c897720d04b97ea49d3db281c5ee2.glb}
+  physics: static
+  rotation: {lookAt: {x: 8.3, y: 5.52, z: -11.5}}
+  tags: [bodyworks]
 esc-down-hum:
   audio: {clip: /cdn/moodboard-realistic-gritty/sfx-mall-escalator-motor-hum-and-soft-step-clatter-loop.mp3, gain: 0.18, loop: true, maxDistance: 14, spatial: true}
   feetPosition: {x: 1.8, y: 1, z: -2}
