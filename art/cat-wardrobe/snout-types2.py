@@ -21,24 +21,27 @@ tip = front(0, SC.z, 0.02); print("TIP", tuple(round(v, 4) for v in tip))
 # normals of the basis
 me.vertices.foreach_get  # noqa
 N = [(nm @ v.normal).normalized() for v in me.vertices]
-def flat(i):
+def press(i, k, wide):
+    # the whole muzzle scaled back toward its root by k (uniform, so it stays convex: no crater), fading out past its rim into the cheeks
     v = W[i] - SC
     if v.y > 0.004: return Vector()
     side = math.hypot(v.x / 0.085, v.z / 0.075)
-    if side >= 1.3: return Vector()
-    w = sm((-v.y) / 0.03) * (1 - sm((side - 0.75) / 0.55))
-    return Vector((v.x * 0.08 * w, -v.y * 0.62 * w, -v.z * 0.04 * w))
+    if side >= 1.5: return Vector()
+    w = sm((-v.y + 0.004) / 0.012) * (1 - sm((side - 0.95) / 0.5))
+    return Vector((v.x * wide * w, -v.y * k * w, 0))
+flat = lambda i: press(i, 0.58, 0.06)
 pads = [Vector((s * 0.021, tip.y + 0.008, tip.z - 0.013)) for s in (-1, 1)]   # spatial points just under the nose (the mouth has no skin verts to probe)
 cheeks = [front(s * 0.058, tip.z + 0.004, 0.012) for s in (-1, 1)]
 print("PADS", [tuple(round(v, 3) for v in p) for p in pads], "CHEEKS", [tuple(round(v, 3) for v in p) for p in cheeks])
 g = lambda d, r: math.exp(-(d / r) ** 2)
 def puff(i):
     p = W[i]; amt = 0
-    for c in pads: amt += 0.011 * g((p - c).length, 0.017)
+    for c in pads: amt += 0.015 * g((p - c).length, 0.02)
     for c in cheeks: amt += 0.008 * g((p - c).length, 0.036)
     for sx in (-1, 1): amt += 0.005 * g((p - Vector((sx * 0.04, tip.y + 0.012, tip.z - 0.006))).length, 0.03)   # bridge pad→cheek, no crease
-    if amt < 1e-5 or N[i].y > 0.2: return Vector()   # front-facing skin only
-    return N[i] * amt
+    base = press(i, 0.28, 0.14)   # mochi: a shorter, wider dumpling muzzle...
+    if amt < 1e-5 or N[i].y > 0.2: return base   # front-facing skin only
+    return base + N[i] * amt   # ...with puffed whisker pads and round cheeks
 for name, fn in (("Snout_Flat", flat), ("Snout_Puff", puff)):
     k = kb[name]; mx = 0
     for i in range(len(B)):
