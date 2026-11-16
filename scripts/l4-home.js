@@ -22,7 +22,7 @@ const GLUG = `fx
 pop bub burst=10..16 on=disc(.09) life=.5..0.9 v=up(.5..0.9)+sdir()*.05 size=.012..0.03 acc=drag(1.2) col=<.85,.95,1> a=.8>0 sz=$size*(.6>1.2) r=sprite(soft-disc,add)`;
 const ARC = `fx
 pop jet rate=90 win=0;.9 life=.35..0.45 v=<0,.95,-.55>+sdir()*.04 acc=grav() size=.012..0.02 col=<.8,.92,1> a=.75>0 sz=$size r=sprite(soft-disc,alpha,velocity,.02)
-pop mist burst=8 at=<0,.05,-.28> life=.3..0.6 v=sdir()*.2 size=.03..0.06 col=<.85,.95,1> a=.35>0 sz=$size r=sprite(soft-disc,alpha)`;
+pop mist burst=8 pos=<0,.05,-.28> life=.3..0.6 v=sdir()*.2 size=.03..0.06 col=<.85,.95,1> a=.35>0 sz=$size r=sprite(soft-disc,alpha)`;
 const FLOW_TICK = 0.08;
 const say = (who, text, ctx) => notify(ctx, who, text); // scripts/lib/notify.js, shared
 const snd = (ctx, clip, v = 0.6, y = 1) => heard(ctx, { clip: G(clip), position: { ...ctx.self.worldFeetPosition, y: (ctx.self.worldFeetPosition?.y ?? 0) + y }, volume: v, maxDistance: 12 });
