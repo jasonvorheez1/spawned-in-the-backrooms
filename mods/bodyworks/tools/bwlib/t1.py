@@ -242,10 +242,10 @@ def run(body, ZONES, DOC, a):
         for i, g in enumerate(sk.rings):
             rel = TV - g['o']; m = np.abs(rel[:, 2]) < 0.02 * S
             if not m.any(): continue
-            Rl = rel[m].copy(); Rl[:, 2] = 0; L = np.linalg.norm(Rl, axis=1) + 1e-9
+            Rl = rel[m].copy(); Rl[:, 2] = 0; Lt = np.linalg.norm(Rl, axis=1) + 1e-9
             for j, d in enumerate(g['dirs']):
-                cone = (Rl @ d) / L > 0.94
-                if cone.any() and L[cone].max() > R[i, j] - 0.01 * S: sk.hole[i, j] = True
+                cone = (Rl @ d) / Lt > 0.94
+                if cone.any() and Lt[cone].max() > R[i, j] - 0.01 * S: sk.hole[i, j] = True
         h = sk.hole.copy()
         for di in (-1, 0, 1):
             for dj in (-1, 0, 1): h |= np.roll(np.roll(sk.hole, di, 0), dj, 1)
