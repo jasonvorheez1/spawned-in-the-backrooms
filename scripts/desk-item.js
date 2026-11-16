@@ -28,7 +28,7 @@ export const ears = {
       st.taken = true; ctx.after(0.3, "stow"); ctx.after(RESTOCK_S, "restock"); return;
     }
     if (st.kind === "mug") {
-      if (st.empty) { say("Coffee ring and a dead fly. Ferry refills it when she's back."); return; }
+      if (st.empty) { say("Coffee ring and a dead fly. Senna refills it when she's back."); return; }
       hands(ctx, p);
       animate(ctx, me, { "rotation.pitch": [0, -35, -35, 0], "feetPosition.y": [f.y, f.y + 0.12, f.y + 0.12, f.y] }, { duration: 0.9, easing: "easeInOutQuad" }); // lifted, tipped, set back down
       s.thirst = Math.min(100, (s.thirst ?? 100) + 8); st.empty = true; st.verb = "Look"; st.info = "empty, a ring of coffee at the bottom";
