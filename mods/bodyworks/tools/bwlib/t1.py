@@ -479,10 +479,13 @@ def run(body, ZONES, DOC, a):
         _zs = [(_nk.matrix_world @ v.co).z for v in _nk.data.vertices]
         z_collar = max(z_collar, min(_zs) + 0.55 * (max(_zs) - min(_zs)))   # a crew collar part-way up the neck: the shoulder tops rise to the neck, a lower level cut bared them
     near_sh = {k: (lambda p, f=f: True) for k, f in near_sh.items()}   # the plane does the trimming now
-    # the collar is the neck zone's own border: a level cut clipped the shoulder tops, which rise above the neck base on this body
+    # a mock collar: the level cut sits just over the highest shoulder skin, so the traps (which rise above the neck base on a short neck) stay covered;
+    # the neck zone's own border was a stair-stepped, gap-toothed neckline
+    _shz = [(o.matrix_world @ v.co).z for k in ('shoulder_l', 'shoulder_r') if ZONES.get(k) is not None for o in [ZONES[k]] for v in o.data.vertices]
+    z_mock = max([z_collar] + [z + 0.004 * S for z in _shz])
     # ONE welded shell, collar to hem: the yoke and chest as two shells met on stair-stepped zone borders at the same offset and tore into slivers there
-    _ZT = ('upperchest', 'shoulder_l', 'shoulder_r', 'breast_l', 'breast_r', 'cleavage', 'upperback', 'chest', 'belly', 'side_l', 'side_r', 'armpit_front_l', 'armpit_front_r', 'armpit_back_l', 'armpit_back_r', 'upperarm_l', 'upperarm_r')
-    for nm_, ob in shell([_ZT], OFF['top'], 'top_chest', cuts={'upperchest': [(z_underbust - 0.07 * S, False)] + sleeve_cap['upperarm_l'] + sleeve_cap['upperarm_r']}).items():
+    _ZT = ('upperchest', 'shoulder_l', 'shoulder_r', 'neck', 'breast_l', 'breast_r', 'cleavage', 'upperback', 'chest', 'belly', 'side_l', 'side_r', 'armpit_front_l', 'armpit_front_r', 'armpit_back_l', 'armpit_back_r', 'upperarm_l', 'upperarm_r')
+    for nm_, ob in shell([_ZT], OFF['top'], 'top_chest', cuts={'upperchest': [(z_mock, True), (z_underbust - 0.07 * S, False)] + sleeve_cap['upperarm_l'] + sleeve_cap['upperarm_r']}).items():
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
     for nm_, ob in shell(['foot_l', 'foot_r'], OFF['feet'], 'feet', {'feet_sole': lambda z: z < -0.5, 'feet_upper': lambda z: z >= -0.5}).items():
         CAGE[nm_] = (ob, COL['feet']); SEG[nm_] = []
