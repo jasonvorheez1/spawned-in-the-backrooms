@@ -2064,24 +2064,15 @@ l70-bp-office:
   visibleRange:
     max: 140
 l70-breaker:
-  behavior:
-  - scripts/l70-press.js
-  feetPosition:
-    x: 48.3
-    y: 1
-    z: -19.14
+  behavior: [scripts/l70-press.js, scripts/usable-kit.js]
+  feetPosition: {x: 48.3, y: 1, z: -19.14}
   id: l70-breaker
   model: /cdn/value.0919a72230d19f7a5fadf929b70747b4182eb4e61cb8d6f75633b74c5a87d390.glb
   physics: static
-  rotation:
-    yaw: 0
-  state:
-    'on': false
-  tags:
-  - usable
-  - l70-breaker
-  visibleRange:
-    max: 65
+  rotation: {yaw: 0}
+  state: {"on": false}
+  tags: [usable, l70-breaker]
+  visibleRange: {max: 65}
 l70-c-banner:
   feetPosition:
     x: 0
@@ -3652,34 +3643,19 @@ l70-house-sofa:
     max: 65
   state: {"name":"Living-room sofa","seat":{"w":2,"gap":0.75,"y":0.31}}
 l70-house-stove:
+  behavior: [scripts/field-fixture.js, scripts/usable-kit.js]
   castShadow: false
-  feetPosition:
-    x: -39.6
-    y: 0.54
-    z: -20.95
+  feetPosition: {x: -39.6, y: 0.54, z: -20.95}
   id: l70-house-stove
-  layout:
-    box:
-      max:
-        y: 0.93
-      min:
-        y: 0
-  model:
-    id: /cdn/value.4c288814480bee5bc0698991caa539a68f89a43818ddf332974a5f6a92a6a51c.glb
-  physics:
-    body: static
-    collider: box
-  rotation:
-    pitch: 0
-    roll: 0
-    yaw: 180
+  layout: {box: {max: {y: 0.93}, min: {y: 0}}}
+  model: {id: /cdn/value.4c288814480bee5bc0698991caa539a68f89a43818ddf332974a5f6a92a6a51c.glb}
+  physics: {body: static, collider: box}
+  rotation: {pitch: 0, roll: 0, yaw: 180}
   scale: 1
-  tags: ["l70","l70-town","usable"]
+  state: {c: {x: -39.6, y: 1.4, z: -20.59}, info: Heat beans for the cold outside, kind: field-stove, name: Kitchen stove, verb: Heat a tin}
+  tags: [l70, l70-town, usable]
   visible: true
-  visibleRange:
-    max: 65
-  behavior: scripts/field-fixture.js
-  state: {"kind":"field-stove","name":"Kitchen stove","verb":"Heat a tin","info":"Heat beans for the cold outside","c":{"x":-39.6,"y":1.4,"z":-20.59}}
+  visibleRange: {max: 65}
 l70-house-table:
   castShadow: false
   feetPosition:
@@ -5719,28 +5695,16 @@ l70-pole-1-snow:
   visibleRange:
     max: 140
 l70-pump:
-  feetPosition:
-    x: 46.6
-    y: 0.16
-    z: -20.1
+  behavior: [scripts/usable-kit.js]
+  feetPosition: {x: 46.6, y: 0.16, z: -20.1}
   id: l70-pump
-  layout:
-    box:
-      max:
-        y: 0.9
-      min:
-        y: 0
+  layout: {box: {max: {y: 0.9}, min: {y: 0}}}
   model: /cdn/value.debf3c1e0ee3d3d9e38d2188746f9cb4da0a1e2f0f0d70b0b9eba6d4eb17575b.glb
   physics: static
-  rotation:
-    yaw: 0
-  state:
-    'on': false
-  tags:
-  - usable
-  - l70-pump
-  visibleRange:
-    max: 65
+  rotation: {yaw: 0}
+  state: {"on": false}
+  tags: [usable, l70-pump]
+  visibleRange: {max: 65}
 l70-rock10:
   feetPosition:
     x: -28.29815775760914
@@ -5919,106 +5883,46 @@ l70-swing-snow:
   visibleRange:
     max: 65
 l70-valve-0:
-  behavior:
-  - scripts/l70-press.js
-  feetPosition:
-    x: 49.5
-    y: 0.62
-    z: -23.5
+  behavior: [scripts/l70-press.js, scripts/usable-kit.js]
+  feetPosition: {x: 49.5, y: 0.62, z: -23.5}
   id: l70-valve-0
-  layout:
-    box:
-      max:
-        y: 0.54
-      min:
-        y: 0
+  layout: {box: {max: {y: 0.54}, min: {y: 0}}}
   model: /cdn/value.a76bacd25382accd2629f0b3460299de143f6911ad0837f6728d172e0429fc38.glb
   physics: static
-  rotation:
-    yaw: 0
-  state:
-    n: 0
-    turn: 0
-  tags:
-  - usable
-  - l70-valve
-  visibleRange:
-    max: 65
+  rotation: {yaw: 0}
+  state: {n: 0, turn: 0}
+  tags: [usable, l70-valve]
+  visibleRange: {max: 65}
 l70-valve-1:
-  behavior:
-  - scripts/l70-press.js
-  feetPosition:
-    x: 49.5
-    y: 0.62
-    z: -22.5
+  behavior: [scripts/l70-press.js, scripts/usable-kit.js]
+  feetPosition: {x: 49.5, y: 0.62, z: -22.5}
   id: l70-valve-1
-  layout:
-    box:
-      max:
-        y: 0.54
-      min:
-        y: 0
+  layout: {box: {max: {y: 0.54}, min: {y: 0}}}
   model: /cdn/value.a76bacd25382accd2629f0b3460299de143f6911ad0837f6728d172e0429fc38.glb
   physics: static
-  rotation:
-    yaw: 0
-  state:
-    n: 1
-    turn: 0
-  tags:
-  - usable
-  - l70-valve
-  visibleRange:
-    max: 65
+  rotation: {yaw: 0}
+  state: {n: 1, turn: 0}
+  tags: [usable, l70-valve]
+  visibleRange: {max: 65}
 l70-valve-2:
-  behavior:
-  - scripts/l70-press.js
-  feetPosition:
-    x: 49.5
-    y: 0.62
-    z: -21.5
+  behavior: [scripts/l70-press.js, scripts/usable-kit.js]
+  feetPosition: {x: 49.5, y: 0.62, z: -21.5}
   id: l70-valve-2
-  layout:
-    box:
-      max:
-        y: 0.54
-      min:
-        y: 0
+  layout: {box: {max: {y: 0.54}, min: {y: 0}}}
   model: /cdn/value.a76bacd25382accd2629f0b3460299de143f6911ad0837f6728d172e0429fc38.glb
   physics: static
-  rotation:
-    yaw: 0
-  state:
-    n: 2
-    turn: 0
-  tags:
-  - usable
-  - l70-valve
-  visibleRange:
-    max: 65
+  rotation: {yaw: 0}
+  state: {n: 2, turn: 0}
+  tags: [usable, l70-valve]
+  visibleRange: {max: 65}
 l70-valve-3:
-  behavior:
-  - scripts/l70-press.js
-  feetPosition:
-    x: 49.5
-    y: 0.62
-    z: -20.5
+  behavior: [scripts/l70-press.js, scripts/usable-kit.js]
+  feetPosition: {x: 49.5, y: 0.62, z: -20.5}
   id: l70-valve-3
-  layout:
-    box:
-      max:
-        y: 0.54
-      min:
-        y: 0
+  layout: {box: {max: {y: 0.54}, min: {y: 0}}}
   model: /cdn/value.a76bacd25382accd2629f0b3460299de143f6911ad0837f6728d172e0429fc38.glb
   physics: static
-  rotation:
-    yaw: 0
-  state:
-    n: 3
-    turn: 0
-  tags:
-  - usable
-  - l70-valve
-  visibleRange:
-    max: 65
+  rotation: {yaw: 0}
+  state: {n: 3, turn: 0}
+  tags: [usable, l70-valve]
+  visibleRange: {max: 65}
