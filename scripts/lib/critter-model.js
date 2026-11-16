@@ -942,6 +942,11 @@ export function restyle(ctx, o, wardSet) {
     if (l.heightS || l.buildS) o.scale = { x: Number(l.buildS) || 1, y: Number(l.heightS) || 1, z: Number(l.buildS) || 1 }
     return true
   }
+  if (o.state?.wear && !o.tags?.includes('player') && catBodyIds().includes(mid)) { // Nov 16 refit (Shelly 'readjust all clothing type fits'): a worn garment whose file was refit swaps to the new file in place
+    const l = o.state.look?.sex ? { ...o.state.wear, ...o.state.look } : o.state.wear; let hit = false
+    try { for (const k of catChildren(l.sex === 'm' ? 'm' : 'f', l)) { const c = ctx.place?.objects?.[o.id + '/' + k.id]; if (c && typeof c.model?.id === 'string' && c.model.id !== k.model.id) { c.model = { ...JSON.parse(JSON.stringify(c.model)), id: k.model.id }; hit = true } } } catch (e) {}
+    if (hit) return true
+  }
   { const f = o.model?.materials?.headFur?.params?.face // Nov 16 (Shelly "make sure it applies to everyone", "apply it to the npcs"): a standing cat whose painted face is from an older set redraws with today's
     if (f && o.state?.wear && !o.tags?.includes('player') && !faceNow().has(f)) { o.model = bodyModel(o.state.wear); return true }
     // Nov 16 (Shelly: hair "weird up front"): a standing cat with a hairstyle but no hair-coloured scalp under it redraws once, so no white shows between the locks
