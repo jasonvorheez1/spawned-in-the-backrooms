@@ -76,30 +76,24 @@ const CSS = `<style>
 #mm .mm-photo{position:absolute;inset:-2%;width:104%;height:104%;object-fit:cover;z-index:-3;filter:saturate(.9) contrast(1.05);animation:mm-drift 30s ease-in-out infinite alternate}
 #mm.mm-title:before{background:radial-gradient(ellipse 70% 65% at 48% 42%,transparent 30%,#0a0905aa 80%,#050403 100%)}
 #mm.mm-title:after{opacity:.35}
-#mm .memo{position:relative;z-index:1;box-sizing:border-box;width:min(520px,100%);margin:0 auto;padding:30px 34px 26px;background:#eee7d0;background-image:radial-gradient(circle at 84% 86%,transparent 34px,#8a6a3a22 35px,#8a6a3a33 38px,transparent 40px),repeating-linear-gradient(0deg,transparent 0 27px,#7a92b022 27px 28px),linear-gradient(170deg,#f4eedb,#e2d8b8);color:#24211a;font:400 15px/28px 'Courier New',Courier,monospace;transform:rotate(-1.4deg);box-shadow:0 2px 0 #cfc4a2,0 18px 40px #000a,0 2px 6px #0006;animation:mm-enter .6s ease-out both}
+#mm .memo{position:relative;z-index:1;box-sizing:border-box;width:min(460px,100%);margin:0 auto;padding:34px 34px 26px;background:#eee7d0;background-image:linear-gradient(170deg,#f4eedb,#e2d8b8);color:#24211a;font:400 15px/28px 'Courier New',Courier,monospace;transform:rotate(-.8deg);box-shadow:0 2px 0 #cfc4a2,0 18px 40px #000a,0 2px 6px #0006;animation:mm-enter .6s ease-out both}
 #mm .memo:before,#mm .memo:after{content:'';position:absolute;top:-12px;width:96px;height:26px;background:#d9cfa8cc;box-shadow:0 1px 2px #0003}
 #mm .memo:before{left:18px;transform:rotate(-7deg)}#mm .memo:after{right:22px;transform:rotate(5deg)}
-#mm .memo-hd{display:flex;justify-content:space-between;font-size:11px;line-height:16px;letter-spacing:.08em;color:#5d5543;border-bottom:2px solid #24211a;padding-bottom:6px}
 #mm .memo h1{margin:14px 0 2px;font:700 30px/1.05 'Courier New',Courier,monospace;letter-spacing:-.01em;color:#1b1914;text-transform:uppercase;text-shadow:none}
-#mm .memo-re{font-size:12px;line-height:18px;color:#5d5543;margin-bottom:12px}
-#mm .memo-ln{display:flex;align-items:baseline;gap:10px;width:100%;padding:0 4px;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;position:relative}
-#mm .memo-ln .bx{flex:none;width:15px;height:15px;border:1.5px solid #24211a;align-self:center;display:grid;place-items:center;font-size:13px;line-height:1}
-#mm .memo-ln .lbl{text-transform:uppercase;font-weight:700}
-#mm .memo-ln .dots{flex:1;border-bottom:2px dotted #24211a55;transform:translateY(-6px)}
-#mm .memo-ln .val{color:#5d5543;font-size:13px}
-#mm .memo-ln:hover,#mm .memo-ln:focus-visible{outline:0;background:linear-gradient(100deg,transparent 2%,#f5e04a99 4%,#f5e04a88 95%,transparent 98%)}
-#mm .memo-ln:hover .bx,#mm .memo-ln:focus-visible .bx{background:#24211a;color:#eee7d0}
-#mm .memo-go{margin:4px 0 8px;font-size:18px;line-height:34px}#mm .memo-go .bx{width:18px;height:18px;background:#24211a;color:#eee7d0}
-#mm .memo-mode{display:flex;gap:18px;align-items:baseline;margin:2px 0 10px;padding:0 4px;font-size:13px}
-#mm .memo-mode span{color:#5d5543}
-#mm .memo-mode button{border:0;background:none;padding:0 2px;font:700 13px/28px 'Courier New',monospace;color:#24211a;cursor:pointer;text-transform:uppercase}
-#mm .memo-mode button i{font-style:normal;font-weight:400}
-#mm .memo-mode button:not(.on){color:#6f6754}#mm .memo-mode button:not(.on):hover,#mm .memo-mode button:focus-visible{outline:0;background:#f5e04a88;color:#24211a}
-#mm .memo-mode small{display:block;margin:-6px 0 8px 4px;color:#6f6754;font-size:11px;line-height:16px}
-#mm .memo-ft{margin-top:14px;padding-top:6px;border-top:1px solid #24211a44;font-size:10px;line-height:14px;color:#6f6754;letter-spacing:.06em;display:flex;justify-content:space-between}
-#mm .memo-ft b{display:inline-block;padding:1px 6px;border:2px solid #a8322a;color:#a8322a;transform:rotate(-4deg);font-size:11px;letter-spacing:.12em;opacity:.8}
-@media(max-width:640px){#mm .memo{padding:22px 18px 18px;font-size:13px}#mm .memo h1{font-size:22px}#mm .memo-ln .val{display:none}}
-@media(max-height:570px){#mm .memo{padding:14px 22px 12px;line-height:24px}#mm .memo h1{font-size:22px;margin-top:6px}#mm .memo-ft{display:none}}
+#mm .memo h1{margin:0 0 22px;font:700 32px/1.05 'Courier New',Courier,monospace;color:#1b1914;text-transform:uppercase;text-shadow:none;text-align:center}
+#mm .memo-go{display:block;width:100%;border:0;cursor:pointer;background:#1f1c16;color:#f2ecd6;padding:14px 18px;font:700 22px/1.1 'Courier New',monospace;letter-spacing:.06em;text-transform:uppercase;text-align:center;transition:background .12s}
+#mm .memo-go small{display:block;margin-top:4px;font:400 12px/1.2 'Courier New',monospace;letter-spacing:.04em;text-transform:none;color:#cfc6a8}
+#mm .memo-go:hover,#mm .memo-go:focus-visible{outline:0;background:#3a2f12;color:#f5e04a}
+#mm .memo-mode{display:grid;grid-template-columns:1fr 1fr;margin-top:12px;border:2px solid #1f1c16}
+#mm .memo-mode button{border:0;background:none;padding:9px 0;cursor:pointer;font:700 14px/1 'Courier New',monospace;letter-spacing:.06em;text-transform:uppercase;color:#6f6754}
+#mm .memo-mode button.on{background:#1f1c16;color:#f2ecd6;cursor:default}
+#mm .memo-mode button:not(.on):hover,#mm .memo-mode button:not(.on):focus-visible{outline:0;background:#f5e04a88;color:#1f1c16}
+#mm .memo-hint{margin:6px 0 0;text-align:center;font-size:12px;line-height:16px;color:#6f6754}
+#mm .memo-links{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;margin-top:18px;padding-top:12px;border-top:1px solid #1f1c1633}
+#mm .memo-links button{border:0;background:none;padding:6px 4px;cursor:pointer;text-align:left;font:700 14px/1.2 'Courier New',monospace;letter-spacing:.04em;text-transform:uppercase;color:#2a261d}
+#mm .memo-links button:hover,#mm .memo-links button:focus-visible{outline:0;background:linear-gradient(100deg,transparent 2%,#f5e04a99 5%,#f5e04a88 94%,transparent 98%)}
+@media(max-width:640px){#mm .memo{padding:24px 18px 18px}#mm .memo h1{font-size:24px}#mm .memo-go{font-size:18px}}
+@media(max-height:570px){#mm .memo{padding:16px 22px 12px}#mm .memo h1{font-size:22px;margin-bottom:10px}#mm .memo-links{margin-top:8px;padding-top:6px}}
 @media(prefers-reduced-motion:reduce){#mm .mm-photo,#mm .memo{animation:none}}#mm.mm-reduced .mm-photo,#mm.mm-reduced .memo{animation:none}
 </style>`
 
@@ -228,20 +222,15 @@ export function mainMenu(ctx, player, launch = false) {
     // Title (Shelly Nov 16: "clearer", "not a half life 1/gmod menu", then "too ai slop"): a typed memo taped to the Level 0 wall, the choices are lines on the form
     const multi = s.run?.mode === 'multi'
     const where = multi ? 'Bonus Rooms' : (PLACE_NAMES[s.savePlace ?? player?.place] ?? 'Level 0')
-    const ln = (cls, act, box, lbl, val = '', relock = false) => `<button class="memo-ln ${cls}" onclick="sendAction('mmenu',${act}${relock ? ',{relockPointer:true}' : ''})"><span class="bx">${box}</span><span class="lbl">${lbl}</span><span class="dots"></span><span class="val">${val}</span></button>`
-    const md = (v, on, lbl) => `<button class="${on ? 'on' : ''}" ${on ? 'aria-pressed="true"' : `onclick="sendAction('mmenu',{k:'mode',v:'${v}'},{relockPointer:true})"`}><i>(${on ? 'x' : '&nbsp;'})</i> ${lbl}</button>`
+    const go = (act) => `sendAction('mmenu',${act},{relockPointer:true})`
+    const md = (v, on, lbl) => `<button class="${on ? 'on' : ''}" ${on ? 'aria-pressed="true"' : `onclick="${go(`{k:'mode',v:'${v}'}`)}"`}>${lbl}</button>`
+    const lk = (v, lbl) => `<button onclick="sendAction('mmenu',{k:'view',v:'${v}'})">${lbl}</button>`
     content = `<div class="memo">
-      <div class="memo-hd"><span>FORM 0-L · WANDERER INTAKE</span><span>PG 1 OF ∞</span></div>
       <h1>Spawned in the Backrooms</h1>
-      <div class="memo-re">RE: you, who noclipped. tick one.</div>
-      ${ln('memo-go', "{k:'start'}", '▶', returning ? 'Continue' : 'Start', returning ? `${esc(where)}, lv ${esc(s.level ?? 1)}` : (multi ? 'Bonus Rooms' : 'Level 0'), true)}
-      <div class="memo-mode" role="group" aria-label="Mode"><span>MODE:</span>${md('solo', !multi, 'Solo')}${md('multi', multi, 'Multiplayer')}</div>
-      <small style="display:block;margin:-10px 0 8px 4px;color:#6f6754;font-size:11px;line-height:16px">${multi ? 'no story, starts in the Bonus Rooms, bring friends' : 'the story, your own run'}</small>
-      ${ln('', "{k:'view',v:'newgame'}", '', returning ? 'New expedition' : 'Custom start', 'pick the rules')}
-      ${ln('', "{k:'view',v:'saves'}", '', 'Saves', '5 slots')}
-      ${ln('', "{k:'view',v:'settings'}", '', 'Settings')}
-      ${ln('', "{k:'view',v:'controls'}", '', 'Controls')}
-      <div class="memo-ft"><span>FILE WITH: M.E.G. BASE ALPHA</span><b>RECEIVED</b></div>
+      <button class="memo-go" onclick="${go("{k:'start'}")}">▶ ${returning ? 'Continue' : 'Start'}<small>${returning ? `${esc(where)} · level ${esc(s.level ?? 1)}` : (multi ? 'Bonus Rooms' : 'Level 0')}</small></button>
+      <div class="memo-mode" role="group" aria-label="Mode">${md('solo', !multi, 'Solo')}${md('multi', multi, 'Multiplayer')}</div>
+      <div class="memo-hint">${multi ? 'no story · bring friends' : 'the story · your own run'}</div>
+      <div class="memo-links">${lk('newgame', returning ? 'New expedition' : 'Custom start')}${lk('saves', 'Saves')}${lk('settings', 'Settings')}${lk('controls', 'Controls')}</div>
     </div>`
   } else {
     content = `<div class="col">
