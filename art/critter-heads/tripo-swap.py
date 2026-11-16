@@ -27,7 +27,7 @@ TUV = {n: [tuple(lp[bm.loops.layers.uv[n]].uv.copy() for lp in f.loops) for f in
 bvh = BVHTree.FromBMesh(bm)
 # old skull frame
 mid = [p for p in OB if abs(p.x) < 0.02]
-tip = min(mid, key=lambda p: p.y)
+tip = min(mid, key=lambda p: p.y).copy()
 wid = max(p.x for p in OB if p.z < tip.z + 0.12) - min(p.x for p in OB if p.z < tip.z + 0.12)
 # the Tripo head
 pre = set(bpy.data.objects); bpy.ops.import_scene.gltf(filepath=TRI)
@@ -54,7 +54,7 @@ tri.data.transform(Matrix.Rotation(rot, 4, "Z")); print("snout axis", ax, sg)
 P = [v.co for v in tri.data.vertices]
 EX = [ext(0), ext(1), ext(2)]
 xl = 0.02 * EX[0] + 1e-3
-ttip = min([p for p in P if abs(p.x) < xl] or P, key=lambda p: p.y)
+ttip = min([p for p in P if abs(p.x) < xl] or P, key=lambda p: p.y).copy()
 zl = ttip.z + 0.4 * EX[2]
 twid = max(p.x for p in P if p.z < zl) - min(p.x for p in P if p.z < zl)
 s = wid / max(ext(0) * 0.0 + twid, 1e-6)
