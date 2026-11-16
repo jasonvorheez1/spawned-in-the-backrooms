@@ -319,6 +319,7 @@ export function update(ctx) {
     else if (MESH) {
       ctx.self.primitive = null
       ctx.self.model = bodyModel(params)
+      if (ctx.self.isLocal) ctx.log('[slimtrace] dress', JSON.stringify({ slim: params.slim, cute: params.cute, id: ctx.self.model?.id ?? ctx.self.model }))
       if (HUMAN) { ctx.self.material = null; seatHead(ctx, ctx.self, params) } // the human body: its own head and face, no tail or ears
       else {
       const bm = bustMorph(params)
@@ -337,7 +338,7 @@ export function update(ctx) {
   if (worn && ctx.now() - (ses.cwSweep ?? 0) > 1000) { ses.cwSweep = ctx.now(); dropCatKids(ctx, ctx.self) } // Shelly Nov 15: a worn model (spawn avatar, plymodel) shows none of the cat's ears, hair or clothes
   if (MESH && !HUMAN && !worn && ses.headFace !== face) { ses.headFace = face; applyBones(ctx) }
   const talk = talkingNow(ctx), faceKey = face + (talk ? ':talk' : '')
-  if (MESH && !HUMAN && !worn && isNewCat(ses.cachedParams) && ses.catFace !== faceKey) { ses.catFace = faceKey; ctx.self.model = bodyModel({ ...ses.cachedParams, expr: face, talk }) } // the new cat's face is a picture in its skin: a mood swaps it
+  if (MESH && !HUMAN && !worn && isNewCat(ses.cachedParams) && ses.catFace !== faceKey) { ses.catFace = faceKey; ctx.self.model = bodyModel({ ...ses.cachedParams, expr: face, talk }); if (ctx.self.isLocal) ctx.log('[slimtrace] face', JSON.stringify({ slim: ses.cachedParams?.slim, id: ctx.self.model?.id ?? ctx.self.model })) } // the new cat's face is a picture in its skin: a mood swaps it
   const hs = Number(l.headS) || 1, ts = Number(l.tailS) || 1
   if (!worn && !HUMAN && (hs !== (ses.headS || 1) || ts !== (ses.tailS || 1))) { ses.headS = hs; ses.tailS = ts; applyBones(ctx) }
   if (!!ctx.self.state?.crouch !== !!ses.crouchB) { ses.crouchB = !!ctx.self.state?.crouch; applyBones(ctx) } // crouching lifts the cat's back (applyBones)
