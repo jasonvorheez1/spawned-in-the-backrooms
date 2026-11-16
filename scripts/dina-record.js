@@ -1,4 +1,22 @@
 import { setDinaStep, questVoice } from "./lib/dina-quest.js";
+import { animate } from "builtin/tween";
+import { puff } from "./lib/use-kick.js";
+// Every press moves the record itself: slips riffle, the crate rocks, a log's cover nods open; each its own sound.
+const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
+const MOVE = {
+  freight: { a: { "rotation.pitch": [0, -8, 3, -1, 0] }, t: 0.6, clip: "stack-of-carbon-freight-slips-thumbed-through-riffle", fx: null },
+  crate: { a: { "rotation.roll": [0, 3, -3, 1.5, 0] }, t: 0.45, clip: "wooden-battery-crate-rocked-empty-cells-rattle", fx: "dust" },
+  carbon: { a: { "rotation.pitch": [0, -10, 4, 0] }, t: 0.6, clip: "thin-carbon-paper-sheet-peeled-and-crinkled", fx: null },
+  handoff: { a: { "rotation.pitch": [0, -6, 0] }, t: 0.5, clip: "heavy-ledger-binder-cover-opened-on-desk-thump", fx: "dust" },
+  archive: { a: { "rotation.pitch": [0, -6, 0] }, t: 0.5, clip: "metal-filing-drawer-pulled-open-folders-shuffled", fx: null },
+};
+function stir(ctx, kind) {
+  const m = MOVE[kind]; if (!m) return;
+  const pos = ctx.self.worldFeetPosition ?? ctx.self.feetPosition, y = ctx.self.feetPosition.y;
+  animate(ctx, ctx.self, { ...m.a, "feetPosition.y": [y, y + 0.025, y] }, { duration: m.t, easing: "easeOutQuad" });
+  ctx.emit("playSound", { clip: G(m.clip), position: pos, volume: 0.6, maxDistance: 10 });
+  if (m.fx) puff(ctx, m.fx, { ...pos, y: pos.y + 0.2 });
+}
 
 const RECORDS = {
   freight: {
@@ -45,12 +63,15 @@ export const ears = {
       const p = ctx.getObject(event?.by), have = String(st.holotapes ?? "").split(",").filter(Boolean);
       if (!have.includes("dina4")) { st.holotapes = [...have, "dina4"].join(","); st.notice = { text: "Dina, Tape Four · in your bag · play it on HALOGEN (I > Misc)", at: ctx.now() }; }
       else st.notice = { text: "You already have Dina's tape.", at: ctx.now() };
-      if (p) p.hidden = [...(p.hidden ?? []), ctx.self.id]; // gone from your hand's side of the shelf
+      const y = ctx.self.feetPosition.y, yaw = ctx.self.rotation?.yaw ?? 0;
+      animate(ctx, ctx.self, { "feetPosition.y": [y, y + 0.07, y + 0.03], "rotation.yaw": [yaw, yaw + 200, yaw + 180] }, { duration: 0.4, easing: "easeOutQuad" }); // turned over in your fingers, then pocketed
+      if (p) ctx.after(0.4, "pocket", { by: p.id }); // gone from your hand's side of the shelf
       ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-cassette-tape-pickup-plastic-clack.mp3", position: ctx.self.feetPosition, volume: 0.7 }, { audience: { player: event.by } });
       return;
     }
     const record = RECORDS[ctx.self.state.kind];
     if (!st || !record) return;
+    stir(ctx, ctx.self.state.kind);
     const known = (st.dinaQ ?? 0) >= record.min;
     if (known && record.flag) { if (!st[record.flag]) { st[record.flag] = 1; st.notice = { text: record.notice, at: ctx.now() }; } }
     else if (known && record.needs && !st[record.needs] && (st.dinaQ ?? 0) < record.stage) { st.notice = { text: record.needs === "dinaCrate" ? "The log is indexed by ticket, but C-23's page makes no sense without the courier's waybill." : "The public index says the file was copied from somewhere else. Find the carbon first.", at: ctx.now() }; }
@@ -59,3 +80,5 @@ export const ears = {
     questVoice(ctx, known ? record.voice ?? "q-clerk" : "q-clerk", known ? record.line ?? record.text : record.early, event.by);
   },
 };
+
+export function pocket(ctx, { by }) { const p = ctx.getObject(by); if (p) p.hidden = [...(p.hidden ?? []), ctx.self.id]; } // gone from your hand's side of the shelf
