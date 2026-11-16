@@ -1,7 +1,7 @@
 # Nov 16 (Shelly #443717+: "breasts look droopy too. im aiming for cuter mesh shaping, including base snout shape").
 # One rest-space field, run on the bases AND every garment/hair/fluff/ear piece so they keep fitting:
 #  snout: to Shelly's guide: shorter (55%), thinner (86%), a little taller (110%), the nose tip kept (both sexes)
-#  hips: soft flare over the hip bones · paws: three toe lobes on each foot
+#  hips: soft flare over the hip bones · paws: four chunky round toes per foot (Shelly's leg guide)
 #  bust (female Chest key): rebuilt perkier: peak 8 mm higher, rounder fuller underside, lifted instead of dropped, a little smaller
 # usage: blender -b --factory-startup --python cute.py -- <in.glb> <out.glb> <f|m> [cloth]
 import bpy, sys, math
@@ -41,18 +41,19 @@ def hips(p):
     if p.y > 0.03 or abs(p.x) < 0.07: return Vector()
     w = math.exp(-0.5 * ((p.z - HZ) / HW) ** 2) * sm((abs(p.x) - 0.07) / 0.06)
     return Vector((math.copysign(0.014 * w, p.x), -0.004 * w, 0))
-# paws: three toe lobes across each foot's front, little grooves between them
-TOES = [(-0.028, 0.0), (0.0, 0.004), (0.028, 0.0)]
+# paws, to Shelly's leg guide (/cdn/image-u7rr5gfc4.webp): an oval foot front split in four chunky round toes that pop out
+FX, FY, FZ = 0.106, -0.132, 0.036
+TOES = [(-0.036, 0.004), (-0.012, 0.0), (0.012, 0.0), (0.036, 0.004)]   # x offset, how far back each toe sits
 def paws(p, nrm):
-    if p.z > 0.075 or p.y > -0.07: return Vector()
-    fx = 0.10 if p.x > 0 else -0.10; d = Vector()
+    if p.z > 0.085 or p.y > -0.06: return Vector()
+    fx = FX if p.x > 0 else -FX; lx = p.x - fx; d = Vector()
     for ox, oy in TOES:
-        r2 = ((p.x - fx - ox) / 0.012) ** 2 + ((p.y + 0.13 - oy) / 0.03) ** 2 + ((p.z - 0.04) / 0.03) ** 2
-        d += nrm * 0.006 * math.exp(-0.5 * r2)
-    for gx in (-0.014, 0.014):
-        r2 = ((p.x - fx - gx) / 0.004) ** 2 + ((p.y + 0.13) / 0.03) ** 2 + ((p.z - 0.045) / 0.025) ** 2
-        d -= nrm * 0.0025 * math.exp(-0.5 * r2)
-    return d
+        r2 = ((lx - math.copysign(ox, fx)) / 0.010) ** 2 + ((p.y - FY - oy) / 0.028) ** 2 + ((p.z - FZ) / 0.030) ** 2
+        d += (nrm * 0.011 + Vector((0, -0.004, 0))) * math.exp(-0.5 * r2)
+    for gx in (-0.024, 0.0, 0.024):
+        r2 = ((lx - gx) / 0.0035) ** 2 + ((p.y - FY) / 0.03) ** 2 + ((p.z - FZ - 0.004) / 0.028) ** 2
+        d -= nrm * 0.006 * math.exp(-0.5 * r2)
+    return d * sm((-0.06 - p.y) / 0.03)
 n = 0
 for o in [o for o in bpy.data.objects if o.type == "MESH"]:
     me = o.data; kb = me.shape_keys.key_blocks if me.shape_keys else None
