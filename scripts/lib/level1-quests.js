@@ -57,10 +57,13 @@ const C = {
   dVossPay: "Fifty Backdollars says you remember the face.",
   dVossLean: "The chit has your stamp. I can ask the M.E.G. who signed the other copy.",
   rVossSell: "Ale's skimming Callum's crates for a family in the east halls. What's that worth to you?",
+  rFamilyNews: "How's the family in the east halls doing?",
+  rDebtNews: "What happened to Ale's debt?",
   wStart: "You look worried, doc. What's going on?",
   wAsk: "Ortiz needs purification tablets. She says you've got a tin.",
   wMed: "Bad water means sick runners, and sick runners eat your rations lying down.",
   wBuy: "Fifteen Backdollars for the tin. Paperwork can wait.",
+  wTrust: "We found a way to feed Ale's family. Can we do the same for Ortiz's patient?",
   wGive: "Here. Purification tablets, straight from Callum's shelf.",
   wDone: "How's the patient?",
 };
@@ -68,6 +71,14 @@ const TAG = { rTrack: "Survival 30", rAleSpeech: "Speech 40", rAleBarter: "Barte
 const CHECK = { rTrack: ["survival", 30], rAleSpeech: ["speech", 40], rAleBarter: ["barter", 30], rAleThreat: ["speech", 55], rCover: ["speech", 45], rVossTip: ["barter", 35], dVossLean: ["speech", 50], wMed: ["medicine", 35], wBuy: ["barter", 25] };
 const opt = (k, tag) => ({ text: C[k], tag: tag ?? TAG[k] ?? "Quest" });
 const who = (it) => String(it?.id ?? "").split("/").pop();
+export function rationsOutcome(s) {
+  if (s.rationsQ !== 99) return null;
+  if (s.rationsOutcome) return s.rationsOutcome;
+  const text = s.qdone?.["short-rations"]?.text ?? "";
+  if (text.includes("found help for Ale's family")) return "helped";
+  if (text.includes("sold Ale's debt")) return "sold";
+  return null;
+}
 
 export function l1Choice(ctx, it, s, list) {
   if (!Array.isArray(list) || !s) return list;
@@ -77,15 +88,17 @@ export function l1Choice(ctx, it, s, list) {
     if (r === 1 && !s.rTracked) add.push(opt("rTrack"));
     if (r === 3) { add.push(opt(s.rAleDead ? "rKilled" : "rTruth", "Quest")); if (!s.rAleDead) { if (s.rAleTalked === "rAid") add.push(opt("rResolve", "Quest")); add.push(opt("rCover")); } }
     if (r === 4) add.push(opt(s.rAleDead ? "rKilled" : "rTruth", "Quest"));
-    if (w === 1 && repOf(s, "meg") > -35) { add.push(opt("wAsk", "Quest")); add.push(opt("wMed")); if ((s.cents ?? 0) >= 1500) add.push(opt("wBuy")); }
+    if (w === 1 && repOf(s, "meg") > -35) { add.push(opt("wAsk", "Quest")); add.push(opt("wMed")); if ((s.cents ?? 0) >= 1500) add.push(opt("wBuy")); if (rationsOutcome(s) === "helped") add.push(opt("wTrust", "Quest")); }
   } else if (id === "meg-ortiz" && repOf(s, "meg") > -35) {
     if (r === 1) add.push(opt("rOrtiz", "Quest"));
     if (!w) add.push(opt("wStart", "Quest Start"));
     if (w === 2) add.push(opt("wGive", "Quest"));
     if (w === 3) add.push(opt("wDone", "Quest"));
+    if (rationsOutcome(s) === "helped") add.push(opt("rFamilyNews", "Ask"));
   } else if (id === "bntg-voss" && repOf(s, "bntg") > -35) {
     if (r === 1 && (s.cents ?? 0) >= 1000) add.push(opt("rVossTip"));
-    if (r === 3 && !s.rAleDead && s.rAleTalked && s.rAleTalked !== "lift") add.push(opt("rVossSell", "Quest"));
+    if (r === 3 && !s.rAleDead && ["rAid", "rAleSpeech", "rAleThreat"].includes(s.rAleTalked)) add.push(opt("rVossSell", "Quest"));
+    if (rationsOutcome(s) === "sold") add.push(opt("rDebtNews", "Ask"));
   }
   if (id === "bntg-voss" && s.dinaQ === 6) { // The Undelivered step 6 (dina-quest.js): who bought the chit. Talk, pay, or lean on him; or lift his ledger (questLift1)
     add.push(opt("dVossAsk", "Quest")); if ((s.cents ?? 0) >= 5000) add.push(opt("dVossPay", "$50")); add.push(opt("dVossLean"));
@@ -173,6 +186,7 @@ export function handleDialogueQuest1(ctx, p, it, text) {
   if (id === "meg-callum" && r === 3 && k === "rResolve" && s.rAleTalked === "rAid" && !s.rAleDead) {
     aleFeels(ctx, p, 45);
     finish(ctx, p, "rations", { xp: 130, cents: 500, items: ["bandage", "weapon:" + UNIQUE], text: "Quest completed: Short Rations · found help for Ale's family · Callum's Lucky Thirteen", rep: [["meg", 3], ["survivors", 8], ["karma", 5]] });
+    if (s.rationsQ === 99) s.rationsOutcome = "helped";
     return { reply: "She should have asked. But the kids need to eat. I'll set aside a share, and Ale can run it out there. You paid in already. Take this too. Thirteen years it's kept me breathing. Your turn.", mood: "calm" };
   }
   if (id === "meg-callum" && (r === 3 || r === 4) && (k === "rTruth" || k === "rKilled")) {
@@ -201,12 +215,20 @@ export function handleDialogueQuest1(ctx, p, it, text) {
     return { reply: "Ten. Pleasure. Ale's been swapping tins in the east halls. Not to me, which is the part that annoys me.", mood: "happy" };
   }
   if (id === "bntg-voss" && k === "rVossSell" && r === 3) {
+    if (!["rAid", "rAleSpeech", "rAleThreat"].includes(s.rAleTalked) || s.rAleDead) return null;
     aleFeels(ctx, p, -80);
     finish(ctx, p, "rations", { xp: 110, cents: 4000, items: [], by: "bntg", text: "Quest completed: Short Rations · sold Ale's debt to the B.N.T.G.", rep: [["bntg", 12], ["survivors", -6], ["karma", -5]] });
+    if (s.rationsQ === 99) s.rationsOutcome = "sold";
     return { reply: "Unlicensed supply line. That's a debt now, and debts get paid. She'll work it off hauling for us. Forty, and you never heard my name.", mood: "happy" };
   }
 
   // ---------------- The Undelivered, step 6: the stowaway's chit
+  if (id === "meg-ortiz" && k === "rFamilyNews" && rationsOutcome(s) === "helped") {
+    return { reply: "Ale came by for dressings. Callum's putting aside food now, so the children aren't living on whatever she can hide in her coat. She asked me to thank you.", mood: "happy" };
+  }
+  if (id === "bntg-voss" && k === "rDebtNews" && rationsOutcome(s) === "sold") {
+    return { reply: "She's hauling for the B.N.T.G. until the account's clear. Her family still needs feeding. That wasn't part of our arrangement.", mood: "calm" };
+  }
   if (id === "bntg-voss" && s.dinaQ === 6 && (k === "dVossAsk" || k === "dVossPay" || k === "dVossLean")) {
     if (k === "dVossAsk") return { reply: "Look at the number, not the name. Every chit has a freight slip. I keep the copies by the stall. Fifty if you want me to find yours.", mood: "calm" };
     if (k === "dVossPay") {
@@ -226,8 +248,13 @@ export function handleDialogueQuest1(ctx, p, it, text) {
     setStep1(ctx, p, "water", 1, "Quest started: Bad Water");
     return { reply: "Runner came in drinking from the dark puddles. Fever, shakes. I need purification tablets and Callum sits on the only tin like it's gold. Get it from him. However you get it.", mood: "calm" };
   }
-  if (id === "meg-callum" && w === 1 && (k === "wAsk" || k === "wMed" || k === "wBuy")) {
+  if (id === "meg-callum" && w === 1 && (k === "wAsk" || k === "wMed" || k === "wBuy" || k === "wTrust")) {
     if (k === "wAsk") return { reply: "That tin is for emergencies. Fill out a form. We don't have forms. So, no.", mood: "annoyed" };
+    if (k === "wTrust") {
+      if (rationsOutcome(s) !== "helped" || repOf(s, "meg") <= -35) return null;
+      setStep1(ctx, p, "water", 2, "Callum trusted you with the purification tablets. Bring them to Ortiz.");
+      return { reply: "You helped me put food aside when I couldn't see past the missing cans. Ortiz's patient needs these more than my shelf does. Take the tin to her.", mood: "calm" };
+    }
     if (k === "wBuy" && (s.cents ?? 0) < 1500) return { reply: "With what? Your charm?", mood: "annoyed" };
     if (!roll(ctx, p, it, k)) return { reply: k === "wBuy" ? "Fifteen? That tin's worth more than you." : "Nice speech. Still no.", mood: "annoyed" };
     if (k === "wBuy") s.cents = (s.cents ?? 0) - 1500;

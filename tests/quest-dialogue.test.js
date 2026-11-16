@@ -98,6 +98,49 @@ test('the early reward agrees with the dialogue and does not give a unique gun',
   expect(result.reply).not.toContain('thirty-eight')
 })
 
+test('Short Rations outcomes change later faction conversations and Bad Water', async () => {
+  const { handleDialogueQuest1, l1Choice } = await import('../scripts/lib/level1-quests.js')
+  const helped = scene('meg-callum', 'level1')
+  Object.assign(helped.s, { rationsQ: 3, rAleTalked: 'rAid', waterQ: 1 })
+  const resolve = "Ale took the cans for a family. I brought water. Can we help them instead of punishing her?"
+  handleDialogueQuest1(helped.ctx, helped.ctx.self, helped.npc, resolve)
+  expect(helped.s.rationsOutcome).toBe('helped')
+  const trust = l1Choice(helped.ctx, helped.npc, helped.s, []).find(c => c.text.includes("We found a way"))
+  expect(trust).toBeTruthy()
+  openDialogue(helped.ctx, helped.npc)
+  helped.choose(trust.text)
+  expect(helped.s.waterQ).toBe(2)
+  expect(helped.s.quests['bad-water'].step).toContain('Dr. Ortiz')
+  expect(helped.s.sub.t).toContain("Ortiz's patient")
+
+  const medic = { id: 'meg-ortiz' }
+  expect(l1Choice(helped.ctx, medic, helped.s, []).some(c => c.text.includes('family in the east halls'))).toBe(true)
+  const hub = scene('hub-amber-jo', 'thehub')
+  Object.assign(hub.s, { rationsQ: 99, rationsOutcome: 'helped' })
+  openDialogue(hub.ctx, hub.npc)
+  const joLine = 'Have you heard from Ale about the family on Level 1?'
+  expect(hub.s.talkChoices.some(c => c.text === joLine)).toBe(true)
+  hub.choose(joLine)
+  expect(hub.s.payout.items).toEqual(['almond', 'bandage'])
+  expect(hub.s.talkChoices.some(c => c.text === joLine)).toBe(false)
+
+  const sold = scene('bntg-voss', 'level1')
+  Object.assign(sold.s, { rationsQ: 3, rAleTalked: 'rAleSpeech', waterQ: 1 })
+  const sell = "Ale's skimming Callum's crates for a family in the east halls. What's that worth to you?"
+  handleDialogueQuest1(sold.ctx, sold.ctx.self, sold.npc, sell)
+  expect(sold.s.rationsOutcome).toBe('sold')
+  const news = l1Choice(sold.ctx, sold.npc, sold.s, []).find(c => c.text.includes("Ale's debt"))
+  expect(news).toBeTruthy()
+  expect(handleDialogueQuest1(sold.ctx, sold.ctx.self, sold.npc, news.text).reply).toContain('hauling')
+  expect(l1Choice(sold.ctx, { id: 'meg-callum' }, sold.s, []).some(c => c.text.includes('We found a way'))).toBe(false)
+
+  const legacy = { rationsQ: 99, waterQ: 1, qdone: { 'short-rations': { text: "Quest completed: Short Rations · found help for Ale's family · Callum's Lucky Thirteen" } } }
+  expect(l1Choice(helped.ctx, helped.npc, legacy, []).some(c => c.text.includes('We found a way'))).toBe(true)
+  const unknown = { rationsQ: 3, rAleTalked: 'rAleBarter' }
+  expect(l1Choice(sold.ctx, sold.npc, unknown, []).some(c => c.text === sell)).toBe(false)
+  expect(handleDialogueQuest1(sold.ctx, { state: unknown }, sold.npc, sell)).toBeNull()
+})
+
 test('every quest starter from the quest choice providers has an actual briefing', () => {
   const ids = ['l11-walker-1', 'l11-trader-kael', 'l11-walker-3', 'l10-meg-cooper', 'l10-meg-maeve', 'l8-carla-kid', 'l8-hobb', 'l8-ivo', 'l21-ned', 'l21-goknar', 'l11-realty-agent', 'l13p-noor', 'l31-q-marlowe', 'l70-npc-marinerson', 'l70-npc-ines', 'l61-amber-a', 'l61-guard-a', 'l61-guild-a', 'l61-sal']
   for (const id of ids) {

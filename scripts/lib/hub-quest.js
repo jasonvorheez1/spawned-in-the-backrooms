@@ -1,7 +1,8 @@
 // The Hub's people and its three optional quests (my designs, off Shelly's brief #320257). Nothing starts by talking alone:
 // each quest is a line the player chooses. Stages live on the player: hubMK (The Missing Key), hubLR (Lost Expedition Records),
 // hubUP (Uncharted Passage): 0 none, 1.. stages, 99 done. Keys: scripts/lib/hubkeys.js.
-import { setQuest, endQuest, tellQuest } from "./quests.js";
+import { setQuest, endQuest, tellQuest, queuePayout } from "./quests.js";
+import { rationsOutcome } from "./level1-quests.js";
 import { addRep, isVilified } from "./rep.js";
 // the M.E.G. hates you: their post won't talk, so Camp Amber carries Dina's lead (Shelly Nov 13: alternate routes when a faction is hostile)
 export const megHostile = (s) => isVilified(s, { id: "hub-meg-okafor", state: { faction: "meg" } });
@@ -53,6 +54,7 @@ export function hubChoices(ctx, it, s) {
     else if ((s.hubDinaLead || s.trail?.name || (s.dinaQ ?? 0) >= 9) && !s.hubLedger && !s.hubDinaAsk) out.push({ text: "Did a Dina come through here? Somebody said you wrote her down.", tag: "Ask" });
   }
   if (id === "hub-amber-jo") {
+    if (rationsOutcome(s) === "helped" && !s.hubAleThanks) out.push({ text: "Have you heard from Ale about the family on Level 1?", tag: "Ask" });
     if (megHostile(s) && !s.hubDinaAsk && !s.hubLedger && (s.hubDinaLead || s.trail?.name || (s.dinaQ ?? 0) >= 9)) out.push({ text: "The uniforms won't talk to me. Did a Dina come through?", tag: "Ask" });
     if (s.hubPhoebeDeal === "hostile" && !hasKey(s, "level11") && !s.hubTenthCrossed) out.push({ text: "Phoebe cut me off. Can Camp Amber spare a Level 11 key? [$180]", tag: "Key" });
   }
@@ -124,6 +126,11 @@ export function handleDialogueQuestHub(ctx, p, npc, text) {
   if (id === "hub-amber-pip" && t.includes("anything good on those tapes") && lr === 99 && s.hubLRsold && !up) { s.hubUPask = 1; return { reply: "Jo played one before she traded it. Mostly counting. Then a uniform goes 'this one's blank'. A door with no mark, right at the end of the dark road. Jo says that's worth more than the tapes.", mood: "happy" }; }
   if (id === "hub-amber-pip" && t.includes("go and find that door") && lr === 99 && s.hubLRsold && !up && s.hubUPask) { s.hubUP = 1; setQuest(s, UP, { name: N[UP], step: "Jo's tape mentions a door with no mark at the end of the dark road. Find it, then report to Pip, Sato, or Okafor at the barrier.", mark: M("hub-blank") }); tellQuest(ctx, p, `Quest Started: ${N[UP]}`); return { reply: "Go on then! Hand on it, see if it's warm. Then tell the uniforms, they pay better than us. Don't say where you heard it.", mood: "happy" }; }
   if (id === "hub-amber-pip" && t.includes("buy some m.e.g. recorders") && lr === 2) { s.hubLR = 99; s.hubLRsold = 1; delete s.hubRec; pay(s, 260); addRep(s, "meg", -6, "Sold the M.E.G. survey tapes to Camp Amber"); endQuest(s, LR, "You sold the 2019 team's tapes to Camp Amber. Sato never heard them."); tellQuest(ctx, p, `Quest Completed: ${N[LR]} · +$260`); return { reply: "Uniform tapes? Yes! Jo trades those back to the uniforms for stove gas. Everybody wins! Except whoever asked you to get them. Sorry, them.", mood: "happy" }; }
+  if (id === "hub-amber-jo" && t === "have you heard from ale about the family on level 1?" && rationsOutcome(s) === "helped" && !s.hubAleThanks) {
+    s.hubAleThanks = true;
+    queuePayout(s, { items: ["almond", "bandage"] });
+    return { reply: "A scout brought word. The family has a steady share now, and Ale said you helped arrange it. Take some water and a bandage for the road. You can tell her we heard.", mood: "happy" };
+  }
   if (id === "hub-amber-jo" && t.includes("uniforms won't talk to me") && megHostile(s) && !s.hubDinaAsk) { s.hubDinaAsk = 1; s.hubDinaVia = "amber"; addRep(s, "amber", 1); return { reply: "Small woman, big bag, asked for the tenth tunnel like she was ordering lunch. I walked her halfway. She didn't want tea. Rude, honestly. Tenth tunnel, pilgrim. Keep your head down near the post.", mood: "calm" }; }
   if (id === "hub-amber-jo" && t.includes("spare a level 11 key") && s.hubPhoebeDeal === "hostile" && !hasKey(s, "level11")) {
     if ((s.cents ?? 0) < 18000) return { reply: "Hundred and eighty, pilgrim. We don't run a charity on Level 11 keys.", mood: "calm" };
