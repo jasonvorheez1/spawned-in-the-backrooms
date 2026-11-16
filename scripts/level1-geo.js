@@ -38,6 +38,18 @@ function wallSeg(ctx, axis, fixed, a, b, y0 = 0, y1 = H, grime = null) {
       if (k.drop) { tube(ctx, axis === "x" ? [[w, y - 0.1, m], [w, 1.45, m]] : [[m, y - 0.1, w], [m, 1.45, w]], [0.014, 0.014], 6); ctx.color("oklch(0.8 0.01 90)"); X(m - 0.045, m + 0.045, 1.33, 1.45, fixed + T, fixed + T + 0.04); } // a switch box
       ctx.metalness(0);
     }
+    { // Nov 16 graphics pass (Shelly: "sure"): water that ran down from the slab and a tide line where the floor damp wicks up, so no two walls read alike
+      const sd = (n) => hash(Math.round(fixed * 7) + n, Math.round(a * 7), 4100 + n), t3 = T + 0.009, len = b - a;
+      ctx.albedo(null); ctx.roughness(0.35);
+      const tide = 0.3 + sd(1) * 0.35; ctx.color("oklch(0.34 0.03 72 / 0.32)"); X(a, b, 0.14, tide, fixed - t3, fixed + t3);
+      ctx.color("oklch(0.3 0.035 68 / 0.18)"); X(a, b, tide, tide + 0.06 + sd(2) * 0.08, fixed - t3 - 0.001, fixed + t3 + 0.001);
+      const n = 1 + Math.floor(sd(3) * Math.min(4, len / 1.6));
+      for (let i = 0; i < n; i++) {
+        const u = a + 0.2 + sd(10 + i) * (len - 0.4), w = 0.06 + sd(20 + i) * 0.34, top = H - 0.02, run = 0.7 + sd(30 + i) * 2.2;
+        ctx.color(`oklch(0.3 0.04 ${60 + Math.round(sd(40 + i) * 20)} / ${(0.22 + sd(50 + i) * 0.2).toFixed(2)})`); X(u - w / 2, u + w / 2, top - run, top, fixed - t3 - 0.002, fixed + t3 + 0.002);
+        ctx.color("oklch(0.28 0.04 65 / 0.18)"); X(u - w * 0.25, u + w * 0.25, top - run - 0.25 - sd(60 + i) * 0.5, top - run, fixed - t3 - 0.002, fixed + t3 + 0.002); // the drip thins as it runs out
+      }
+    }
     ctx.albedo(k.tex); ctx.color(col); ctx.roughness(0.9);
   }
 }
