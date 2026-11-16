@@ -1,5 +1,11 @@
 import { texSigns } from "../../scripts/lib/sign-tex.js";
-const SIGN_TEX = [["PERSONNEL ONLY","/cdn/value.c23d99307fd9a90dd96af6035d77fa7d579246066e0a2ec0cd6837f818500c7d.png"]]; // hand-made sign faces, Nov 16
+const SIGN_TEX = [["PERSONNEL ONLY","/cdn/value.c23d99307fd9a90dd96af6035d77fa7d579246066e0a2ec0cd6837f818500c7d.png"],
+  ["STAIRS DOWN", "/cdn/value.ff74b90419a3d4c2df7260d9ed615e389a4c5ff2701658f5e21034ac58c7d747.png"], // chipped green enamel stencil
+  ["UNSURVEYED", "/cdn/value.98456ae2b2c89bd1c00273d208766254e46195ba74857f2480ea48cc95a285a4.png"], // spray-painted plywood, muddy handprint
+  ["M.E.G. BASE ALEF", "/cdn/value.bef51629343000ca49b03dbeaf63daf558901051fb9c072605415f3328a439d6.png"], // engraved aluminium plaque
+  ["EXPLORATION WING", "/cdn/value.6720c0d6778f7106aa3e69991b9babf175c6fd7ad4d4fb386ca9b478dc1b8332.png"], // taped typed paper, coffee ring
+  ["COLD STORAGE B-04", "/cdn/value.8f8e41fe3d5b8898badc5a4bcfb4b39271592f9cb59c03af1caaa125e5093d51.png"], // frosted teal, chalked note
+  ["SECTOR E", "/cdn/value.c95ca22b9b2fc8521d07879dc0256c676983f860451900678487c63f94877d07.png"]]; // peeling hazard sheeting // hand-made sign faces, Nov 16
 import { sweepProps } from "../../scripts/lib/breakables.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
@@ -179,7 +185,7 @@ function lay(ctx) {
   sp("l21-from-l8", { feetPosition: { x: CAVE.x - 3.2, y: 0.1, z: CAVE.z }, rotation: { yaw: -90 } });
   sp("l21-down", { feetPosition: { x: DOWN.x + 0.7, y: 0, z: DOWN.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 1.4 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level2#l2-from-l21" } });
   sp("l21-cave", { feetPosition: { x: CAVE.x - 1.0, y: 0, z: CAVE.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.2, height: 3, depth: 3 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level8#l8-from-l21" } });
-  sp("l21-down-sign", { feetPosition: { x: DOWN.x + 0.55, y: 2.55, z: DOWN.z }, rotation: { yaw: 90 }, ...sign(1.3, 0.4, `<div face="front" width="1.3m" style="font-size:90px;font-weight:900;color:#d8f0c0;text-align:center">STAIRS DOWN · LEVEL 2</div>`, "oklch(0.25 0.04 150)") });
+  sp("l21-down-sign", { feetPosition: { x: DOWN.x + 0.55, y: 2.55, z: DOWN.z }, rotation: { yaw: -90 }, ...sign(1.3, 0.4, `<div face="front" width="1.3m" style="font-size:90px;font-weight:900;color:#d8f0c0;text-align:center">STAIRS DOWN · LEVEL 2</div>`, "oklch(0.25 0.04 150)") });
   sp("l21-cave-sign", {
     feetPosition: { x: CAVE.x - 0.9, y: 2.6, z: CAVE.z }, rotation: { yaw: 90 },
     ...sign(2.2, 0.45, `<div face="front" width="2.2m" style="font-family:Arial,sans-serif;font-weight:900;color:#e8e0c0;text-align:center;line-height:1.05"><div style="font-size:80px;color:#ff9a4a">UNSURVEYED</div><div style="font-size:38px">ROPE &amp; ANCHOR REQUIRED</div></div>`, "oklch(0.1 0.01 60)"),
@@ -507,7 +513,8 @@ const l21CampBenches = () => {
 };
 
 export function tick(ctx) {
-  texSigns(ctx, SIGN_TEX);
+  texSigns(ctx, SIGN_TEX, 3);
+  if (!ctx.place.state.downYawV) { const ds = ctx.getObject("l21-down-sign"); if (ds) { ds.rotation = { yaw: -90 }; ctx.place.state.downYawV = 1; } } // faced the wall (read mirrored) before Nov 16
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level21"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
