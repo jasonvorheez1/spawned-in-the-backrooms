@@ -1,4 +1,15 @@
 # spawn-scene v2 yaml x0z0
+l1-ration-note:
+  behavior: scripts/quest-prop-use.js
+  castShadow: false
+  feetPosition: {x: 10.1, y: 1.405, z: 3.9}
+  id: l1-ration-note
+  material: {color: "#d9c9a3", roughness: 0.95}
+  physics: none
+  primitive: {kind: box, width: 0.24, height: 0.008, depth: 0.17}
+  rotation: {yaw: 12}
+  state: {kind: l1-ration-note, name: Folded supply count, verb: Read}
+  tags: [usable]
 bntg-voss:
   behavior: [scripts/humanoid-locomotion.js, scripts/meg-agent.js]
   feetPosition: {x: 13.2, y: 0, z: 3.1}

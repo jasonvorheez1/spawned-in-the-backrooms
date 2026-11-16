@@ -98,6 +98,35 @@ test('the early reward agrees with the dialogue and does not give a unique gun',
   expect(result.reply).not.toContain('thirty-eight')
 })
 
+test('a supply note reveals Ale before or during Short Rations without starting the quest', async () => {
+  const { ears } = await import('../scripts/quest-prop-use.js')
+  const read = (sc) => {
+    const note = { id: 'l1-ration-note', state: { kind: 'l1-ration-note' }, feetPosition: { x: 10.1, y: 1.405, z: 3.9 } }
+    ears.press({ ...sc.ctx, self: note, getObject: id => id === 'player' ? sc.ctx.self : null }, { by: 'player' })
+  }
+  const early = scene('meg-callum', 'level1')
+  read(early)
+  expect(early.s.rationsQ).toBeUndefined()
+  expect(early.s.reading).toBe(1101)
+  read(early)
+  expect(early.s.pages.split(',').filter(x => x === '1101')).toHaveLength(1)
+  early.choose("You're counting those cans like they owe you money. Something wrong?")
+  early.choose("I'll take the job.")
+  expect(early.s.rationsQ).toBe(2)
+  expect(early.s.quests['short-rations'].mark.id).toBe('meg-ale')
+
+  const active = scene('meg-callum', 'level1')
+  active.choose("You're counting those cans like they owe you money. Something wrong?")
+  active.choose("I'll take the job.")
+  expect(active.s.rationsQ).toBe(1)
+  read(active)
+  expect(active.s.rationsQ).toBe(2)
+  expect(active.s.quests['short-rations'].step).toContain('Ale')
+  active.s.rationsQ = 3
+  read(active)
+  expect(active.s.rationsQ).toBe(3)
+})
+
 test('Short Rations outcomes change later faction conversations and Bad Water', async () => {
   const { handleDialogueQuest1, l1Choice } = await import('../scripts/lib/level1-quests.js')
   const helped = scene('meg-callum', 'level1')

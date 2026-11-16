@@ -1,6 +1,8 @@
 // Shared lightweight interactables for cross-level quest props (Level 3 Guild plate, Level 6 acoustic relay).
 import { heard } from "./lib/hear.js";
 import { setStep61 } from "./lib/level61-quests.js";
+import { setStep1 } from "./lib/level1-quests.js";
+import { kick } from "./lib/use-kick.js";
 
 const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 
@@ -10,6 +12,17 @@ export const ears = {
     if (!w) return;
     const now = ctx.now(), pos = ctx.self.worldFeetPosition ?? ctx.self.feetPosition;
     const note = (text) => { w.notice = { text, at: now }; };
+
+    if (s.kind === "l1-ration-note") {
+      kick(ctx, ctx.self, "flutter", { d: 0.4 });
+      heard(ctx, { clip: G("paper-flip-card-stand"), position: pos, volume: 0.45, maxDistance: 10 });
+      const pages = String(w.pages ?? "").split(",").filter(Boolean);
+      if (!pages.includes("1101")) { pages.push("1101"); w.pages = pages.join(","); }
+      w.reading = 1101;
+      w.rationsClue = true;
+      if (w.rationsQ === 1) setStep1(ctx, who, "rations", 2, "The note under Callum's supply count names Ale. Ask her about the missing cans.");
+      return;
+    }
 
     if (s.kind === "l3-guild-plate") {
       heard(ctx, { clip: G("paper-flip-card-stand"), position: pos, volume: 0.45, maxDistance: 10 });

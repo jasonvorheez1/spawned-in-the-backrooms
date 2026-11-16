@@ -21,7 +21,7 @@ export const QUESTS1 = {
   rations: {
     key: "rationsQ", name: "Short Rations",
     tips: {
-      1: "Ask Dr. Ortiz or examine Callum's crates for clues about the missing cans",
+      1: "Ask Dr. Ortiz or examine the camp's supply records for clues about the missing cans",
       2: "Ask Ale about the missing cans and decide what to do",
       3: "Report back to Callum. Your choices depend on what you learned from Ale",
       4: "Tell Callum what happened to his rations",
@@ -155,6 +155,7 @@ export function handleDialogueQuest1(ctx, p, it, text) {
   // ---------------- Short Rations
   if (k === "rStart" && id === "meg-callum" && !r) {
     setStep1(ctx, p, "rations", 1, "Quest started: Short Rations");
+    if (s.rationsClue) setStep1(ctx, p, "rations", 2, "The note under Callum's supply count names Ale. Ask her about the missing cans.");
     return { reply: "I logged forty-one cans on Monday. There are thirty-four on the shelf. Ask around and see where the seven went. Keep my name out of it.", mood: "annoyed" };
   }
   if (k === "rTrack" && id === "meg-callum" && r === 1) {
