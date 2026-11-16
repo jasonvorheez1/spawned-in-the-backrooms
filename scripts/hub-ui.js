@@ -65,10 +65,12 @@ export function hubUi(ctx, player) {
   let title = "", sub = "", rows = ""
   if (k === "diner") {
     title = "Tom's Diner"; sub = "Just for fun. Nothing here leaves the mall, and nothing here fills you up out there."
-    rows = Object.entries(B.food ?? {}).map(([key, f]) => `<div class="row"><div><div class="n">${f.name}</div></div><button ${can(f.price) ? "" : "disabled"} onclick="${act("food", key)}">FREE</button></div>`).join("")
+    rows = Object.entries(B.food ?? {}).map(([key, f]) => `<div class="row"><div><div class="n">${f.name}</div></div><button onclick="${act("food", key)}">FREE</button></div>`).join("")
   } else if (k === "clothes") {
     title = "Liminal Clothes"; sub = "Casual wear. Bought pieces go in your bag (I)."
-    rows = (B.clothes ?? []).map(([tok, price], i) => { const p = parseCloth(tok); const name = `${p?.pat ? p.pat + " " : ""}${p?.row?.name ?? tok}`; return `<div class="row"><div style="display:flex;gap:10px;align-items:center"><span style="width:18px;height:18px;border-radius:4px;background:${p?.colour ?? "#888"};border:1px solid #fff4"></span><div class="n">${name}</div></div><button ${can(price) ? "" : "disabled"} onclick="${act("cloth", i)}">${bd(price)}</button></div>` }).join("")
+    const owned = {}
+    for (const t of String(s.clothes ?? "").split(",").filter(Boolean)) owned[t] = (owned[t] ?? 0) + 1
+    rows = (B.clothes ?? []).map(([tok, price], i) => { const p = parseCloth(tok); const name = `${p?.pat ? p.pat + " " : ""}${p?.row?.name ?? tok}`; const n = owned[tok] ?? 0; return `<div class="row"><div style="display:flex;gap:10px;align-items:center"><span style="width:18px;height:18px;border-radius:4px;background:${p?.colour ?? "#888"};border:1px solid #fff4"></span><div class="n">${name}${n ? ` <span class="i">· in bag${n > 1 ? ` ×${n}` : ""}</span>` : ""}</div></div><button ${can(price) ? "" : "disabled"} onclick="${act("cloth", i)}">${bd(price)}</button></div>` }).join("")
   } else if (k === "furniture") {
     title = "Andrew's Furniture"; sub = "Weightless delivery: place it at home from the Furniture tab in your build menu (B)."
     const order = FURN.order ?? Object.keys(FURN.pieces ?? {})

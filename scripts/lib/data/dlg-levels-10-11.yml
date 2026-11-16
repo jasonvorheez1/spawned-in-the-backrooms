@@ -622,6 +622,32 @@ bonus-rico:
     board: ["All aboard! Arms in!", "Marigold's leaving, rider!", "Doors closing. Eyes front!", "Next stop, wherever you left off!"]
   gest: { wave: "Yo! Rider!", gift: "Ha, a tip! Thanks!", dance: "Platform party!", nodance: "Train's due. Rain check.", insult: "I'm putting you on the slow one." }
 
+bonus-sal:
+  hi: "Squeeze Play! Ice in, lid on. Pick two fruits, or three if you're feeling lucky."
+  back: ["Back by the fountain? Mix something new.", "Blender's cold and the fruit's fresh. Sort of."]
+  warm: "My favourite taste-tester. I saved the good Lucky O Milk in the back cooler."
+  cold: "Menu's on the board. Pay at the counter."
+  bye: "Drink it before the fizz quits!"
+  ask:
+    - q: "What's actually in these smoothies?"
+      a: "Almond water base, crates of fruit that wash up off the service corridor, and plenty of crushed ice. Keeps your knees moving out there."
+    - q: "Any secret blends worth knowing?"
+      a: "Wild Berry with Mango wakes you right up. Almond, Berry, and Kiwi? Call that the Night Shift — patches body and head at once."
+      then:
+        - q: "What about Lucky O Milk?"
+          a: "Weird pink stuff, sweet as melted cereal. Toss it with Almond Water and Kiwi if you've got the coin for a Pot o' Gold."
+    - q: "How'd you get a juice stand beside a mall fountain?"
+      a: "Fountain was already running when I dragged the cart in. Seemed criminal not to sell cold cups next to running water."
+    - q: "Cut me a break on the tab?"
+      a: "Ah, go on then. Don't tell Andrew — he still owes me two dollars for a mango cup."
+      sk: speech 35
+      fail: "Nice try, slick. Fruit doesn't haul itself up from Level 1."
+      do: discount
+  barks:
+    idle: ["Ice in, lid on!", "Fresh blends by the fountain.", "Try the Lucky O Milk!"]
+    hi: ["Hey! Thirsty?", "Right by the fountain!"]
+  gest: { wave: "Yo!", gift: "Cheers! Next swirl's extra cold.", dance: "Fountain groove!", nodance: "Busy blending.", insult: "Enjoy tap water, pal." }
+
 l02-capn:
   hi: "Ah. A visitor. Mind the carpet, it is new. Everything is new. Sorry for the inconvenience."
   back: ["The visitor returns. Nobody returns.", "The floor is fine now. It is always fine at first."]

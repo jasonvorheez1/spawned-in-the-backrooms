@@ -36,4 +36,21 @@ export function layBonusExtra(ctx) {
   const len = g.z[1] - g.z[0], mid = (g.z[0] + g.z[1]) / 2, y = (B.floors?.upper ?? 5.5) - 0.12;
   [["west", g.west[1], NEON_P], ["east", g.east[0], NEON_T]].forEach(([k, x, c]) =>
     sp(`bonus-fx-edge-${k}`, { feetPosition: { x, y, z: mid }, primitive: { kind: "box", width: 0.06, height: 0.06, depth: len }, material: neon(c) }));
+  // spotlights + brass plaques for Art Gallery works #5-#9 (matches bc-glight-1..4 & bc-plaque-1..4)
+  const art = [
+    ["5", { x: 22.15, y: 10.2, z: -14 },   { x: 23.95, y: 7.4, z: -14 },   { x: 23.93, y: 7, z: -12.85 }, 90,  "Escalator Well, 1995", "K. Reyes · tempera"],
+    ["6", { x: 12,    y: 10.2, z: -26.15 }, { x: 12,    y: 7.4, z: -27.95 }, { x: 13.15, y: 7, z: -27.93 }, 180, "Skylight Noon, 1996",  "D. Cho · oil on canvas"],
+    ["7", { x: 22,    y: 10.2, z: -26.15 }, { x: 22,    y: 7.4, z: -27.95 }, { x: 23.15, y: 7, z: -27.93 }, 180, "Glass Atrium, 1997",   "T. Vance · acrylic"],
+    ["8", { x: 12,    y: 10.2, z: -1.85 },  { x: 12,    y: 7.4, z: -0.05 },  { x: 10.85, y: 7, z: -0.07 },  0,   "Closing Time, 1998",   "M. Okun · charcoal"],
+    ["9", { x: 22,    y: 10.2, z: -1.85 },  { x: 22,    y: 7.4, z: -0.05 },  { x: 20.85, y: 7, z: -0.07 },  0,   "Warm Tracks, 1999",    "R. Delgado · pastel"],
+  ];
+  for (const [n, lp, aim, pp, yaw, title, sub] of art) {
+    sp(`bonus-fx-glight-${n}`, { feetPosition: lp, light: { kind: "spot", aim, angle: 24, penumbra: 0.6, color: "#fff1d6", distance: 9, intensity: 7, shadow: { enabled: false } } });
+    sp(`bonus-fx-plaque-${n}`, {
+      feetPosition: pp, rotation: { yaw }, castShadow: false,
+      vector: `<svg viewBox='0 0 120 60' width='0.3m'><rect x='1' y='1' width='118' height='58' rx='3' fill='#c9a24a' stroke='#7a5a1c' stroke-width='2'/><text x='60' y='26' text-anchor='middle' font-family='serif' font-size='11' fill='#2a1d08'>${title}</text><text x='60' y='44' text-anchor='middle' font-family='serif' font-size='9' fill='#2a1d08'>${sub}</text></svg>`,
+    });
+  }
+  // soft warm glow from the upper lounge's lava lamp (bl-lava)
+  sp("bonus-fx-lava-glow", { feetPosition: { x: 22.95, y: 6.45, z: -5.14 }, light: { kind: "point", color: "#ff5cb8", distance: 4.5, intensity: 1.1, shadow: { enabled: false } } });
 }
