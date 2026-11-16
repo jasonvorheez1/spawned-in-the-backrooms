@@ -1,3 +1,4 @@
+import { animate } from "builtin/tween";
 // Level 11: the 1995 Porsche 911 Carrera RS. A real car: one dynamic hull on four sprung wheels (a ray per wheel),
 // rear-wheel drive, grip that runs out if you throw it, brakes, a handbrake, and the driver sitting inside it.
 // E at the door climbs in (door, then the flat-six turns over), W/S gas and brake/reverse, A/D steer, SPACE handbrake,
@@ -54,6 +55,7 @@ export const ears = {
     if (!sell(ctx, by)) return; // a car on the lot is bought before it's driven
     ctx.self.controller = by;
     ctx.self.state.driver = by;
+    dip(ctx, 0.07); // the springs take a body's weight
     const pos = ctx.self.feetPosition;
     heard(ctx, { clip: SFX.door, position: pos, volume: 0.85, maxDistance: 20 });
     ctx.after(0.55, "ignite", {});
@@ -64,13 +66,19 @@ export const ears = {
 // what a player bought lives in their own save (player.state.cars), so it stays theirs in every room.
 const CHACHING = "/cdn/moodboard-realistic-gritty/sfx-cash-register-cha-ching-bell-and-drawer.mp3";
 const dollars = (c) => "$" + Math.round(c / 100).toLocaleString("en-US");
+// the hull sinks on its springs when someone climbs in, and rocks when a buyer kicks the tyres
+function dip(ctx, d) {
+  const h = ctx.getObject(ctx.self.id + "/hull"); if (!h) return;
+  const y = (ctx.self.session.hullY ??= h.feetPosition?.y ?? 0);
+  animate(ctx, h, { "feetPosition.y": [y, y - d, y + d * 0.25, y] }, { duration: 0.5, easing: "easeOutQuad" });
+}
 function sell(ctx, by) {
   const st = ctx.self.state, price = st.price; if (!price) return true;
   const p = ctx.getObject(by); if (!p?.state) return false;
   const mine = (p.state.cars ?? []).includes(ctx.self.id);
   if (!mine && st.ownerId && st.ownerId !== p.userId) { p.state.notice = { text: `Sold. This one belongs to ${st.ownerName ?? "someone else"}.`, at: ctx.now() }; return false; }
   if (!mine) {
-    if ((p.state.cents ?? 0) < price) { p.state.notice = { text: `${dollars(price)} Backdollars, as-is. You're ${dollars(price - (p.state.cents ?? 0))} short.`, at: ctx.now() }; return false; }
+    if ((p.state.cents ?? 0) < price) { dip(ctx, 0.04); p.state.notice = { text: `${dollars(price)} Backdollars, as-is. You're ${dollars(price - (p.state.cents ?? 0))} short.`, at: ctx.now() }; return false; }
     p.state.cents -= price;
     p.state.cars = [...(p.state.cars ?? []), ctx.self.id];
     heard(ctx, { clip: CHACHING, position: ctx.self.feetPosition, volume: 0.9, maxDistance: 18 });

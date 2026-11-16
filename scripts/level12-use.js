@@ -21,8 +21,10 @@ export const ears = {
     const pos = { ...(ctx.self.worldFeetPosition ?? ctx.self.feetPosition), y: 1.1 };
     const me = { audience: { player: who.id } };
     if (s.kind === "harris-log") { // a collectable tape: it goes in the bag, played from HALOGEN's tapes tab; hearing it through sets know12 (player.js holoEnd)
+      const ty = ctx.self.feetPosition.y, tyaw = ctx.self.rotation?.yaw ?? 0; // turned over in the hand, label up, then set back down
+      animate(ctx, ctx.self, { "feetPosition.y": [ty, ty + 0.08, ty], "rotation.yaw": [tyaw, tyaw + 180, tyaw + 360] }, { duration: 0.5, easing: "easeOutQuad" });
       const have = String(who.state.holotapes ?? "").split(",").filter(Boolean);
-      if (have.includes("matrix")) { who.state.notice = { text: "You already have Harris's tape. Play it on HALOGEN (I > Tapes)", at: now }; return; }
+      if (have.includes("matrix")) { heard(ctx, { clip: CLICK, position: pos, volume: 0.5, maxDistance: 8 }); who.state.notice = { text: "Your copy's in the bag. This one's labelled MATRIX in a different pen. Same tape.", at: now }; return; }
       heard(ctx, { clip: CLICK, position: pos, volume: 0.7, maxDistance: 8 });
       have.push("matrix"); who.state.holotapes = have.join(","); who.state.pickedAt = now;
       who.state.notice = { text: "Tape: \"Expedition Log: Matrix\" · play it on HALOGEN (I > Tapes)", at: now };
