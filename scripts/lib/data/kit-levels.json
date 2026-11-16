@@ -1,0 +1,49 @@
+{
+  "v": 1,
+  "level70": {
+    "l70-valve-*": { "m": "dial", "p": "dial", "s": "rusted-gate-valve-wheel-squeal", "q": 0.03 },
+    "l70-breaker": { "m": "lever", "p": "lever", "s": "industrial-knife-switch-breaker-clunk", "l": "1,0.8,0.45" },
+    "l70-pump": { "m": "lever", "p": "lever", "s": "hand-pump-handle-squeak-water-gush", "g": { "cd": 900, "thirst": 15 }, "t": "Cold enough to ache your teeth. Thirst +15", "i": "Hand pump. Froidetown's one honest machine." },
+    "l70-q-note": { "m": "button", "p": "button", "s": "cassette-deck-play-button-clunk-hiss", "l": "1,0.6,0.3" },
+    "l70-q-locker": { "m": "flap", "p": "flap", "s": "military-footlocker-hasp-clank-open", "mat": { "color": "oklch(0.42 0.05 135)", "roughness": 0.6, "metalness": 0.4, "texture": "cdn/texture-chipped-olive-drab-paint-metal.png", "pbr": true } },
+    "l70-house-stove": { "m": "dial", "p": "dial", "s": "gas-stove-burner-click-ignite", "l": "0.4,0.6,1" }
+  },
+  "level132": {
+    "l132-sq-fountain": { "m": "button", "p": "button", "s": "drinking-fountain-push-button-water-arc", "g": { "cd": 900, "sanity": 4 }, "t": "Six pennies on the bottom. None yours. Sanity +4" },
+    "l132-sq-board": { "m": "tap", "s": "paper-notice-pinned-flutter", "g": { "cd": 1800, "xp": 5 }, "t": "Lost cat, odd jobs, a map with the tree circled. +5 XP", "i": "Lost cat. Odd jobs. Somebody circled the tree." },
+    "l132-sq-phonebox": { "m": "dial", "p": "dial", "s": "rotary-payphone-dial-and-coin-return", "g": { "cd": 1800, "items": ["cash:5"] }, "t": "Dial tone. Then a Backnickel in the return slot.", "i": "Coin return's been jiggled before." },
+    "l132-sq-kiosk": { "m": "screen", "p": "screen", "l": "0.3,0.9,1", "s": "usb-charger-plug-in-chirp", "g": { "cd": 900, "sanity": 5 }, "t": "Phone at 12%. It's something. Sanity +5", "i": "Charging kiosk. Three cables, one works." }
+  },
+  "level114": {
+    "tv": { "m": "screen", "p": "screen", "l": "0.5,0.7,1", "s": "crt-television-power-on-whine-static", "g": { "cd": 900, "sanity": 6 }, "t": "Infomercial for a knife that cuts shoes. Sanity +6" },
+    "switch": { "m": "button", "s": "plastic-wall-light-switch-click", "q": 0.15 },
+    "bed": { "m": "tap", "s": "old-mattress-springs-creak", "q": 0.04 }
+  },
+  "gamma": {
+    "#computer": { "m": "tap", "l": "0.3,1,0.5", "s": "old-keyboard-typing-burst", "q": 0.02 },
+    "gamma-workshop-bench": { "m": "tap", "s": "bench-vise-crank-tighten-metal", "q": 0.02 },
+    "gamma-marlo-ammobench": { "m": "tap", "s": "brass-casings-rattle-in-tin-can", "q": 0.02 }
+  },
+  "home11": {
+    "h-tv-screen": { "m": "tap", "l": "0.5,0.7,1", "s": "crt-tv-channel-change-click-static", "g": { "cd": 900, "sanity": 5 }, "t": "Rerun. You know every line. Sanity +5" },
+    "h-boombox-use": { "m": "button", "p": "button", "s": "boombox-cassette-eject-clack", "g": { "cd": 900, "sanity": 4 }, "t": "Track seven again. Sanity +4" },
+    "h-razr-use": { "m": "button", "s": "flip-phone-snap-open-chirp", "g": { "cd": 1800, "xp": 3 }, "t": "No new messages. Two old ones from Mom. +3 XP" },
+    "h-micro-use": { "m": "button", "p": "button", "s": "microwave-door-pop-beep-hum", "l": "1,0.8,0.5", "g": { "cd": 1200, "hunger": 12 }, "t": "Hot Pocket. Lava core, frozen edge. Hunger +12" },
+    "h-lava-use": { "m": "lamp", "p": "lamp", "l": "1,0.4,0.2", "s": "lamp-pull-chain-click", "g": { "cd": 900, "sanity": 6 }, "t": "You watch three blobs rise. Sanity +6" },
+    "h-tote": { "m": "tap", "s": "plastic-storage-tote-lid-snap" },
+    "h-bed": { "m": "tap", "s": "old-mattress-springs-creak", "q": 0.04 }
+  },
+  "tutorial0": {
+    "t0-halogen": { "m": "tap", "l": "0.4,0.9,1", "s": "wrist-terminal-chirp-handshake", "q": 0.02 }
+  },
+  "level27": {
+    "l27-spring-tap": { "m": "tap", "l": "0.6,0.85,1", "s": "cupped-hands-splash-in-cave-pool" }
+  },
+  "level34": {
+    "l34-up-*": { "m": "tap", "s": "iron-rung-grip-clank", "q": 0.02 },
+    "l34-ch2-relay": { "m": "flap", "p": "flap", "s": "rubber-gasket-case-pop-open", "l": "0.5,1,0.7", "mat": { "color": "oklch(0.4 0.03 130)", "roughness": 0.55, "texture": "cdn/texture-rubberized-plastic.png", "pbr": true } }
+  },
+  "levelrun": {
+    "lrun-to-*": { "m": "tap", "s": "hospital-door-push-bar-clack", "q": 0.02 }
+  }
+}
