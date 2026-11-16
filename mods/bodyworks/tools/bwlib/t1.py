@@ -475,7 +475,7 @@ def run(body, ZONES, DOC, a):
     # the cap ends on a plane square to the arm, not the sphere's stair-stepped rim (that rim read as a ragged neckline)
     def _cap(s):
         sh, el = np.array(J[f'shoulder.{s}'], float), np.array(J[f'elbow.{s}'], float); ax = (el - sh) / max(np.linalg.norm(el - sh), 1e-6)
-        return [(tuple(sh + ax * capR * 0.8), tuple(ax), True)]
+        return [(tuple(sh + ax * capR * 1.3), tuple(ax), True)]
     sleeve_cap = {f'upperarm_{s.lower()}': _cap(s) for s in 'LR'}
     # the collar line sits where the neck skin starts, not at the neck joint: on a short-necked body the joint is below the
     # collarbone and a cut there bared the whole upper chest
