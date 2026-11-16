@@ -32,15 +32,7 @@ export function geometry(ctx) {
   paint(ctx, "oklch(0.86 0.012 90)", "acoustic", 0.95);
   for (const [x, z, i] of holes) if (rnd(i, 3) < 0.55) { const ox = (rnd(i, 4) - 0.5) * 1.2, oz = (rnd(i, 5) - 0.5) * 1.2, rot = rnd(i, 6) < 0.5;
     rot ? box(ctx, x + ox - 0.6, x + ox + 0.6, 0.004, 0.02, z + oz - 0.3, z + oz + 0.3) : box(ctx, x + ox - 0.3, x + ox + 0.3, 0.004, 0.02, z + oz - 0.6, z + oz + 0.6); }
-  // water rings on the tiles: tea-brown blooms with a darker heart
-  for (let i = 0; i < 34; i++) {
-    const x = (rnd(i, 7) - 0.5) * 60, z = (rnd(i, 8) - 0.5) * 60, r = 0.35 + rnd(i, 9) * 0.9;
-    // Shelly: the old opaque orange patches read as a brown slab hanging under the lift lobby ceiling. Now a stain
-    // soaked into the tile: three thin layers flush on the ceiling, each a step darker toward a dried tide-line heart
-    paint(ctx, "oklch(0.88 0.025 85)", "acoustic", 1); blob(ctx, x, z, r * 1.15, H - 0.003, i * 3 + 2, 11);
-    paint(ctx, "oklch(0.82 0.04 78)", "acoustic", 1); blob(ctx, x, z, r, H - 0.0045, i * 3);
-    paint(ctx, "oklch(0.74 0.05 70)", "acoustic", 1); blob(ctx, x + 0.05, z - 0.04, r * 0.45, H - 0.006, i * 3 + 1, 7);
-  }
+  // (water rings removed: flat patches read as brown slabs hanging off the ceiling, Shelly Nov 16)
   // return-air grilles between the troffers, and the sprinkler heads on a 3 m grid
   for (let x = -24; x <= 24; x += 8) for (let z = -22; z <= 22; z += 8) {
     if (nearCol(x, z, 1)) continue;
