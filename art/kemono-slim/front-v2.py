@@ -65,14 +65,14 @@ if DEFORM:
         if abs(p.x) < 0.05: continue
         k = blob(p, (math.copysign(0.105, p.x), 0.0, 0.43), (0.06, 0.12, 0.07))
         p.x -= math.copysign(0.008 * k, p.x)
-    # 4. bust: high and round: the front of each breast eased onto a sphere set higher than the old cone, so the tip softens and the underside fills
+    # 4. bust: high and round: the front of each breast eased onto a sphere at the apex height, so the cone tip softens and the underside fills round
     for i in U:
         p = P[i]
         for sx in (-1, 1):
-            c = Vector((sx * 0.034, -0.012, 0.628)); k = blob(p, (sx * 0.034, -0.04, 0.615), (0.05, 0.05, 0.06))
+            c = Vector((sx * 0.036, -0.011, 0.64)); k = blob(p, (sx * 0.036, -0.04, 0.635), (0.05, 0.05, 0.058))
             if k <= 0 or p.y > -0.005: continue
-            d = p - c; tgt = c + d.normalized() * 0.043
-            P[i] = p + (tgt - p) * 0.75 * k
+            d = p - c; tgt = c + d.normalized() * 0.046
+            P[i] = p + (tgt - p) * 0.7 * k
     # 5. head: bigger, rounder skull for anime proportions (wider more than taller so the ears stay near 1 m)
     hc = Vector((0.0, 0.02, 0.875))
     for i in U:
@@ -80,13 +80,20 @@ if DEFORM:
         if w <= 0: continue
         p = P[i]; d = p - hc; f = 0.09 * w
         P[i] = hc + Vector((d.x * (1 + f), d.y * (1 + f), d.z * (1 + f * 0.35)))
-    # 6. snout: shorter and softer, the chin small and tucked, the cheeks fuller so the muzzle contours into them
+    # 6. snout: a small round button muzzle: the lower face eased onto a sphere, so the jutting chin tucks in and the tip rounds;
+    #    cheeks a little fuller so the muzzle contours into them (her guide: "the muzzle CONNECTS and contours")
+    mc = Vector((0.0, -0.034, 0.795))
     for i in U:
         p = P[i]
-        k = blob(p, (0, -0.108, 0.8), (0.06, 0.075, 0.055)); p.y += 0.03 * k
-        k = blob(p, (0, -0.075, 0.772), (0.045, 0.05, 0.03)); p.y += 0.012 * k; p.z += 0.006 * k
+        if p.y > -0.03: continue
+        k = blob(p, (0, -0.065, 0.785), (0.055, 0.055, 0.055)) * ss(-0.03, -0.05, p.y)
+        if k <= 0: continue
+        d = p - mc; tgt = mc + d.normalized() * 0.039
+        P[i] = p + (tgt - p) * 0.7 * k
+    for i in U:
+        p = P[i]
         for sx in (-1, 1):
-            k = blob(p, (sx * 0.06, -0.06, 0.8), (0.04, 0.05, 0.045)); p.x += sx * 0.005 * k; p.y -= 0.005 * k
+            k = blob(p, (sx * 0.06, -0.055, 0.8), (0.04, 0.05, 0.045)); p.x += sx * 0.004 * k; p.y -= 0.005 * k
     # 7. relax on the welded graph over the edited regions
     nb = {i: set() for i in U}
     for e in me.edges:
@@ -100,8 +107,8 @@ if DEFORM:
                 if m <= 0 or not nb[i]: continue
                 avg = sum((Q[j] for j in nb[i]), Vector()) / len(nb[i])
                 P[i] = Q[i] + (avg - Q[i]) * f * m
-    mask = {i: max(blob(P[i], (0, -0.09, 0.8), (0.08, 0.08, 0.06)), blob(P[i], (0.1, 0, 0.43), (0.07, 0.12, 0.08)), blob(P[i], (-0.1, 0, 0.43), (0.07, 0.12, 0.08)),
-                blob(P[i], (0.034, -0.04, 0.615), (0.06, 0.06, 0.07)), blob(P[i], (-0.034, -0.04, 0.615), (0.06, 0.06, 0.07))) for i in U}
+    mask = {i: max(blob(P[i], (0, -0.07, 0.79), (0.08, 0.07, 0.07)), blob(P[i], (0.1, 0, 0.43), (0.07, 0.12, 0.08)), blob(P[i], (-0.1, 0, 0.43), (0.07, 0.12, 0.08)),
+                blob(P[i], (0.036, -0.04, 0.635), (0.06, 0.06, 0.07)), blob(P[i], (-0.036, -0.04, 0.635), (0.06, 0.06, 0.07))) for i in U}
     relax(mask, 6, 0.45)
     # 8. feet back on 0, seams welded shut again
     mz = min(P[i].z for i in U)
