@@ -36,6 +36,7 @@ export const ears = {
     if (s.kind === "dispenser") {
       if (who.state.l31card) return note(who, "You already have a green card.", ctx);
       who.state.l31card = true;
+      ctx.emit("squash", { target: ctx.self.id, axis: "y", intensity: 0.06, duration: 0.35 });
       ctx.emit("playSound", { clip: SFX + "sfx-vending-machine-heavy-clunk.mp3", position: at, volume: 0.7, maxDistance: 16 });
       ctx.after(0.45, "cardSlide");
       return note(who, "A green card slides into the tray. You pocket it.", ctx);
@@ -48,6 +49,8 @@ export const ears = {
     }
     if (now < (ctx.self.session.busy ?? 0)) return;
     ctx.self.session.busy = now + 2200;
+    ctx.emit("shake", { target: ctx.self.id, intensity: 0.05, duration: 0.5 }); // the cabinet rocks on its levellers as the attract loop kicks in
+    ctx.spawn({ feetPosition: { x: at.x, y: at.y + 1.5, z: at.z }, lifetime: 2.2, audience: "near", light: { kind: "point", color: s.glow ?? "#9fd0ff", intensity: 2.2, distance: 3.5 } });
     ctx.emit("playSound", { clip: "/cdn/moodboard-pixel-bright/sfx-arcade-attract-jingle-two-seconds.mp3", position: at, volume: 0.6, pitch: s.pitch ?? 1, maxDistance: 16 });
     ctx.after(2, "result", { by });
   },
@@ -55,8 +58,19 @@ export const ears = {
 export function cardSlide(ctx) { ctx.emit("playSound", { clip: SFX + "sfx-plastic-card-slide-out.mp3", position: ctx.self.worldFeetPosition, volume: 0.7, maxDistance: 12 }); }
 export function result(ctx, p) {
   const who = ctx.getObject(p?.by), L = RESULTS[ctx.self.state.res] ?? RESULTS.upright;
-  if (who) note(who, L[Math.floor(ctx.random() * L.length) % L.length], ctx);
+  if (!who) return;
+  note(who, L[Math.floor(ctx.random() * L.length) % L.length], ctx);
+  // the coin return: one Backnickel per machine per player every ten minutes, a one-in-three chance (lib/items.js cash token, paid through the payout queue)
+  const at = ctx.self.worldFeetPosition, uid = who.userId ?? who.id, paid = ctx.self.state.paid ?? {}, now = ctx.now();
+  if (now - (paid[uid] ?? -1e12) > 600000 && ctx.random() < 0.34 && !who.state.payout) {
+    ctx.self.state.paid = { ...paid, [uid]: now };
+    who.state.payout = { xp: 0, items: ["cash:5"] };
+    ctx.emit("playSound", { clip: SFX + "sfx-coin-return-slot-clink.mp3", position: at, volume: 0.6, maxDistance: 10 });
+    ctx.emit("fx", { position: { x: at.x, y: at.y + 0.7, z: at.z }, script: COIN });
+  }
 }
+const COIN = `fx
+pop glint burst=6..9 on=sphere(.06) life=.3..0.6 v=sdir()*(.4..0.8)+up(.6) size=.02..0.035 acc=grav()*.6 col=hdr(2.4,2,1) a=1>0 sz=$size r=sprite(ember,add)`;
 
 const tex = (what) => `cdn/texture-${what}.png`;
 const glow = (what, color = "#ffffff", k = 1.4) => ({ texture: tex(what), emissiveMap: tex(what), emissive: color, emissiveIntensity: k, roughness: 0.15 });
