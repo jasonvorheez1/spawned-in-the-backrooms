@@ -413,7 +413,7 @@ function move(ctx, m) {
 function glow(ctx, stutter) {
   const b = ctx.self.bounds, c = b?.center ?? ctx.self.worldFeetPosition;
   ctx.spawn({ feetPosition: { x: c.x, y: c.y + 0.05, z: c.z }, lifetime: stutter ? 0.5 : 1.3, audience: "all",
-    light: { kind: "point", color: stutter ? "oklch(0.92 0.06 95)" : "oklch(0.85 0.13 70)", intensity: stutter ? 1.2 : 2.2, distance: stutter ? 4 : 6 } }, { persist: false });
+    light: { kind: "point", color: stutter ? "oklch(0.92 0.06 95)" : "oklch(0.85 0.13 70)", intensity: stutter ? 1.2 : 2.2, distance: stutter ? 4 : 6 } });
   const g = ctx.getObject(ctx.self.id + "/glow");
   if (g) try { animate(ctx, g.id, { scale: [1, 1.35, 1] }, { duration: 1.1, easing: "easeOutSine" }); } catch {}
 }
