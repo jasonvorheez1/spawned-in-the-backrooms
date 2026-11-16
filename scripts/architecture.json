@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9335,
-  "updatedAt": "2026-11-16T12:24:50.851Z",
+  "basedOnSpecVersion": 9344,
+  "updatedAt": "2026-11-16T12:35:09.200Z",
   "summary": "Spawned in the Backrooms is a multiplayer survival RPG spanning Level 0, the Bonus mall, The Hub and authored destinations. Character progress lives in player.state while Solo and Multiplayer keep separate run/story state; shared registries and helpers coordinate play, and local place scenes/sims compose their worlds. Creator tools include reusable place dressing, Advanced Transform editing, and BodyWorks rig-fitting workflows.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0 yellow maze, routes and anomalies; momentsV gates wall moments/room-prop regeneration, sim handles ceiling-stuck enemies and one-time surface dressing, objects.scene hosts shared controllers; x0z0.scene adds camera, maze and anomaly placements.",
-    "places/bonus + places/testlab (3D) - shared vaporwave mall with shops, staff, arcade, homes and atlas Teleport Station; Test Range has loot/enemy bays and HIT SQUAD pad; mall signs and props have authored faces/surfaces and ambient dressing.",
+    "places/main (3D) - Level 0 yellow maze, routes and anomalies; momentsV gates wall moments/room-prop regeneration, sim handles ceiling-stuck enemies and one-time surface dressing, objects.scene hosts shared controllers; x0z0.scene adds came…",
+    "places/bonus + places/testlab (3D) - shared vaporwave mall with shops, staff, arcade, homes and atlas Teleport Station; Test Range has loot/enemy bays and HIT SQUAD pad; Bonus x0z0.scene includes BodyWorks fitting stand bw-fitting-body with shelly-bodyworks GLB, scripted fur/face zones, hidden clothing shells and static plinth.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; sim builds tunnels/doors and staffs camps; t5-a2 leads to Level 178; x0z0.scene adds lamp dust and road haze, with brighter amber lighting.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; scenes and sims own local beats.",
-    "places/level1 + places/level1c + places/level2 + places/level4 + places/level26 (3D) - Level 1 M.E.G. camp and procedural concrete corridors with rust streaks/tide marks; cool grey-blue look and camera-follow motes/mist; Level 2 pipe halls, Level 4 offices and Level 26 party rooms.",
-    "places/level9 + places/level10 + places/level11 + places/level61 + places/level70 (3D) - Suburbs, farm, city/Base Beta/strip mall/clinic, Snackrooms checkpoint and Froidetown; Level 11 sim paints street, Thebes gate, Sedco, road-work and unmapped-exit signs; Level 61 phone sign is pre-painted in scene.",
+    "places/level1 + places/level1c + places/level2 + places/level4 + places/level26 (3D) - Level 1 M.E.G. camp and procedural concrete corridors with rust streaks/tide marks; cool grey-blue look and camera-follow motes/mist; Level 2 pipe halls…; scripts/level4-detail-geo.js adds non-colliding ceiling/carpet lived-in detail, with flat water-ring patches removed.",
+    "places/level9 + places/level10 + places/level11 + places/level61 + places/level70 (3D) - Suburbs, farm, city/Base Beta/strip mall/clinic, Snackrooms checkpoint and Froidetown; Level 11 sim paints street, Thebes gate, Sedco, road-work and u…",
     "places/level169 + places/level132 + places/level178 (3D) - Level 169 desert/house/trail/Field Office 7, Level 132 Duchy of Morigont/Lumiria and barter, Level 178 Kyoto terrain/house/residents/arrival quest.",
-    "places/levelrun (3D) - Level ! Chapter 2 finale: intake-room horde breach, crimson obstacle corridor and rescue to the Safe Alcove; sim stages the chase and characters. Other numbered places and side locations have authored cells/sims; Level 8 and 2.1 now apply handmade sign faces through their sims."
+    "places/levelrun (3D) - Level ! Chapter 2 finale: intake-room horde breach, crimson obstacle corridor and rescue to the Safe Alcove; sim stages the chase and characters. Other numbered places and side locations have authored cells/sims; Lev…"
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera and ordered behaviors/actions; fall-guard precedes movement; radio, barter and phone are player behaviors.",
@@ -55,7 +55,7 @@
     "scripts/lib/hub.js noteAtlas, called by scripts/player.js on place arrival - player.state.atlas maps canonical destination to first-seen date and visit count; place sims own room-local texV/signTexV completion stamps."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused interactions.",
+    "world.config.yaml actions → templates/player.js ordered locomotion, player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused i…",
     "templates/player.js runs scripts/fall-guard.js before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; player.js builds local first-person viewmodel and avatar setup.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
@@ -64,9 +64,9 @@
     "scripts/lib/mp-guard.js multiRoom → scripts/player.js damage and scripts/meg-agent.js death handling → ordinary NPCs are restored at 30% HP, stunned and shown DOWN; shootable/born-hostile/killable NPCs still die.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold handlers call carryAcross for held props/followers; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone (Level 1.1 sectors, Level 178 house, Level 132 Lumiria); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass.",
-    "scripts/player.js place arrival → scripts/lib/hub.js noteAtlas writes player.state.atlas once per arrival (tutorial0 aliases main); old saved place is backfilled when absent; Bonus Teleport Station renders discovered ATLAS_ORDER destinations.",
+    "scripts/player.js place arrival → scripts/lib/hub.js noteAtlas writes player.state.atlas once per arrival (tutorial0 aliases main); old saved place is backfilled when absent; Bonus Teleport Station renders discovered ATLAS_ORDER destinatio…",
     "Dina diary/records/Hub lead interactions → scripts/lib/dina-quest.js learn/questVoice → player.state.trail tracker and voiced dialogue; after trail.pass the older dinaQ stages continue. Story-off runs and Multiplayer bypass the purser.",
-    "Place sim tick → scripts/lib/retexture.js retextureOnce textures eligible bare props; scripts/lib/sign-tex.js texSigns maps marker text to image faces, preserving sign bodies and stamping signTexV once found or after 30 player-present scans."
+    "Place sim tick → scripts/lib/retexture.js retextureOnce textures eligible bare props; scripts/lib/sign-tex.js texSigns maps marker text to image faces, preserving sign bodies and stamping signTexV once found or after 30 player-present scan…"
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
@@ -92,6 +92,6 @@
     "Tutorial finale cut ends at tut0-cut.js LEN.final = 14 s; THE WAY BACK / SOMEWHERE WET card is held over black and the crossing, then fades on Level 1 landing; retain ui.js lazy-load and main-menu.js t0lift stamp coupling.",
     "scripts/lib/data/main-quest.yml is a retired, unread draft; live Dina story is scripts/lib/dina-quest.js + dlg-quest-main.yml + design/story-spine.md, with legacy dinaQ stages continuing only after trail.pass.",
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with sim-created hub-from-l178.",
-    "Level 169 uses x/z, north = -z and 1:10 map scale; Level 1.1 hall distance is +X (0–620 m), north at -Z. retextureOnce waits about 8 s with a player and stamps texV; texSigns keeps the marker table, preserves sign geometry, and stamps v2 after all markers or 30 scans with players present."
+    "Level 169 uses x/z, north = -z and 1:10 map scale; Level 1.1 hall distance is +X (0–620 m), north at -Z. retextureOnce waits about 8 s with a player and stamps texV; texSigns keeps the marker table, preserves sign geometry, and stamps v2 a…"
   ]
 }
