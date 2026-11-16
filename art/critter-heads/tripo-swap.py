@@ -37,10 +37,11 @@ tri.data.transform(M); tri.matrix_world = Matrix()
 P = [v.co for v in tri.data.vertices]
 ext = lambda i: max(p[i] for p in P) - min(p[i] for p in P)
 # its muzzle points along the horizontal axis whose far end is the narrower (snout) end: test +-X, +-Y
+EX = [ext(0), ext(1), ext(2)]
 def snout_dir():
     best = None
     for ax, sg in ((0, 1), (0, -1), (1, 1), (1, -1)):
-        far = max(p[ax] * sg for p in P); band = [p for p in P if p[ax] * sg > far - 0.12 * ext(ax)]
+        far = max(p[ax] * sg for p in P); lim = far - 0.12 * EX[ax]; band = [p for p in P if p[ax] * sg > lim]
         w = max(p[1 - ax] for p in band) - min(p[1 - ax] for p in band)
         if best is None or w < best[0]: best = (w, ax, sg)
     return best[1:]
@@ -48,9 +49,11 @@ ax, sg = snout_dir()
 rot = {(1, -1): 0, (0, 1): -1.5708, (0, -1): 1.5708, (1, 1): 3.1416}[(ax, sg)]
 tri.data.transform(Matrix.Rotation(rot, 4, "Z")); print("snout axis", ax, sg)
 P = [v.co for v in tri.data.vertices]
-ttip = min([p for p in P if abs(p.x) < 0.02 * ext(0) + 1e-3] or P, key=lambda p: p.y)
-tz = min(p.z for p in P)
-twid = max(p.x for p in P if p.z < ttip.z + 0.12 * ext(2) / max(ext(2), 1e-6) * 3) - min(p.x for p in P if p.z < ttip.z + 0.12 * ext(2) / max(ext(2), 1e-6) * 3)
+EX = [ext(0), ext(1), ext(2)]
+xl = 0.02 * EX[0] + 1e-3
+ttip = min([p for p in P if abs(p.x) < xl] or P, key=lambda p: p.y)
+zl = ttip.z + 0.36
+twid = max(p.x for p in P if p.z < zl) - min(p.x for p in P if p.z < zl)
 s = wid / max(ext(0) * 0.0 + twid, 1e-6)
 for v in tri.data.vertices:
     p = v.co; v.co = Vector((tip.x + (p.x - ttip.x) * s, tip.y + (p.y - ttip.y) * s, tip.z + (p.z - ttip.z) * s))
