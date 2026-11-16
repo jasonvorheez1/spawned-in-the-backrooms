@@ -239,19 +239,24 @@ export const ears = {
 
     if (s.kind === "condiment") {
       snd("squeeze-bottle-ketchup-squirt", 0.5, 6);
+      ctx.emit("squash", { target: ctx.self.id, axis: "y", intensity: 0.25, duration: 0.3 });
       tell(s.line ?? "SQUEEZE", "#ff9a7a");
       return;
     }
 
     if (s.kind === "directory") {
       snd("paper-flip-card-stand", 0.5, 8);
+      ctx.emit("shake", { target: ctx.self.id, intensity: 0.02, duration: 0.25 });
       w.notice = { text: "Restaurants north. Vending and toilets south. Level 11 exit east. M.E.G. checkpoint west.", at: now };
       return;
     }
 
     if (s.kind === "payphone") {
       snd("walkie-talkie-radio-click-static-burst", 0.45, 6);
-      tell("The local line works. Dial out and you get static.", "#9fe8ff");
+      ctx.emit("shake", { target: ctx.self.id, intensity: 0.03, duration: 0.3 });
+      const coin = (ctx.self.session.coinRet ??= {});
+      if (now - (coin[uid] ?? -1e12) > 20 * 60000) { coin[uid] = now; snd("payphone-coin-return-quarter-clatter", 0.55, 6); w.payout = { xp: 0, items: [...(w.payout?.items ?? []), "cash:25"], text: "Line's dead, but the coin return coughs up a Backquarter." }; return; }
+      tell("Dial tone, then a man ordering a pizza on Level 11. He's been on hold since Tuesday.", "#9fe8ff");
       return;
     }
 
@@ -272,7 +277,7 @@ export const ears = {
     }
 
     if (now - (cool[uid] ?? -1e9) < (s.cooldown ?? COOL)) {
-      tell(s.kind === "vend" ? "Give the machine a moment." : "Please wait.");
+      tell(s.kind === "vend" ? "Coil's still turning. Give it a second." : "Kitchen's still on the last one.");
       return;
     }
     if (s.kind === "vend" && s.weeklyStock) {

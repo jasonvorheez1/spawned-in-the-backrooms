@@ -29,7 +29,7 @@ const SFX = {
 };
 
 const SPARK_FX = `fx
-pop spark burst=14..22 on=sphere(.12) life=.35..0.7 v=up(1.1)+sdir()*.8 size=.025..0.055 acc=vec(0,-2.6,0) col=<1,.85,.35> a=1>0 sz=$size r=sprite(soft-disc,add)`;
+pop spark burst=14..22 on=sphere(.12) life=.35..0.7 v=up(1.1)+sdir()*.8 size=.025..0.055 acc=grav() col=<1,.85,.35> a=1>0 sz=$size r=sprite(soft-disc,add)`;
 const NEON_FX = `fx
 pop star burst=12..18 on=box(.3,.1,.3) life=.5..0.9 v=up(1.2)+sdir()*.35 size=.03..0.06 col=<1,.45,.9> a=1>0 sz=$size r=sprite(soft-disc,add)`;
 
