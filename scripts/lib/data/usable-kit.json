@@ -1,5 +1,5 @@
 {
-  "v": 1,
+  "v": 2,
   "level11": {
     "l11-elev-btn-*": { "m": "button", "p": "button" },
     "l11-skydeck-binoculars": { "m": "dial", "p": "dial", "s": "coin-drop-into-metal-slot-and-gear-whir" },
@@ -69,6 +69,6 @@
     "l13p-*": { "m": "tap", "s": "locket-clasp-click" }
   },
   "level02": {
-    "*": { "m": "tap", "s": "aerosol-air-freshener-spray-hiss" }
+    "#freshener": { "m": "tap", "s": "aerosol-air-freshener-spray-hiss" }
   }
 }
