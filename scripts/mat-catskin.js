@@ -124,8 +124,8 @@ export function material(ctx) {
     if (!ctx.params.faceless) col = mix(col, ctx.params.noseR != null ? C("nose") : vec3(0.07, 0.045, 0.045), noseM);
     // Nov 16 (Shelly: hair "weird up front"): white scalp showed between short locks; under a hairstyle the head above the hairline wears the hair's root colour
     if (ctx.params.scalp) {
-      const hv = P("scalpV", 0.66), wob = mx_noise_float(q.mul(vec3(90, 20, 90))).mul(0.03);
-      const sc = smoothstep(hv, hv.add(0.04), v.add(wob));
+      const hv = P("scalpV", 0.71), wob = mx_noise_float(q.mul(vec3(90, 20, 90))).mul(0.035);
+      const sc = smoothstep(hv, hv.add(0.07), v.add(wob));
       col = mix(col, C("scalp").mul(0.72), sc);
     }   // the crew: no nose   // matte, no shine (Shelly Nov 12)
     m.colorNode = col;
