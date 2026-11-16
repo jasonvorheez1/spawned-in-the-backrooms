@@ -476,7 +476,7 @@ function body(ctx, kind) {
 }
 
 export const ears = {
-  probe(ctx) { const a = ACTS[ctx.self.id] ?? ACTS["kind:" + ctx.self.state.kind]; if (!a) return; move(ctx, a.m); puff(ctx, a.fx); sfx(ctx, a.s, 0.4); ctx.self.session.probed = ctx.now(); },
+  probe(ctx) { const a = ACTS[ctx.self.id] ?? ACTS["kind:" + ctx.self.state.kind]; if (!a) return; move(ctx, a.m); puff(ctx, a.fx); sfx(ctx, a.s, 0.4); ctx.self.state.probed = ctx.now(); ctx.log("probe", ctx.self.id, a.m); },
   press(ctx, { by } = {}) {
     const s = ctx.self.state;
     const p = ctx.place.players.find((q) => q.id === by);
