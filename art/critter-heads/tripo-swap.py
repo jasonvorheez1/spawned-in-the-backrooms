@@ -64,9 +64,9 @@ BB('scaled', [v.co for v in tri.data.vertices]); BB('old', OB); tri.data.update(
 BB('pre-clean', [v.co for v in tri.data.vertices])
 # clean: weld, decimate to budget, smooth
 bpy.context.view_layer.objects.active = tri; tri.select_set(True)
-bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.mesh.remove_doubles(threshold=0.0004); bpy.ops.object.mode_set(mode="OBJECT")
+bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT"); bpy.ops.mesh.remove_doubles(threshold=0.0015); bpy.ops.object.mode_set(mode="OBJECT")
 if len(tri.data.polygons) > NF:
-    d = tri.modifiers.new("dec", "DECIMATE"); d.ratio = NF / len(tri.data.polygons); bpy.ops.object.modifier_apply(modifier="dec")
+    d = tri.modifiers.new("dec", "DECIMATE"); d.use_symmetry = True; d.symmetry_axis = "X"; d.ratio = NF / len(tri.data.polygons); bpy.ops.object.modifier_apply(modifier="dec")
 for f in tri.data.polygons: f.use_smooth = True
 for u in list(tri.data.uv_layers): tri.data.uv_layers.remove(u)
 NEWUV = {n: tri.data.uv_layers.new(name=n) for n in UVL}
@@ -119,6 +119,8 @@ BB('keyed', [v.co for v in tri.data.vertices]); BB('omw', [omw.translation]); pr
 tri.data.transform(omw.inverted(), shape_keys=True)
 newme = tri.data; oldname = old.name
 bpy.data.objects.remove(tri); old.data = newme; newme.name = oldname; tri = old
+for k in tri.data.shape_keys.key_blocks: k.value = 0
+print("nonzero old keys", [(k.name, k.value) for k in kb if k.value]) if False else None
 print("faces", len(tri.data.polygons), "verts", len(tri.data.vertices), "keys", [k.name for k in tri.data.shape_keys.key_blocks])
 bpy.ops.object.select_all(action="SELECT")
 bpy.ops.export_scene.gltf(filepath=OUT, export_apply=False, export_skins=True, export_morph=True, export_animation_mode="ACTIONS", export_yup=True)
