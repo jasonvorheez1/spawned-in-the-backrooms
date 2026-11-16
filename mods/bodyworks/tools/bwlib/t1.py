@@ -453,9 +453,9 @@ def run(body, ZONES, DOC, a):
     # zone (heavy-set) the cap showed between yoke and sleeve, so the yoke also takes the upper arm skin near the joint
     capR = 0.11 * S
     near_sh = {f'upperarm_{s.lower()}': (lambda p, s=s: float(np.linalg.norm(p - np.array(J[f'shoulder.{s}']))) < capR) for s in 'LR'}
-    for nm_, ob in shell(['upperchest', 'shoulder_l', 'shoulder_r', 'upperarm_l', 'upperarm_r'], OFF['top'], 'top_yoke', keepf=near_sh).items():
+    for nm_, ob in shell([('upperchest', 'shoulder_l', 'shoulder_r'), 'upperarm_l', 'upperarm_r'], OFF['top'], 'top_yoke', keepf=near_sh).items():
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
-    for nm_, ob in shell(['breast_l', 'breast_r', 'cleavage', 'upperback', 'chest'], OFF['top'], 'top_chest', zmin=z_underbust - 0.03 * S).items():
+    for nm_, ob in shell([('breast_l', 'breast_r', 'cleavage', 'upperback', 'chest', 'side_l', 'side_r', 'armpit_front_l', 'armpit_front_r', 'armpit_back_l', 'armpit_back_r')], OFF['top'], 'top_chest', zmin=z_underbust - 0.03 * S).items():
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
     for nm_, ob in shell(['foot_l', 'foot_r'], OFF['feet'], 'feet', {'feet_sole': lambda z: z < -0.5, 'feet_upper': lambda z: z >= -0.5}).items():
         CAGE[nm_] = (ob, COL['feet']); SEG[nm_] = []
