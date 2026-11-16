@@ -14,11 +14,11 @@ TIP, BACK, MZ = -0.2485, -0.165, 0.795      # snout tip y, where the muzzle meet
 def snout(p):
     if p.y > BACK or p.z < 0.70 or p.z > 0.90: return Vector()
     t = (BACK - p.y) / (BACK - TIP)                        # 0 at the face, 1 at the tip
-    r = math.hypot(p.x / 0.12, (p.z - MZ) / 0.075)         # the muzzle's footprint
-    w = 1 - sm((r - 0.75) / 0.6)
+    r = math.hypot(p.x / 0.11, (p.z - MZ) / (0.05 if p.z > MZ else 0.07))         # the muzzle's footprint
+    w = 1 - sm((r - 0.55) / 0.75)
     if w <= 0: return Vector()
     d = Vector((0, 0, 0))
-    d.y += (BACK - p.y) * 0.48 * w                         # shorter
+    d.y += (BACK - p.y) * 0.48 * w * sm(t * 2.2)                         # shorter
     d.x += p.x * 0.10 * w * sm(1 - t)                      # cheeks a touch rounder
     d.z += (MZ - p.z) * 0.18 * w * t                       # tip rounder, less pointy
     return d
