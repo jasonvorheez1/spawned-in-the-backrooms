@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9287,
-  "updatedAt": "2026-11-16T11:35:25.213Z",
+  "basedOnSpecVersion": 9296,
+  "updatedAt": "2026-11-16T11:53:06.217Z",
   "summary": "Spawned in the Backrooms is a multiplayer survival RPG spanning Level 0, the Bonus mall, The Hub and authored destinations. Character progress lives in player.state while Solo and Multiplayer keep separate run/story state; shared scripts and registries coordinate play, and local place scenes/sims compose their worlds. The optional main quest is Dina's clue trail, The Way Back; the title screen offers Continue/Start, a Solo/Multiplayer switch and secondary expedition/save/settings controls.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0 yellow maze, routes and anomalies; momentsV gates wall moments/room-prop regeneration, sim handles ceiling-stuck enemies, objects.scene hosts shared controllers.",
+    "places/main (3D) - Level 0 yellow maze, routes and anomalies; momentsV gates wall moments/room-prop regeneration, sim handles ceiling-stuck enemies, objects.scene hosts shared controllers; x0z0.scene adds camera-follow warm dust and yellow haze.",
     "places/bonus + places/testlab (3D) - shared vaporwave mall with shops, staff, arcade, homes and atlas Teleport Station; Test Range has loot/enemy bays and HIT SQUAD pad.",
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; sim builds tunnels/doors and staffs camps; t5-a2 leads to Level 178.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; scenes and sims own local beats.",
-    "places/level1 + places/level1c + places/level2 + places/level4 + places/level26 (3D) - Level 1 M.E.G. camp, far-west Level 0 entry/arrival and Corrupted Corridor; Level 1.1 sim lays cast, caches and supplies.",
+    "places/level1 + places/level1c + places/level2 + places/level4 + places/level26 (3D) - Level 1 M.E.G. camp and procedural concrete corridors with rust water streaks/tide marks; cold grey-blue fog/look and camera-follow motes/mist; far-west Level 0 entry/arrival and Corrupted Corridor; Level 1.1 sim lays cast, caches and supplies.",
     "places/level9 + places/level10 + places/level11 + places/level61 + places/level70 (3D) - Suburbs, farm, city/Base Beta/strip mall/clinic, Snackrooms checkpoint and Froidetown.",
     "places/level169 + places/level132 + places/level178 (3D) - Level 169 desert/house/trail/Field Office 7, Level 132 Duchy of Morigont/Lumiria and barter, Level 178 Kyoto terrain/house/residents/arrival quest.",
     "places/levelrun (3D) - Level ! Chapter 2 finale: intake-room horde breach, crimson obstacle corridor and rescue to the Safe Alcove; sim stages the chase and characters. Other numbered places and side locations have authored cells/sims."
@@ -21,8 +21,8 @@
     "places/level169/sim.js + scripts/lib/data/level169.yml + house/Ferry/Friends/road/Robotics helpers - desert setpieces, schedules, routes, quests and units.",
     "places/level132/sim.js + scripts/lib/data/level132.yml + scripts/lib/l132-*.js - town/countryside lay and tick orchestration for stalls, shops, land, people, Duke, quests and barter.",
     "places/level178/config.yaml + scripts/terrain178.js + x0z0.scene + sim.js - Kyoto terrain, house, residents, arrival quest, finds, containers and breakable sweep.",
-    "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js + scripts/ui.js - title/pause and save lifecycle, Solo/Multiplayer switching, expedition choices and HUD; title is taped paper with Continue/Start, a mode switch and secondary controls.",
-    "scripts/hub.js + scripts/hub-ui.js + scripts/lib/hub.js - Bonus mall counters and atlas Teleport Station UI/actions; shared hub library owns room routing, home access and atlas policy."
+    "places/level1/sim.js + scripts/level1-geo.js + scripts/lib/wallgrid.js - Level 1.1 lays the procedural hall geometry and lamp fixtures; wallgrid supplies corridor wall/door topology.",
+    "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js + scripts/ui.js - title/pause and save lifecycle, Solo/Multiplayer switching, expedition choices and HUD; scripts/hub.js + scripts/hub-ui.js + scripts/lib/hub.js coordinate Bonus mall counters, atlas UI/actions and shared routing/home/atlas policy."
   ],
   "shared": [
     "scripts/lib/places.js - canonical place names/labels/HUD titles; consumed by feed, quest names and scripts/ui.js; also defines valid atlas destinations.",
@@ -42,7 +42,7 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - journal/advancement/reward helpers; scripts/lib/containment.js - pen/door operations; scripts/lib/run-opts.js - run/mode helpers and keys.",
     "scripts/lib/hub.js - HUB_ROOM, HUB_PLACE, isHubRoom, soloRoom, HOMES, LEVEL_NAMES, lastLevel, toHub, toSolo, ATLAS_SKIP, atlasKey, atlasable, ATLAS_ORDER, noteAtlas.",
-    "scripts/lib/dina-quest.js - HOME, CAMP, DCUT_LEN, PAGE1/PAGE2/PAGES, TRAIL, learn, questVoice, trailStep/trailText, dinaLead."
+    "scripts/lib/dina-quest.js - HOME, CAMP, DCUT_LEN, PAGE1/PAGE2/PAGES, TRAIL, learn, questVoice, trailStep/trailText, dinaLead; scripts/level1-geo.js - geometry; scripts/look-garage.js - look."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable character player.state: progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance/look, currency and gear shared across Solo/Multiplayer.",
@@ -64,8 +64,8 @@
     "scripts/lib/mp-guard.js multiRoom → scripts/player.js damage and scripts/meg-agent.js death handling → ordinary NPCs are restored at 30% HP, stunned and shown DOWN; shootable/born-hostile/killable NPCs still die.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold handlers call carryAcross for held props/followers; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone (Level 1.1 sectors, Level 178 house, Level 132 Lumiria); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass.",
-    "scripts/player.js place arrival → scripts/lib/hub.js noteAtlas writes player.state.atlas once per arrival (tutorial0 aliases main); old saved place is backfilled when absent; Bonus Teleport Station renders discovered ATLAS_ORDER destinations and validates travel.",
-    "Dina diary/records/Hub lead interactions → scripts/lib/dina-quest.js learn/questVoice → player.state.trail tracker and voiced dialogue; after trail.pass the older dinaQ stages continue. Story-off runs and Multiplayer bypass the purser without gaining a pass.",
+    "scripts/player.js place arrival → scripts/lib/hub.js noteAtlas writes player.state.atlas once per arrival (tutorial0 aliases main); old saved place is backfilled when absent; Bonus Teleport Station renders discovered ATLAS_ORDER destinations.",
+    "Dina diary/records/Hub lead interactions → scripts/lib/dina-quest.js learn/questVoice → player.state.trail tracker and voiced dialogue; after trail.pass the older dinaQ stages continue. Story-off runs and Multiplayer bypass the purser with the legacy quest route.",
     "scripts/lib/tut0-cut.js sets t0Done/t0fade at finale → scripts/ui.js lazy-loads scripts/cutscene-ui.js t0Fade; scripts/main-menu.js refreshes the fade stamp at Level 1 landing so the title card lifts on crossing."
   ],
   "behaviorFamilies": [
@@ -76,7 +76,7 @@
     "scripts/lib/l169-road.js + l169-road-geo.js + l169-travel.js + l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
     "places/level132/sim.js + l132-{stalls,shops,land,people,duke,quests,barter}.js + barter-deal.js - staged town and keeper trades use eight goods categories; first gift then balanced currency-free barter.",
     "scripts/phone.js + phone-ui.js + screen.js - one shared wrist phone; apps include keeper contacts/restock texts, camera/photos/notes, flashlight and radio.",
-    "scripts/lib/body3.js + scripts/lib/data/combat-anims.yml - human/furry third-person combat poses vary by weapon family; long guns share aim/ready and left-hand gun reach with grip corrections."
+    "scripts/lib/body3.js + scripts/lib/data/combat-anims.yml - human/furry third-person combat poses vary by weapon family; long guns share aim/ready and left-hand gun reach with grip corrections; main and Level 1 scenes each use camera-follow FX with level-specific dust/mist palettes and mobile particle counts."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists; Level 26 placements/barrage use uploaded models.",
@@ -92,6 +92,6 @@
     "Tutorial finale cut ends at tut0-cut.js LEN.final = 14 s; the THE WAY BACK / SOMEWHERE WET card is held over black and the crossing, then fades on Level 1 landing. Keep the ui.js lazy-load condition and main-menu.js t0lift stamp refresh coupled.",
     "scripts/lib/data/main-quest.yml is a retired, unread draft; live Dina story is scripts/lib/dina-quest.js + dlg-quest-main.yml + design/story-spine.md, with legacy dinaQ stages continuing only after trail.pass.",
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with sim-created hub-from-l178.",
-    "Level 169 uses x/z, north = -z and 1:10 map scale; Level 1.1 hall distance is +X (0–620 m), north at -Z; keep terrain/route landmarks and sector boundaries aligned."
+    "Level 169 uses x/z, north = -z and 1:10 map scale; Level 1.1 hall distance is +X (0–620 m), north at -Z; preserve terrain/route landmarks and sector boundaries. l0-air/l1-air are scene-placed camera-follow ambient FX with reduced mobile counts, not world-state simulations."
   ]
 }
