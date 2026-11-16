@@ -145,10 +145,11 @@ def run(body, ZONES, DOC, a):
             rows = [r for r in order if tb.hole[r, j]]
             tb.hole[:, j] = False
             for r in rows[:2]: tb.hole[r, j] = True
-        h = tb.hole.copy()
-        for dj in (-1, 1): h |= np.roll(tb.hole, dj, 1)
-        for di in (-1, 1): h |= np.roll(tb.hole, di, 0) & (np.arange(len(tb.rings)) > 0)[:, None]
-        tb.hole = h
+        # no margin: a ring and column of margin bared a patch of rump round the tail root, wider than the tail
+        if __import__('os').environ.get('BW_TAILPAD'):
+            h = tb.hole.copy()
+            for dj in (-1, 1): h |= np.roll(tb.hole, dj, 1)
+            tb.hole = h
         print('BODYWORKS T1', tb.name, 'tail hole cells', int(tb.hole.sum()))
     # ---------- TOP: torso + yoke + sleeves ----------
     t = add(Tube('top_torso', 'top', OFF['top'], 40, COL['top']))
