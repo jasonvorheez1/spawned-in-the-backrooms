@@ -222,6 +222,9 @@ def run(body, ZONES, DOC, a):
     sk.finish(0)
     R = sk.R.copy()
     for i in range(1, len(R)): R[i] = np.maximum(R[i], R[i - 1])
+    # an A-line flare: below the widest hip ring the hem grows ~0.22 m per metre of drop, so it hangs like cloth, not a drum
+    _zs = np.array([rg['u'] for rg in sk.rings]); _hip = int(np.argmax(np.nanmean(sk.R, 1)))
+    for i in range(_hip + 1, len(R)): R[i] = R[i] + 0.22 * (_zs[_hip] - _zs[i])
     for _ in range(6): R = 0.5 * R + 0.25 * (np.roll(R, 1, 1) + np.roll(R, -1, 1))   # several passes: one left a faceted, pleat-like silhouette
     for _ in range(2): R[1:-1] = 0.5 * R[1:-1] + 0.25 * (R[:-2] + R[2:])
     dz = np.array([g['o'][2] for g in sk.rings]); R += ((z_waist - dz) * 0.06)[:, None]
