@@ -3,6 +3,9 @@ import { ears as computer } from "./computer.js";
 import { heard } from "./lib/hear.js";
 import { skillsOf } from "./lib/stats.js";
 import { queuePayout, payOnce } from "./lib/quests.js";
+import { kick, puff } from "./lib/use-kick.js";
+// what each fixture does with its own body when pressed (motion, then a puff where one belongs)
+const MOTION = { intercom: ["nod"], breaker: ["sink", "spark"], alarm: ["rattle", "spark"], cooler: ["hop", "drops"], sink: ["squash", "drops"], kettle: ["rattle", "steam"], vending: ["rattle", "dust"], monitor: ["squash", "glow"], surglamp: ["swing"], gas: ["rattle", "steam"], curtain: ["flutter"], shutter: ["hop", "dust"], tube: ["rattle", "steam"], decon: ["squash", "steam"], aed: ["nod"], board: ["flutter"], terminal: ["nod"] };
 
 const SFX = "/cdn/moodboard-realistic-gritty/";
 const HOUR = 3600000;
@@ -62,7 +65,19 @@ function setTroffers(ctx, seg, on) {
 }
 
 export const ears = {
-  press: (ctx, { by }) => {
+  press: (ctx, a) => {
+    const m = MOTION[ctx.self.state?.kind];
+    if (m) {
+      const r = ctx.self.rotation, pos = ctx.self.worldFeetPosition ?? ctx.self.feetPosition;
+      kick(ctx, ctx.self, m[0], { yaw: typeof r === "number" ? r : r?.yaw ?? 0, d: ctx.random() < 0.5 ? 1 : -1 });
+      if (m[1] && pos) puff(ctx, m[1], { x: pos.x, y: pos.y + 0.9, z: pos.z });
+    }
+    return press(ctx, a);
+  },
+};
+
+function press(ctx, { by }) {
+  {
     const s = ctx.self.state, who = ctx.getObject(by), w = who?.state;
     if (!s || !w) return;
     if (s.kind === "terminal") {
@@ -114,18 +129,18 @@ export const ears = {
     }
 
     if (s.kind === "alarm") {
-      if (now < (s.coolAt ?? 0)) { toast(ctx, who, "Alarm bell resetting...", "sfx-ui-denied-click.mp3", pos, 0.4); return; }
+      if (now < (s.coolAt ?? 0)) { toast(ctx, who, "Bell's still shuddering on its mount.", "sfx-ui-denied-click.mp3", pos, 0.4); return; }
       s.coolAt = now + 15000;
       heard(ctx, { clip: SFX + "sfx-building-security-alarm-bell-ringing-short.mp3", position: pos, volume: 0.9, maxDistance: 36 });
       ctx.emit("noise", { position: pos, radius: 34, kind: "alarm" }, { audience: { nearby: pos, radius: 34 } });
-      toast(ctx, who, "Code Blue alarm tripped — nearby hostiles will investigate!");
+      toast(ctx, who, "CODE BLUE. Everything on this floor heard that.");
       return;
     }
 
     if (s.kind === "cooler" || s.kind === "sink" || s.kind === "kettle") {
       const key = s.kind === "cooler" ? "l109CoolAt" : s.kind === "sink" ? "l109WashAt" : "l109TeaAt";
       const cd = s.kind === "kettle" ? 120000 : 45000;
-      if (now < (ses[key] ?? 0)) { toast(ctx, who, s.kind === "kettle" ? "Kettle is still warming up." : "You already cooled off recently.", "sfx-ui-denied-click.mp3", pos, 0.4); return; }
+      if (now < (ses[key] ?? 0)) { toast(ctx, who, s.kind === "kettle" ? "Kettle's still ticking. Give it a minute." : s.kind === "sink" ? "Tap coughs air. Tank's refilling." : "Out of paper cups. Somebody's hoarding them.", "sfx-ui-denied-click.mp3", pos, 0.4); return; }
       ses[key] = now + cd;
       const hpAdd = s.kind === "kettle" ? 10 : s.kind === "cooler" ? 4 : 0;
       const sanAdd = s.kind === "kettle" ? 14 : s.kind === "sink" ? 6 : 6;
@@ -170,7 +185,7 @@ export const ears = {
         if (ctx.self.primitive?.params) ctx.self.primitive = { ...ctx.self.primitive, params: { ...ctx.self.primitive.params, on: false } };
         const msg = VITALS[Math.floor(ctx.random() * VITALS.length)];
         sub(who, "PATIENT MONITOR", msg, 4500, now);
-        toast(ctx, who, "Monitor silenced", "sfx-soft-pda-beep-confirm.mp3", pos, 0.55);
+        toast(ctx, who, "Flatline tone cut. Felt rude.", "sfx-soft-pda-beep-confirm.mp3", pos, 0.55);
         return;
       }
       if (!usedAt(ctx, uid) && ((sk.medicine ?? 0) >= 20 || (sk.repair ?? 0) >= 20)) {
@@ -191,7 +206,7 @@ export const ears = {
       s.info = s.on ? "spot lit" : "off";
       if (ctx.self.primitive?.params) ctx.self.primitive = { ...ctx.self.primitive, params: { ...ctx.self.primitive.params, on: s.on } };
       ctx.self.light = s.on ? { kind: "spot", color: "#fff8ea", intensity: 5, distance: 7, angle: 55, penumbra: 0.6, aim: s.aim ?? { x: pos.x, y: 0, z: pos.z }, shadow: { enabled: false } } : null;
-      toast(ctx, who, s.on ? "Surgical lamp ON" : "Surgical lamp OFF", "sfx-electrical-breaker-clunk-power-dies-hum-cuts-out.mp3", pos, 0.45);
+      heard(ctx, { clip: SFX + "sfx-electrical-breaker-clunk-power-dies-hum-cuts-out.mp3", position: pos, volume: 0.45, maxDistance: 14 });
       return;
     }
 
@@ -224,7 +239,7 @@ export const ears = {
         queuePayout(w, { xp: 0, items: [drop], text: `Found behind curtain: ${drop}` });
         return;
       }
-      toast(ctx, who, drawn > 0.55 ? "Curtain drawn" : "Curtain pulled back");
+      who.state.notice = { text: drawn > 0.55 ? "Rings scrape the rail. Bed's private again." : "Empty bed. Sheets still warm, somehow.", at: now };
       return;
     }
 
@@ -247,7 +262,7 @@ export const ears = {
 
     if (s.kind === "tube") {
       const uid = s.uid ?? ctx.self.id;
-      if (usedAt(ctx, uid)) { toast(ctx, who, "Pneumatic tube pressure rebuilding · check back later.", "sfx-ui-denied-click.mp3", pos, 0.45); return; }
+      if (usedAt(ctx, uid)) { toast(ctx, who, "Tube's sucking air. Nothing in transit.", "sfx-ui-denied-click.mp3", pos, 0.45); return; }
       markUsed(ctx, uid);
       s.info = "recharging";
       if (ctx.self.primitive?.params) ctx.self.primitive = { ...ctx.self.primitive, params: { ...ctx.self.primitive.params, ready: false } };
@@ -256,7 +271,7 @@ export const ears = {
       if (ctx.random() < 0.4) items.push("cash:25");
       if (!PAGES_RE(w, 104)) items.push("page:104");
       const first = payOnce(w, "l109-tube");
-      queuePayout(w, { xp: first ? 25 : 0, items, text: "Pneumatic capsule arrived!" });
+      queuePayout(w, { xp: first ? 25 : 0, items, text: "Capsule thunks home. Addressed to Ward 0, which doesn't exist." });
       heard(ctx, { clip: SFX + "sfx-pneumatic-sliding-metal-door-hiss-open.mp3", position: pos, volume: 0.7, maxDistance: 14 });
       return;
     }
@@ -307,5 +322,5 @@ export const ears = {
     }
 
 
-  },
-};
+  }
+}
