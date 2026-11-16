@@ -70,7 +70,9 @@ export function material(ctx) {
     // beside the nose, between the muzzle top and the eyes, no pale paint at all: the pictures' muzzle peaks read as white triangles there
     const besideNose = step(abs(u.sub(0.5)), 0.17).mul(step(P("muzV", 0.32).sub(0.03), v)).mul(step(v, 0.47));
     pic = vec4(pic.rgb, pic.a.mul(float(1).sub(besideNose.mul(smoothstep(0.45, 0.6, min(pic.r, pic.g))))));
-    pic = vec4(pic.rgb, mix(pic.a, pic.a.mul(max(keep, ink.mul(wide))), lowFace));
+    // Nov 16 (Shelly: dark arcs beside the nose): the arcs were the face pictures' old muzzle-outline ink kept by `wide`; mouth ink now stays only in the mouth's own column
+    const mouthCol = smoothstep(0.1, 0.075, abs(u.sub(0.5)));
+    pic = vec4(pic.rgb, mix(pic.a, pic.a.mul(max(keep, ink.mul(wide).mul(mouthCol))), lowFace));
     // on the snout the projection grazes its sides and the mouth smears: muzzle paint only lands where the surface faces the front
     const facing = mix(float(1), smoothstep(0.32, 0.62, normalLocal.z), muzzle);
     // iris: the picture's blue above max(r,g) is the iris shading (art/cat-wardrobe/iris.py); look.eyes colours it, the pupil stays black
