@@ -306,7 +306,7 @@ def run(body, ZONES, DOC, a):
         if b_ - a_ < 1: print('BODYWORKS T1 WARN empty segment', name, tube); return
         SEG.setdefault(name, []).append((tb, a_, b_, mask))
     BIG = 99
-    seg('top_midriff', 'top_torso', -BIG, z_underbust - 0.01 * S)   # top_chest is a zone shell (below): a tube can't wrap the top of a bust
+    seg('top_midriff', 'top_torso', -BIG, z_underbust - 0.05 * S)   # top_chest is a zone shell (below): a tube can't wrap the top of a bust
     # top_yoke: an offset shell of the upper-chest, upper-back and shoulder zones (below), not the old x-swept tube that left
     # gaps at the collarbone and the sleeve seam on every body tried
     seg('neck_collar', 'neck_band', -9, 0.5); seg('neck_choker', 'neck_band', 0.5, 99); seg('neck_lace', 'neck_lace', -9, 99)
