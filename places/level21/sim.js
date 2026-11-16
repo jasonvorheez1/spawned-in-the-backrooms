@@ -21,7 +21,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import { spawnProp } from "../../scripts/lib/l2props.js";
 import { workbenchSpec, ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
 export const cadence = "500ms";
-const V = 33; // 33: two-tick teardown/rebuild so V bumps never collide with destroyed entity IDs; 32: align radio-rack, north-wall roster, and twin restroom basins with l21-geo
+const V = 34; // 34: painted danger plates + roster clipboard (Nov 16); 33: two-tick teardown/rebuild so V bumps never collide with destroyed entity IDs; 32: align radio-rack, north-wall roster, and twin restroom basins with l21-geo
 const COT = { id: "/cdn/value.66bddc7e8f06c294092289342cca8265ad492304cd8e1df9cef66e01e9b94c72.glb", forward: "-z" }, BENCH = { id: "/cdn/value.79f1d7e5cb9f66321063c5449edeb0e169c6f6223a0bac5e89d7067905636e1e.glb", forward: "-z" };
 const MD = (h) => ({ id: `/cdn/value.${h}.glb`, forward: "-z" }), BOXC = { body: "static", collider: "box" }; // art/level21/props21.py
 const L21M = {
