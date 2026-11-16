@@ -74,7 +74,7 @@ function startPour(ctx) {
   animate(ctx, id, { "feetPosition.y": [0.43, 0.49], "rotation.roll": [-9, 0] }, { duration: 0.28, easing: "easeOutQuad" });
   ctx.spawn("bottling-stream", { parent, feetPosition: { x: 0, y: 0.83, z: -0.265 }, fx: { script: POUR } });
 }
-function sip(ctx, who, n) { if (who?.state) who.state.thirst = Math.min(100, (who.state.thirst ?? 100) + n); }
+function sip(who, n) { if (who?.state) who.state.thirst = Math.min(100, (who.state.thirst ?? 100) + n); }
 const cotState = (id) => ({ kind: "field-rest", plate: id + "-plate", name: "Office cot", verb: "Rest", info: "For the person who claimed the office" });
 
 export function wireOfficeCots(ctx) {
