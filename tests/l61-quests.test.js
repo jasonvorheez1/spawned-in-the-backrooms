@@ -178,6 +178,36 @@ test('Four Hundred and Thirteen: Level 3 plate prop -> Base Omega -> Guild [Surv
   expect(say61(mkCtx(), mCopy, 'l61-guild-a', "How's Page 413 holding up in the Book?").mood).toBe('annoyed')
 })
 
+test('Camp Amber responds to Page 413 and can warn travellers after the M.E.G. sale', async () => {
+  const { ears: hubEars } = await import('../scripts/hub-thing.js')
+  const warning = 'I sold the survey to the M.E.G. Can Amber still warn people about B4?'
+  const post = 'Please post the B4 warning for travellers.'
+  const s = { l61GuildQ: 99, l61GuildTo: 'meg', qdone: { 'four-hundred-and-thirteen': { text: 'Sold the survey to the M.E.G.' } } }
+  expect(l61Choices('hub-amber-jo', s).some(c => c.text === warning)).toBe(true)
+  expect(say61(mkCtx(), s, 'hub-amber-jo', post)).toBeNull()
+  say61(mkCtx(), s, 'hub-amber-jo', warning)
+  expect(s.quests['amber-b4-warning'].mark.id).toBe('hub-amber-jo')
+  say61(mkCtx(), s, 'hub-amber-jo', post)
+  expect(s.l61AmberB4).toBe(2)
+  expect(s.rep.amber).toBe(3)
+  expect(s.qdone['four-hundred-and-thirteen'].text).toContain('Later, Jo posted')
+  expect(s.qdone['amber-b4-warning']).toBeTruthy()
+  expect(say61(mkCtx(), s, 'hub-amber-jo', post)).toBeNull()
+  expect(s.rep.amber).toBe(3)
+
+  const box = { state: { kind: 'amberbox' }, feetPosition: { x: 0, y: 0, z: 0 } }
+  const p = player(s)
+  hubEars.press(mkCtx(0.5, { self: box, objects: { p } }), { by: 'p' })
+  expect(s.notice.text).toContain('B4 drops one way')
+  const other = player({ l61GuildQ: 99, l61GuildTo: 'meg' })
+  hubEars.press(mkCtx(0.5, { self: box, objects: { p: other } }), { by: 'p' })
+  expect(other.state.notice.text).not.toContain('B4 drops one way')
+
+  const guild = { l61GuildQ: 99, l61GuildTo: 'guild-warn' }
+  expect(l61Choices('hub-amber-jo', guild).some(c => c.text.includes("Guild's Page 413"))).toBe(true)
+  expect(say61(mkCtx(), guild, 'hub-amber-jo', "Did the Guild's Page 413 warning reach Camp Amber?").reply).toContain('B4')
+})
+
 test('Paper Bird rewrite + Two Menus Short: tray recognition, Guild waybill, Kael coffee favor, Guild dividend', () => {
   const s = { skl: hiSkills, cents: 2000, l61TraysReturned: 2, craneQ: 0 }
 

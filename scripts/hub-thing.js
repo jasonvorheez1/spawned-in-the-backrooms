@@ -41,8 +41,18 @@ export const ears = {
       return; }
     if (k === "blank") { if ((s.hubUP ?? 0) === 1) { s.hubUP = 2; s.hubBlank = 1; setQuest(s, "hub-uncharted", { name: "Uncharted Passage", step: "The blank door is warm. Tell Sato, Okafor, or Pip at Camp Amber.", mark: M("hub-meg-sato") }); tellQuest(ctx, p, "Uncharted Passage · Report back"); }
       s.hubBlank = 1; return notify(ctx, p, "No mark over it. No keyhole. The concrete is warm, like something on the other side has been leaning on it for a long time."); }
-    if (k === "amberbox") { if (s.hubAmberKit) { if (!ready(s, "amber-water", 7200000, ctx.now())) return notify(ctx, p, "One box per face. Pip wrote your face down."); const b = { ...(s.snacks ?? {}) }; b.purified_water = (b.purified_water ?? 0) + 1; s.snacks = b; return notify(ctx, p, "Somebody topped it up with one bottle of water. GO SLOW is underlined twice now."); } s.hubAmberKit = 1; const bag = { ...(s.snacks ?? {}) }; for (const t of ["purified_water", "bandage", "stew"]) bag[t] = (bag[t] ?? 0) + 1; s.snacks = bag;
-      return notify(ctx, p, "Camp Amber's newcomer box: water, a tin, a bandage. Someone has written GO SLOW on the lid."); }
+    if (k === "amberbox") {
+      const warning = s.l61GuildQ === 99 && (s.l61GuildTo === "guild-warn" || s.l61AmberB4 === 2)
+        ? " A note warns: Level 4 vending button B4 drops one way into the Snackrooms."
+        : "";
+      if (s.hubAmberKit) {
+        if (!ready(s, "amber-water", 7200000, ctx.now())) return notify(ctx, p, "One box per face. Pip wrote your face down." + warning);
+        const b = { ...(s.snacks ?? {}) }; b.purified_water = (b.purified_water ?? 0) + 1; s.snacks = b;
+        return notify(ctx, p, "Somebody topped it up with one bottle of water. GO SLOW is underlined twice now." + warning);
+      }
+      s.hubAmberKit = 1; const bag = { ...(s.snacks ?? {}) }; for (const t of ["purified_water", "bandage", "stew"]) bag[t] = (bag[t] ?? 0) + 1; s.snacks = bag;
+      return notify(ctx, p, "Camp Amber's newcomer box: water, a tin, a bandage. Someone has written GO SLOW on the lid." + warning);
+    }
     if (k === "note") return notify(ctx, p, ctx.self.state.text);
   },
 };
