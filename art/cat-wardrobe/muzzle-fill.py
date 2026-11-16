@@ -5,7 +5,7 @@
 # blender -b --factory-startup --python-exit-code 1 -P art/cat-wardrobe/muzzle-fill.py -- IN.glb OUT.glb [strength]
 import bpy, sys
 from mathutils import Vector
-args = sys.argv[sys.argv.index("--")+1:]; IN, OUT = args[:2]; ST = float(args[2]) if len(args) > 2 else 0.45; CH = float(args[3]) if len(args) > 3 else 0.7   # snout melt, chin-front melt (Nov 16: "their head is weird up front": the lowered jaw made a shelf)
+args = sys.argv[sys.argv.index("--")+1:]; IN, OUT = args[:2]; ST = float(args[2]) if len(args) > 2 else 0.7; CH = float(args[3]) if len(args) > 3 else 1.0   # snout melt, chin-front melt (Nov 16: "their head is weird up front": the lowered jaw made a shelf)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=IN)
 head = bpy.data.objects["Head"]; me = head.data; mw = head.matrix_world; inv = mw.inverted()
