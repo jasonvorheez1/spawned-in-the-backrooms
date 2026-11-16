@@ -18,7 +18,7 @@ def snout(p):
     q = v.length / SR
     if q >= 1: return Vector()
     w = (1 - sm(q)) * sm((-v.y) / 0.04)              # strongest at the tip, nothing at the cheeks and brow
-    return -v * 0.5 * w                              # every point pulled toward the root: a smaller, rounder button
+    return -v * 0.68 * w                              # every point pulled toward the root: a smaller, rounder button
 CX, CZ, AMP, SXW, SUP, SDN = 0.045, 0.528, 0.046, 0.034, 0.044, 0.034
 if CLOTH: AMP = 0.049
 def lobe(p, s):
