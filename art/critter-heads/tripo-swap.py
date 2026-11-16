@@ -21,6 +21,8 @@ for v, p in zip(bm.verts, OB): v.co = p
 bmesh.ops.triangulate(bm, faces=bm.faces[:])
 bm.verts.ensure_lookup_table(); bm.faces.ensure_lookup_table()
 TRIS = [(tuple(v.index for v in f.verts), f.material_index) for f in bm.faces]
+UVL = [l.name for l in om.uv_layers]
+TUV = {n: [tuple(lp[bm.loops.layers.uv[n]].uv.copy() for lp in f.loops) for f in bm.faces] for n in UVL}
 bvh = BVHTree.FromBMesh(bm)
 # old skull frame
 mid = [p for p in OB if abs(p.x) < 0.02]
@@ -52,7 +54,7 @@ P = [v.co for v in tri.data.vertices]
 EX = [ext(0), ext(1), ext(2)]
 xl = 0.02 * EX[0] + 1e-3
 ttip = min([p for p in P if abs(p.x) < xl] or P, key=lambda p: p.y)
-zl = ttip.z + 0.36
+zl = ttip.z + 0.4 * EX[2]
 twid = max(p.x for p in P if p.z < zl) - min(p.x for p in P if p.z < zl)
 s = wid / max(ext(0) * 0.0 + twid, 1e-6)
 for v in tri.data.vertices:
@@ -65,6 +67,7 @@ if len(tri.data.polygons) > NF:
     d = tri.modifiers.new("dec", "DECIMATE"); d.ratio = NF / len(tri.data.polygons); bpy.ops.object.modifier_apply(modifier="dec")
 for f in tri.data.polygons: f.use_smooth = True
 for u in list(tri.data.uv_layers): tri.data.uv_layers.remove(u)
+NEWUV = {n: tri.data.uv_layers.new(name=n) for n in UVL}
 tri.data.materials.clear()
 for m in om.materials: tri.data.materials.append(m)
 # per new vertex: nearest old triangle
@@ -89,6 +92,15 @@ for vi, (fi, loc) in enumerate(hits):
         for n, g in OW[oi].items(): acc[n] = acc.get(n, 0) + g * wt
     for n, g in acc.items():
         if g > 1e-4: tri.vertex_groups[n].add([vi], g, "REPLACE")
+# UVs: each corner takes the old surface's UV under it (the face paint projects through these)
+for f in tri.data.polygons:
+    fi0, _ = near(f.center)
+    for li in f.loop_indices:
+        vi = tri.data.loops[li].vertex_index; fi, loc = hits[vi]
+        if TRIS[fi][1] != TRIS[fi0][1]: fi, loc = fi0, bvh.find_nearest(NV[vi])[0]
+        w = bary(fi, loc)
+        for n in UVL:
+            c = TUV[n][fi]; NEWUV[n].data[li].uv = (sum(c[k][0] * w[k] for k in range(3)), sum(c[k][1] * w[k] for k in range(3)))
 # shape keys: each old key's delta, carried by the same barycentric blend
 tri.shape_key_add(name="Basis")
 R = omw.to_3x3()
