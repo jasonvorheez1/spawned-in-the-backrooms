@@ -126,6 +126,23 @@ def run(body, ZONES, DOC, a):
         if mask is not None: m &= mask
         return m
 
+    # a garment tube the tail pokes out of: open the cells it leaves through (a column and a ring of margin), so the cloth
+    # never wraps a coloured band round the tail root
+    _TAILW = np.array([sum(w for k, w in vw.items() if 'tail' in k.lower()) for vw in VW]); _TV = V[_TAILW >= 0.6]
+    def tail_open(tb):
+        if not len(_TV): return
+        for i, g in enumerate(tb.rings):
+            rel = _TV - g['o']; m = np.abs(rel[:, 2]) < 0.02 * S
+            if not m.any(): continue
+            Rl = rel[m].copy(); Rl[:, 2] = 0; Lt = np.linalg.norm(Rl, axis=1) + 1e-9
+            for j, d in enumerate(g['dirs']):
+                cone = (Rl @ d) / Lt > 0.985
+                if cone.any() and Lt[cone].max() > tb.R[i, j] + 0.004 * S: tb.hole[i, j] = True
+        h = tb.hole.copy()
+        for dj in (-1, 1): h |= np.roll(tb.hole, dj, 1)
+        for di in (-1, 1): h |= np.roll(tb.hole, di, 0) & (np.arange(len(tb.rings)) > 0)[:, None]
+        tb.hole = h
+        print('BODYWORKS T1', tb.name, 'tail hole cells', int(tb.hole.sum()))
     # ---------- TOP: torso + yoke + sleeves ----------
     t = add(Tube('top_torso', 'top', OFF['top'], 40, COL['top']))
     okT = lambda n: tor_fam(n) or n.startswith('thigh')
@@ -143,22 +160,7 @@ def run(body, ZONES, DOC, a):
             from collections import Counter
             rr = g['r']; print('DBG torso z %.3f yc %.3f %s rF %.3f rB %.3f rS %.3f' % (g['u'], g['o'][1], dict(Counter(g['kind'])), rr[0], rr[20], rr[10]))
     t.finish(2)
-    # the tail's exit through the top's hem: open the cells the tail pokes out of, like the skirt's, so the shirt
-    # never wraps a pink band around the tail root
-    _TV = V[np.array([sum(w for k, w in vw.items() if 'tail' in k.lower()) >= 0.6 for vw in VW])]
-    if len(_TV):
-        for i, g in enumerate(t.rings):
-            rel = _TV - g['o']; m = np.abs(rel[:, 2]) < 0.02 * S
-            if not m.any(): continue
-            Rl = rel[m].copy(); Rl[:, 2] = 0; Lt = np.linalg.norm(Rl, axis=1) + 1e-9
-            for j, d in enumerate(g['dirs']):
-                cone = (Rl @ d) / Lt > 0.985
-                if cone.any() and Lt[cone].max() > t.R[i, j] + 0.004 * S: t.hole[i, j] = True
-        h = t.hole.copy()
-        for dj in (-1, 1): h |= np.roll(t.hole, dj, 1)
-        for di in (-1, 1): h |= np.roll(t.hole, di, 0) & (np.arange(len(t.rings)) > 0)[:, None]
-        t.hole = h
-        print('BODYWORKS T1 top tail hole cells', int(t.hole.sum()))
+    tail_open(t)
     # the yoke reads T0 ZONE names, not rig roles: an auto-rigger's Head weights spill onto the collarbones (Mixamo) and
     # would punch the yoke full of holes; the zones were already cut by shape where the weights were thin
     YOKEZ = ('upperchest', 'breast_l', 'breast_r', 'cleavage', 'chest', 'upperback', 'shoulder_l', 'shoulder_r', 'upperarm_l', 'upperarm_r')
@@ -209,6 +211,7 @@ def run(body, ZONES, DOC, a):
         m = zslab(z, 0.01, 0.25); yc = float(V[m][:, 1].mean()) if m.sum() > 10 else body.yc
         pv.ring(float(z), np.array([0, yc, z]), around(40, FWD, X), okL, hole=anyarm, maxr=0.3)
     pv.finish(1)
+    tail_open(pv)
     LEGP = {}
     for s, sg in SIDES:
         Hh, Kk, A = J[f'hip.{s}'], J[f'knee.{s}'], J[f'ankle.{s}']
