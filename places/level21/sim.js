@@ -214,7 +214,7 @@ function lay(ctx) {
   sp("l21-sandbags-0", { feetPosition: { x: cellCenter(2, ARRIVE.cz).x - 0.8, y: 0, z: DOWN.z + 1.6 }, model: L21M.sandbags, physics: BOXC });
   sp("l21-sandbags-1", { feetPosition: { x: cellCenter(2, ARRIVE.cz).x - 0.8, y: 0, z: DOWN.z - 1.6 }, rotation: { yaw: 180 }, model: L21M.sandbags, physics: BOXC });
   const ex = rm("explo")[0]; sp("l21-sign-explo", { feetPosition: { x: edgeOf(ex, 2) + 0.25, y: 2.3, z: center(ex).z }, rotation: { yaw: -90 }, ...sign(1.8, 0.5, `${MEG(1.8)}<div style="font-size:66px">EXPLORATION WING</div><div style="font-size:32px;color:#c8d8b8">LOG ALL GEAR AT DESK</div></div>`) });
-  const fr = rm("fridges")[0], fc = center(fr); sp("l21-sign-fridge", { feetPosition: { x: fc.x, y: 2.4, z: edgeOf(fr, 3) + 0.2 }, rotation: { yaw: 0 }, ...sign(2.5, 0.65, `<div face="front" width="2.5m" style="font-family:Arial,sans-serif;font-weight:900;color:#f0f4f8;text-align:center;line-height:1.05"><div style="font-size:78px">COLD STORAGE B-04</div><div style="font-size:34px;color:#a8d8c8">hand-chalked: "REFRIGERATOR PARADISE"</div></div>`, "oklch(0.3 0.04 200)") });
+  const fr = rm("fridges")[0], fc = center(fr); sp("l21-sign-fridge", { feetPosition: { x: fc.x, y: 2.4, z: edgeOf(fr, 3) + 0.2 }, rotation: { yaw: 180 }, ...sign(2.5, 0.65, `<div face="front" width="2.5m" style="font-family:Arial,sans-serif;font-weight:900;color:#f0f4f8;text-align:center;line-height:1.05"><div style="font-size:78px">COLD STORAGE B-04</div><div style="font-size:34px;color:#a8d8c8">hand-chalked: "REFRIGERATOR PARADISE"</div></div>`, "oklch(0.3 0.04 200)") });
   sp("l21-sign-edges", { feetPosition: { x: cellCenter(EDGE_X - 1, LANE.z0 + 1).x + 1.6, y: 2.3, z: cellCenter(0, LANE.z0 + 1).z }, rotation: { yaw: -90 }, ...sign(2.0, 0.65, `${MEG(2.0)}<div style="font-size:76px">SECTOR E · BOUNDARY</div><div style="font-size:34px;color:#e8a098">UNLIT ZONE · LIGHT CHECK MANDATORY</div></div>`) });
 
   // ---- Base Alef: dim concourse, triage cots, dead radio rack, desk paperwork, fallen garrison
@@ -514,6 +514,7 @@ const l21CampBenches = () => {
 
 export function tick(ctx) {
   texSigns(ctx, SIGN_TEX, 3);
+  if ((ctx.place.state.fridgeYawV ?? 0) < 1) { const fs = ctx.getObject("l21-sign-fridge"); if (fs) { fs.rotation = { yaw: 180 }; ctx.place.state.fridgeYawV = 1; } } // it faced the wall before Nov 16
   if ((ctx.place.state.downYawV ?? 0) < 2) { const ds = ctx.getObject("l21-down-sign"), cs = ctx.getObject("l21-cave-sign"); if (ds && cs) { ds.rotation = { yaw: -90 }; cs.feetPosition = { ...cs.feetPosition, y: 1.65 }; ctx.place.state.downYawV = 2; } } // faced the wall (read mirrored) before Nov 16
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level21"); // every sign dressed as its own board (scripts/lib/sign-style.js)
