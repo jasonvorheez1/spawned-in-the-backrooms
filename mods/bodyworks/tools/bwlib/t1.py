@@ -509,7 +509,8 @@ def run(body, ZONES, DOC, a):
             for _nkZo in _nkSk:
                 _nkDg = bpy.context.evaluated_depsgraph_get(); _nkBz = _bm3.new(); _nkBz.from_mesh(_nkZo.data); _nkBz.transform(_nkZo.matrix_world); _nkTr.append(_BVH.FromBMesh(_nkBz)); _nkBz.free()
             _nkGap = OFF['top'] * 0.8
-            for _nkV in _nkBand:
+            _nkAll = [_nkV for _nkV in _nkB.verts if (_nkMW @ _nkV.co).z > z_mock - 0.05 * S]   # the open collar edge too, or the nape skin pokes over it
+            for _nkV in _nkAll:
                 _nkW = _nkMW @ _nkV.co; _nkBest = None
                 for _nkT in _nkTr:
                     _nkHit = _nkT.find_nearest(_nkW)
