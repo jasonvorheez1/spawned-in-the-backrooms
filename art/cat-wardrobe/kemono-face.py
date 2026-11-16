@@ -27,7 +27,7 @@ def open_eye(cx, cy, sx, rx, ry, small=False):
     # Nov 16 (Shelly "redo the eyes and mouth too"; rule: black eyes): a glossy black bean, no white, no iris.
     # Rubberhose-kawaii: tall oval, one big catchlight up and toward the nose side, one small one low and outside, soft sheen at the bottom.
     k = 0.62 if small else 1.0
-    erx, ery = rx * 0.66 * k, ry * 0.86 * k
+    erx, ery = rx * 0.9 * k, ry * 1.02 * k   # Nov 16 v3 (Shelly "looks like beady eyes"): back up to big kawaii beans
     ell(cx, cy + 4, erx, ery, fill=(14, 10, 14, 255))
     for i in range(10):                                   # a faint warm sheen along the lower rim, so the black reads round
         t = i / 10
