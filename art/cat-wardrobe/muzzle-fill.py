@@ -13,7 +13,7 @@ head = bpy.data.objects["Head"]; me = head.data; mw = head.matrix_world; inv = m
 P = [mw @ v.co for v in me.vertices]
 nose = min((p for p in P if abs(p.x) < 0.012), key=lambda p: p.y)
 s = (max(p.z for p in P) - min(p.z for p in P)) / 0.62          # head size vs the cute head the numbers were set on
-XW, ZT, ZB, YD = 0.13 * s, nose.z + 0.015 * s, nose.z - 0.13 * s, 0.11 * s
+XW, ZT, ZB, YD = 0.13 * s, nose.z + 0.015 * s, nose.z - 0.13 * s, 0.2 * s
 reg = [i for i, p in enumerate(P) if abs(p.x) < XW and ZB < p.z < ZT and p.y < nose.y + YD]
 def envelope(pts, z):                                            # forward (min y) convex envelope of (z, y) points, read at z
   pts = sorted(pts); hull = []
@@ -28,7 +28,7 @@ def envelope(pts, z):                                            # forward (min 
   return None
 dy = {}
 for i in reg:
-  p = P[i]; sl = [(P[j].z, P[j].y) for j in reg if abs(P[j].x - p.x) < 0.009 * s]
+  p = P[i]; sl = [(P[j].z, P[j].y) for j in reg if abs(P[j].x - p.x) < 0.012 * s]
   e = envelope(sl, p.z)
   if e is None or e >= p.y: continue
   fx = max(0.0, 1 - abs(p.x) / XW) ** 0.7
@@ -37,9 +37,12 @@ for i in reg:
 nb = [[] for _ in P]
 for e in me.edges: a, b = e.vertices; nb[a].append(b); nb[b].append(a)
 field = [dy.get(i, 0.0) for i in range(len(P))]
-for _ in range(6):                                               # smooth the push, keep it a push
-  field = [min(f, sum(field[j] for j in nb[i]) / len(nb[i])) if (i in dy or f) and nb[i] else f for i, f in enumerate(field)] if False else \
-          [ (0.5 * f + 0.5 * sum(field[j] for j in nb[i]) / len(nb[i])) if nb[i] and abs(P[i].x) < XW * 1.2 and ZB - 0.02 < P[i].z < ZT + 0.01 else f for i, f in enumerate(field)]
+print("raw", len(dy), round(-min(dy.values() or [0]), 4))
+zone = [abs(p.x) < XW * 1.2 and ZB - 0.02 * s < p.z < ZT + 0.01 * s for p in P]
+for _ in range(4):                                               # smooth the push without thinning it: a vertex keeps its own push or its neighbours' mean, whichever is deeper
+  field = [min(f, 0.85 * sum(field[j] for j in nb[i]) / len(nb[i])) if nb[i] and zone[i] else f for i, f in enumerate(field)]
+for _ in range(2):                                               # then one gentle relax so the rim has no step
+  field = [(0.6 * f + 0.4 * sum(field[j] for j in nb[i]) / len(nb[i])) if nb[i] and zone[i] else f for i, f in enumerate(field)]
 field = [min(0.0, f) for f in field]
 moved = 0
 for i, f in enumerate(field):
