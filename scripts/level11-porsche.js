@@ -205,3 +205,12 @@ import { raycast } from "builtin/physics";
 function rayDown(ctx, origin, up) {
   return raycast(ctx, origin, scale(up, -1), { distance: C.rayLen, physicsOnly: true, ignoreEntities: [ctx.self.id] });
 }
+
+// a car that slips through the lot (ground not streamed yet) comes back to where it was parked
+export function onOutOfBounds(ctx) {
+  const h = ctx.self.state.parkedAt;
+  if (!h) return true;
+  ctx.self.velocity = { x: 0, y: 0, z: 0 };
+  ctx.self.feetPosition = { x: h.x, y: h.y + 0.3, z: h.z };
+  return false;
+}
