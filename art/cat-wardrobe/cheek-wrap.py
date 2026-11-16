@@ -17,11 +17,11 @@ EYE = 0.835
 AMT = float(a[3]) if len(a) > 3 else 0.03   # the drawn eyes' lower lids: the fill fades out before it reaches them
 def fill(p):
     dz = p.z - (ZC - 0.012)
-    r = math.hypot(p.x / 0.165, dz / (0.055 if dz > 0 else 0.13))
+    r = math.hypot(p.x / 0.2, dz / (0.055 if dz > 0 else 0.13))
     if r >= 1: return 0.0
     w = (1 - r * r) ** 2
     side = sm((abs(p.x) - 0.02) / 0.06)          # nothing on the muzzle itself: only its sides and the cheeks
-    face = 1 - sm((p.y - FY) / 0.16)             # the front half of the head, out to where the cheeks turn back
+    face = 1 - sm((p.y - FY) / 0.2)             # the front half of the head, out to where the cheeks turn back
     top = 1 - sm((p.z - (EYE - 0.025)) / 0.025)
     return AMT * w * side * face * top
 D = [Vector((0, -fill(p), 0)) for p in W]
@@ -30,6 +30,8 @@ for k in kb:
     for i in range(len(B)): k.data[i].co = k.data[i].co + inv @ D[i]
 for i, v in enumerate(me.vertices): v.co = kb["Basis"].data[i].co
 if PROOF:
+    KEY = a[4] if len(a) > 4 else None
+    if KEY: kb[KEY].value = 1.0
     sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 600
     mat = bpy.data.materials.new("clay"); mat.diffuse_color = (0.9, 0.9, 0.9, 1)
     for o in bpy.data.objects:
@@ -37,7 +39,7 @@ if PROOF:
     bpy.ops.object.light_add(type="SUN", rotation=(0.9, 0.3, -0.6)); bpy.context.object.data.energy = 3
     w = bpy.data.worlds.new("w"); sc.world = w; w.color = (0.3, 0.3, 0.33)
     import os
-    for nm, pos in (("side", (-0.9, -0.5, 0.80)), ("front", (-0.35, -0.9, 0.80))):
+    for nm, pos in (("side", (-0.9, -0.5, 0.80)), ("front", (-0.35, -0.9, 0.80)), ("q", (-0.6, -0.75, 0.9))):
         bpy.ops.object.camera_add(location=pos); cam = bpy.context.object; cam.data.lens = 85
         d = Vector((0, FY + 0.09, 0.79)) - cam.location; cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
         sc.camera = cam; sc.render.filepath = PROOF.replace(".png", f"-{nm}.png"); bpy.ops.render.render(write_still=True)
