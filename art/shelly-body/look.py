@@ -3,7 +3,16 @@ src = sys.argv[sys.argv.index("--")+1]; out = sys.argv[sys.argv.index("--")+2]
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=src)
 sc=bpy.context.scene; sc.render.engine="CYCLES"; sc.cycles.samples=12; sc.render.resolution_x=600; sc.render.resolution_y=800
+for o in list(sc.objects):
+  if o.name.startswith("Icosphere"): bpy.data.objects.remove(o)
 meshes=[o for o in sc.objects if o.type=="MESH"]
+for o in meshes:
+  if o.data.shape_keys:
+    for k in o.data.shape_keys.key_blocks[1:]: k.value = 1.0 if k.name=="Chest" else 0.0
+  for m in o.data.materials:
+    if m and m.use_nodes:
+      b=m.node_tree.nodes.get("Principled BSDF")
+      if b: b.inputs["Base Color"].default_value=(0.9,0.62,0.35,1)
 for o in meshes: print("MESH",o.name,len(o.data.vertices),[k.name for k in (o.data.shape_keys.key_blocks if o.data.shape_keys else [])], [ (k.name,round(k.value,2)) for k in (o.data.shape_keys.key_blocks if o.data.shape_keys else [])][:3])
 dg=bpy.context.evaluated_depsgraph_get()
 zs=[ (o.matrix_world@v.co) for o in meshes for v in o.evaluated_get(dg).data.vertices]
