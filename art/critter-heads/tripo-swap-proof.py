@@ -2,7 +2,7 @@
 # scaled to the old skull's width, its muzzle tip at the old one's height, rendered beside the current head for Shelly's verdict.
 # usage: blender -b --factory-startup --python-exit-code 1 --python tripo-swap-proof.py -- <body.glb> <tripo.glb> <out.png> <out.glb>
 import bpy, sys
-from mathutils import Vector
+from mathutils import Vector, Matrix
 a = sys.argv[sys.argv.index("--") + 1:]; SRC, TRI, OUT, GLB = a
 bpy.ops.wm.read_factory_settings(use_empty=True)
 def load(f):
@@ -24,13 +24,15 @@ zc = (max(p.z for p in skull) + min(p.z for p in skull)) / 2
 yb = max(p.y for p in skull)
 headB.hide_render = True
 T = load(TRI); tri = next(o for o in T if o.type == "MESH")
-TW = [tri.matrix_world @ v.co for v in tri.data.vertices]
+M = tri.matrix_world.copy(); tri.parent = None; tri.matrix_world = M
+tri.data.transform(M); tri.matrix_world = Matrix()
+TW = [v.co.copy() for v in tri.data.vertices]
 tw = max(p.x for p in TW) - min(p.x for p in TW)
 s = wid * 1.08 / tw
 tcx = (max(p.x for p in TW) + min(p.x for p in TW)) / 2; tz = (max(p.z for p in TW) + min(p.z for p in TW)) / 2; tyb = max(p.y for p in TW)
-root = next(o for o in T if o.parent is None)
-root.scale = (s, s, s); bpy.context.view_layer.update()
-root.location += Vector((cx - tcx * s, yb - tyb * s + 0.01, zc + 0.03 - tz * s))
+for v in tri.data.vertices:
+    p = v.co; v.co = Vector((cx + (p.x - tcx) * s, yb + 0.01 + (p.y - tyb) * s, zc + 0.03 + (p.z - tz) * s))
+tri.data.update()
 print("scale", round(s, 3))
 sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 24; sc.render.resolution_x = 1200; sc.render.resolution_y = 700
 w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[0].default_value = (0.55, 0.55, 0.58, 1); w.node_tree.nodes["Background"].inputs[1].default_value = 0.9
