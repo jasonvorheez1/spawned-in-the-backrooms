@@ -406,7 +406,7 @@ function move(ctx, m) {
   }
   if (!k) return;
   ss.busy = now + d * 1000 + 60;
-  try { animate(ctx, me.id, k, { duration: d, easing: e }); } catch (err) { ctx.log("l178 move", m, String(err)); }
+  try { animate(ctx, me, k, { duration: d, easing: e }); } catch (err) { ctx.log("l178 move", m, String(err)); }
 }
 
 // A lamp flares (or a dead torch stutters): a short live light at the thing, gone on its own.
@@ -415,7 +415,7 @@ function glow(ctx, stutter) {
   ctx.spawn({ feetPosition: { x: c.x, y: c.y + 0.05, z: c.z }, lifetime: stutter ? 0.5 : 1.3, audience: "all",
     light: { kind: "point", color: stutter ? "oklch(0.92 0.06 95)" : "oklch(0.85 0.13 70)", intensity: stutter ? 1.2 : 2.2, distance: stutter ? 4 : 6 } });
   const g = ctx.getObject(ctx.self.id + "/glow");
-  if (g) try { animate(ctx, g.id, { scale: [1, 1.35, 1] }, { duration: 1.1, easing: "easeOutSine" }); } catch {}
+  if (g) try { animate(ctx, g, { scale: [1, 1.35, 1] }, { duration: 1.1, easing: "easeOutSine" }); } catch {}
 }
 
 function puff(ctx, name) {
