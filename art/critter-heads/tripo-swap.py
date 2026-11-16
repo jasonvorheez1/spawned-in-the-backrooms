@@ -73,6 +73,16 @@ NEWUV = {n: tri.data.uv_layers.new(name=n) for n in UVL}
 tri.data.materials.clear()
 for m in om.materials: tri.data.materials.append(m)
 BB('cleaned', [v.co for v in tri.data.vertices])
+# neck: the low band of the new head melts onto the old head's own neck surface, so the ring meets the body exactly
+zb = min(v.co.z for v in tri.data.vertices); oz = min(p.z for p in OB); BAND = 0.16
+for v in tri.data.vertices:
+    t = 1 - (v.co.z - zb) / BAND
+    if t <= 0: continue
+    t = t * t * (3 - 2 * t)
+    q = Vector((v.co.x, v.co.y, v.co.z - (zb - oz) * t))
+    loc = bvh.find_nearest(q)[0]
+    v.co = v.co.lerp(loc, t)
+tri.data.update(); BB('necked', [v.co for v in tri.data.vertices])
 # per new vertex: nearest old triangle
 def near(p):
     loc, nrm, fi, d = bvh.find_nearest(p); return fi, loc
