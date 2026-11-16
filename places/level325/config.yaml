@@ -17,11 +17,11 @@ defaultSpawnRotation: { yaw: 0 }
 worldBounds: { bottom: -40 }
 atmosphere:
   look: { script: mods/awakening/look.js, params: { mistBase: 0, mistDensity: 0.01, mistReach: 120, bloomThreshold: 0.9, bloomStrength: 0.3, vignette: 0.16, aoStrength: 0.9, sharpen: 0.3 } }
-  sky: { kind: realistic, model: hosek }
+  sky: { kind: color, color: oklch(0.78 0.012 92) }
   timeOfDay: 13.5
   cycle: { frozen: 13.5 }
-  clouds: { enabled: true, density: 0.95, opacity: 1, altitude: 520, thickness: 500, speed: 0.6, color: "#b9b6ad" }
-  fog: { kind: linear, near: 35, far: 330, color: oklch(0.74 0.015 90) }
+  clouds: { enabled: true, density: 1, opacity: 0.9, altitude: 420, thickness: 900, speed: 0.5, color: "oklch(0.74 0.012 92)" }
+  fog: { kind: linear, near: 25, far: 300, color: oklch(0.76 0.014 92) }
   sun: { light: { intensity: 0.55, color: oklch(0.9 0.02 90), shadow: { enabled: true } } }
   ambient: { light: { color: oklch(0.8 0.015 95), intensity: 1.05 } }
   hemisphere: { skyColor: oklch(0.82 0.012 95), groundColor: oklch(0.6 0.02 80), intensity: 0.8 }
