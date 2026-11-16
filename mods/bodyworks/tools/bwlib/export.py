@@ -8,7 +8,7 @@ def run(body, ZONES, CAGES, DOC, a):
     for o in keep: o.select_set(True)
     path = os.path.join(a.out, DOC['name'] + '-bodyworks.glb')
     bpy.ops.export_scene.gltf(filepath=path, export_format='GLB', use_selection=True, export_skins=True, export_animations=False,
-                              export_morph=False, export_apply=False)
+                              export_morph=True, export_apply=False)
     DOC['export'] = {'glb': os.path.basename(path), 'zones': list(ZONES), 'cages': ['cage_' + n for n in (CAGES['cage'] if CAGES else {})],
                      'MB': round(os.path.getsize(path) / 1e6, 2)}
     print('BODYWORKS export ->', path, DOC['export']['MB'], 'MB')
