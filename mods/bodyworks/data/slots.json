@@ -1,0 +1,15 @@
+{
+ "_doc": "The garment slots every BodyWorks body gets (Medi 2026-10-09/10, T1 cage). layers_m: shell offset off the skin per slot (half of it scales with body size). hems_u: where segments are cut on the limb chains (arm: shoulder 0, elbow 1, wrist 2; leg: hip 0, knee 1, ankle 2). variants: slot -> variant -> the segments it is made of; neighbouring variants SHARE segments, so a short sleeve is the first half of a long one.",
+ "layers_m": {"legs": 0.004, "top": 0.006, "gloves": 0.008, "feet": 0.009, "skirt": 0.014, "neck": 0.007},
+ "colors": {"legs": "#3a86ff", "top": "#ff006e", "gloves": "#ffbe0b", "feet": "#fb5607", "skirt": "#8338ec", "neck": "#06d6a0"},
+ "hems_u": {"sleeve_short": 0.55, "glove_short": 1.75, "shorts": 0.45, "knee": 1.12, "boot": 1.55},
+ "variants": {
+  "top": {"full": ["top_midriff", "top_chest", "top_yoke"], "cropped": ["top_chest", "top_yoke"]},
+  "neck": {"choker": ["neck_choker"], "collar": ["neck_collar", "neck_choker"], "necklace": ["neck_lace"]},
+  "sleeves": {"short": ["top_sleeve_short"], "long": ["top_sleeve_short", "top_sleeve_long"]},
+  "gloves": {"short": ["gloves_hand", "gloves_cuff_short"], "long": ["gloves_hand", "gloves_cuff_short", "gloves_cuff_long"]},
+  "legs": {"panties": ["legs_seat"], "shorts": ["legs_seat", "legs_short"], "knee": ["legs_seat", "legs_short", "legs_knee"], "long": ["legs_seat", "legs_short", "legs_knee", "legs_long"]},
+  "skirt": {"mini": ["skirt_mini"], "knee": ["skirt_mini", "skirt_knee"], "long": ["skirt_mini", "skirt_knee", "skirt_long"]},
+  "feet": {"sandal": ["feet_sole"], "shoe": ["feet_sole", "feet_upper"], "boot": ["feet_sole", "feet_upper", "feet_boot"], "tall": ["feet_sole", "feet_upper", "feet_boot", "feet_tall"]}
+ }
+}

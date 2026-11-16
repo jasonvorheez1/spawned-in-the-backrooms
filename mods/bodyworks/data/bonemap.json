@@ -1,0 +1,174 @@
+{
+ "_doc": "Bone-name patterns (regex) for every role, tested on the bone name with its prefix (mixamorig:, DEF-, J_Bip_, Bip01, CC_Base_) and side token (Left/Right, .L/_r, L_ ...) removed, lower-cased, non-alphanumerics stripped. 'ignore' patterns drop a bone first (it then inherits its parent's role). 'order' is the test order: the first role whose pattern matches wins. Add a rig's words here when bw.py stops on 'cannot find'.",
+ "ignore": [
+  "^hair",
+  "hair\\d",
+  "skirt",
+  "cloth",
+  "cape",
+  "^tail",
+  "breast",
+  "bust",
+  "boob",
+  "^ear",
+  "eye",
+  "jaw",
+  "tongue",
+  "teeth",
+  "^lip",
+  "brow",
+  "cheek",
+  "nose",
+  "^lid",
+  "weapon",
+  "^prop",
+  "^ik",
+  "pole",
+  "target",
+  "end$",
+  "nub$",
+  "socket",
+  "attach",
+  "camera",
+  "^special",
+  "oris",
+  "levator",
+  "temporalis",
+  "risorius",
+  "orbicularis",
+  "mentalis",
+  "masseter",
+  "^tongue",
+  "wing"
+ ],
+ "fingers": {
+  "1": [
+   "thumb",
+   "^finger1",
+   "pollex"
+  ],
+  "2": [
+   "index",
+   "^finger2",
+   "pointer"
+  ],
+  "3": [
+   "middle",
+   "^finger3"
+  ],
+  "4": [
+   "ring",
+   "^finger4"
+  ],
+  "5": [
+   "pinky",
+   "little",
+   "^finger5",
+   "small"
+  ]
+ },
+ "order": [
+  "forearm",
+  "upperarm",
+  "clavicle",
+  "hand",
+  "toe",
+  "foot",
+  "thigh",
+  "shin",
+  "neck",
+  "head",
+  "chest",
+  "spine",
+  "hips"
+ ],
+ "roles": {
+  "forearm": [
+   "forearm",
+   "lowerarm",
+   "elbow",
+   "lowarm",
+   "arm2$",
+   "armlower"
+  ],
+  "upperarm": [
+   "upperarm",
+   "uparm",
+   "arm1?$",
+   "armupper",
+   "humerus",
+   "^arm\\d*$"
+  ],
+  "clavicle": [
+   "clavicle",
+   "collar",
+   "shoulder"
+  ],
+  "hand": [
+   "hand$",
+   "wrist",
+   "palm",
+   "^hand\\d*$",
+   "carpal"
+  ],
+  "toe": [
+   "toe",
+   "ball"
+  ],
+  "foot": [
+   "foot$",
+   "ankle",
+   "^foot\\d*$",
+   "heel"
+  ],
+  "thigh": [
+   "thigh",
+   "upleg",
+   "upperleg",
+   "legupper",
+   "hip[lr]?$",
+   "femur",
+   "leg1$"
+  ],
+  "shin": [
+   "shin",
+   "calf",
+   "lowerleg",
+   "leglower",
+   "knee",
+   "^leg\\d?$",
+   "leg2$",
+   "tibia"
+  ],
+  "neck": [
+   "neck"
+  ],
+  "head": [
+   "^head\\d*$",
+   "head$",
+   "skull"
+  ],
+  "chest": [
+   "chest",
+   "ribcage",
+   "thorax",
+   "upperbody"
+  ],
+  "spine": [
+   "spine",
+   "abdomen",
+   "torso",
+   "waist",
+   "belly",
+   "back\\d*$"
+  ],
+  "hips": [
+   "hips",
+   "pelvis",
+   "^root$",
+   "cog",
+   "^center$",
+   "lowerbody"
+  ]
+ }
+}

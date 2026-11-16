@@ -1,0 +1,15 @@
+{
+  "name": "bodyworks",
+  "displayName": "BodyWorks",
+  "description": "Any rigged humanoid .glb to the four fitting layers in one Blender command: hideable skin zones (T0), garment cages (T1), gear slots that hide the zones they cover, and per-zone collider capsules (T2). A workshop tool for armor and clothing pipelines.",
+  "tags": [
+    "character",
+    "body",
+    "armor",
+    "clothing",
+    "rigging",
+    "tool"
+  ],
+  "visibility": "public",
+  "version": "1.5.0"
+}
