@@ -52,7 +52,7 @@ ctr = Vector((sum(xs)/len(xs), sum(ys)/len(ys), 0))
 def zone(p):
   t = (p.z - z0) / H
   if (p - NOSE).length < 0.075: return 0.0                             # the approved snout stays as it is
-  band = 0.18 < t < 0.62                                               # the dented band round the face and cheeks
+  band = 0.06 < t < 0.66                                               # the dented band round the face and cheeks
   ear = t > 0.80
   return 1.0 if band else 0.0                                  # ears: smoothing pinched the inner cup, left as sculpted
 wgt = [zone(p) for p in P]
