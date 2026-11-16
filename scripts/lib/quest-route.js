@@ -2,7 +2,7 @@
 import { EXIT, HALF, cellCenter } from "./maze.js";
 import { hasKey } from "./hubkeys.js";
 
-const EXITS = {
+export const EXITS = {
   main: [
     { to: "level1", id: "main-from-l1", label: "Flickering wall", point: { x: -HALF + 1.1, y: 0, z: cellCenter(EXIT.cx, EXIT.cz).z } },
     { to: "level01", id: "l0-zenith", label: "Keycard hatch", needs: "zenKey" },
