@@ -1,56 +1,46 @@
-# Nov 16 (dark arcs beside the nose): the midline under the nose is convex, but beside it the snout bulb overhangs a
-# shelf, and that undercut shadows as two dark arcs. Each thin vertical slice of the lower face is pushed forward to its
-# own convex front envelope (a slice can't hide a hollow under an overhang), the push field is smoothed (the field, never
-# the positions: smoothing positions folded faces into a torn triangle on try one), and faded out toward cheeks and chin.
-# Never pulls a vertex in. The same delta rides every shape key.
-# blender -b --factory-startup --python-exit-code 1 -P art/cat-wardrobe/muzzle-fill.py -- IN.glb OUT.glb
+# Nov 16 (dark arcs beside the nose): in game the arcs are the steep sides of the snout bulb where it meets the cheeks
+# (seen on the salon stylist, Bonus). The bulb is melted into the face with Blender's Laplacian Smooth (volume-preserving),
+# weighted by a soft sphere around the bulb, so its sides slope instead of cliff. The painted nose and mouth carry the muzzle.
+# The basis delta rides every shape key. Plain hand-rolled smoothing (try one) folded faces; this keeps the surface whole.
+# blender -b --factory-startup --python-exit-code 1 -P art/cat-wardrobe/muzzle-fill.py -- IN.glb OUT.glb [strength]
 import bpy, sys
 from mathutils import Vector
-IN, OUT = sys.argv[sys.argv.index("--")+1:][:2]
+args = sys.argv[sys.argv.index("--")+1:]; IN, OUT = args[:2]; ST = float(args[2]) if len(args) > 2 else 1.0
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=IN)
 head = bpy.data.objects["Head"]; me = head.data; mw = head.matrix_world; inv = mw.inverted()
 P = [mw @ v.co for v in me.vertices]
 nose = min((p for p in P if abs(p.x) < 0.012), key=lambda p: p.y)
-s = (max(p.z for p in P) - min(p.z for p in P)) / 0.62          # head size vs the cute head the numbers were set on
-XW, ZT, ZB, YD = 0.13 * s, nose.z + 0.015 * s, nose.z - 0.13 * s, 0.2 * s
-reg = [i for i, p in enumerate(P) if abs(p.x) < XW and ZB < p.z < ZT and p.y < nose.y + YD]
-def envelope(pts, z):                                            # forward (min y) convex envelope of (z, y) points, read at z
-  pts = sorted(pts); hull = []
-  for q in pts:
-    while len(hull) >= 2:
-      (z1, y1), (z2, y2) = hull[-2], hull[-1]
-      if (z2 - z1) * (q[1] - y1) - (y2 - y1) * (q[0] - z1) <= 0: hull.pop()   # keep the lower (more forward) chain
-      else: break
-    hull.append(q)
-  for (z1, y1), (z2, y2) in zip(hull, hull[1:]):
-    if z1 <= z <= z2: return y1 + (y2 - y1) * (z - z1) / max(z2 - z1, 1e-9)
-  return None
-dy = {}
-for i in reg:
-  p = P[i]; sl = [(P[j].z, P[j].y) for j in reg if abs(P[j].x - p.x) < 0.012 * s]
-  e = envelope(sl, p.z)
-  if e is None or e >= p.y: continue
-  fx = max(0.0, 1 - abs(p.x) / XW) ** 0.7
-  fz = min(1.0, (p.z - ZB) / (0.04 * s), (ZT - p.z) / (0.01 * s))
-  dy[i] = (e - p.y) * fx * max(0.0, fz)
-nb = [[] for _ in P]
-for e in me.edges: a, b = e.vertices; nb[a].append(b); nb[b].append(a)
-field = [dy.get(i, 0.0) for i in range(len(P))]
-print("raw", len(dy), round(-min(dy.values() or [0]), 4))
-zone = [abs(p.x) < XW * 1.2 and ZB - 0.02 * s < p.z < ZT + 0.01 * s for p in P]
-for _ in range(4):                                               # smooth the push without thinning it: a vertex keeps its own push or its neighbours' mean, whichever is deeper
-  field = [min(f, 0.85 * sum(field[j] for j in nb[i]) / len(nb[i])) if nb[i] and zone[i] else f for i, f in enumerate(field)]
-for _ in range(2):                                               # then one gentle relax so the rim has no step
-  field = [(0.6 * f + 0.4 * sum(field[j] for j in nb[i]) / len(nb[i])) if nb[i] and zone[i] else f for i, f in enumerate(field)]
-field = [min(0.0, f) for f in field]
+s = (max(p.z for p in P) - min(p.z for p in P)) / 0.62
+C = Vector((0, nose.y + 0.03 * s, nose.z - 0.005 * s)); RAD = 0.11 * s
+vg = head.vertex_groups.new(name="muzzle_melt")
+for i, p in enumerate(P):
+  if p.y > nose.y + 0.12 * s: continue
+  d = (p - C).length
+  w = max(0.0, 1 - d / RAD)
+  if w > 0: vg.add([i], min(1.0, (w ** 0.6) * ST), "REPLACE")
+keys = me.shape_keys
+if keys: head.shape_key_add  # keep keys; evaluate basis alone
+for o in bpy.data.objects: o.select_set(False)
+m = head.modifiers.new("melt", "LAPLACIANSMOOTH"); m.vertex_group = vg.name
+m.iterations = 25; m.lambda_factor = 0.6; m.lambda_border = 0.0; m.use_volume_preserve = True; m.use_normalized = True
+for mod in head.modifiers:
+  if mod.type == "ARMATURE": mod.show_viewport = False
+if keys:
+  for k in keys.key_blocks: k.value = 0.0
+dg = bpy.context.evaluated_depsgraph_get(); ev = head.evaluated_get(dg).data
+assert len(ev.vertices) == len(P)
+D = [(mw @ ev.vertices[i].co) - P[i] for i in range(len(P))]
+head.modifiers.remove(m)
+for mod in head.modifiers:
+  if mod.type == "ARMATURE": mod.show_viewport = True
 moved = 0
-for i, f in enumerate(field):
-  if f < -1e-5:
-    moved += 1; d = Vector((0, f, 0))
-    me.vertices[i].co = inv @ (P[i] + d)
-    if me.shape_keys:
-      for k in me.shape_keys.key_blocks: k.data[i].co = inv @ ((mw @ k.data[i].co) + d)
+for i, d in enumerate(D):
+  if d.length > 1e-6:
+    moved += 1; me.vertices[i].co = inv @ (P[i] + d)
+    if keys:
+      for k in keys.key_blocks: k.data[i].co = inv @ ((mw @ k.data[i].co) + d)
+head.vertex_groups.remove(vg)
 me.update()
-print("filled", moved, "of", len(reg), "max", round(-min(field), 4), "nose", tuple(round(c, 3) for c in nose))
+print("melted", moved, "max", round(max(d.length for d in D), 4), "nose", tuple(round(c, 3) for c in nose))
 bpy.ops.export_scene.gltf(filepath=OUT, export_format="GLB", export_apply=False, export_animations=False, export_morph=True, export_skins=True, export_image_format="JPEG")
