@@ -522,6 +522,10 @@ def run(body, ZONES, DOC, a):
                 _nkLoc, _nkN, _, _nkD = _nkBest
                 _nkSide = (_nkW - _nkLoc).dot(_nkN)
                 if _nkSide < _nkGap: _nkV.co = _nkMI @ (_nkLoc + _nkN.normalized() * _nkGap)
+            # the collar rim levelled round the neck alone: its boundary followed the zone border in steps and read as teeth at the nape; levelled out to the shoulders it folded them into flaps (fit41)
+            for _nkV in [v for v in _nkB.verts if v.is_boundary]:
+                _nkW = _nkMW @ _nkV.co
+                if _nkW.z > z_mock - 0.03 * S and math.hypot(_nkW.x, _nkW.y - _cy) < 0.09 * S: _nkW.z = z_mock; _nkV.co = _nkMI @ _nkW
             # a short lip up from the collar edge, held off the skin: the nape rose over the level edge as a sliver of skin
             _nkE = [e for e in _nkB.edges if e.is_boundary and min((_nkMW @ x.co).z for x in e.verts) > z_mock - 0.01 * S]
             if _nkE:
