@@ -187,7 +187,7 @@ function lay(ctx) {
   sp("l21-cave", { feetPosition: { x: CAVE.x - 1.0, y: 0, z: CAVE.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.2, height: 3, depth: 3 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level8#l8-from-l21" } });
   sp("l21-down-sign", { feetPosition: { x: DOWN.x + 0.55, y: 2.55, z: DOWN.z }, rotation: { yaw: -90 }, ...sign(1.3, 0.4, `<div face="front" width="1.3m" style="font-size:90px;font-weight:900;color:#d8f0c0;text-align:center">STAIRS DOWN · LEVEL 2</div>`, "oklch(0.25 0.04 150)") });
   sp("l21-cave-sign", {
-    feetPosition: { x: CAVE.x - 0.9, y: 2.6, z: CAVE.z }, rotation: { yaw: 90 },
+    feetPosition: { x: CAVE.x - 0.9, y: 1.65, z: CAVE.z }, rotation: { yaw: 90 },
     ...sign(2.2, 0.45, `<div face="front" width="2.2m" style="font-family:Arial,sans-serif;font-weight:900;color:#e8e0c0;text-align:center;line-height:1.05"><div style="font-size:80px;color:#ff9a4a">UNSURVEYED</div><div style="font-size:38px">ROPE &amp; ANCHOR REQUIRED</div></div>`, "oklch(0.1 0.01 60)"),
     fx: { script: CAVE_MIST_FX },
     children: [{ feetPosition: { x: 0, y: -1.6, z: -1.2 }, light: { kind: "point", color: "oklch(0.7 0.1 220)", intensity: 3.5, distance: 13 } }],
@@ -514,7 +514,7 @@ const l21CampBenches = () => {
 
 export function tick(ctx) {
   texSigns(ctx, SIGN_TEX, 3);
-  if (!ctx.place.state.downYawV) { const ds = ctx.getObject("l21-down-sign"); if (ds) { ds.rotation = { yaw: -90 }; ctx.place.state.downYawV = 1; } } // faced the wall (read mirrored) before Nov 16
+  if ((ctx.place.state.downYawV ?? 0) < 2) { const ds = ctx.getObject("l21-down-sign"), cs = ctx.getObject("l21-cave-sign"); if (ds && cs) { ds.rotation = { yaw: -90 }; cs.feetPosition = { ...cs.feetPosition, y: 1.65 }; ctx.place.state.downYawV = 2; } } // faced the wall (read mirrored) before Nov 16
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level21"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
