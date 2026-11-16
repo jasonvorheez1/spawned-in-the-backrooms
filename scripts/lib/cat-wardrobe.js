@@ -5,9 +5,10 @@ import FACES from './data/critter-faces.yml'
 import { PRINTS } from '../mat-cloth.js'
 
 export const CAT_BODY = {
-  f: { glb: '/cdn/value.7309ce8f660b84de170015fa6b1857820c128047d571e01cb2b657ada7b2d296.glb', fur: '/cdn/value.1c4f4402e22ebd41f1cca9b45fc42ef2bec051041b40c8a3c40b88028a23ca58.jpg' },
-  m: { glb: '/cdn/value.515f1ea15e5df790de6d31fbbda708bdf3059935a14c4072ccbd5e3d48f916cc.glb', fur: '/cdn/value.58ce243610699df44f4552ccfdfc667580c63c99f28103ecf2d1dd72c94657fe.jpg' }
+  f: { glb: '/cdn/value.a9fe1b55e1b3e84dde8df63eb6e11cdce0ebeb6102b1b6668fcfb0693c2e2a87.glb', fur: '/cdn/value.1c4f4402e22ebd41f1cca9b45fc42ef2bec051041b40c8a3c40b88028a23ca58.jpg' },
+  m: { glb: '/cdn/value.d40b06d473f373299260c30a3d00023af9d9e03b3749d9a28f9c900e00311025.glb', fur: '/cdn/value.58ce243610699df44f4552ccfdfc667580c63c99f28103ecf2d1dd72c94657fe.jpg' }
 }
+// Nov 16 (Shelly 'improve head and body'): art/cat-wardrobe/face-relax.py radially relaxed the wavy dent band round the face/cheeks, muzzle edge feathered, ears untouched. Before: f 7309ce8f…, m 515f1ea1…, cute e6c03523…
 // Nov 16 (Shelly, dark arcs by the nose): art/cat-wardrobe/snout-smooth.py relaxed every Snout_* key's crease into the cheek; the cute female base got head-round + snout-smooth too. Before: f a06470ad…, m 69b103f0…, cute 5c85f993…
 // Nov 16 (Shelly 'deflating balloon' + 'stray normals and blocky areas'): art/cat-wardrobe/head-round.py: lower head dropped 3 cm and filled, split verts welded, baked normals cleared. Before: f f104ebfd…, m c1fba068…
 // Nov 16 (Shelly 'the snout on the critters arent covering to their cheeks'): CAT_BODY re-exported through art/cat-wardrobe/cheek-wrap.py, the muzzle's sides filled out into the cheeks on every snout key
@@ -17,7 +18,7 @@ export const CAT_BODY = {
 export const CAT_OLD = { f: '/cdn/value.562ce0246eae9362d0d784854f5dff319bcc254c755c854e1be2c450ae9540c9.glb', m: '/cdn/value.3208bf922d1aff4faeefffab9867f3d2363af1dab60a37cc50860602d207c545.glb' }
 export const CAT_BODY2 = { f: CAT_BODY.f.glb, m: CAT_BODY.m.glb }
 // Nov 16 (Shelly 'yes' to wearing it): the cute pass on the female base (art/cat-wardrobe/cute.py + snout-short.py): short round button snout, perkier bust, rounder hips/thighs. Same mesh, bones and keys. Worn when look.cute is set; every other cat keeps CAT_BODY
-export const CAT_CUTE = { f: '/cdn/value.e6c03523e713ad07af4425d53e2cdbdcde6826216843070b5ba88b5228dabe3f.glb' }
+export const CAT_CUTE = { f: '/cdn/value.8666253139a57a07dd3ff1afc335f3462d440203ed4e2adf7bf76ae4f66bc8ed.glb' }
 // Nov 16 (Shelly 'make her slimmer, more anime', 'yes' to wearing it): a new Tripo body from a blank-faced concept, Tripo-rigged (mixamo names), faces +x. No shape keys or face paint slots yet; garments not refit to it
 export const SLIM_ON = false   // Nov 16 (Shelly 'for now bring everyone back to the old critter body'): the slim kemono is shelved; true wears it again
 export const CAT_SLIM = { f: '/cdn/value.e31c04cba0cad7a6c96c4b7b16b333decd3a601f345cd4373e0ae702731d0dd9.glb' }   // art/kemono-slim/front-v3.py (reshaped on front.py's alignment): faces +z, hips over the origin, one 'fur' slot
