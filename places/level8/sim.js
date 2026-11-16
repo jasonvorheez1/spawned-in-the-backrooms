@@ -1,4 +1,6 @@
 import { texSigns } from "../../scripts/lib/sign-tex.js";
+// road markers: one painted blank board, each number hand-lettered over it (Shelly Nov 16: signs must not look generated)
+const MARKER_FACE = (num) => `<div face="front" width="0.9m" style="position:relative;width:100%;height:100%;padding:0;margin:0;overflow:hidden"><img src="/cdn/value.73c09b761201dcefebbab4392d4772d2713e68b8859fd84b97f78178fff70a83.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:fill"><div style="position:absolute;left:0;right:0;top:44%;text-align:center;font-family:'Comic Sans MS','Marker Felt',cursive;font-weight:900;font-size:150px;line-height:1;color:#1d1a16;opacity:.86;transform:rotate(${(num % 5) - 2}deg)">#${num}</div></div>`;
 const SIGN_TEX = [["▼ 9TH ROAD ▼","/cdn/value.29f96f06b2149bb870ec8cd547f8a695285e7d9b5856e5426ce156aa61049e3d.png"],["FLOOD GAUGE","/cdn/value.1971e375360e38cf2309e115c2f7d20c9f0395fbe89a9bca98d32ce04dfa426f.png"],["NEVER ENTER","/cdn/value.9e3ebfc5dae0050018d0aafea102215043a6cd59ec2142fd9b665f3e970ffc1a.png"],["KEEP BACK · IT IS HOT","/cdn/value.e006f46b26d5d2c3d67eb326e4c50d21f7f8feb9d4b7ff3b489de3a071e78a8a.png"],["ROAD CLOSED","/cdn/value.7d17dd5ae5ee776a7b6f90698e363461ec53e08d0a1d4e1a9f758b240e783123.png"],["THE SUBURBS","/cdn/value.fad9d7770a3986d8fb337f35e52aa805fb0f9d02e724c4cc9cce5774646a3fb4.png"],["ERRANDS","/cdn/value.530382c241c0ef13469a74ae914f3793ead1f392b39dd729c5f58bac0b728b11.png"],["CONCRETE TUNNEL","/cdn/value.34a76d3525c0024e3f71fbbedb28b3ed7cb53c17bdbedd73138b51cb918f74e9.png"],["WELCOME TO THE 9TH ROAD","/cdn/value.5df13ba55da6ef2a1b453beaa16fbc559808f4ab2689ffeff15ce11817024918.png"],["9TH ROAD CAMP","/cdn/value.d8c27aed3607f0dc245f72d9bf1c644f4b38011aa146fad902feaf24d887c162.png"]]; // hand-made sign faces, Nov 16
 import { retextureOnce } from "../../scripts/lib/retexture.js";
 import { pickVariant, vmul } from "../../scripts/lib/foe-variant.js";
@@ -200,7 +202,7 @@ function lay(ctx) {
   for (let s = 50, n = 0; s <= 460; s += 50, n++) {
     const p = P(s, -(ST.hall.rx - 1.2), 1.55);
     sp(`l8-marker-${n}`, {
-      ...at({ ...p, yaw: P(s).yaw - 90 }), ...sign(0.9, 0.5, `<div face="front" width="0.9m" style="font-family:Arial,sans-serif;font-weight:900;color:#f2d870;text-align:center;line-height:1.05"><div style="font-size:46px">9TH ROAD</div><div style="font-size:34px;color:#e8e0c0">MARKER #${82 - n}</div></div>`),
+      ...at({ ...p, yaw: P(s).yaw - 90 }), ...sign(0.9, 0.5, MARKER_FACE(82 - n)),
       visibleRange: { max: 40 }, castShadow: false,
       children: [
         { feetPosition: { x: 0, y: -1.55, z: -0.04 }, primitive: { kind: "cylinder", radiusTop: 0.045, radiusBottom: 0.06, height: 1.8 }, material: STEEL },
@@ -574,6 +576,7 @@ function lay(ctx) {
 const l8Ways = () => { const d = P(46, -8.9, 0), m = P(46, -5.4, 0), l = Math.hypot(m.x - d.x, m.z - d.z) || 1; return [{ id: "l8-to-l21", at: { x: d.x, y: m.y, z: d.z }, fwd: { x: (m.x - d.x) / l, z: (m.z - d.z) / l }, trust: true }]; };
 export function tick(ctx) {
   texSigns(ctx, SIGN_TEX, 3);
+  if ((ctx.place.state.markerV ?? 0) < 1 && ctx.place.players?.length) { let hit = 0; for (let n = 0; n < 9; n++) { const m = ctx.getObject(`l8-marker-${n}`); if (m) { m.ui = MARKER_FACE(82 - n); hit++; } } if (hit) ctx.place.state.markerV = 1; } // markers laid before Nov 16 kept the plain text face
   retextureOnce(ctx); // graphics pass: bare props get real surfaces
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level8"); // every sign dressed as its own board (scripts/lib/sign-style.js)
