@@ -17,7 +17,7 @@ EYE = 0.835
 AMT = float(a[3]) if len(a) > 3 else 0.03   # the drawn eyes' lower lids: the fill fades out before it reaches them
 def fill(p):
     dz = p.z - (ZC - 0.012)
-    r = math.hypot(p.x / 0.165, dz / (0.055 if dz > 0 else 0.11))
+    r = math.hypot(p.x / 0.165, dz / (0.055 if dz > 0 else 0.13))
     if r >= 1: return 0.0
     w = (1 - r * r) ** 2
     side = sm((abs(p.x) - 0.02) / 0.06)          # nothing on the muzzle itself: only its sides and the cheeks
