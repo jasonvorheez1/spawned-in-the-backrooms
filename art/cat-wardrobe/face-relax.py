@@ -40,12 +40,18 @@ def render(tag, keys=None):
     cam.location = c + d.normalized() * 2.2; cam.rotation_euler = (c - cam.location).to_track_quat("-Z", "Y").to_euler()
     sc.render.filepath = f"/workspace/cw/out/{TAG}_{tag}_{n}.png"; bpy.ops.render.render(write_still=True)
 if PROBE: render("before"); sys.exit(0)
-H = max(zs) - min(zs); z0 = min(zs); cx = (min(xs)+max(xs))/2; yF = min(ys)
+H = max(zs) - min(zs); z0 = min(zs)
+kbs = me.shape_keys.key_blocks
+sl = kbs["Snout_Long"]; dS = [(mw.to_3x3() @ (sl.data[m[0]].co - kbs["Basis"].data[m[0]].co)) for m in members]
+tip = max(range(len(P)), key=lambda i: dS[i].length); FRONT = dS[tip].normalized(); NOSE = P[tip]
+print("front", FRONT, "nose", NOSE)
+ctr = Vector((sum(xs)/len(xs), sum(ys)/len(ys), 0))
 def zone(p):
   t = (p.z - z0) / H
-  face = (p.y < yF + 0.35*(max(ys)-yF)) and 0.25 < t < 0.75          # front of the face, mid-height
-  ear = t > 0.78                                                       # ears and crown rims
-  return 1.0 if (face or ear) else 0.0
+  if (p - NOSE).length < 0.075: return 0.0                             # the approved snout stays as it is
+  band = 0.18 < t < 0.62                                               # the dented band round the face and cheeks
+  ear = t > 0.80
+  return 1.0 if band else (0.7 if ear else 0.0)
 wgt = [zone(p) for p in P]
 for _ in range(3):  # feather the edge of the zone
   wgt = [max(w, 0.6*max((wgt[j] for j in nb[i]), default=0)) for i, w in enumerate(wgt)]
