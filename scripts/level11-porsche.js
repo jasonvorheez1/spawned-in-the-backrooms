@@ -97,6 +97,7 @@ export function ignite(ctx) {
   ctx.self.audio = { clip: SFX.engine, loop: true, gain: 0.55, pitch: 0.75, spatial: true, maxDistance: 45 };
 }
 
+export function onSpawn(ctx) { if (!ctx.self.state.parkedAt) { const f = ctx.self.feetPosition; ctx.self.state.parkedAt = { x: f.x, y: f.y, z: f.z }; } }
 export function onControlBegin(ctx, player) { return true; }
 export function onControlEnd(ctx, player) {
   const s = m(ctx); s.gas = 0; s.steerIn = 0; s.hand = false;
