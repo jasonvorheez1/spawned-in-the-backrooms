@@ -12,7 +12,7 @@ export const CAT_BODY = {
 export const CAT_OLD = { f: '/cdn/value.562ce0246eae9362d0d784854f5dff319bcc254c755c854e1be2c450ae9540c9.glb', m: '/cdn/value.3208bf922d1aff4faeefffab9867f3d2363af1dab60a37cc50860602d207c545.glb' }
 export const CAT_BODY2 = { f: CAT_BODY.f.glb, m: CAT_BODY.m.glb }
 // Nov 16 (Shelly 'yes' to wearing it): the cute pass on the female base (art/cat-wardrobe/cute.py + snout-short.py): short round button snout, perkier bust, rounder hips/thighs. Same mesh, bones and keys. Worn when look.cute is set; every other cat keeps CAT_BODY
-export const CAT_CUTE = { f: '/cdn/value.73183ecd397e6d53ad8084ea2f64cb2e3a45c6049c43fb3b487ceda61503b5b0.glb' }
+export const CAT_CUTE = { f: '/cdn/value.d9e28ffbcff1e1b53edacf6e570e345c31a3d5d34f5b720df0950337fb5aa248.glb' }
 export const bodyGlb = (sex, look) => (look?.cute && CAT_CUTE[sex]) || CAT_BODY[sex].glb
 // Nov 13 body pass (art/cat-wardrobe/body-pass): female waist and hips, seat/shoulder weights re-blended, tail root relaxed, Bob/Puff/Curl tails rebuilt. CAT_PREV: the bases before it
 export const CAT_PREV = { f: '/cdn/value.e8e63dfafb7285f7362bb87c7e685d38fda0180e9f00f711ec56436ff43fa0c4.glb', m: '/cdn/value.a935fee298a38e28d69d6472997a747507062f2507ac308f0db98fa42efa1dd3.glb' }
