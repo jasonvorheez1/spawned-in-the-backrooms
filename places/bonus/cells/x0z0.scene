@@ -1142,7 +1142,7 @@ bc-vending-1:
   feetPosition: {x: 9.17, y: 0, z: 23.75}
   id: "bc-vending-1"
   layout: {box: {max: {x: 0.5, y: 1.9, z: 0.45}, min: {x: -0.5, y: 0, z: -0.45}}}
-  model: "/cdn/value.8845cbb69caf895635cbffeb1dc69ce931ec9613083b0306a2f50ae671906d28.glb"
+  model: {forward: "+x", id: "/cdn/value.8845cbb69caf895635cbffeb1dc69ce931ec9613083b0306a2f50ae671906d28.glb"}
   physics: "static"
   rotation: {yaw: 90}
   behavior: scripts/l61-use.js
