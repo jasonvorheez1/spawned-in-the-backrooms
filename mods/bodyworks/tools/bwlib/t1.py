@@ -497,28 +497,28 @@ def run(body, ZONES, DOC, a):
     # the head zone spills down onto the neck base (472 verts under the collar on the cute body): it pokes through as skin teeth unless the top takes that band too
     for nm_, ob in shell([_ZT], OFF['top'], 'top_chest', keepf={'head': lambda p: p[2] < z_mock + 0.012 * S and math.hypot(p[0], p[1] - _cy) < 0.115 * S}, cuts={'upperchest': [collar_cap, (z_underbust - 0.07 * S, False)] + sleeve_cap['upperarm_l'] + sleeve_cap['upperarm_r']}).items():
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
-        if nm_ == 'top_chest':   # the neck band welds four zones whose offsets disagree: a dent stood in the nape. Relax that band, then hold it off the skin
+        if nm_ == 'top_chest':   # the neck _nkBand welds four zones whose offsets disagree: a dent stood in the nape. Relax that _nkBand, then hold it off the skin
             import bmesh as _bm3
             from mathutils.bvhtree import BVHTree as _BVH
-            MWt = ob.matrix_world; MIt = MWt.inverted()
-            b3 = _bm3.new(); b3.from_mesh(ob.data)
-            band = [v for v in b3.verts if (MWt @ v.co).z > z_mock - 0.05 * S and not v.is_boundary]
-            for _ in range(6): _bm3.ops.smooth_vert(b3, verts=band, factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
-            skins = [ZONES[z] for z in ('neck', 'upperchest', 'upperback', 'shoulder_l', 'shoulder_r', 'head') if ZONES.get(z) is not None]
-            trees = []
-            for zo in skins:
-                dg_ = bpy.context.evaluated_depsgraph_get(); bmz = _bm3.new(); bmz.from_mesh(zo.data); bmz.transform(zo.matrix_world); trees.append(_BVH.FromBMesh(bmz)); bmz.free()
-            gap = OFF['top'] * 0.8
-            for v in band:
-                w = MWt @ v.co; best = None
-                for t_ in trees:
-                    hit = t_.find_nearest(w)
-                    if hit[0] is not None and (best is None or hit[3] < best[3]): best = hit
-                if best is None: continue
-                loc, nrm, _, dist = best
-                side = (w - loc).dot(nrm)
-                if side < gap: v.co = MIt @ (loc + nrm.normalized() * gap)
-            b3.to_mesh(ob.data); b3.free(); ob.data.update()
+            _nkMW = ob.matrix_world; _nkMI = _nkMW.inverted()
+            _nkB = _bm3.new(); _nkB.from_mesh(ob.data)
+            _nkBand = [_nkV for _nkV in _nkB.verts if (_nkMW @ _nkV.co).z > z_mock - 0.05 * S and not _nkV.is_boundary]
+            for _ in range(6): _bm3.ops.smooth_vert(_nkB, verts=_nkBand, factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
+            _nkSk = [ZONES[z] for z in ('neck', 'upperchest', 'upperback', 'shoulder_l', 'shoulder_r', 'head') if ZONES.get(z) is not None]
+            _nkTr = []
+            for _nkZo in _nkSk:
+                _nkDg = bpy.context.evaluated_depsgraph_get(); _nkBz = _bm3.new(); _nkBz.from_mesh(_nkZo.data); _nkBz.transform(_nkZo.matrix_world); _nkTr.append(_BVH.FromBMesh(_nkBz)); _nkBz.free()
+            _nkGap = OFF['top'] * 0.8
+            for _nkV in _nkBand:
+                _nkW = _nkMW @ _nkV.co; _nkBest = None
+                for _nkT in _nkTr:
+                    _nkHit = _nkT.find_nearest(_nkW)
+                    if _nkHit[0] is not None and (_nkBest is None or _nkHit[3] < _nkBest[3]): _nkBest = _nkHit
+                if _nkBest is None: continue
+                _nkLoc, _nkN, _, _nkD = _nkBest
+                _nkSide = (_nkW - _nkLoc).dot(_nkN)
+                if _nkSide < _nkGap: _nkV.co = _nkMI @ (_nkLoc + _nkN.normalized() * _nkGap)
+            _nkB.to_mesh(ob.data); _nkB.free(); ob.data.update()
     for nm_, ob in shell(['foot_l', 'foot_r'], OFF['feet'], 'feet', {'feet_sole': lambda z: z < -0.5, 'feet_upper': lambda z: z >= -0.5}).items():
         CAGE[nm_] = (ob, COL['feet']); SEG[nm_] = []
     VARIANTS = {sl_: {vn: [sg for sg in segs if sg in CAGE] for vn, segs in vs.items()} for sl_, vs in SLOTDEF['variants'].items()}
