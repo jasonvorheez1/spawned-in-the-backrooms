@@ -193,7 +193,7 @@ def run(body, ZONES, DOC, a):
     LEGP = {}
     for s, sg in SIDES:
         Hh, Kk, A = J[f'hip.{s}'], J[f'knee.{s}'], J[f'ankle.{s}']
-        u_top = float((Hh[2] - (z_crotch + 0.03 * S)) / (Hh[2] - Kk[2]))   # the leg starts 3 cm inside the seat: started at the crotch, a slit of thigh showed between them; LEGP[s] = (Hh, Kk, A, u_top)
+        u_top = float((Hh[2] - (z_crotch + 0.03 * S)) / (Hh[2] - Kk[2])); LEGP[s] = (Hh, Kk, A, u_top)   # the leg starts 3 cm inside the seat: started at the crotch, a slit of thigh showed between them
         lg = add(Tube(f'legs_leg_{s}', 'legs', OFF['legs'], 28, COL['legs']))
         okLeg = lambda n, s=s: isleg(s)(n) or n == 'hips'
         for u, p, tg in chain_samples([Hh, Kk, A], 0.025, u0=u_top, u1=1.94):
