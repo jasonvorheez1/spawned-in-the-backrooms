@@ -12,6 +12,7 @@ export const CAT_BODY = {
 // Nov 16 (Shelly 'deflating balloon' + 'stray normals and blocky areas'): art/cat-wardrobe/head-round.py: lower head dropped 3 cm and filled, split verts welded, baked normals cleared. Before: f f104ebfd…, m c1fba068…
 // Nov 16 (Shelly 'the snout on the critters arent covering to their cheeks'): CAT_BODY re-exported through art/cat-wardrobe/cheek-wrap.py, the muzzle's sides filled out into the cheeks on every snout key
 // Nov 16 (Shelly 'revert ... eye and snout', 'the head fit is fine'): heads rebuilt from the pre-snout bases (851a1a9d f, a2e999a9 m, 5c85f993 cute) through head-round.py + head-trim.py only; the snout fill/smooth and the black-eye redraw are gone
+// Nov 16 (Shelly 'revert everything to before the eye and snout and lower half of head change', 'the head fit is fine'): CAT_BODY/CAT_CUTE rebuilt from the pre-cheek-wrap bases (851a1a9d f, a2e999a9 m, 5c85f993 cute) through head-round.py + head-trim.py only; faces back to the pre-Nov-16 set, eyes take look.eyes again
 // Nov 12 lock-in (Shelly 'yea thats good'): CAT_BODY is the reshaped base (art/cat-wardrobe/rebase.py): female fuller PG chest, male wider shoulders and thicker neck. CAT_OLD: the bases before it
 export const CAT_OLD = { f: '/cdn/value.562ce0246eae9362d0d784854f5dff319bcc254c755c854e1be2c450ae9540c9.glb', m: '/cdn/value.3208bf922d1aff4faeefffab9867f3d2363af1dab60a37cc50860602d207c545.glb' }
 export const CAT_BODY2 = { f: CAT_BODY.f.glb, m: CAT_BODY.m.glb }
