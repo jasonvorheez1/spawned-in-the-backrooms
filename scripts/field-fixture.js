@@ -10,6 +10,8 @@ const REACH = 3;
 const STEP = 0.7;
 const STEAM = `fx
 pop steam burst=8..11 on=disc(.09) life=1.5..2 v=up(.08..0.18) size=.04..0.07 col=<.91,.9,.88> a=0>.24:.2>0 sz=$size*(.5>2.3) r=sprite(smoke-puff,alpha)`;
+const LINEN = `fx
+pop lint burst=12..16 on=disc(.5) life=1.2..2 v=up(.15..0.4)+sdir()*.2 size=.015..0.03 acc=buoy(.1)+curl(.4)+drag(1.2) col=<.95,.93,.86> a=0>.6:.2>.7:.5>0 sz=$size r=sprite(soft-disc,alpha)`;
 export { handsOff } from "./desk-item.js";
 
 const where = (o) => o?.worldFeetPosition ?? o?.feetPosition;
@@ -44,13 +46,15 @@ function startRest(ctx, p) {
     tell(ctx, p, ctx.self.state.plate ? "This cot belongs to the office's owner." : "Ask the concierge for a room of your own.");
     return;
   }
-  if (now - (ps.fieldRestAt ?? -1e12) < conf.cooldown * 1000) { tell(ctx, p, "You've rested recently."); return; }
+  if (now - (ps.fieldRestAt ?? -1e12) < conf.cooldown * 1000) { tell(ctx, p, "Your back's had all the mattress it can take for now."); return; }
   if ((ps.fieldRestPending ?? 0) > now) return;
   const at = now + conf.seconds * 1000;
   ps.fieldRestPending = at;
   startRestPose(ctx, p, conf.seconds);
-  tell(ctx, p, "Stay here a moment to rest.");
+  tell(ctx, p, ctx.self.state.restStart ?? "You sit on the edge and let your shoulders drop. Stay put a moment.");
   sound(ctx, "cdn/sfx-futon-rustle-soft-exhale.mp3");
+  const bed = ctx.self.state.c ?? where(ctx.self); // the bedding gives under you: a puff of old linen
+  ctx.emit("fx", { position: { ...bed, y: (bed?.y ?? 0) + 0.55 }, script: LINEN }, { audience: { nearby: bed, radius: 10 } });
   ctx.after(conf.seconds, "finishRest", { by: p.id, at, from: { ...where(p) }, hp: ps.hp });
 }
 export function finishRest(ctx, { by, at, from, hp }) {

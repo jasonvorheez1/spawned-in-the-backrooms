@@ -9,6 +9,7 @@
 //          or [Repair 40] bridges them to the box's own test leads. They're yours, once.
 // Progress is the player's own: player.state.nvgQ 1 asked · 2 case found empty · 3 goggles taken · 4 done (old saves keep these).
 import { heard } from "./lib/hear.js";
+import { animate } from "builtin/tween";
 import { setQuest, endQuest, qid } from "./lib/quests.js";
 import { questBriefing } from "./lib/quest-dialogue.js";
 import { rollCheck } from "./lib/npc-talk.js";
@@ -86,11 +87,31 @@ function finish(ctx, p, at, how) {
   say(ctx, p, how, at);
   ctx.after(0.2, "reward", { id: p.id });
 }
+// every press moves the thing first: the radio's set jumps and its lamp blinks, the case flips, the den's bones scatter, the box's flap clanks
+const DUST = `fx
+pop dust burst=10..14 on=disc(.9) life=.7..1.2 v=up(.3..0.7)+sdir()*.3 size=.1..0.2 acc=buoy(.3)+drag(1.4) col=<.42,.38,.32> a=0>.3:.3>.7:.12>0 sz=$size*(.6>2) rot=spin(.2) r=sprite(smoke-puff,alpha)`;
+function jolt(ctx, me, kind, at) {
+  const r = me.rotation ?? {}, yaw = typeof r === "number" ? r : r.yaw ?? 0, y = me.feetPosition?.y ?? 0;
+  if (kind === "radio") {
+    animate(ctx, me, { "scale.y": [1, 0.95, 1.02, 1] }, { duration: 0.25, easing: "easeOutQuad" });
+    ctx.spawn({ parent: me.id, feetPosition: { x: 0, y: 0.95, z: 0 }, lifetime: 0.7, castShadow: false, light: { kind: "point", color: "#ff3b2a", intensity: 0.8, distance: 2, shadow: { enabled: false } } });
+  } else if (kind === "case") {
+    animate(ctx, me, { "feetPosition.y": [y, y + 0.08, y], "rotation.yaw": [yaw, yaw + 25, yaw + 18] }, { duration: 0.4, easing: "easeOutQuad" });
+  } else if (kind === "den") {
+    for (const c of (me.children ?? []).slice(0, 6)) { const o = ctx.getObject(c.id ?? c); if (o?.feetPosition) { const cy = o.feetPosition.y; animate(ctx, o, { "feetPosition.y": [cy, cy + 0.07, cy] }, { duration: 0.3, easing: "easeOutQuad" }); } }
+    ctx.emit("fx", { position: { ...at, y: (at?.y ?? 0) + 0.05 }, script: DUST }, { audience: { nearby: at, radius: 16 } });
+    heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-bones-rattle-scatter-dry.mp3", position: at, volume: 0.5, maxDistance: 10 });
+  } else if (kind === "drop") {
+    animate(ctx, me, { "rotation.yaw": [yaw, yaw + 2, yaw - 1.5, yaw] }, { duration: 0.3, easing: "linear" });
+    heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-steel-mailbox-flap-clank.mp3", position: at, volume: 0.6, maxDistance: 10 });
+  }
+}
 export const ears = {
   press: (ctx, d) => {
     const p = ctx.getObject(d?.by); if (!p?.state) return;
     const me = ctx.self, s = p.state, q = s.nvgQ ?? 0, now = ctx.now(), at = me.worldFeetPosition ?? me.feetPosition;
     const kind = me.state.kind;
+    jolt(ctx, me, kind, at);
     if (kind === "radio") {
       if (q >= 4) { s.nvgAfter = ((s.nvgAfter ?? -1) + 1) % LINES.after.length; return say(ctx, p, "after", at, LINES.after[s.nvgAfter]); }
       if (q === 0) {
@@ -102,7 +123,7 @@ export const ears = {
       return say(ctx, p, q === 1 ? "ask2" : q === 2 ? "empty2" : "got2", at);
     }
     if (kind === "case") {
-      if (q !== 1) { s.notice = { text: q === 0 ? "A dented case stencilled INES · M.E.G. MAINT. Empty, the strap chewed through." : "The empty case. Drag marks lead east.", at: now }; return; }
+      if (q !== 1) { s.notice = { text: q === 0 ? "Dented case, stencilled INES · M.E.G. MAINT. Strap chewed through. Somebody's missing these." : "The empty case. Drag marks lead east.", at: now }; return; }
       step(ctx, s, 2);
       heard(ctx, { clip: "/cdn/moodboard-realistic-gritty/sfx-container-open-rustle.mp3", position: at, volume: 0.7, maxDistance: 10 }, { audience: { player: p.id } });
       if (check(ctx, p, "survival", 35, "Survival", at)) { s.nvgTracks = true; say(ctx, p, "tracks", at); s.notice = { text: `[Survival 35] You read the marks · Ines: "${LINES.tracks}"`, at: now }; return; }
@@ -111,7 +132,7 @@ export const ears = {
       return;
     }
     if (kind === "den") {
-      if (q !== 2) { s.notice = { text: q < 2 ? "Bones, scraps, a chewed boot. A hound den." : "Bones and scraps. Nothing shiny left.", at: now }; return; }
+      if (q !== 2) { s.notice = { text: q < 2 ? "Bones, a chewed work boot, half a name tag reading INE. Something lives here and sleeps light." : "Bones and the other boot. You leave it. They've earned it.", at: now }; return; }
       step(ctx, s, 3); s.pickedAt = now;
       const g = me.children?.find?.((c) => String(c.id ?? c).endsWith("glint"));
       if (g) { g.visible = false; const o = ctx.getObject(g.id ?? g); if (o) o.visible = false; }
@@ -124,8 +145,8 @@ export const ears = {
       return;
     }
     if (kind === "drop") {
-      if (q >= 4) { s.notice = { text: "The drop box is empty.", at: now }; return; }
-      if (q !== 3) { s.notice = { text: "M.E.G. drop box. Nothing to hand in.", at: now }; return; }
+      if (q >= 4) { s.notice = { text: "Empty drop box. A form taped inside says RETURNS: M-F, 9-5. Nobody has seen a Friday here.", at: now }; return; }
+      if (q !== 3) { s.notice = { text: "M.E.G. returns box. The slot fits goggles, radios and, judging by the dent, one wrench thrown hard.", at: now }; return; }
       if ((s.battery ?? 0) >= 25) { s.battery = Math.max(0, s.battery - 25); return finish(ctx, p, at, "done"); } // a cell's worth of charge from the torch pool
       if (!s.nvgBridgeTried) {
         s.nvgBridgeTried = true; // one try
