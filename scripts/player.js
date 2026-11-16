@@ -331,6 +331,11 @@ function takeToken0(ctx, token, opts) {
     sound(ctx, 'pickup-ammo', 0.7, true)
     return { ok: true }
   }
+  if (token === 'bolt325') { // rebar crossbow bolts: Boom Town salvage only
+    s.bolt325 = (s.bolt325 ?? 0) + (W.bolt325?.perPickup ?? 3); s.pickedAt = now
+    sound(ctx, 'pickup-ammo', 0.7, true)
+    return { ok: true }
+  }
   if (token === 'latex') { // balloon latex pellets, salvaged from popped Level 26 balloons
     s.latex = (s.latex ?? 0) + W.latex.perPickup; s.pickedAt = now
     sound(ctx, 'pickup-ammo', 0.7, true)
@@ -1029,7 +1034,7 @@ export function pullToken(ctx, t) { // one carried thing out of the bag as its p
     else if (t.startsWith('meat:')) { const c = t.slice(5); if ((s.meat?.[c] ?? 0) > 0) { s.meat = { ...s.meat, [c]: s.meat[c] - 1 }; tok = t } }
     else if (t.startsWith('snack:')) { const c = t.slice(6); if ((s.snacks?.[c] ?? 0) > 0) { s.snacks = { ...s.snacks, [c]: s.snacks[c] - 1 }; tok = c } }
     else if (t === 'frag' || t === 'molotov' || t === 'bauble') { const k = THROW[t].key; if ((s[k] ?? 0) > 0) { s[k] -= 1; tok = t } }
-    else if (t === 'ammo' || t === 'shells' || t === 'cells' || t === 'rockets' || t === 'latex') { const per = W[t]?.perPickup ?? 1; if ((s[t] ?? 0) >= per) { s[t] -= per; tok = t } else s.notice = { text: `Need a full box (${per})`, at: ctx.now() } }
+    else if (t === 'ammo' || t === 'shells' || t === 'cells' || t === 'rockets' || t === 'latex' || t === 'bolt325') { const per = W[t]?.perPickup ?? 1; if ((s[t] ?? 0) >= per) { s[t] -= per; tok = t } else s.notice = { text: `Need a full box (${per})`, at: ctx.now() } }
     else if (t === 'bobbypin') { if (s.bobbypins > 0) { s.bobbypins -= 1; tok = 'bobbypin' } }
     else if (isBookToken(t)) { const cur = s.books?.[t] ?? 0; if (cur > 0) { const next = { ...s.books }; if (cur > 1) next[t] = cur - 1; else delete next[t]; s.books = next; tok = t } }
     else if (isMagToken(t)) { const cur = s.mags?.[t] ?? 0; if (cur > 0) { const next = { ...s.mags }; if (cur > 1) next[t] = cur - 1; else delete next[t]; s.mags = next; tok = t } }

@@ -78,6 +78,9 @@ scrap:
   rust_flakes: { name: Rust flakes, kg: 0.05, color: "#b0603a" }
   bricks:      { name: Brick,       kg: 1.0, color: "#c8664a" }
   mortar_dust: { name: Mortar dust, kg: 0.2, color: "#cfc8b8" }
+  bamboo_pole: { name: Scaffold bamboo, kg: 0.7, color: "#c9a25a" }  # Level 325 only: pulled from fallen scaffolding before it sinks
+  steel_cable: { name: Steel cable, kg: 0.4, color: "#8e98a2" }      # Level 325 only: crane and lashing cable from the rubble
+  channel_glass: { name: Channel glass, kg: 0.1, color: "#5fb8ff" }  # Level 325 only: blue glass left where the flash touched a tower top
   copper_wire: { name: Copper wire, kg: 0.1, color: "#e8904a" }
   tile_shard:  { name: Tile shard,  kg: 0.2, color: "#d8b878" }
   ceramic_shard: { name: Ceramic shard, kg: 0.1, color: "#e8e0cc" }

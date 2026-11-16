@@ -62,6 +62,9 @@ recipes:
   oilskin:    { cat: armor, name: Storm oilskin foulie, in: { drywall: 2, wire: 2, scrap_wood: 1 },          out: ["cloth:topw:hoodie:d49b27"],   skill: [survival, 20], bench: true, desc: "Top · DR 6 · Level 7 waterproof storm coat" }
   abysshauberk: { cat: armor, name: Abyssal tar-scale hauberk, in: { sheet_steel: 2, wire: 3, bolts: 3 },    out: ["cloth:topw:apron:1c282e"],    skill: [survival, 45], bench: true, desc: "Top · DR 8 · Level 7 tar-cured deep-sea armor" }
   # weapons (Savi's picks): what the levels break into, made into something to swing
+  bolt325:    { cat: ammo, name: Rebar bolts,     in: { rebar_rod: 1, steel_cable: 1 },                out: [bolt325],          skill: [repair, 10],   bench: true, desc: "Three sharpened rebar bolts for the Scaffold crossbow" }
+  maul325:    { cat: weapons, name: Rubble maul,   in: { rubble: 3, rebar_rod: 2, steel_cable: 1 },     out: ["weapon:maul325"], skill: [repair, 20],   bench: true, desc: "A fallen tower's concrete cast round a rebar haft · slow, knocks them flat" }
+  xbow325:    { cat: weapons, name: Scaffold crossbow, in: { bamboo_pole: 3, steel_cable: 2, rebar_rod: 1, channel_glass: 1 }, out: ["weapon:xbow325"], skill: [guns, 20], bench: true, desc: "Lashed scaffold bamboo, a rebar bow, a Channel-glass sight · quiet, one heavy bolt" }
   pipeclub:   { cat: weapons, name: Pipe scrap,        in: { steel_pipe: 1, wire: 1 },                     out: ["weapon:pipe_scrap"],   skill: [repair, 5],    desc: "A length of pipe, grip wrapped in wire" }
   rebarspike: { cat: weapons, name: Rebar spike,       in: { rebar_rod: 2, wire: 1 },                      out: ["weapon:rebar"],        skill: [repair, 15],   desc: "Rebar ground to a point · reach 3.1 m" }
   crowbar:    { cat: weapons, name: Crowbar,           in: { steel_pipe: 1, sheet_steel: 1, bolts: 1 },    out: ["weapon:crowbar"],      skill: [repair, 25],   bench: true, desc: "Pries doors and skulls alike" }
