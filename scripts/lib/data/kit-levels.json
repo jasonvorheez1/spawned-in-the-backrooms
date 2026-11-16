@@ -1,5 +1,5 @@
 {
- "v": 3,
+ "v": 4,
  "level70": {
   "l70-valve-*": {
    "m": "dial",
@@ -238,6 +238,60 @@
    "m": "tap",
    "s": "hospital-door-push-bar-clack",
    "q": 0.02
+  }
+ },
+ "level10": {
+  "l10-farm-well": {
+   "m": "dial",
+   "p": "dial",
+   "s": "well-windlass-crank-creak-rope-bucket-splash"
+  },
+  "l10-windmill-quern": {
+   "m": "dial",
+   "p": "dial",
+   "s": "stone-hand-quern-grinding-grain-gritty-rumble"
+  },
+  "l10-hearth-oven": {
+   "m": "flap",
+   "p": "flap",
+   "s": "cast-iron-oven-door-creak-open-fire-crackle",
+   "l": "1,0.55,0.2",
+   "mat": {
+    "color": "oklch(0.25 0.01 50)",
+    "roughness": 0.5,
+    "metalness": 0.7,
+    "texture": "cdn/texture-sooty-cast-iron-plate.png",
+    "pbr": true
+   }
+  },
+  "l10-storm-cellar": {
+   "m": "flap",
+   "p": "flap",
+   "s": "heavy-wooden-cellar-hatch-thud-open-hinge-groan",
+   "mat": {
+    "color": "oklch(0.42 0.05 60)",
+    "roughness": 0.9,
+    "texture": "cdn/texture-weathered-grey-barn-planks.png",
+    "pbr": true
+   }
+  },
+  "l10-outpost-radio": {
+   "m": "dial",
+   "p": "dial",
+   "s": "shortwave-radio-tuning-knob-static-sweep",
+   "l": "1,0.75,0.35"
+  },
+  "l10-scarecrow-*": {
+   "m": "tap",
+   "s": "straw-scarecrow-rustle-burlap-creak"
+  },
+  "l10-wheat-patch-*": {
+   "m": "tap",
+   "s": "dry-wheat-stalks-rustle-sickle-swish"
+  },
+  "l10-fam-beds": {
+   "m": "tap",
+   "s": "wool-bedroll-blanket-rustle"
   }
  }
 }
