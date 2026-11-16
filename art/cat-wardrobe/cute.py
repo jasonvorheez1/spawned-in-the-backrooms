@@ -46,10 +46,10 @@ for o in [o for o in bpy.data.objects if o.type == "MESH"]:
             if u != v2: nbr.setdefault(u, set()).add(v2); nbr.setdefault(v2, set()).add(u)
         pos = {}; wt = {}
         for i, c in enumerate(base):
-            pos[cid[i]] = c + disp[i]; q = ((mw @ c) - SC).length / (SR * 1.3); wt[cid[i]] = max(wt.get(cid[i], 0), 1 - sm(q))
+            pos[cid[i]] = c + disp[i]; q = ((mw @ c) - SC).length / (SR * 1.6); wt[cid[i]] = max(wt.get(cid[i], 0), 1 - sm(q))
         sel = [c for c in pos if wt[c] > 0 and nbr.get(c)]
-        for _ in range(8):
-            pos.update({c: pos[c].lerp(sum((pos[j] for j in nbr[c]), Vector()) / len(nbr[c]), 0.45 * wt[c]) for c in sel})
+        for _ in range(16):
+            pos.update({c: pos[c].lerp(sum((pos[j] for j in nbr[c]), Vector()) / len(nbr[c]), 0.6 * wt[c]) for c in sel})
         for i in range(len(base)): disp[i] = pos[cid[i]] - base[i]
     if kb:
         old = {k.name: [d.co.copy() for d in k.data] for k in kb}
