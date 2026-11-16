@@ -46,7 +46,7 @@ export function laySideB(ctx) {
     "concession", "B.N.T.G. Rink Concession", "Dez · B.N.T.G.", "agent", { voice: "l31-q-dez", essential: true, rounds: SHIFT.dez, nerve: "brave" });
 
   // the DJ's crate, back corner behind the left curtain, where it's dark
-  if (GLB.crate) M("crate", "crate", -6.1, -29.3, 0, { tags: ["usable", "l31-q"], behavior: "scripts/l31-crate.js", state: { name: "Steel crate", verb: "Open", info: "Padlocked. A card slot under the lock." } });
+  if (GLB.crate) M("crate", "crate", -6.1, -29.3, 0, { tags: ["usable", "l31-q"], behavior: ["scripts/l31-crate.js", "scripts/lib/level31-sideb.js"], state: { name: "Steel crate", verb: "Open", info: "Padlocked. A card slot under the lock." } });
   else sp("crate", { feetPosition: { x: -6.1, y: 0, z: -29.3 }, primitive: { kind: "box", width: 0.95, height: 0.6, depth: 0.55 }, material: { color: "#4a5236", roughness: 0.7, metalness: 0.4 }, physics: "static", tags: ["usable", "l31-q"], behavior: "scripts/l31-crate.js", state: { name: "Steel crate", verb: "Open", info: "Padlocked. A card slot under the lock." } });
   sp("crate-glow", { feetPosition: { x: -6.1, y: 0.9, z: -28.9 }, light: { kind: "point", color: "#9ab6ff", intensity: 0.25, distance: 2.5 } });
 
@@ -62,3 +62,12 @@ export function laySideB(ctx) {
     "rink", "the Roller Rink", "Rink Regular", "regular", { docile: true, rounds: LAPS[id] });
   F("face1", -11, -16.8, 180, "f", "#8a3f6a"); F("face2", 16, -15, 200, "m", "#2f6a7a"); F("face3", -24, 12, 120, "m", "#a8743a");
 }
+
+// The crate's second behavior (scripts/l31-crate.js runs the quest): the lid jumps against its hasp and the padlock knocks.
+export const ears = {
+  press: (ctx) => {
+    const now = ctx.now(), ses = ctx.self.session; if (now < (ses.rattle ?? 0)) return; ses.rattle = now + 600;
+    ctx.emit("shake", { target: ctx.self.id, intensity: 0.06, duration: 0.4 });
+    ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-padlock-rattling-on-steel-hasp.mp3", position: ctx.self.worldFeetPosition, volume: 0.6, maxDistance: 10 });
+  },
+};

@@ -91,7 +91,8 @@ export function layFood(ctx) {
   P("menu", { feetPosition: { x: 41.79, y: 3.4, z: 17 }, rotation: { yaw: 90 }, vector: MENU });
   // Clear trays on the way back to the rink aisle.
   P("note", { feetPosition: { x: 29.05, y: 1.72, z: 6.16 }, rotation: { yaw: 180 }, vector: PAPER });
-  for (const [i, x] of [28.15, 29.95].entries()) M(`trash${i + 1}`, "trash", x, 6.47, 180, { tags: ["usable"], state: { name: "Trash can", verb: "Clear tray", info: "Clear your tray here before leaving the snack bar.", kind: "trash" }, behavior: "scripts/l31-food.js" });
+  const CAN_INFO = ["Clear your tray before you leave. The clerk counts.", "Someone taped a plastic fork to the flap. Trays here."];
+  for (const [i, x] of [28.15, 29.95].entries()) M(`trash${i + 1}`, "trash", x, 6.47, 180, { tags: ["usable"], state: { name: "Trash can", verb: "Clear tray", info: CAN_INFO[i], kind: "trash" }, behavior: ["scripts/l31-food.js", "scripts/lib/level31-food.js"] });
   const BSEAT = { tags: ["seat"], state: { name: "Bench", seat: { w: 2, gap: 0.7 } } };
   M("bench-n1", "benchO", 35.6, 6.5, 180, BSEAT); M("bench-n2", "benchG", 39.4, 6.5, 180, BSEAT);
   M("condi", "condi", 40.85, 8.15, 90, {}, floorY);
@@ -206,3 +207,21 @@ function layStaffRoom(ctx, P, M) {
   T("staff-chair2", "chair", 39.55, 0, 34.95, -80, [0.61, 0.85, 0.63]);
   P("staff-cork", { feetPosition: { x: 38.6, y: 1.55, z: z1 - 0.02 }, rotation: { yaw: 0 }, vector: CORK });
 }
+
+// The trash can's second behavior (scripts/l31-food.js clears the tray): the flap swings, and a hand in there
+// now and then comes back with something somebody didn't finish. One find per can per player every 15 minutes.
+const FINDS = ["almond", "cash:1", "almond", "cash:5"];
+export const ears = {
+  press: (ctx, p) => {
+    if (ctx.self.state?.kind !== "trash") return;
+    const who = ctx.getObject(p?.by), at = ctx.self.worldFeetPosition, now = ctx.now(); if (!who?.state) return;
+    ctx.emit("squash", { target: ctx.self.id, axis: "y", intensity: 0.1, duration: 0.3 }); // the swing flap knocks the can down on its base
+    const got = ctx.self.state.got ?? {}, uid = who.userId ?? who.id;
+    if (who.state.l31tray || now - (got[uid] ?? -1e12) < 900000 || who.state.payout) return;
+    ctx.self.state.got = { ...got, [uid]: now };
+    if (ctx.random() < 0.45) {
+      who.state.payout = { xp: 0, items: [FINDS[Math.floor(ctx.random() * FINDS.length) % FINDS.length]] };
+      ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-rummaging-through-paper-trash-bag.mp3", position: at, volume: 0.5, maxDistance: 8 });
+    }
+  },
+};
