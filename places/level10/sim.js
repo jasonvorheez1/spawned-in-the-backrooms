@@ -1,3 +1,4 @@
+import { dressLevel } from "../../scripts/lib/kit-levels.js";
 import { retextureOnce } from "../../scripts/lib/retexture.js";
 import { shipTick } from "../../scripts/lib/ssfun-voyage.js";
 import { stealerModel } from "../../scripts/lib/stealer-body.js";
@@ -570,6 +571,7 @@ pop mote rate=?mobile:3|6 on=box(.2,1,.6) life=3..5 v=up(.02..0.08) size=.01..0.
 export function tick(ctx) {
   retextureOnce(ctx); // graphics pass: bare props get real surfaces
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
+  dressLevel(ctx, "level10"); // farm fixtures: crank, hatch, quern, dial (data/kit-levels.json)
   restyleSigns(ctx, "level10"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   if (ctx.place.players?.length) shipTick(ctx, null, "level10"); // the S.S. Fun calls here some hours (scripts/lib/ssfun-voyage.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
