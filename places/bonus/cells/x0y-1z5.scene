@@ -22,7 +22,7 @@ kemono-slim-preview:
 slim-lab-body:
   feetPosition: {x: 0, y: -59.8, z: 600}
   id: slim-lab-body
-  model: {forward: "+z", id: /cdn/value.35883a4b2e5b3438537cb1a45055d6d8942bd06956f31d430fb1eb949da0d559.glb, parts: {fur: {color: "#ffffff", kind: scripted, params: {nF: 0.015, tHi: 0.705}, script: scripts/mat-catskin.js}}}
+  model: {forward: "+z", id: /cdn/value.e31c04cba0cad7a6c96c4b7b16b333decd3a601f345cd4373e0ae702731d0dd9.glb, parts: {fur: {color: "#ffffff", kind: scripted, params: {nF: 0.015, tHi: 0.705}, script: scripts/mat-catskin.js}}}
   scale: 1.2
   tags: [slim-lab]
   visibleTo: editors

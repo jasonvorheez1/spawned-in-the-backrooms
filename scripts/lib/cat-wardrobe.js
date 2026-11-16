@@ -15,7 +15,7 @@ export const CAT_BODY2 = { f: CAT_BODY.f.glb, m: CAT_BODY.m.glb }
 export const CAT_CUTE = { f: '/cdn/value.5c85f9937c2c419c5da4fc6b1391223512dbe030c1c93f995cdfb679359d4403.glb' }
 // Nov 16 (Shelly 'make her slimmer, more anime', 'yes' to wearing it): a new Tripo body from a blank-faced concept, Tripo-rigged (mixamo names), faces +x. No shape keys or face paint slots yet; garments not refit to it
 export const SLIM_ON = false   // Nov 16 (Shelly 'for now bring everyone back to the old critter body'): the slim kemono is shelved; true wears it again
-export const CAT_SLIM = { f: '/cdn/value.35883a4b2e5b3438537cb1a45055d6d8942bd06956f31d430fb1eb949da0d559.glb' }   // art/kemono-slim/front-v2.py (reshaped on front.py's alignment): faces +z, hips over the origin, one 'fur' slot
+export const CAT_SLIM = { f: '/cdn/value.e31c04cba0cad7a6c96c4b7b16b333decd3a601f345cd4373e0ae702731d0dd9.glb' }   // art/kemono-slim/front-v3.py (reshaped on front.py's alignment): faces +z, hips over the origin, one 'fur' slot
 export const CAT_SLIM_FUR = '/cdn/value.25effe634928de41ad100cdcf8be4b66f3dc638613d816781aa177b44dc0dabd.png'   // its own Tripo colours, worn whole
 export const bodyGlb = (sex, look) => (look?.cute && CAT_CUTE[sex]) || CAT_BODY[sex].glb
 // Nov 13 body pass (art/cat-wardrobe/body-pass): female waist and hips, seat/shoulder weights re-blended, tail root relaxed, Bob/Puff/Curl tails rebuilt. CAT_PREV: the bases before it
