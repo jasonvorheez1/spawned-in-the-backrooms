@@ -17,11 +17,11 @@ for f in sorted(glob.glob(f"{D}/g_*_{SEX}.glb")):
         if o.type == "ARMATURE": o.data.pose_position = "REST"
     bpy.context.view_layer.update()
     dg = bpy.context.evaluated_depsgraph_get()
-    bodies = [o for o in base if o.type == "MESH"]
-    body = max(bodies, key=lambda o: len(o.data.vertices))
-    bev = body.evaluated_get(dg); bm = bev.to_mesh()
-    verts = [body.matrix_world @ v.co for v in bm.vertices]
-    bvh = BVHTree.FromPolygons(verts, [p.vertices[:] for p in bm.polygons])
+    verts, polys = [], []   # the skin is Body + Head (the placeholder Icosphere is no skin)
+    for body in [o for o in base if o.type == "MESH" and o.name in ("Body", "Head")]:
+        bm = body.evaluated_get(dg).to_mesh(); n = len(verts)
+        verts += [body.matrix_world @ v.co for v in bm.vertices]; polys += [[i + n for i in p.vertices] for p in bm.polygons]
+    bvh = BVHTree.FromPolygons(verts, polys)
     bpy.ops.import_scene.gltf(filepath=f)
     new = [o for o in bpy.data.objects if o not in base]
     for o in new:
@@ -29,21 +29,22 @@ for f in sorted(glob.glob(f"{D}/g_*_{SEX}.glb")):
     bpy.context.view_layer.update()
     tot = inside = near = moved = 0; deep = 0.0; far = []
     for o in new:
-        if o.type != "MESH": continue
+        if o.type != "MESH" or o.name.startswith("Icosphere"): continue
         mw = o.matrix_world; mi = mw.inverted()
         for v in o.data.vertices:
             p = mw @ v.co; loc, nrm, _, dist = bvh.find_nearest(p)
             if loc is None: continue
             tot += 1; sd = (p - loc).dot(nrm)
             far.append(dist)
+            if dist > 0.03: continue   # a brim, lens or hem hanging free is not skin contact
             if sd < 0: inside += 1; deep = max(deep, -sd)
             elif sd < MARGIN: near += 1
-            if sd < MARGIN and dist < 0.06:   # only skin-hugging verts; a brim or lens 6 cm off is left as made
+            if sd < MARGIN and os.environ.get("WRITE"):   # only skin-hugging verts; a brim or lens 6 cm off is left as made
                 v.co = mi @ (loc + nrm * MARGIN); moved += 1
     far.sort()
     rep[name] = dict(verts=tot, inside=inside, near=near, moved=moved, deepest_mm=round(deep * 1000, 1),
                      median_gap_mm=round(far[len(far) // 2] * 1000, 1) if far else None)
-    if moved:
+    if moved and os.environ.get("WRITE"):
         bpy.ops.object.select_all(action="DESELECT")
         for o in new: o.select_set(True)
         bpy.context.view_layer.objects.active = next(o for o in new if o.type == "MESH")
