@@ -87,5 +87,5 @@ for g, m in enumerate(members):
     if kb:
       for k in kb: k.data[i].co += dl
 me.update()
+bpy.ops.export_scene.gltf(filepath=OUT, export_format="GLB", export_apply=False, export_animations=False, export_morph=True, export_skins=True, export_image_format="JPEG")   # export BEFORE the proof render: render() swaps every slot for a grey clay
 render("after")
-bpy.ops.export_scene.gltf(filepath=OUT, export_format="GLB", export_apply=False, export_animations=False, export_morph=True, export_skins=True, export_image_format="JPEG")
