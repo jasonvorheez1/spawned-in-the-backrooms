@@ -24,19 +24,20 @@ def lash(b0, tip):
     nx, ny = -(tip[1] - b0[1]), tip[0] - b0[0]; L = math.hypot(nx, ny); nx, ny = nx / L * 2.6, ny / L * 2.6
     d.polygon([P(b0[0] - nx, b0[1] - ny), P(b0[0] + nx, b0[1] + ny), P(*tip)], fill=INK)
 def open_eye(cx, cy, sx, rx, ry, small=False):
-    # Nov 16 (Shelly "redo the eyes and mouth too"; rule: black eyes): a glossy black bean, no white, no iris.
-    # Rubberhose-kawaii: tall oval, one big catchlight up and toward the nose side, one small one low and outside, soft sheen at the bottom.
-    k = 0.62 if small else 1.0
-    erx, ery = rx * 0.9 * k, ry * 1.02 * k   # Nov 16 v3 (Shelly "looks like beady eyes"): back up to big kawaii beans
-    ell(cx, cy + 4, erx, ery, fill=(14, 10, 14, 255))
-    for i in range(10):                                   # a faint warm sheen along the lower rim, so the black reads round
-        t = i / 10
-        arc(cx, cy + 4, erx * (0.86 - t * 0.04), ery * (0.86 - t * 0.04), 35, 145, (58 + int(30 * (1 - t)), 40, 52, 255), 1.2)
-    ell(cx - sx * erx * 0.28, cy - ery * 0.34, erx * 0.36, ery * 0.27, fill=(255, 255, 255, 255))
-    ell(cx + sx * erx * 0.34, cy + ery * 0.42, erx * 0.14, ery * 0.11, fill=(255, 255, 255, 235))
+    # Nov 16 v4 (Shelly "the whites are also gone too. fix that", her ref /cdn/image-u5976x8h1.webp): a white eye in a thick
+    # black rim, a big black pupil filling most of it, set toward the nose and low; lashes flick off the outer top (girls only).
+    k = 0.8 if small else 1.0
+    erx, ery = rx * 0.98, ry * 1.04
+    ell(cx, cy + 4, erx + 4, ery + 4, fill=INK)                       # the rim
+    ell(cx, cy + 4, erx, ery, fill=(255, 255, 255, 255))               # the white
+    prx, pry = erx * 0.66 * k, ery * 0.72 * k
+    pcx, pcy = cx - sx * erx * 0.12, cy + 4 + ery * 0.14
+    ell(pcx, pcy, prx, pry, fill=(10, 8, 12, 255))                     # the pupil
+    ell(pcx + sx * prx * 0.30, pcy - pry * 0.42, prx * 0.17, pry * 0.14, fill=(255, 255, 255, 230))   # a pin of light
     if not male:
-        for bx, by, tx, ty in ((0.78, -0.74, 11, -9), (0.98, -0.36, 13, -2)):
-            b0 = (cx + sx * bx * erx, cy + 4 + by * ery); lash(b0, (b0[0] + sx * tx, b0[1] + ty))
+        for ang, ln in ((-62, 11), (-38, 13)):
+            t = math.radians(ang); b0 = (cx + sx * math.cos(t) * (erx + 2), cy + 4 + math.sin(t) * (ery + 2))
+            lash(b0, (b0[0] + sx * ln * 0.9, b0[1] - ln * 0.55))
 def lid_lashes(cx, cy, sx, rx, y):
     if not male: lash((cx + sx * rx * 0.95, y), (cx + sx * (rx + 12), y - 6))
 for sx in (-1, 1):
