@@ -13,7 +13,7 @@ sm = lambda t: 0 if t <= 0 else 1 if t >= 1 else t * t * (3 - 2 * t)
 TIP, BACK, MZ = -0.2485, -0.165, 0.795      # snout tip y, where the muzzle meets the face, muzzle centre height
 SC, SR = Vector((0, -0.150, 0.795)), 0.16    # the muzzle's root inside the face, and how far the shaping reaches
 # Shelly's guide (#444xxx, /cdn/image-u9vdp1gha.webp, u96gn3d2w): a SMALL snout is short and thin with a little height, the nose tip kept
-SX, SY, SZ = 0.86, 0.55, 1.10                 # width, length, height of the muzzle about its root
+SX, SY, SZ = 0.86, 0.74, 1.04                 # width, length, height of the muzzle about its root
 def snout(p):
     v = p - SC
     if v.y > 0.005: return Vector()
