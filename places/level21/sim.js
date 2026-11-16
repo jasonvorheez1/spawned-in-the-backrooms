@@ -21,7 +21,7 @@ import { tickChatter, CHATTER } from "../../scripts/lib/chatter.js";
 import { spawnProp } from "../../scripts/lib/l2props.js";
 import { workbenchSpec, ammobenchSpec, ensureBenches } from "../../scripts/lib/benches.js";
 export const cadence = "500ms";
-const V = 34; // 34: painted danger plates + roster clipboard (Nov 16); 33: two-tick teardown/rebuild so V bumps never collide with destroyed entity IDs; 32: align radio-rack, north-wall roster, and twin restroom basins with l21-geo
+const V = 35; // 35: signs: stairs sign out in front of its lintel, cave sign faced into the hall, DANGER plate on ~1 dead end in 6 (was 28 copies; Shelly: samey signs) · 34: 34: painted danger plates + roster clipboard (Nov 16); 33: two-tick teardown/rebuild so V bumps never collide with destroyed entity IDs; 32: align radio-rack, north-wall roster, and twin restroom basins with l21-geo
 const COT = { id: "/cdn/value.66bddc7e8f06c294092289342cca8265ad492304cd8e1df9cef66e01e9b94c72.glb", forward: "-z" }, BENCH = { id: "/cdn/value.79f1d7e5cb9f66321063c5449edeb0e169c6f6223a0bac5e89d7067905636e1e.glb", forward: "-z" };
 const MD = (h) => ({ id: `/cdn/value.${h}.glb`, forward: "-z" }), BOXC = { body: "static", collider: "box" }; // art/level21/props21.py
 const L21M = {
@@ -179,9 +179,9 @@ function lay(ctx) {
   sp("l21-from-l8", { feetPosition: { x: CAVE.x - 3.2, y: 0.1, z: CAVE.z }, rotation: { yaw: -90 } });
   sp("l21-down", { feetPosition: { x: DOWN.x + 0.7, y: 0, z: DOWN.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 1.4 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level2#l2-from-l21" } });
   sp("l21-cave", { feetPosition: { x: CAVE.x - 1.0, y: 0, z: CAVE.z }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1.2, height: 3, depth: 3 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level8#l8-from-l21" } });
-  sp("l21-down-sign", { feetPosition: { x: DOWN.x + 0.3, y: 2.4, z: DOWN.z }, rotation: { yaw: 90 }, ...sign(1.3, 0.4, `<div face="front" width="1.3m" style="font-size:90px;font-weight:900;color:#d8f0c0;text-align:center">STAIRS DOWN · LEVEL 2</div>`, "oklch(0.25 0.04 150)") });
+  sp("l21-down-sign", { feetPosition: { x: DOWN.x + 0.55, y: 2.55, z: DOWN.z }, rotation: { yaw: 90 }, ...sign(1.3, 0.4, `<div face="front" width="1.3m" style="font-size:90px;font-weight:900;color:#d8f0c0;text-align:center">STAIRS DOWN · LEVEL 2</div>`, "oklch(0.25 0.04 150)") });
   sp("l21-cave-sign", {
-    feetPosition: { x: CAVE.x - 0.6, y: 3.1, z: CAVE.z }, rotation: { yaw: -90 },
+    feetPosition: { x: CAVE.x - 0.9, y: 2.6, z: CAVE.z }, rotation: { yaw: 90 },
     ...sign(2.2, 0.45, `<div face="front" width="2.2m" style="font-family:Arial,sans-serif;font-weight:900;color:#e8e0c0;text-align:center;line-height:1.05"><div style="font-size:80px;color:#ff9a4a">UNSURVEYED</div><div style="font-size:38px">ROPE &amp; ANCHOR REQUIRED</div></div>`, "oklch(0.1 0.01 60)"),
     fx: { script: CAVE_MIST_FX },
     children: [{ feetPosition: { x: 0, y: -1.6, z: -1.2 }, light: { kind: "point", color: "oklch(0.7 0.1 220)", intensity: 3.5, distance: 13 } }],
@@ -484,7 +484,7 @@ function dress21(ctx) {
     const c = cellCenter(cx, cz), opens = openings(cx, cz);
     if (opens.length === 1) { // a dead end: the DANGER door the wiki photographed
       const d = [0, 1, 2, 3].find((k) => k !== opens[0] && k === (opens[0] + 2) % 4), [nx, nz] = D4W[d], w = S / 2 - W - 0.06;
-      if (hash(cx, cz, 731) < 0.55) ctx.spawn(`l21-danger-${cx}-${cz}`, { tags: ["l21-sign"], feetPosition: { x: c.x + nx * w, y: 1.35, z: c.z + nz * w }, rotation: { yaw: yawOf(-nx, -nz) }, visibleRange: { max: 30 }, castShadow: false,
+      if (hash(cx, cz, 731) < 0.17) ctx.spawn(`l21-danger-${cx}-${cz}`, { tags: ["l21-sign"], feetPosition: { x: c.x + nx * w, y: 1.35, z: c.z + nz * w }, rotation: { yaw: yawOf(-nx, -nz) }, visibleRange: { max: 30 }, castShadow: false,
         primitive: { kind: "box", width: 0.51, height: 0.34, depth: 0.012 }, material: { texture: "/cdn/value.4f21fb78df20237a390fd42c07d9379e4c6779c7e3375112146bcb16ba314538.png", roughness: 0.55, metalness: 0.2 }, // painted enamel plate, Nov 16
       });
     }
