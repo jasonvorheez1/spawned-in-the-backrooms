@@ -1,6 +1,7 @@
 # Nov 16 (Shelly #443717+: "breasts look droopy too. im aiming for cuter mesh shaping, including base snout shape").
 # One rest-space field, run on the bases AND every garment/hair/fluff/ear piece so they keep fitting:
 #  snout: to Shelly's guide: shorter (55%), thinner (86%), a little taller (110%), the nose tip kept (both sexes)
+#  hips: soft flare over the hip bones · paws: three toe lobes on each foot
 #  bust (female Chest key): rebuilt perkier: peak 8 mm higher, rounder fuller underside, lifted instead of dropped, a little smaller
 # usage: blender -b --factory-startup --python cute.py -- <in.glb> <out.glb> <f|m> [cloth]
 import bpy, sys, math
@@ -34,12 +35,31 @@ def bust(p, n):
     s = 1 if p.x > 0 else -1; under = max(0.0, min(1.0, (CZ - p.z) / 0.03))
     off = Vector((s * 0.07 * AMP * w, -AMP * w, 0.14 * AMP * w * (0.4 + 0.6 * under)))   # lifted: the underside carried up, no sag
     return off * min(1, max(0, (-n.y + 0.1) / 0.45))
+# hips (#444068 follow-up): a soft round flare over the hip bones, front and sides only (the tail behind stays put)
+HZ, HW = 0.335, 0.045
+def hips(p):
+    if p.y > 0.03 or abs(p.x) < 0.07: return Vector()
+    w = math.exp(-0.5 * ((p.z - HZ) / HW) ** 2) * sm((abs(p.x) - 0.07) / 0.06)
+    return Vector((math.copysign(0.014 * w, p.x), -0.004 * w, 0))
+# paws: three toe lobes across each foot's front, little grooves between them
+TOES = [(-0.028, 0.0), (0.0, 0.004), (0.028, 0.0)]
+def paws(p, nrm):
+    if p.z > 0.075 or p.y > -0.07: return Vector()
+    fx = 0.10 if p.x > 0 else -0.10; d = Vector()
+    for ox, oy in TOES:
+        r2 = ((p.x - fx - ox) / 0.012) ** 2 + ((p.y + 0.13 - oy) / 0.03) ** 2 + ((p.z - 0.04) / 0.03) ** 2
+        d += nrm * 0.006 * math.exp(-0.5 * r2)
+    for gx in (-0.014, 0.014):
+        r2 = ((p.x - fx - gx) / 0.004) ** 2 + ((p.y + 0.13) / 0.03) ** 2 + ((p.z - 0.045) / 0.025) ** 2
+        d -= nrm * 0.0025 * math.exp(-0.5 * r2)
+    return d
 n = 0
 for o in [o for o in bpy.data.objects if o.type == "MESH"]:
     me = o.data; kb = me.shape_keys.key_blocks if me.shape_keys else None
     mw = o.matrix_world; inv = mw.to_3x3().inverted()
     base = [v.co.copy() for v in me.vertices]
-    disp = [inv @ snout(mw @ c) for c in base]
+    nw = mw.to_3x3()
+    disp = [inv @ (snout(mw @ c) + hips(mw @ c) + paws(mw @ c, (nw @ me.vertices[i].normal).normalized())) for i, c in enumerate(base)]
     if o.name == "Head":
         key = lambda c: (round(c.x, 5), round(c.y, 5), round(c.z, 5)); cl = {}; cid = [cl.setdefault(key(c), len(cl)) for c in base]
         nbr = {}
