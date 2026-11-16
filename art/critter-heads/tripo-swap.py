@@ -107,7 +107,7 @@ print("faces", len(tri.data.polygons), "verts", len(tri.data.vertices), "keys", 
 bpy.ops.object.select_all(action="SELECT")
 bpy.ops.export_scene.gltf(filepath=OUT, export_apply=False, export_skins=True, export_morph=True, export_animation_mode="ACTIONS", export_yup=True)
 # proof: front 3/4, side, with the old fur grey
-sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 24; sc.render.resolution_x = sc.render.resolution_y = 640
+sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 640
 w = bpy.data.worlds.new("w"); sc.world = w; w.use_nodes = True; w.node_tree.nodes["Background"].inputs[0].default_value = (0.6, 0.6, 0.62, 1)
 for m in tri.data.materials:
     m.use_nodes = True; bs = m.node_tree.nodes.get("Principled BSDF")
