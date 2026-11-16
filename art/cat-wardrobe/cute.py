@@ -36,11 +36,11 @@ def bust(p, n):
     off = Vector((s * 0.07 * AMP * w, -AMP * w, 0.14 * AMP * w * (0.4 + 0.6 * under)))   # lifted: the underside carried up, no sag
     return off * min(1, max(0, (-n.y + 0.1) / 0.45))
 # hips (#444068 follow-up): a soft round flare over the hip bones, front and sides only (the tail behind stays put)
-HZ, HW = 0.335, 0.045
+HZ, HW = 0.31, 0.085   # Nov 16 #thighs: wider and gentler, the narrow 2 cm ridge read as a pointy thigh corner
 def hips(p):
     if p.y > 0.03 or abs(p.x) < 0.07: return Vector()
     w = math.exp(-0.5 * ((p.z - HZ) / HW) ** 2) * sm((abs(p.x) - 0.07) / 0.06)
-    return Vector((math.copysign(0.02 * w, p.x), -0.005 * w, 0))
+    return Vector((math.copysign(0.011 * w, p.x), -0.004 * w, 0))
 # paws, to Shelly's leg guide (/cdn/image-u7rr5gfc4.webp): an oval foot front split in four chunky round toes that pop out
 FX, FY, FZ = 0.106, -0.132, 0.036
 TOES = [(-0.036, 0.004), (-0.012, 0.0), (0.012, 0.0), (0.036, 0.004)]   # x offset, how far back each toe sits
@@ -62,6 +62,23 @@ for o in [o for o in bpy.data.objects if o.type == "MESH"]:
     base = [v.co.copy() for v in me.vertices]
     nw = mw.to_3x3()
     disp = [inv @ (snout(mw @ c) + hips(mw @ c) + paws(mw @ c, (nw @ me.vertices[i].normal).normalized())) for i, c in enumerate(base)]
+    if o.name != "Head" and not CLOTH:   # thighs: relax the outer hip/thigh corner so it reads as one round curve, no point
+        key = lambda c: (round(c.x, 5), round(c.y, 5), round(c.z, 5)); cl = {}; cid = [cl.setdefault(key(c), len(cl)) for c in base]
+        nbr = {}
+        for e in me.edges:
+            u, v2 = cid[e.vertices[0]], cid[e.vertices[1]]
+            if u != v2: nbr.setdefault(u, set()).add(v2); nbr.setdefault(v2, set()).add(u)
+        pos = {}; wt = {}
+        for i, c in enumerate(base):
+            q = mw @ c; t = math.exp(-0.5 * ((q.z - 0.30) / 0.075) ** 2) * sm((abs(q.x) - 0.05) / 0.05)
+            pos[cid[i]] = c + disp[i]; wt[cid[i]] = max(wt.get(cid[i], 0), t)
+        sel = [c for c in pos if wt[c] > 0.02 and nbr.get(c)]
+        for _ in range(8):
+            avg = {c: sum((pos[j] for j in nbr[c]), Vector()) / len(nbr[c]) for c in sel}
+            pos.update({c: pos[c].lerp(avg[c], 0.5 * wt[c]) for c in sel})
+            avg = {c: sum((pos[j] for j in nbr[c]), Vector()) / len(nbr[c]) for c in sel}
+            pos.update({c: pos[c].lerp(avg[c], -0.53 * wt[c]) for c in sel})   # Taubin: rounds without shrinking the thigh
+        for i in range(len(base)): disp[i] = pos[cid[i]] - base[i]
     if o.name == "Head":
         key = lambda c: (round(c.x, 5), round(c.y, 5), round(c.z, 5)); cl = {}; cid = [cl.setdefault(key(c), len(cl)) for c in base]
         nbr = {}
