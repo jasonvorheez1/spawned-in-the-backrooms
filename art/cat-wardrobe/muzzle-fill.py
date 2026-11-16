@@ -14,14 +14,15 @@ nb = [[] for _ in me.vertices]
 for e in me.edges: i, j = e.vertices; nb[i].append(j); nb[j].append(i)
 C = Vector((0, nose.y + 0.045, nose.z - 0.055))          # the pocket's middle, under and behind the nose
 def wgt(p):
-  if (p - nose).length < 0.022: return 0.0                # the nose tip keeps its shape
+  front = p.y < nose.y + 0.012                            # the nose tip's own skin, not the pocket tucked behind it
+  if front and (p - nose).length < 0.022: return 0.0      # the nose tip keeps its shape
   d = (Vector((p.x * 0.85, p.y, p.z)) - C).length
-  hold = min(1.0, ((p - nose).length - 0.022) / 0.02)
+  hold = min(1.0, ((p - nose).length - 0.022) / 0.02) if front else 1.0
   return max(0.0, 1 - d / 0.11) ** 0.8 * hold
 W = [wgt(p) for p in P]
 def smooth(co):                                           # co: world-space list
   cur = list(co)
-  for _ in range(45):
+  for _ in range(90):
     nxt = list(cur)
     for i, w in enumerate(W):
       if w > 0 and nb[i]:
