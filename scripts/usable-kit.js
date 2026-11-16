@@ -3,6 +3,7 @@
 // The press answers inside 0.2 s: the part moves, the body squashes, a sound at the thing, a short light if it has one.
 // A gift (g) pays once per player per cd seconds; the stamp rides state.kcd[userId].
 import { animate } from "builtin/tween";
+import { seatPart } from "./lib/usable-kit.js";
 const SFX = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const DEF_SOUND = { lever: "heavy-iron-lever-throw-clank", dial: "rotary-dial-ratchet-spin", button: "brass-elevator-button-click", flap: "old-steamer-trunk-lid-creak-open", screen: "old-computer-boot-startup-chime", lamp: "old-payphone-hook-switch-click", tap: "wood-creak-heavy-timber-settling" };
 const FLASH = (c) => `fx
@@ -21,6 +22,9 @@ function move(ctx, k) {
   ctx.emit("squash", { target: id, axis: "y", intensity: k.q ?? 0.06, duration: 0.25 });
   if (k.m === "tap" || !has) ctx.emit("shake", { target: id, intensity: 0.04, duration: 0.25 });
 }
+// a row born with its kit inline (level7, level 0.2) seats its own part once it has a body to measure
+export function onSpawn(ctx) { if (ctx.self.state.kit?.p) ctx.after(1.5, "dress"); }
+export function dress(ctx) { if (!seatPart(ctx, ctx.self, ctx.self.state.kit) && !ctx.self.bounds && (ctx.self.session.tries = (ctx.self.session.tries ?? 0) + 1) < 5) ctx.after(2, "dress"); }
 export const ears = {
   press: (ctx, { by }) => {
     const k = ctx.self.state.kit; if (!k) return;

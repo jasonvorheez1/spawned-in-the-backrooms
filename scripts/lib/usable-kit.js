@@ -15,7 +15,10 @@ const PART = {
     material: { color: "oklch(0.25 0.06 150)", emissive: "oklch(0.75 0.17 150)", emissiveIntensity: 1.4, texture: "cdn/texture-crt-scanlines.png" } }),
   lamp: () => ({ primitive: { kind: "sphere", radius: 0.045 }, material: { color: "oklch(0.9 0.06 85)", emissive: "oklch(0.85 0.12 80)", emissiveIntensity: 1.2, roughness: 0.2 } }),
 };
-const match = (rows, id) => rows[id] ?? Object.entries(rows).find(([k]) => k.endsWith("*") && id.startsWith(k.slice(0, -1)))?.[1];
+const RX = {};
+const glob = (k) => (RX[k] ??= new RegExp("^" + k.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*") + "$"));
+// a key is an id, an id glob ("l8-glow-*", "l13f-*-tv") or "#tag"
+export const match = (rows, id, tags = []) => rows[id] ?? Object.entries(rows).find(([k]) => (k[0] === "#" ? tags.includes(k.slice(1)) : k.includes("*") && glob(k).test(id)))?.[1];
 function seat(o, row) { // local front-face point: front is -Z; AABB unrolled by yaw
   if (row.at) return { x: row.at[0], y: row.at[1], z: row.at[2] };
   const b = o.bounds; if (!b) return { x: 0, y: 0.8, z: -0.3 };
@@ -25,17 +28,23 @@ function seat(o, row) { // local front-face point: front is -Z; AABB unrolled by
   const sc = typeof o.scale === "number" ? o.scale : (o.scale?.y ?? 1);
   return row.p === "flap" ? { x: 0, y: b.size.y / sc + 0.005, z: 0 } : { x: (w / sc) * 0.28, y: (b.size.y / sc) * (row.h ?? 0.62), z: -(Math.abs(d) / sc) / 2 - 0.012 };
 }
+// the moving part, seated once under the thing (id <thing>/kit-<part>)
+export function seatPart(ctx, o, row) {
+  if (!row?.p || !PART[row.p] || !o?.bounds || ctx.getObject(`${o.id}/kit-${row.p}`)) return false;
+  ctx.spawn(`kit-${row.p}`, { ...PART[row.p](row.mat), parent: o.id, feetPosition: seat(o, row), tags: ["kit-part"] });
+  return true;
+}
 export function kitPass(ctx, place = ctx.self?.place ?? "main") {
   const rows = KIT[place]; if (!rows) return 0;
   let n = 0;
   for (const r of ctx.query({ tags: ["usable"] })) {
     if (r.state?.kitV === KIT.v || r.id.includes("/")) continue;
-    const row = match(rows, r.id); if (!row) continue;
+    const row = match(rows, r.id, r.tags); if (!row) continue;
     const o = ctx.getObject(r.id); if (!o || !o.bounds) continue;
     const beh = Array.isArray(o.behavior) ? o.behavior : o.behavior ? [o.behavior] : [];
     if (!beh.includes("scripts/usable-kit.js")) o.behavior = [...beh, "scripts/usable-kit.js"];
     const { i, ...kit } = row; o.state.kit = kit; if (i) o.state.info = i;
-    if (row.p && PART[row.p] && !ctx.getObject(`${r.id}/kit-${row.p}`)) ctx.spawn(`kit-${row.p}`, { ...PART[row.p](row.mat), parent: r.id, feetPosition: seat(o, row), tags: ["kit-part"] });
+    seatPart(ctx, o, row);
     o.state.kitV = KIT.v; n++;
     if (n >= 12) break; // a dozen a pass; the rest next pass
   }
