@@ -21,12 +21,12 @@ def dome(p, A, rx, rup, rdn, power=2, zc=ZC):
     if r >= 1: return 0.0
     return A * (1 - r ** power) ** 2
 def facing(p):   # front of the face only: fades to nothing 6 cm behind the muzzle front
-    return 1 - sm((p.y - FY) / 0.06)
+    return 1 - sm((p.y - FY) / 0.09)
 g = lambda d, r: math.exp(-(d / r) ** 2)
-def button(p): return dome(p, 0.042, 0.105, 0.11, 0.075) * facing(p)
+def button(p): return dome(p, 0.042, 0.105, 0.11, 0.10) * facing(p)
 def flat(p): return dome(p, 0.016, 0.12, 0.10, 0.08, power=4) * facing(p)
 def puff(p):
-    a = dome(p, 0.036, 0.12, 0.10, 0.08, power=3)
+    a = dome(p, 0.036, 0.12, 0.10, 0.10, power=3)
     for s in (-1, 1): a += 0.012 * g(math.hypot(p.x - s * 0.022, (p.z - (ZC - 0.022)) * 0.7), 0.026)
     return a * facing(p)
 D = {n: [Vector((0, -f(p), 0)) for p in W] for n, f in (("b", button), ("f", flat), ("p", puff))}
