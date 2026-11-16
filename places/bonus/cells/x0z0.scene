@@ -2593,7 +2593,7 @@ kemono-slim-preview:
   feetPosition: {x: 6.6, y: 5.52, z: -12.3}
   id: kemono-slim-preview
   layout: {box: {max: {x: 1, y: 1.2, z: 0.5}, min: {x: -1, y: 0, z: -0.5}}}
-  model: {id: /cdn/value.ada9afab0068383656909dc6ef4c8a820d6204edfb0237524bdd3d4ffc5aff95.glb}
+  model: {forward: "+x", id: /cdn/value.c962a4a4c551528d33eed4f4cc14468c38220eea5af67b1f156cf303f0cba7ab.glb}
   rotation: {lookAt: {x: 4.5, y: 5.52, z: -12.6}}
   tags: [preview]
 plat-clock:
