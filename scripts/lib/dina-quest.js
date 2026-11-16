@@ -7,6 +7,7 @@ import { skillsOf } from "./stats.js";
 import { entryOf } from "./dialogue.js";
 import Q from "./data/dlg-quest-main.yml";
 import { hubRoute } from "./hub-route.js";
+import { noStory } from "./run-opts.js";
 const LEGACY = "the-undelivered";
 export const HOME = { id: "the-way-back", name: "The Way Back" };
 export const CAMP = { x: 22.3, y: 0, z: 38.4 };
@@ -26,7 +27,7 @@ export function learn(ctx, st, key, quiet) {
 // the lines other scripts still send by their old words: each plays its rewritten line (and voice) and teaches its clue
 const OLD = {
   "River copied the return test. Cabin 23, SS Fun. If I miss the handoff, look there.": { to: Q["q-dina"].diary, keys: ["name", "word", "list"] },
-  "C-23. One waterproof case from the Adventure. Pickup at the Electrical Station checkpoint. Paid in batteries.": { to: Q["bntg-voss"].slip, keys: ["name", "list"] },
+  "C-23. One waterproof case off the boat. Pickup at the Electrical Station checkpoint. Paid in batteries.": { to: Q["bntg-voss"].slip, keys: ["name", "list"] },
   "Freight slips from the Habitable Zone. Each delivery has a ticket number.": { to: Q["q-clerk"]["slip-early"], keys: ["name", "list"], sub: "SIGN-IN SHEET" },
   "C-23 canceled. The stowaway never turned up. River filed a copy of the test results before the drive went missing. Look up Return Test 04 at Base Gamma.": { to: Q["q-clerk"].handoff, keys: ["name", "tape"] },
   "A handoff log. The page is indexed by freight ticket. Somebody tore out the carbon paper.": { to: Q["q-clerk"]["handoff-early"], keys: ["name", "tape"], who: "q-dina", sub: "TAPE · DINA" },
@@ -50,7 +51,7 @@ const STEP = {
   5: { step: "Follow the wet prints past the party to the bedroll at the end of the hall.", mark: { place: "level26", id: "l26d-stow-nest" } },
   6: { step: "The stowaway's chit came from a trader named Voss on Level 1. Ask him, or check the slips by his stall.", mark: { place: "level1", id: "dina-freight-slip" } },
   7: { step: "The slip names a checkpoint at the Electrical Station on Level 3. The courier went through Level 2 first: find the crate they left by the barred door marked 3, then the handoff record.", mark: { place: "level2", id: "dina-courier-crate" } },
-  8: { step: "The handoff log's carbon was torn out. River's copy went up the lift to Level 4's offices: find it, then check the public records inside Base Gamma.", mark: { place: "level4", id: "dina-carbon-copy" } },
+  8: { step: "The handoff log's carbon was torn out. River's copy went up the lift to Level 4's offices: find it, then check the public records inside Base Gamma, behind the coned door on Level 3.", mark: { place: "level4", id: "dina-carbon-copy" } },
   9: { step: "Chapter 1 complete. River reached a voice on the other side. Nobody has crossed, and the backup drive is still missing.", mark: null },
 };
 // before trail.pass: questions. Indexed by how far the trail has gone (the furthest key learned)
@@ -69,7 +70,7 @@ export function trailStep(st) {
   if (t.pass) {
     const n = Math.max(2, st.dinaQ ?? 0);
     if (n === 7 && st.dinaCrate) return { step: "The courier's waybill says C-23 went on to the Electrical Station on Level 3. Find the handoff record there.", mark: { place: "level3", id: "dina-handoff" } };
-    if (n === 8 && st.dinaCarbon) return { step: "River filed Return Test 04 at Base Gamma. Check it against the public records inside.", mark: { place: "gamma", id: "dina-return-record" } };
+    if (n === 8 && st.dinaCarbon) return { step: "River filed Return Test 04 at Base Gamma, behind the coned door on Level 3. Check the public records inside.", mark: { place: "gamma", id: "dina-return-record" } };
     return STEP[n] ?? STEP[2];
   }
   let hi = 0; TRAIL.forEach((k, i) => { if (t[k]) hi = i + 1; });
@@ -154,7 +155,7 @@ function purser(ctx, p, line, who = "PURSER") {
 export function funGate(ctx, p) {
   const st = p?.state; if (!st) return false;
   migrate(st);
-  if (st.trail?.pass) return true;
+  if (st.trail?.pass || noStory(st)) return true; // story off: no pass, no purser (Shelly Nov 16)
   const L = Q["q-purser"], now = ctx.now();
   if (st.crouch) { learn(ctx, st, "pass", true); purser(ctx, p, L.sneak, ""); return true; }
   if (!st.funAsk || now - st.funAsk > 90000) { st.funAsk = now; purser(ctx, p, L.refuse); return false; }

@@ -4,8 +4,8 @@ const RECORDS = {
   freight: {
     stage: 7,
     min: 6,
-    text: "C-23. One waterproof case from the Adventure. Pickup at the Electrical Station checkpoint. Paid in batteries. Signed, Voss",
-    voice: "bntg-voss", line: "C-23. One waterproof case from the Adventure. Pickup at the Electrical Station checkpoint. Paid in batteries.",
+    text: "C-23. One waterproof case off the boat. Pickup at the Electrical Station checkpoint. Paid in batteries. Signed, Voss",
+    voice: "bntg-voss", line: "C-23. One waterproof case off the boat. Pickup at the Electrical Station checkpoint. Paid in batteries.",
     early: "A stack of freight slips. Every delivery has a ticket number. None of them mean anything to you yet.",
     notice: "Freight slip C-23 names the Electrical Station checkpoint.",
   },
