@@ -10,8 +10,9 @@ im = Image.new("RGBA", (W * S, H * S), (0, 0, 0, 0))
 def P(x, y): return (x * S, y * S)
 def ell(d, cx, cy, rx, ry, **k): d.ellipse([P(cx - rx, cy - ry), P(cx + rx, cy + ry)], **k)
 # soft cream muzzle oval: wraps wide toward the cheeks
-mz = Image.new("RGBA", im.size, (0, 0, 0, 0)); ell(ImageDraw.Draw(mz), 138, 186, 92, 40, fill=(252, 240, 226, 235))
-im.alpha_composite(mz.filter(ImageFilter.GaussianBlur(5 * S)))
+mask = Image.new("L", im.size, 0); ell(ImageDraw.Draw(mask), 138, 186, 92, 40, fill=235)
+mz = Image.new("RGBA", im.size, (252, 240, 226, 0)); mz.putalpha(mask.filter(ImageFilter.GaussianBlur(5 * S)))
+im.alpha_composite(mz)
 d = ImageDraw.Draw(im)
 male = SEX == "m"
 for sx in (-1, 1):
@@ -38,10 +39,11 @@ for sx in (-1, 1):
     a0, a1 = (20, 60) if sx > 0 else (120, 160)
     d.arc([P(cx - rx, cy - ry), P(cx + rx, cy + ry)], a0, a1, fill=(40, 28, 32, 200), width=int(1.4 * S))
     if not male:   # two lashes flicking out at the outer corner
-        ox, oy = cx + sx * (rx - 2), cy - ry * 0.55
-        for k, (dx, dy) in enumerate(((11, -9), (13, 0))):
-            d.line([P(ox, oy + k * 7), P(ox + sx * dx, oy + k * 7 + dy)], fill=(28, 20, 24, 255), width=int(3 * S), joint="curve")
-            ell(d, ox + sx * dx, oy + k * 7 + dy, 1.5, 1.5, fill=(28, 20, 24, 255))
+        for k, (bx, by, tx, ty) in enumerate(((-0.2, -0.95, 6, -14), (0.55, -0.82, 13, -9), (0.85, -0.5, 15, -2))):
+            # a tapered lash: wide where it leaves the lid, a point at its tip, curling outward
+            b0 = (cx + sx * bx * rx, cy + by * ry); tip = (b0[0] + sx * tx, b0[1] + ty)
+            nxv, nyv = -(tip[1] - b0[1]), (tip[0] - b0[0]); L = (nxv * nxv + nyv * nyv) ** 0.5; nxv, nyv = nxv / L * 2.6, nyv / L * 2.6
+            d.polygon([P(b0[0] - nxv, b0[1] - nyv), P(b0[0] + nxv, b0[1] + nyv), P(*tip)], fill=(28, 20, 24, 255))
 # nose: a small rounded heart-triangle, rosy dark
 nx, ny = 138, 156
 d.polygon([P(nx - 9, ny - 4), P(nx + 9, ny - 4), P(nx, ny + 6)], fill=(70, 36, 44, 255))
