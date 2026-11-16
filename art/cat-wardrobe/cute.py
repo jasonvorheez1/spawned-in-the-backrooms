@@ -1,6 +1,6 @@
 # Nov 16 (Shelly #443717+: "breasts look droopy too. im aiming for cuter mesh shaping, including base snout shape").
 # One rest-space field, run on the bases AND every garment/hair/fluff/ear piece so they keep fitting:
-#  snout: the muzzle's front 8 cm pulled back ~35% and rounded, wider at the cheeks (both sexes)
+#  snout: to Shelly's guide: shorter (55%), thinner (86%), a little taller (110%), the nose tip kept (both sexes)
 #  bust (female Chest key): rebuilt perkier: peak 8 mm higher, rounder fuller underside, lifted instead of dropped, a little smaller
 # usage: blender -b --factory-startup --python cute.py -- <in.glb> <out.glb> <f|m> [cloth]
 import bpy, sys, math
@@ -11,14 +11,16 @@ for o in list(bpy.data.objects):
     if o.name.startswith("Icosphere"): bpy.data.objects.remove(o)
 sm = lambda t: 0 if t <= 0 else 1 if t >= 1 else t * t * (3 - 2 * t)
 TIP, BACK, MZ = -0.2485, -0.165, 0.795      # snout tip y, where the muzzle meets the face, muzzle centre height
-SC, SR = Vector((0, -0.150, 0.800)), 0.145   # the muzzle's root inside the face, and how far the pull reaches
+SC, SR = Vector((0, -0.150, 0.795)), 0.16    # the muzzle's root inside the face, and how far the shaping reaches
+# Shelly's guide (#444xxx, /cdn/image-u9vdp1gha.webp, u96gn3d2w): a SMALL snout is short and thin with a little height, the nose tip kept
+SX, SY, SZ = 0.86, 0.55, 1.10                 # width, length, height of the muzzle about its root
 def snout(p):
     v = p - SC
-    if v.y > 0.01: return Vector()
-    q = v.length / SR
-    if q >= 1: return Vector()
-    w = (1 - sm(q)) * sm((-v.y) / 0.04)              # strongest at the tip, nothing at the cheeks and brow
-    return -v * 0.68 * w                              # every point pulled toward the root: a smaller, rounder button
+    if v.y > 0.005: return Vector()
+    side = math.hypot(v.x / 0.10, (v.z) / 0.085)
+    if side >= 1.25: return Vector()
+    w = sm((-v.y) / 0.05) * (1 - sm((side - 0.7) / 0.55))   # the muzzle only: full past 5 cm forward, fading into cheeks and brow
+    return Vector((v.x * (SX - 1), v.y * (SY - 1), v.z * (SZ - 1))) * w
 CX, CZ, AMP, SXW, SUP, SDN = 0.045, 0.528, 0.046, 0.034, 0.044, 0.034
 if CLOTH: AMP = 0.049
 def lobe(p, s):
@@ -46,10 +48,10 @@ for o in [o for o in bpy.data.objects if o.type == "MESH"]:
             if u != v2: nbr.setdefault(u, set()).add(v2); nbr.setdefault(v2, set()).add(u)
         pos = {}; wt = {}
         for i, c in enumerate(base):
-            pos[cid[i]] = c + disp[i]; q = ((mw @ c) - SC).length / (SR * 1.6); wt[cid[i]] = max(wt.get(cid[i], 0), 1 - sm(q))
+            pos[cid[i]] = c + disp[i]; q = ((mw @ c) - SC).length / (SR * 1.2); wt[cid[i]] = max(wt.get(cid[i], 0), 1 - sm(q))
         sel = [c for c in pos if wt[c] > 0 and nbr.get(c)]
-        for _ in range(16):
-            pos.update({c: pos[c].lerp(sum((pos[j] for j in nbr[c]), Vector()) / len(nbr[c]), 0.6 * wt[c]) for c in sel})
+        for _ in range(5):
+            pos.update({c: pos[c].lerp(sum((pos[j] for j in nbr[c]), Vector()) / len(nbr[c]), 0.35 * wt[c]) for c in sel})
         for i in range(len(base)): disp[i] = pos[cid[i]] - base[i]
     if kb:
         old = {k.name: [d.co.copy() for d in k.data] for k in kb}
