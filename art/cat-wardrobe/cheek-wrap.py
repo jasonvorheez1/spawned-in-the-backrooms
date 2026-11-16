@@ -13,16 +13,17 @@ head = bpy.data.objects["Head"]; me = head.data; mw = head.matrix_world; inv = m
 kb = me.shape_keys.key_blocks; B = [k.co.copy() for k in kb["Basis"].data]; W = [mw @ c for c in B]
 ZC = 0.80
 FY = min(p.y for p in W if abs(p.x) < 0.01 and abs(p.z - ZC) < 0.01)
-EYE = 0.835   # the drawn eyes' lower lids: the fill fades out before it reaches them
+EYE = 0.835
+AMT = float(a[3]) if len(a) > 3 else 0.03   # the drawn eyes' lower lids: the fill fades out before it reaches them
 def fill(p):
     dz = p.z - (ZC - 0.012)
-    r = math.hypot(p.x / 0.165, dz / (0.05 if dz > 0 else 0.085))
+    r = math.hypot(p.x / 0.165, dz / (0.055 if dz > 0 else 0.11))
     if r >= 1: return 0.0
     w = (1 - r * r) ** 2
-    side = sm((abs(p.x) - 0.03) / 0.07)          # nothing on the muzzle itself: only its sides and the cheeks
+    side = sm((abs(p.x) - 0.02) / 0.06)          # nothing on the muzzle itself: only its sides and the cheeks
     face = 1 - sm((p.y - FY) / 0.16)             # the front half of the head, out to where the cheeks turn back
     top = 1 - sm((p.z - (EYE - 0.025)) / 0.025)
-    return 0.022 * w * side * face * top
+    return AMT * w * side * face * top
 D = [Vector((0, -fill(p), 0)) for p in W]
 print("MAX", round(max(d.length for d in D), 4), "moved", sum(1 for d in D if d.length > 1e-5))
 for k in kb:
@@ -36,8 +37,8 @@ if PROOF:
     bpy.ops.object.light_add(type="SUN", rotation=(0.9, 0.3, -0.6)); bpy.context.object.data.energy = 3
     w = bpy.data.worlds.new("w"); sc.world = w; w.color = (0.3, 0.3, 0.33)
     import os
-    for nm, pos in (("side", (-0.55, -0.35, 0.82)), ("front", (0, -0.6, 0.82))):
-        bpy.ops.object.camera_add(location=pos); cam = bpy.context.object; cam.data.lens = 70
-        d = Vector((0, FY + 0.06, 0.80)) - cam.location; cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
+    for nm, pos in (("side", (-0.9, -0.5, 0.80)), ("front", (-0.35, -0.9, 0.80))):
+        bpy.ops.object.camera_add(location=pos); cam = bpy.context.object; cam.data.lens = 85
+        d = Vector((0, FY + 0.09, 0.79)) - cam.location; cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
         sc.camera = cam; sc.render.filepath = PROOF.replace(".png", f"-{nm}.png"); bpy.ops.render.render(write_still=True)
 bpy.ops.export_scene.gltf(filepath=OUT, export_format="GLB", export_apply=False, export_animations=False, export_morph=True, export_skins=True, export_image_format="JPEG")
