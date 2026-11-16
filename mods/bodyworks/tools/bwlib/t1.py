@@ -246,6 +246,11 @@ def run(body, ZONES, DOC, a):
             for j, d in enumerate(g['dirs']):
                 cone = (Rl @ d) / Lt > 0.985
                 if cone.any() and Lt[cone].max() > R[i, j] + 0.004 * S: sk.hole[i, j] = True
+        # keep only where the tail leaves the body: per column, the first holed ring from the waist and the one under it;
+        # a tail that hangs down behind the cloth below that is covered, not cut round
+        for j in range(sk.hole.shape[1]):
+            rows = np.where(sk.hole[:, j])[0]
+            if len(rows): sk.hole[:, j] = False; sk.hole[rows[0]:rows[0] + 2, j] = True
         h = sk.hole.copy()
         for dj in (-1, 1): h |= np.roll(sk.hole, dj, 1)   # one column of margin each side, no extra rows
         sk.hole = h
