@@ -538,6 +538,18 @@ def run(body, ZONES, DOC, a):
     # the head zone spills down onto the neck base (472 verts under the collar on the cute body): it pokes through as skin teeth unless the top takes that band too
     for nm_, ob in shell([_ZT], OFF['top'], 'top_chest', keepf={'head': lambda p: p[2] < z_mock + 0.012 * S and math.hypot(p[0], p[1] - _cy) < 0.115 * S}, cuts={'upperchest': [collar_cap, (z_underbust - 0.07 * S, False)] + sleeve_cap['upperarm_l'] + sleeve_cap['upperarm_r']}).items():
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
+        # the back zones bleed onto the tail root: their shell copies the tail's own surface as a pink patch. Drop shell faces
+        # that sit on tail skin
+        _tw = np.array([sum(w for k, w in vw.items() if 'tail' in k.lower()) for vw in VW])
+        if (_tw >= 0.3).any():
+            import bmesh as _bmT
+            from mathutils.kdtree import KDTree as _KD
+            _kd = _KD(len(V)); [_kd.insert(Vector(v), k) for k, v in enumerate(V)]; _kd.balance()
+            _bT = _bmT.new(); _bT.from_mesh(ob.data); _MWT = ob.matrix_world
+            _dead = [f for f in _bT.faces if _tw[_kd.find(_MWT @ f.calc_center_median())[1]] >= 0.3]
+            if _dead: _bmT.ops.delete(_bT, geom=_dead, context='FACES')
+            _bT.to_mesh(ob.data); _bT.free(); ob.data.update()
+            print('BODYWORKS T1 top shell faces dropped off the tail', nm_, len(_dead))
         if nm_ == 'top_chest':   # the neck _nkBand welds four zones whose offsets disagree: a dent stood in the nape. Relax that _nkBand, then hold it off the skin
             import bmesh as _bm3
             from mathutils.bvhtree import BVHTree as _BVH
