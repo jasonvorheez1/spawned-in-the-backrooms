@@ -5,7 +5,8 @@ from mathutils import Matrix
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath="/workspace/kemono/kemono-slim-rig.glb")
 rig = next(o for o in bpy.data.objects if o.type == "ARMATURE")
-body = next(o for o in bpy.data.objects if o.type == "MESH")
+for o in [o for o in bpy.data.objects if o.name.startswith("Icosphere")]: bpy.data.objects.remove(o)
+body = next(o for o in bpy.data.objects if o.type == "MESH" and o.vertex_groups)
 B = lambda n: rig.matrix_world @ rig.data.bones["mixamorig:" + n].head_local
 t = B("LeftToeBase") - B("LeftFoot")
 R = Matrix.Rotation(math.atan2(-1, 0) - math.atan2(t.y, t.x), 4, "Z")
@@ -22,7 +23,7 @@ img = next((n.image for n in mat.node_tree.nodes if n.type == "TEX_IMAGE" and n.
 if img: img.filepath_raw = "/workspace/kemono/slim-fur.png"; img.file_format = "PNG"; img.save()
 # landmarks in glTF space: x = Blender x, y = Blender z (up), z = -Blender y (front)
 g = lambda v: [round(v.x, 4), round(v.z - z0, 4), round(-v.y, 4)]
-J = {n: g(B(n)) for n in ["Hips", "Spine1", "Spine2", "Neck", "Head", "LeftShoulder", "LeftArm", "LeftForeArm", "LeftHand", "LeftUpLeg", "LeftLeg", "LeftFoot", "LeftToeBase"]}
+J = {n: g(B(n)) for n in ["Hips", "Spine", "Spine1", "Spine2", "Neck", "Head", "LeftShoulder", "LeftArm", "LeftForeArm", "LeftHand", "RightArm", "LeftUpLeg", "LeftLeg", "LeftFoot", "LeftToeBase"]}
 tail = [g(rig.matrix_world @ b.head_local) for b in rig.data.bones if "tail" in b.name.lower()]
 V = [g(body.matrix_world @ v.co) for v in body.data.vertices]
 H = max(v[1] for v in V)
