@@ -18,9 +18,9 @@ def snout(p):
     w = 1 - sm((r - 0.75) / 0.6)
     if w <= 0: return Vector()
     d = Vector((0, 0, 0))
-    d.y += (BACK - p.y) * 0.36 * w                         # shorter
+    d.y += (BACK - p.y) * 0.48 * w                         # shorter
     d.x += p.x * 0.10 * w * sm(1 - t)                      # cheeks a touch rounder
-    d.z += (MZ - p.z) * 0.10 * w * t                       # tip rounder, less pointy
+    d.z += (MZ - p.z) * 0.18 * w * t                       # tip rounder, less pointy
     return d
 CX, CZ, AMP, SXW, SUP, SDN = 0.045, 0.528, 0.046, 0.034, 0.044, 0.034
 if CLOTH: AMP = 0.049
