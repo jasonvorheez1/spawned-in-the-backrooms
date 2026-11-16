@@ -68,6 +68,21 @@ _oz = min(p.z for p in OB); _base = [p for p in OB if p.z < _oz + 0.03]
 piv = Vector((0, sum(p.y for p in _base) / len(_base), _oz))
 for v in tri.data.vertices: v.co = piv + (v.co - piv) * HS + Vector((0, 0, LIFT))
 tri.data.update(); print("head scale", HS, "lift", LIFT)
+# Nov 16 Shelly: "you made it flat" — the shrunk face read as a disc from the front. Push a real muzzle out of the lower
+# face (nose bridge to chin) and round the cheeks forward, so the snout has volume like her guide's 3/4 head.
+MA = float(os.environ.get("MA", "0.045")); CK = float(os.environ.get("CK", "0.018"))
+PP = [v.co for v in tri.data.vertices]
+fy = min(p.y for p in PP if abs(p.x) < 0.02); mz = min((p for p in PP if abs(p.x) < 0.02), key=lambda p: p.y).z
+cy = sum(p.y for p in PP) / len(PP)
+import math
+for v in tri.data.vertices:
+    p = v.co
+    if p.y > cy: continue
+    fr = min(1.0, (cy - p.y) / max(cy - fy, 1e-6)); fr = fr * fr
+    m = math.exp(-((p.x / 0.075) ** 2 + ((p.z - (mz - 0.01)) / 0.06) ** 2))
+    c = math.exp(-(((abs(p.x) - 0.1) / 0.06) ** 2 + ((p.z - (mz + 0.01)) / 0.07) ** 2))
+    p.y -= (MA * m + CK * c) * fr
+tri.data.update(); print("muzzle", MA, "cheeks", CK, "tip z", round(mz, 3))
 BB('pre-clean', [v.co for v in tri.data.vertices])
 # clean: weld, decimate to budget, smooth
 bpy.context.view_layer.objects.active = tri; tri.select_set(True)
@@ -81,11 +96,15 @@ tri.data.materials.clear()
 for m in om.materials: tri.data.materials.append(m)
 BB('cleaned', [v.co for v in tri.data.vertices])
 # neck: the low band of the new head melts onto the old head's own neck surface, so the ring meets the body exactly
-zb = min(v.co.z for v in tri.data.vertices); oz = min(p.z for p in OB); BAND = 0.16
+zb = min(v.co.z for v in tri.data.vertices); oz = min(p.z for p in OB); BAND = float(os.environ.get("BAND", "0.08")); MUZ = float(os.environ.get("MUZ", "0.14"))
 for v in tri.data.vertices:
     t = 1 - (v.co.z - zb) / BAND
     if t <= 0: continue
     t = t * t * (3 - 2 * t)
+    # keep the muzzle and jaw their own shape: only the throat/nape ring melts onto the old neck
+    yf = min(v.co.y for v in tri.data.vertices); fr = max(0.0, min(1.0, (v.co.y - (yf + MUZ)) / 0.08))
+    t *= fr * fr * (3 - 2 * fr)
+    if t <= 0: continue
     q = Vector((v.co.x, v.co.y, v.co.z - (zb - oz) * t))
     loc = bvh.find_nearest(q)[0]
     v.co = v.co.lerp(loc, t)
