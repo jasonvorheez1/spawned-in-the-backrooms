@@ -11,7 +11,7 @@ import HAIR_SLOTS from './data/hair-slots.yml'
 import HAIR_TEX from './data/hair-tex.yml'
 import WARD_SLOTS from './data/ward-slots.yml'
 import CW from './data/cat-wardrobe.yml'
-import { CAT_BODY, CAT_BODY2, CAT_OLD, CAT_PREV, CAT_CUTE, catModel, catChildren, chestOf, catMorph, SNOUTS, EARS, TAILS, EYE_COLORS } from './cat-wardrobe.js'
+import { CAT_BODY, CAT_BODY2, CAT_OLD, CAT_PREV, CAT_CUTE, CAT_SLIM, catModel, catChildren, chestOf, catMorph, SNOUTS, EARS, TAILS, EYE_COLORS } from './cat-wardrobe.js'
 // hair: its own GLB skinned whole to the Head bone (scripts/lib/data/hair.yml), tinted by the look's hairc; a mask hides it
 export const HAIR_ID = 'critter-hair'
 export const humanHairOf = (l) => {
@@ -858,7 +858,7 @@ export function seatHead(ctx, obj, l) {
 }
 
 // a body from an older Blender pass (not one of M.body) is out of date
-export const staleBody = (model) => !!model && !Object.values(M.body).includes(model.id ?? model) && !Object.values(M.human ?? {}).includes(model.id ?? model) && ![CAT_BODY.f.glb, CAT_BODY.m.glb, CAT_BODY2.f, CAT_BODY2.m, CAT_CUTE.f].includes(model.id ?? model)
+export const staleBody = (model) => !!model && !Object.values(M.body).includes(model.id ?? model) && !Object.values(M.human ?? {}).includes(model.id ?? model) && ![CAT_BODY.f.glb, CAT_BODY.m.glb, CAT_BODY2.f, CAT_BODY2.m, CAT_CUTE.f, CAT_SLIM.f].includes(model.id ?? model)
 const SPECIES = Object.keys(M.species)
 const hashOf = (str) => { let h = 2166136261; for (const c of String(str)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) } return h >>> 0 }
 const CORE_SPECIES = ['cat', 'dog', 'fox', 'bunny', 'bear', 'deer', 'wolf'].filter((k) => SPECIES.includes(k))
