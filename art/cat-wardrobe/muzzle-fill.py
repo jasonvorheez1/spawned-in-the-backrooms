@@ -5,7 +5,7 @@
 # blender -b --factory-startup --python-exit-code 1 -P art/cat-wardrobe/muzzle-fill.py -- IN.glb OUT.glb [strength]
 import bpy, sys
 from mathutils import Vector
-args = sys.argv[sys.argv.index("--")+1:]; IN, OUT = args[:2]; ST = float(args[2]) if len(args) > 2 else 1.0
+args = sys.argv[sys.argv.index("--")+1:]; IN, OUT = args[:2]; ST = float(args[2]) if len(args) > 2 else 0.45; CH = float(args[3]) if len(args) > 3 else 0.7   # snout melt, chin-front melt (Nov 16: "their head is weird up front": the lowered jaw made a shelf)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 bpy.ops.import_scene.gltf(filepath=IN)
 head = bpy.data.objects["Head"]; me = head.data; mw = head.matrix_world; inv = mw.inverted()
@@ -18,7 +18,9 @@ for i, p in enumerate(P):
   if p.y > nose.y + 0.12 * s: continue
   d = (p - C).length
   w = max(0.0, 1 - d / RAD)
-  if w > 0: vg.add([i], min(1.0, (w ** 0.6) * ST), "REPLACE")
+  C2 = Vector((0, nose.y + 0.05 * s, nose.z - 0.13 * s)); w2 = max(0.0, 1 - (p - C2).length / (0.15 * s)) if p.y < nose.y + 0.16 * s else 0.0
+  ww = max((w ** 0.6) * ST, (w2 ** 0.6) * CH)
+  if ww > 0: vg.add([i], min(1.0, ww), "REPLACE")
 keys = me.shape_keys
 if keys: head.shape_key_add  # keep keys; evaluate basis alone
 for o in bpy.data.objects: o.select_set(False)
