@@ -40,8 +40,8 @@ def puff(i):
     for c in cheeks: amt += 0.008 * g((p - c).length, 0.036)
     for sx in (-1, 1): amt += 0.005 * g((p - Vector((sx * 0.04, tip.y + 0.012, tip.z - 0.006))).length, 0.03)   # bridge pad→cheek, no crease
     base = press(i, 0.28, 0.14)   # mochi: a shorter, wider dumpling muzzle...
-    if amt < 1e-5 or N[i].y > 0.2: return base   # front-facing skin only
-    return base + N[i] * amt   # ...with puffed whisker pads and round cheeks
+    if amt < 1e-5: return base
+    return base + N[i] * amt * (1 - sm((N[i].y + 0.15) / 0.35))   # front-facing skin, faded smoothly: no ridge where it stops   # ...with puffed whisker pads and round cheeks
 for name, fn in (("Snout_Flat", flat), ("Snout_Puff", puff)):
     k = kb[name]; mx = 0
     for i in range(len(B)):
