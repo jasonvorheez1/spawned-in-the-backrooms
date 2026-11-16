@@ -56,15 +56,25 @@ def zone(p):
   ear = t > 0.80
   return 1.0 if band else 0.0                                  # ears: smoothing pinched the inner cup, left as sculpted
 wgt = [zone(p) for p in P]
-for _ in range(3):  # feather the edge of the zone
-  wgt = [max(w, 0.6*max((wgt[j] for j in nb[i]), default=0)) for i, w in enumerate(wgt)]
+earv = set(g for g, m in enumerate(members) for k in kbs if k.name.startswith("Ear_") and (k.data[m[0]].co - kbs["Basis"].data[m[0]].co).length > 1e-5)
+for _ in range(3): earv |= set(j for i in list(earv) for j in nb[i])   # the ear and two rings round its root stay as sculpted
+for i in earv: wgt[i] = 0.0
+for _ in range(4):  # feather the edge of the zone
+  wgt = [w if i in earv else max(w, 0.65*max((wgt[j] for j in nb[i]), default=0)) for i, w in enumerate(wgt)]
 base = [p.copy() for p in P]
-for it in range(ITERS):
-  for lam in (0.5, -0.53):
+C0 = Vector((0, sum(p.y for p in P)/len(P), z0 + 0.5*H))
+dirs = [(p - C0).normalized() for p in P]; R = [(p - C0).length for p in P]
+act = [i for i in range(len(P)) if wgt[i] > 0 and nb[i]]
+for it in range(ITERS):                                   # radial-only relax: the waves flatten, the head keeps its outline
+  nr = list(R)
+  for i in act: nr[i] = R[i] + (sum(R[j] for j in nb[i]) / len(nb[i]) - R[i]) * 0.5 * wgt[i]
+  R = nr
+P = [C0 + dirs[i] * R[i] for i in range(len(P))]
+for it in range(6):                                       # then a light Taubin to even the spacing
+  for lam in (0.4, -0.42):
     nw = list(P)
-    for i in range(len(P)):
-      if wgt[i] > 0 and nb[i]:
-        avg = sum((P[j] for j in nb[i]), Vector()) / len(nb[i]); nw[i] = P[i] + (avg - P[i]) * lam * wgt[i]
+    for i in act:
+      avg = sum((P[j] for j in nb[i]), Vector()) / len(nb[i]); nw[i] = P[i] + (avg - P[i]) * lam * wgt[i]
     P = nw
 mx = max((P[i]-base[i]).length for i in range(len(P))); print("max move m", mx)
 print("ear max move", max(((P[i]-base[i]).length for i in range(len(P)) if (P[i].z-z0)/H > 0.8), default=0))
