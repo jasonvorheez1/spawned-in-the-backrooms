@@ -14,12 +14,12 @@ l7-ezra/cw-hair:
 l7-ezra/cw-hat:
   attachment: {skin: true}
   id: l7-ezra/cw-hat
-  model: {forward: "+z", id: /cdn/value.6c4dc2d3990b288b4656200fab96c401aae6651aaa45c4e0a5839697628ac20d.glb, materials: {cloth: {color: "#c8a030", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  model: {forward: "+z", id: /cdn/value.ca54414a168b44f34ca74c6adb647f70a900602737c3253f71dcef0512527c31.glb, materials: {cloth: {color: "#c8a030", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
   parent: l7-ezra
 l7-ezra/cw-shoes:
   attachment: {skin: true}
   id: l7-ezra/cw-shoes
-  model: {forward: "+z", id: /cdn/value.dcfebd4370d0c0aa932157cae6acd02db2afb18e59cc83e6ef34261ed69176f2.glb, materials: {cloth: {color: "#1a1614", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  model: {forward: "+z", id: /cdn/value.af1ece5a9980e1f31cd9e0682dfa4ae93211543566c46e9e85bd6407e413e4f8.glb, materials: {cloth: {color: "#1a1614", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
   parent: l7-ezra
 l7-ezra/cw-topw:
   attachment: {skin: true}
@@ -52,7 +52,7 @@ l7-ines/cw-neck:
 l7-ines/cw-shoes:
   attachment: {skin: true}
   id: l7-ines/cw-shoes
-  model: {forward: "+z", id: /cdn/value.3f9b0636806b0ebabcd12d5037ca8aecf54984a63ea3e5b5c979c1f61c9c9983.glb, materials: {cloth: {color: "#1a1410", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  model: {forward: "+z", id: /cdn/value.938d04d84f9016d1555fca54e4078c1ece501df655103e64ec0849369ac71ffd.glb, materials: {cloth: {color: "#1a1410", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
   parent: l7-ines
 l7-ines/cw-topw:
   attachment: {skin: true}
@@ -85,7 +85,7 @@ l7-jude/cw-neck:
 l7-jude/cw-shoes:
   attachment: {skin: true}
   id: l7-jude/cw-shoes
-  model: {forward: "+z", id: /cdn/value.dcfebd4370d0c0aa932157cae6acd02db2afb18e59cc83e6ef34261ed69176f2.glb, materials: {cloth: {color: "#141210", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  model: {forward: "+z", id: /cdn/value.af1ece5a9980e1f31cd9e0682dfa4ae93211543566c46e9e85bd6407e413e4f8.glb, materials: {cloth: {color: "#141210", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
   parent: l7-jude
 l7-jude/cw-topw:
   attachment: {skin: true}
@@ -108,12 +108,12 @@ l7-mara/cw-hair:
 l7-mara/cw-hat:
   attachment: {skin: true}
   id: l7-mara/cw-hat
-  model: {forward: "+z", id: /cdn/value.a88b4d642dc4ca05aba469b74fffbc20ee2e4000343570502c337fdacd6e2f2d.glb, materials: {cloth: {color: "#c8a030", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  model: {forward: "+z", id: /cdn/value.81d701749c682d952a1735acf404f6a3485b478ec560e704a7e2611378cecb7f.glb, materials: {cloth: {color: "#c8a030", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
   parent: l7-mara
 l7-mara/cw-shoes:
   attachment: {skin: true}
   id: l7-mara/cw-shoes
-  model: {forward: "+z", id: /cdn/value.3f9b0636806b0ebabcd12d5037ca8aecf54984a63ea3e5b5c979c1f61c9c9983.glb, materials: {cloth: {color: "#161412", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  model: {forward: "+z", id: /cdn/value.938d04d84f9016d1555fca54e4078c1ece501df655103e64ec0849369ac71ffd.glb, materials: {cloth: {color: "#161412", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
   parent: l7-mara
 l7-mara/cw-topw:
   attachment: {skin: true}
@@ -146,7 +146,7 @@ l7-tobit/cw-neck:
 l7-tobit/cw-shoes:
   attachment: {skin: true}
   id: l7-tobit/cw-shoes
-  model: {forward: "+z", id: /cdn/value.dcfebd4370d0c0aa932157cae6acd02db2afb18e59cc83e6ef34261ed69176f2.glb, materials: {cloth: {color: "#181412", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  model: {forward: "+z", id: /cdn/value.af1ece5a9980e1f31cd9e0682dfa4ae93211543566c46e9e85bd6407e413e4f8.glb, materials: {cloth: {color: "#181412", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
   parent: l7-tobit
 l7-tobit/cw-topw:
   attachment: {skin: true}
