@@ -28,19 +28,33 @@ for f in sorted(glob.glob(f"{D}/g_*_{SEX}.glb")):
         if o.type == "ARMATURE": o.data.pose_position = "REST"
     bpy.context.view_layer.update()
     tot = inside = near = moved = 0; deep = 0.0; far = []
+    import numpy as np
     for o in new:
         if o.type != "MESH" or o.name.startswith("Icosphere"): continue
-        mw = o.matrix_world; mi = mw.inverted()
+        mw = o.matrix_world; mi = mw.inverted(); n = len(o.data.vertices)
+        D = np.zeros((n, 3)); fixed = np.zeros(n, bool)
         for v in o.data.vertices:
             p = mw @ v.co; loc, nrm, _, dist = bvh.find_nearest(p)
             if loc is None: continue
-            tot += 1; sd = (p - loc).dot(nrm)
-            far.append(dist)
+            tot += 1; sd = (p - loc).dot(nrm); far.append(dist)
             if dist > 0.03: continue   # a brim, lens or hem hanging free is not skin contact
             if sd < 0: inside += 1; deep = max(deep, -sd)
             elif sd < MARGIN: near += 1
-            if sd < MARGIN and os.environ.get("WRITE"):   # only skin-hugging verts; a brim or lens 6 cm off is left as made
-                v.co = mi @ (loc + nrm * MARGIN); moved += 1
+            if sd < MARGIN: D[v.index] = (nrm * (MARGIN - sd))[:]; fixed[v.index] = True
+        # spread the push a few rings so the cloth bulges smoothly instead of denting into spikes
+        E = np.array([e.vertices[:] for e in o.data.edges]) if len(o.data.edges) else np.zeros((0, 2), int)
+        for _ in range(6):
+            acc = np.zeros((n, 3)); cnt = np.zeros(n)
+            np.add.at(acc, E[:, 0], D[E[:, 1]]); np.add.at(acc, E[:, 1], D[E[:, 0]])
+            np.add.at(cnt, E[:, 0], 1); np.add.at(cnt, E[:, 1], 1)
+            avg = acc / np.maximum(cnt, 1)[:, None] * 0.7
+            take = (~fixed) & (np.linalg.norm(avg, axis=1) > np.linalg.norm(D, axis=1))
+            D[take] = avg[take]
+        mv = np.linalg.norm(D, axis=1) > 1e-5; moved += int(mv.sum())
+        if os.environ.get("WRITE"):
+            R = mi.to_3x3()
+            for i in np.nonzero(mv)[0]:
+                v = o.data.vertices[int(i)]; v.co = mi @ ((mw @ v.co) + __import__("mathutils").Vector(D[i]))
     far.sort()
     rep[name] = dict(verts=tot, inside=inside, near=near, moved=moved, deepest_mm=round(deep * 1000, 1),
                      median_gap_mm=round(far[len(far) // 2] * 1000, 1) if far else None)
