@@ -215,6 +215,7 @@ def run(body, ZONES, DOC, a):
     sk = add(Tube('skirt_bell', 'skirt', OFF['skirt'], 48, COL['skirt']))
     z_ankle = float((J['ankle.L'][2] + J['ankle.R'][2]) / 2)
     NOARM = np.array([not (z.startswith('upperarm') or z.startswith('forearm') or z.startswith('wrist') or z.startswith('palm') or z.startswith('fingers')) for z in VZ])
+    NOARM &= np.array([sum(w for k, w in vw.items() if 'tail' in k.lower()) < 0.2 for vw in VW])   # the tail is no hip: a skirt hulled round it stands out like a lampshade
     for z in np.arange(z_waist + 0.06 * S, z_ankle + 0.02 * S - 1e-6, -0.03 * S):
         rel = V - np.array([0, body.yc, z]); m = NOARM & (np.abs(rel[:, 2]) < 0.012 * S); Rl = rel[m]; Rl[:, 2] = 0; dist = np.linalg.norm(Rl, axis=1)
         dirs = around(48, FWD, X); r = np.full(48, np.nan)
@@ -227,10 +228,10 @@ def run(body, ZONES, DOC, a):
     for i in range(1, len(R)): R[i] = np.maximum(R[i], R[i - 1])
     # an A-line flare: below the widest hip ring the hem grows ~0.22 m per metre of drop, so it hangs like cloth, not a drum
     _zs = np.array([rg['u'] for rg in sk.rings]); _hip = int(np.argmax(np.nanmean(sk.R, 1)))
-    for i in range(_hip + 1, len(R)): R[i] = R[i] + 0.22 * (_zs[_hip] - _zs[i])
+    for i in range(_hip + 1, len(R)): R[i] = R[i] + 0.10 * (_zs[_hip] - _zs[i])
     for _ in range(6): R = 0.5 * R + 0.25 * (np.roll(R, 1, 1) + np.roll(R, -1, 1))   # several passes: one left a faceted, pleat-like silhouette
     for _ in range(2): R[1:-1] = 0.5 * R[1:-1] + 0.25 * (R[:-2] + R[2:])
-    dz = np.array([g['o'][2] for g in sk.rings]); R += ((z_waist - dz) * 0.06)[:, None]
+    dz = np.array([g['o'][2] for g in sk.rings]); R += ((z_waist - dz) * 0.02)[:, None]
     sk.R = R; sk.P = np.array([[g['o'] + g['dirs'][j] * (R[i, j] + sk.off) for j in range(48)] for i, g in enumerate(sk.rings)]); sk.S = sk.P
     sk.hole = np.zeros_like(sk.hole)
     # ---------- NECK ----------
