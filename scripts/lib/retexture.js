@@ -26,3 +26,13 @@ export function retexture(ctx, { skipTags = [], skipIds = [] } = {}) {
   }
   return n;
 }
+// one call per tick from a place's sim: waits until the place has stood ~8 s with a player in it (its own spawns are in), then retextures once per room
+const firstSeen = new Map();
+export function retextureOnce(ctx, opts = {}, v = 1) {
+  if (ctx.place.state.texV === v || !ctx.place.players?.length) return;
+  const k = ctx.place.name ?? "p", t = firstSeen.get(k) ?? ctx.now();
+  firstSeen.set(k, t);
+  if (ctx.now() - t < 8000) return;
+  ctx.place.state.texV = v;
+  retexture(ctx, opts);
+}
