@@ -1,3 +1,4 @@
+import { dressLevel } from "./kit-levels.js";
 // Level 132 · square. lay(ctx, L) builds once (guard on ctx.place.state.squareV); tick(ctx, L) runs each second while someone is here.
 // Level 132 · the square: the hollow oak (the exit to Level 10), lamps, benches, cafe tables, planters, bunting, fountain,
 // notice board, phone box and charging kiosk. lay(ctx, L) builds once (ctx.place.state.squareV); numbers in data/l132-square.yml.
@@ -60,4 +61,4 @@ export function lay(ctx, L) {
   put("l132-town-bed", { feetPosition: { x: 0, y: G + 3, z: 0 }, audio: { clip: D.bed.clip, loop: true, gain: D.bed.gain, spatial: false, bus: "Ambience" } });
   st.squareV = D.v;
 }
-export function tick(ctx, L) {}
+export function tick(ctx, L) { dressLevel(ctx, "level132"); }

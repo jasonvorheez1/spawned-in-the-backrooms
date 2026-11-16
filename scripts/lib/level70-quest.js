@@ -9,6 +9,7 @@
 // journal steps name the place, each giver has a line after it ends, and each payout is paid once (the step is checked first).
 // COLD: player.state.chill 0..100 on Level 70 only, ticked here once a second (never hurts). Numbers below are Savi's picks.
 import { pushFeed } from "./feed.js";
+import { dressLevel } from "./kit-levels.js";
 import { heard } from "./hear.js";
 import { addRep } from "./rep.js";
 import { setQuest, endQuest, tellQuest, claimReward } from "./quests.js";
@@ -317,6 +318,7 @@ function schematic() {
 // ---- once a second: gauge, wiring, cold, quest watchers
 const CH = new Map();
 export function tick(ctx) {
+  dressLevel(ctx, "level70");
   wire(ctx); paintGauge(ctx);
   const pd = ctx.place.state.l70pend;
   if (pd && ctx.now() - pd.at > 3000) { ctx.place.state.l70pend = null; const pp = ctx.place.players.find((x) => x.id === pd.by) ?? ctx.place.players[0]; if (pp?.state && !!ctx.place.objects["l70-breaker"]?.state?.on && matchOf(pressures(turnsOf(ctx))) === pd.route) resolve(ctx, pp, pd.route); }

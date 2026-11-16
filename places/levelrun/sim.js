@@ -1,3 +1,4 @@
+import { dressLevel } from "../../scripts/lib/kit-levels.js";
 // Level ! ("Run for Your Life!") Chapter 2 Finale.
 // Intake room (door slam + chained door horde breach) -> 200m crimson corridor with Agility obstacles & chasing wave
 // -> collapse at z <= -198 -> Phoebe's spatial ward rescue into the quiet Safe Alcove (x: 80, z: 0).
@@ -316,6 +317,7 @@ function syncAlcovePhoebe(ctx, players) {
 }
 
 export function tick(ctx) {
+  dressLevel(ctx, "levelrun");
   const st = ctx.place.state;
   if (!st.seeded || !("lrun-intake-floor" in (ctx.place.objects ?? {}))) {
     st.seeded = 1;

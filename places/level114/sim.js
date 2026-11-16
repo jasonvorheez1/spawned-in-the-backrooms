@@ -1,3 +1,4 @@
+import { dressLevel } from "../../scripts/lib/kit-levels.js";
 // Level 114: one bedroom (x -2..2, z -2.25..2.25, 2.5 m high), the door on the south wall ajar onto the void.
 // place.state.lit: the switch. Lit: Smiler eyes glint under the bed and in the closet gap. Dark: a Smiler comes out after DARK_S.
 // Now and then a counterpart stands at the window. The void runs south; a lone door at z 62 lets you out (scripts/l114-use.js).
@@ -85,6 +86,7 @@ function build(ctx) {
   ctx.spawn("hum", { tags: ["l114"], feetPosition: { x: 0, y: 1.5, z: 0 }, audio: { clip: "cdn/ambience-quiet-suburban-bedroom-at-night-distant-fridge-hum-loop.mp3", loop: true, gain: 0.14, maxDistance: 14 } });
 }
 export function tick(ctx) {
+  dressLevel(ctx, "level114");
   const s = ctx.place.state, now = ctx.now();
   if (s.v114 !== V) { build(ctx); s.v114 = V; s.lit = true; s.tvUseV = 0; }
   if (!s.tvUseV && wireTv(ctx)) s.tvUseV = 1;

@@ -1,3 +1,4 @@
+import { dressLevel } from "../../scripts/lib/kit-levels.js";
 // Level 34 "Sewer System": the referee. Lays the sewer once (V), keeps its Drain Smilers fed back in after a while.
 // Layout, all at floor y 0, the bore four feet high (crawl through: scripts/crawl.js):
 //   shaft A (0,0) step-irons up to Level 9's storm drain → tunnel north 20 m → junction (0,25): foul pool, dive down to Level 7;
@@ -100,6 +101,7 @@ function feed(ctx, s) {
 }
 
 export function tick(ctx) {
+  dressLevel(ctx, "level34");
   const s = ctx.place.state;
   if (s.l34V !== V) { lay(ctx); s.l34V = V; }
   if (!ctx.place.objects?.["l34-ch2-relay"]) ctx.spawn("l34-ch2-relay", RELAY_CASE);

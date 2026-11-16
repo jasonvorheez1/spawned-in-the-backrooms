@@ -1,3 +1,4 @@
+import { dressLevel } from "../../scripts/lib/kit-levels.js";
 // Opening route props, supply loop and wrist terminal.
 // The beats themselves run on the player's machine (scripts/lib/tut0-cut.js via scripts/main-menu.js).
 import { H, LIGHTS, ALMOND, DESK, ENC, HALO, DRAWINGS } from "../../scripts/lib/tut0.js"
@@ -25,6 +26,7 @@ function harder(ctx, s) {
   const o = ctx.getObject("t0-light-18"); if (o?.light) o.light = { ...o.light, intensity: 1.4 }
 }
 export function tick(ctx) {
+  dressLevel(ctx, "tutorial0");
   const s = ctx.place.state
   if (s.built === 7) return harder(ctx, s)
   if (s.built) for (const o of ctx.query({ anyTags: ["t0prop", "furniture", "halogen-unit", "almond", "bench", "container"] })) ctx.destroy(o.id)

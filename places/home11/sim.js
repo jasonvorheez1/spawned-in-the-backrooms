@@ -1,3 +1,4 @@
+import { dressLevel } from "../../scripts/lib/kit-levels.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
 import { dressThresholds } from "../../scripts/lib/thresholds.js";
 import { builtSpec } from "../../scripts/lib/build-piece.js";
@@ -28,6 +29,7 @@ const M = {
 const W = 10, D = 12, H = 2.8; // room x -5..5, z -6..6; front door on the +z wall
 
 export function tick(ctx) {
+  dressLevel(ctx, "home11");
   restyleSigns(ctx, "home11"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   const st = ctx.place.state;
