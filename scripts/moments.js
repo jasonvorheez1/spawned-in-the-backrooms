@@ -23,7 +23,7 @@ export const ears = {
     const s = ctx.self.state, who = ctx.getObject(by), now = ctx.now();
     const pos = { ...ctx.self.worldFeetPosition, y: 1.6 };
     if (s.kind === "payphone") {
-      phoneCall(ctx, s, who, !!ctx.self.session.ring); ctx.self.session.ring = false; ctx.self.audio = null;
+      phoneCall(ctx, s, who, !!ctx.self.session.ring); ctx.self.session.ring = false; ctx.self.audio = null; s.verb = "Dial M.E.G. (25¢)"; s.info = "a sticker reads M.E.G. HOTLINE";
     } else if (s.kind === "stairs" && who) { // a stairwell: the flight between the maze and the Manila Rooms below
       heard(ctx, { clip: s.sound, position: pos, volume: 0.8, maxDistance: 10 });
       ctx.emit("screenFlash", { color: "#000000", duration: 0.6, intensity: 1 }, { audience: { player: who.id } });
