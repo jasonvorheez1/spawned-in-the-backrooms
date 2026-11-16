@@ -13,5 +13,5 @@ atmosphere:
   stars: { enabled: false }
   timeOfDay: 0
   wind: { direction: 0, speed: 0 }
-  ambient: { light: { color: oklch(0.86 0.02 240), intensity: 0.32 } } # was 0.6: the lamps carve the dark now
-  hemisphere: { skyColor: oklch(0.85 0.02 230), groundColor: oklch(0.5 0.008 250), intensity: 0.34 } # was 0.55
+  ambient: { light: { color: oklch(0.86 0.02 240), intensity: 0.44 } } # was 0.6: the lamps carve the dark now
+  hemisphere: { skyColor: oklch(0.85 0.02 230), groundColor: oklch(0.5 0.008 250), intensity: 0.42 } # was 0.55
