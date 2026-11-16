@@ -94,6 +94,7 @@ l11-lot-sign-b:
   rotation: {yaw: 90}
   ui: "<div face=\"front\" class=\"w-full h-full flex items-center justify-center\" style=\"background:#1b1b1b;color:#ffd24a;font-family:display;font-size:230px\">AS-IS · NO REFUNDS PAST THE THRESHOLD</div>"
 l11-lot-sold:
+  behavior: [scripts/usable-kit.js]
   feetPosition: {x: 14.6, y: 0.14, z: 28}
   id: l11-lot-sold
   model: {forward: "+x", id: /cdn/value.7b64aefa6629593ca0750e9cce606b15e70e31bfb9db56fd96b82432876ba685.glb, materials: {paint: {color: oklch(0.55 0.08 150), metalness: 0.2, roughness: 0.4}}}
