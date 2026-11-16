@@ -8,7 +8,7 @@ bc-airhockey:
   physics: {body: static, collider: box}
   rotation: {yaw: 180}
   scale: 1.55
-  state: {info: "Puck & mallets ready", name: "Air Hockey Table", propKind: airhockey, verb: Play}
+  state: {info: First to 7. The fan wheezes but works, name: Air Hockey Table, propKind: airhockey, verb: Play}
   tags: [bonus-arcade, usable]
 bc-arcade:
   children: [{audio: {bus: Music, clip: /cdn/music-the-bonus-room-ost-zdv3pdaa.mp3, gain: 0.35, loop: true, maxDistance: 14, spatial: true}, feetPosition: {x: 0, y: 2.5, z: 0}, id: music}, {feetPosition: {x: -2, y: 4.2, z: -4}, id: glow-pink, light: {color: "#ff4fd8", distance: 11, intensity: 2.2, kind: point}}, {feetPosition: {x: 2, y: 4.2, z: 4}, id: glow-cyan, light: {color: "#38e8ff", distance: 11, intensity: 2, kind: point}}]
@@ -280,33 +280,33 @@ bc-bench-6:
 bc-cab-1:
   behavior: scripts/bonus-prop.js
   feetPosition: {x: 13, y: 0.02, z: -23.25}
-  id: "bc-cab-1"
-  layout: {box: {min: {x: -0.38, y: 0.0, z: -0.3897}, max: {x: 0.38, y: 1.79, z: 0.5654}}}
-  model: {id: "/cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb", materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: "/cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png", roughness: 0.2, texture: "/cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png"}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: "cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png", roughness: 0.1, texture: "cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png"}, shell: {color: "oklch(0.93 0.02 90)", roughness: 0.3}}}
-  physics: {body: "static", collider: "box"}
+  id: bc-cab-1
+  layout: {box: {max: {x: 0.38, y: 1.79, z: 0.5654}, min: {x: -0.38, y: 0, z: -0.3897}}}
+  model: {id: /cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb, materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png, roughness: 0.2, texture: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-fighting-game.png}, shell: {color: oklch(0.93 0.02 90), roughness: 0.3}}}
+  physics: {body: static, collider: box}
   rotation: {yaw: 0}
-  state: {info: arcade cabinet, name: "Street Clash EX", propKind: cabinet, verb: Play}
-  tags: ["bonus-arcade", "usable"]
+  state: {info: Room high score on the marquee, name: Street Clash EX, propKind: cabinet, verb: Play}
+  tags: [bonus-arcade, usable]
 bc-cab-2:
   behavior: scripts/bonus-prop.js
   feetPosition: {x: 13, y: 0.02, z: -6.75}
-  id: "bc-cab-2"
-  layout: {box: {min: {x: -0.38, y: 0.0, z: -0.3897}, max: {x: 0.38, y: 1.79, z: 0.5654}}}
-  model: {id: "/cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb", materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: "/cdn/value.f8bb08a00d6117c32ac7f2f567e3c970cd40dc2906777904a69ed77728573cb0.png", roughness: 0.2, texture: "/cdn/value.f8bb08a00d6117c32ac7f2f567e3c970cd40dc2906777904a69ed77728573cb0.png"}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: "cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png", roughness: 0.1, texture: "cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png"}, shell: {color: "oklch(0.32 0.06 260)", roughness: 0.3}}}
-  physics: {body: "static", collider: "box"}
+  id: bc-cab-2
+  layout: {box: {max: {x: 0.38, y: 1.79, z: 0.5654}, min: {x: -0.38, y: 0, z: -0.3897}}}
+  model: {id: /cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb, materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.f8bb08a00d6117c32ac7f2f567e3c970cd40dc2906777904a69ed77728573cb0.png, roughness: 0.2, texture: /cdn/value.f8bb08a00d6117c32ac7f2f567e3c970cd40dc2906777904a69ed77728573cb0.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png}, shell: {color: oklch(0.32 0.06 260), roughness: 0.3}}}
+  physics: {body: static, collider: box}
   rotation: {yaw: 180}
-  state: {info: arcade cabinet, name: "Nova Drift 1989", propKind: cabinet, verb: Play}
-  tags: ["bonus-arcade", "usable"]
+  state: {info: Ship drifts left. Everyone knows, name: Nova Drift 1989, propKind: cabinet, verb: Play}
+  tags: [bonus-arcade, usable]
 bc-cab-3:
   behavior: scripts/bonus-prop.js
   feetPosition: {x: 14.5, y: 0.02, z: -23.25}
-  id: "bc-cab-3"
-  layout: {box: {min: {x: -0.38, y: 0.0, z: -0.3897}, max: {x: 0.38, y: 1.79, z: 0.5654}}}
-  model: {id: "/cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb", materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: "/cdn/value.99f0d7b529b4c4851c7b76a1292d05665a7d392e786d57c519eb5cb0d3ece87b.png", roughness: 0.2, texture: "/cdn/value.99f0d7b529b4c4851c7b76a1292d05665a7d392e786d57c519eb5cb0d3ece87b.png"}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: "cdn/texture-retro-arcade-crt-screen-pixel-racing-game-red-car-sunset-highway.png", roughness: 0.1, texture: "cdn/texture-retro-arcade-crt-screen-pixel-racing-game-red-car-sunset-highway.png"}, shell: {color: "oklch(0.45 0.17 27)", roughness: 0.3}}}
-  physics: {body: "static", collider: "box"}
+  id: bc-cab-3
+  layout: {box: {max: {x: 0.38, y: 1.79, z: 0.5654}, min: {x: -0.38, y: 0, z: -0.3897}}}
+  model: {id: /cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb, materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.99f0d7b529b4c4851c7b76a1292d05665a7d392e786d57c519eb5cb0d3ece87b.png, roughness: 0.2, texture: /cdn/value.99f0d7b529b4c4851c7b76a1292d05665a7d392e786d57c519eb5cb0d3ece87b.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-racing-game-red-car-sunset-highway.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-racing-game-red-car-sunset-highway.png}, shell: {color: oklch(0.45 0.17 27), roughness: 0.3}}}
+  physics: {body: static, collider: box}
   rotation: {yaw: 0}
-  state: {info: arcade cabinet, name: "Sunset Turbo", propKind: cabinet, verb: Play}
-  tags: ["bonus-arcade", "usable"]
+  state: {info: Wheel pulls right a little, name: Sunset Turbo, propKind: cabinet, verb: Play}
+  tags: [bonus-arcade, usable]
 bc-cab-4:
   behavior: scripts/arcade.js
   feetPosition: {x: 14.5, y: 0.02, z: -6.75}
@@ -315,48 +315,48 @@ bc-cab-4:
   model: {id: /cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb, materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.d291bab7e080558ca2d4419bfcb74d56487b980de802de47caa165ca0d1e41f4.png, roughness: 0.2, texture: /cdn/value.d291bab7e080558ca2d4419bfcb74d56487b980de802de47caa165ca0d1e41f4.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-falling-block-puzzle-game.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-falling-block-puzzle-game.png}, shell: {color: oklch(0.22 0.03 270), roughness: 0.3}}}
   physics: {body: static, collider: box}
   rotation: {yaw: 180}
-  state: {game: blockpanic, info: arcade cabinet, kind: arcade, name: Block Panic, verb: Play}
+  state: {game: blockpanic, info: "Stack lines, beat the room's best", kind: arcade, name: Block Panic, verb: Play}
   tags: [bonus-arcade, usable]
 bc-cab-5:
   behavior: scripts/bonus-prop.js
   feetPosition: {x: 17.1, y: 0.02, z: -23.25}
-  id: "bc-cab-5"
-  layout: {box: {min: {x: -0.38, y: 0.0, z: -0.3897}, max: {x: 0.38, y: 1.79, z: 0.5654}}}
-  model: {id: "/cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb", materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: "/cdn/value.a7fabdca9daeeea0ab7cdd6ac32c00ec7a907e8ff56ff546c17ab6a1b9925463.png", roughness: 0.2, texture: "/cdn/value.a7fabdca9daeeea0ab7cdd6ac32c00ec7a907e8ff56ff546c17ab6a1b9925463.png"}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: "cdn/texture-retro-arcade-crt-screen-pixel-ninja-beat-em-up-neon-street.png", roughness: 0.1, texture: "cdn/texture-retro-arcade-crt-screen-pixel-ninja-beat-em-up-neon-street.png"}, shell: {color: "oklch(0.3 0.12 310)", roughness: 0.3}}}
-  physics: {body: "static", collider: "box"}
+  id: bc-cab-5
+  layout: {box: {max: {x: 0.38, y: 1.79, z: 0.5654}, min: {x: -0.38, y: 0, z: -0.3897}}}
+  model: {id: /cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb, materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.a7fabdca9daeeea0ab7cdd6ac32c00ec7a907e8ff56ff546c17ab6a1b9925463.png, roughness: 0.2, texture: /cdn/value.a7fabdca9daeeea0ab7cdd6ac32c00ec7a907e8ff56ff546c17ab6a1b9925463.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-ninja-beat-em-up-neon-street.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-ninja-beat-em-up-neon-street.png}, shell: {color: oklch(0.3 0.12 310), roughness: 0.3}}}
+  physics: {body: static, collider: box}
   rotation: {yaw: 0}
-  state: {info: arcade cabinet, name: "Neon Shinobi", propKind: cabinet, verb: Play}
-  tags: ["bonus-arcade", "usable"]
+  state: {info: Someone scratched 'AAA' into the bezel, name: Neon Shinobi, propKind: cabinet, verb: Play}
+  tags: [bonus-arcade, usable]
 bc-cab-6:
   behavior: scripts/bonus-prop.js
   feetPosition: {x: 17.1, y: 0.02, z: -6.75}
-  id: "bc-cab-6"
-  layout: {box: {min: {x: -0.38, y: 0.0, z: -0.3897}, max: {x: 0.38, y: 1.79, z: 0.5654}}}
-  model: {id: "/cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb", materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: "/cdn/value.a4dabee28ae8c248d1ff7349cd6eadeca73158029106e6df6eeb20dda5a7fbb3.png", roughness: 0.2, texture: "/cdn/value.a4dabee28ae8c248d1ff7349cd6eadeca73158029106e6df6eeb20dda5a7fbb3.png"}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: "cdn/texture-retro-arcade-crt-screen-pixel-light-gun-zombie-shooter.png", roughness: 0.1, texture: "cdn/texture-retro-arcade-crt-screen-pixel-light-gun-zombie-shooter.png"}, shell: {color: "oklch(0.25 0.04 150)", roughness: 0.3}}}
-  physics: {body: "static", collider: "box"}
+  id: bc-cab-6
+  layout: {box: {max: {x: 0.38, y: 1.79, z: 0.5654}, min: {x: -0.38, y: 0, z: -0.3897}}}
+  model: {id: /cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb, materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.a4dabee28ae8c248d1ff7349cd6eadeca73158029106e6df6eeb20dda5a7fbb3.png, roughness: 0.2, texture: /cdn/value.a4dabee28ae8c248d1ff7349cd6eadeca73158029106e6df6eeb20dda5a7fbb3.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-light-gun-zombie-shooter.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-light-gun-zombie-shooter.png}, shell: {color: oklch(0.25 0.04 150), roughness: 0.3}}}
+  physics: {body: static, collider: box}
   rotation: {yaw: 180}
-  state: {info: arcade cabinet, name: "Dead Shift", propKind: cabinet, verb: Play}
-  tags: ["bonus-arcade", "usable"]
+  state: {info: Shotgun's zip-tied to the cabinet, name: Dead Shift, propKind: cabinet, verb: Play}
+  tags: [bonus-arcade, usable]
 bc-cab-7:
   behavior: scripts/bonus-prop.js
   feetPosition: {x: 18.6, y: 0.02, z: -23.25}
-  id: "bc-cab-7"
-  layout: {box: {min: {x: -0.38, y: 0.0, z: -0.3897}, max: {x: 0.38, y: 1.79, z: 0.5654}}}
-  model: {id: "/cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb", materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: "/cdn/value.0255e145ce46f383d12929311f7f2264bbb7c01796330ceeae61232c8fc60764.png", roughness: 0.2, texture: "/cdn/value.0255e145ce46f383d12929311f7f2264bbb7c01796330ceeae61232c8fc60764.png"}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: "cdn/texture-retro-arcade-crt-screen-pixel-blue-hedgehog-platformer-green-hills.png", roughness: 0.1, texture: "cdn/texture-retro-arcade-crt-screen-pixel-blue-hedgehog-platformer-green-hills.png"}, shell: {color: "oklch(0.5 0.15 255)", roughness: 0.3}}}
-  physics: {body: "static", collider: "box"}
+  id: bc-cab-7
+  layout: {box: {max: {x: 0.38, y: 1.79, z: 0.5654}, min: {x: -0.38, y: 0, z: -0.3897}}}
+  model: {id: /cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb, materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.0255e145ce46f383d12929311f7f2264bbb7c01796330ceeae61232c8fc60764.png, roughness: 0.2, texture: /cdn/value.0255e145ce46f383d12929311f7f2264bbb7c01796330ceeae61232c8fc60764.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-blue-hedgehog-platformer-green-hills.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-blue-hedgehog-platformer-green-hills.png}, shell: {color: oklch(0.5 0.15 255), roughness: 0.3}}}
+  physics: {body: static, collider: box}
   rotation: {yaw: 0}
-  state: {info: arcade cabinet, name: "Blue Streak", propKind: cabinet, verb: Play}
-  tags: ["bonus-arcade", "usable"]
+  state: {info: Blue button sticks, name: Blue Streak, propKind: cabinet, verb: Play}
+  tags: [bonus-arcade, usable]
 bc-cab-8:
   behavior: scripts/bonus-prop.js
   feetPosition: {x: 18.6, y: 0.02, z: -6.75}
-  id: "bc-cab-8"
-  layout: {box: {min: {x: -0.38, y: 0.0, z: -0.3897}, max: {x: 0.38, y: 1.79, z: 0.5654}}}
-  model: {id: "/cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb", materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: "/cdn/value.c0082b35d5770fd078597184fb98fef5cb4729cdec1174c3a0905997a2016f17.png", roughness: 0.2, texture: "/cdn/value.c0082b35d5770fd078597184fb98fef5cb4729cdec1174c3a0905997a2016f17.png"}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: "cdn/texture-retro-arcade-crt-screen-pixel-space-pinball-table.png", roughness: 0.1, texture: "cdn/texture-retro-arcade-crt-screen-pixel-space-pinball-table.png"}, shell: {color: "oklch(0.15 0.02 260)", roughness: 0.3}}}
-  physics: {body: "static", collider: "box"}
+  id: bc-cab-8
+  layout: {box: {max: {x: 0.38, y: 1.79, z: 0.5654}, min: {x: -0.38, y: 0, z: -0.3897}}}
+  model: {id: /cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb, materials: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.c0082b35d5770fd078597184fb98fef5cb4729cdec1174c3a0905997a2016f17.png, roughness: 0.2, texture: /cdn/value.c0082b35d5770fd078597184fb98fef5cb4729cdec1174c3a0905997a2016f17.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-pinball-table.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-pinball-table.png}, shell: {color: oklch(0.15 0.02 260), roughness: 0.3}}}
+  physics: {body: static, collider: box}
   rotation: {yaw: 180}
-  state: {info: arcade cabinet, name: "Starlight Pinball DX", propKind: cabinet, verb: Play}
-  tags: ["bonus-arcade", "usable"]
+  state: {info: Tilt sensor is very sensitive, name: Starlight Pinball DX, propKind: cabinet, verb: Play}
+  tags: [bonus-arcade, usable]
 bc-cab-isl-1:
   behavior: scripts/bonus-prop.js
   castShadow: true
@@ -366,7 +366,7 @@ bc-cab-isl-1:
   model: {id: /cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb, parts: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png, roughness: 0.2, texture: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-space-shooter-game.png}, shell: {color: oklch(0.35 0.12 300), roughness: 0.3}}}
   physics: {body: static, collider: box}
   rotation: {yaw: 0}
-  state: {info: arcade cabinet, name: "Galactic Defender", propKind: cabinet, verb: Play}
+  state: {info: Beat the room's best and it says so, name: Galactic Defender, propKind: cabinet, verb: Play}
   tags: [bonus-arcade, usable]
 bc-cab-isl-2:
   behavior: scripts/bonus-prop.js
@@ -377,7 +377,7 @@ bc-cab-isl-2:
   model: {id: /cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb, parts: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png, roughness: 0.2, texture: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-maze-chase-game.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-maze-chase-game.png}, shell: {color: oklch(0.45 0.16 25), roughness: 0.3}}}
   physics: {body: static, collider: box}
   rotation: {yaw: 0}
-  state: {info: arcade cabinet, name: "Maze Chase 86", propKind: cabinet, verb: Play}
+  state: {info: Ghosts still wear 1986 colours, name: Maze Chase 86, propKind: cabinet, verb: Play}
   tags: [bonus-arcade, usable]
 bc-cab-isl-3:
   behavior: scripts/bonus-prop.js
@@ -388,7 +388,7 @@ bc-cab-isl-3:
   model: {id: /cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb, parts: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png, roughness: 0.2, texture: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-racing-game.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-racing-game.png}, shell: {color: oklch(0.3 0.08 250), roughness: 0.3}}}
   physics: {body: static, collider: box}
   rotation: {yaw: 180}
-  state: {info: arcade cabinet, name: "Midnight Highway", propKind: cabinet, verb: Play}
+  state: {info: Nobody has ever finished lap 3, name: Midnight Highway, propKind: cabinet, verb: Play}
   tags: [bonus-arcade, usable]
 bc-cab-isl-4:
   behavior: scripts/arcade.js
@@ -399,19 +399,19 @@ bc-cab-isl-4:
   model: {id: /cdn/value.f7ea830d59b6a54f8a1a0d636b2f200b7225f06c4d8fb290da858ac81ee81298.glb, parts: {marquee: {emissive: "#ffffff", emissiveIntensity: 1.3, emissiveMap: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png, roughness: 0.2, texture: /cdn/value.8599b80c992347ffa1721c57ea9775900aabc859c9fd9e58c77ef132d4c2ab15.png}, screen: {emissive: "#ffffff", emissiveIntensity: 1.5, emissiveMap: cdn/texture-retro-arcade-crt-screen-pixel-puzzle-blocks-game.png, roughness: 0.1, texture: cdn/texture-retro-arcade-crt-screen-pixel-puzzle-blocks-game.png}, shell: {color: oklch(0.25 0.02 260), roughness: 0.3}}}
   physics: {body: static, collider: box}
   rotation: {yaw: 180}
-  state: {game: blockpanic, info: "arcade cabinet · 2P alley", kind: arcade, name: "Block Panic II", verb: Play}
+  state: {game: blockpanic, info: "2P side has a cleaner joystick", kind: arcade, name: Block Panic II, verb: Play}
   tags: [bonus-arcade, usable]
 bc-claw-1:
   behavior: scripts/bonus-prop.js
-  children: [{feetPosition: {x: 0, y: 1.6, z: 0}, id: "lamp", light: {color: "#ffd0f0", distance: 3, intensity: 0.8, kind: "point"}}]
+  children: [{feetPosition: {x: 0, y: 1.6, z: 0}, id: lamp, light: {color: "#ffd0f0", distance: 3, intensity: 0.8, kind: point}}]
   feetPosition: {x: 23.05, y: 0.02, z: -12.9}
-  id: "bc-claw-1"
+  id: bc-claw-1
   layout: {box: {max: {x: 0.65, y: 2, z: 0.65}, min: {x: -0.65, y: 0, z: -0.65}}}
-  model: {id: "/cdn/value.343e20728fe5fff9520e8ab82ab8cbc4b5084303f1e1ef791742b74d05a94f12.glb"}
-  physics: {body: "static", collider: "box"}
+  model: {id: /cdn/value.343e20728fe5fff9520e8ab82ab8cbc4b5084303f1e1ef791742b74d05a94f12.glb}
+  physics: {body: static, collider: box}
   rotation: {yaw: -90}
-  state: {info: Free play today, name: Claw Machine, propKind: claw, verb: Try}
-  tags: ["bonus-arcade", "usable"]
+  state: {info: Claw's got a grip. Mostly, name: Claw Machine, propKind: claw, verb: Try}
+  tags: [bonus-arcade, usable]
 bc-dance:
   behavior: scripts/bonus-prop.js
   children: [{feetPosition: {x: 0, y: 2.2, z: 0.6}, id: glow, light: {color: "#ff4fd8", distance: 4, intensity: 0.9, kind: point}}]
@@ -421,7 +421,7 @@ bc-dance:
   physics: {body: static, collider: box}
   rotation: {yaw: 0}
   scale: 1.33
-  state: {info: "138 BPM · free play", name: Dance Stage, propKind: dance, verb: Step Up}
+  state: {info: "138 BPM. Pads 2 and 4 squeak", name: Dance Stage, propKind: dance, verb: Step Up}
   tags: [bonus-arcade, usable]
 bc-dest-1:
   castShadow: false
@@ -446,7 +446,7 @@ bc-directory:
   physics: {body: static, collider: box}
   rotation: {yaw: 90}
   scale: 1.4
-  state: {info: Floor guide, name: Mall Directory, propKind: directory, verb: Read}
+  state: {info: Map's half right, name: Mall Directory, propKind: directory, verb: Read}
   tags: [bonus-court, usable]
 bc-directory-face:
   castShadow: false
@@ -655,7 +655,7 @@ bc-gumball-rack:
   model: {forward: "+x", id: /cdn/value.eea9f9f32ac71140399e30ebfb44ae03187700cd8bdb5674b930fb1f8bcf411e.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: -90}
-  state: {info: Complimentary treat, name: Gumball Rack, propKind: gumball, verb: Turn Knob}
+  state: {info: One per visit. Mint is the good one, name: Gumball Rack, propKind: gumball, verb: Turn Knob}
   tags: [bonus-arcade, usable]
 bc-juicebar:
   behavior: [scripts/smoothie.js]
@@ -666,7 +666,7 @@ bc-juicebar:
   model: {forward: "+x", id: /cdn/value.032eaa159a83186e26cbf498059d39bcf7b7c04151dfb3565991f3646992a08d.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: 90}
-  state: {info: smoothies, name: Squeeze Play, verb: Order}
+  state: {info: Sal blends what you bring, name: Squeeze Play, verb: Order}
   tags: [bonus-court, usable]
 bc-juicebar-sign:
   castShadow: true
@@ -685,7 +685,7 @@ bc-kiddieride:
   model: {id: /cdn/value.74e048233e378e7161258076745c57cd6948fa4310e4014bb99ffdcaf8953221.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: 0}
-  state: {info: "25¢ — on the house", name: Kiddie Ride, propKind: kiddieride, verb: Ride}
+  state: {info: Rocket ride. Takes the edge off, name: Kiddie Ride, propKind: kiddieride, verb: Ride}
   tags: [bonus-court, usable]
 bc-kiosk:
   feetPosition: {x: -20.5, y: 5.5, z: -3}
@@ -790,7 +790,7 @@ bc-payphone-1:
   physics: {body: static, collider: box}
   rotation: {yaw: 90}
   scale: 1
-  state: {info: Receiver still warm, name: Payphone, propKind: payphone, verb: Listen}
+  state: {info: Coin return clicks when you lift it, name: Payphone, propKind: payphone, verb: Listen}
   tags: [bonus-props, usable]
 bc-payphone-2:
   behavior: scripts/bonus-prop.js
@@ -801,7 +801,7 @@ bc-payphone-2:
   physics: {body: static, collider: box}
   rotation: {yaw: 90}
   scale: 1
-  state: {info: Receiver still warm, name: Payphone, propKind: payphone, verb: Listen}
+  state: {info: Someone left the number for Level 11 on it, name: Payphone, propKind: payphone, verb: Listen}
   tags: [bonus-props, usable]
 bc-phone-plate-1:
   feetPosition: {x: 9.83, y: 1.62, z: -26.95}
@@ -820,7 +820,7 @@ bc-photobooth:
   model: {forward: "+x", id: /cdn/value.3e8eb7f64b279d23a7def50434b39c85693df804db60157edc190e5f6bedb9ac.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: 180}
-  state: {info: 4-frame neon strip, name: Photo Booth, propKind: photobooth, verb: Snap Photo}
+  state: {info: "Four frames, bring a face", name: Photo Booth, propKind: photobooth, verb: Snap Photo}
   tags: [bonus-court, usable]
 bc-pinball-1:
   behavior: scripts/bonus-prop.js
@@ -831,7 +831,7 @@ bc-pinball-1:
   physics: {body: static, collider: box}
   rotation: {yaw: -90}
   scale: 1.75
-  state: {info: "Silver ball · free play", name: Pinball Machine, propKind: pinball, verb: Play}
+  state: {info: Left flipper hits hard, name: Pinball Machine, propKind: pinball, verb: Play}
   tags: [bonus-arcade, usable]
 bc-pinball-2:
   behavior: scripts/bonus-prop.js
@@ -841,7 +841,7 @@ bc-pinball-2:
   physics: {body: static, collider: box}
   rotation: {yaw: -90}
   scale: 1.75
-  state: {info: "Silver ball · free play", name: Pinball Machine, propKind: pinball, verb: Play}
+  state: {info: Right outlane eats balls, name: Pinball Machine, propKind: pinball, verb: Play}
   tags: [bonus-arcade, usable]
 bc-pinball-3:
   behavior: scripts/bonus-prop.js
@@ -851,7 +851,7 @@ bc-pinball-3:
   physics: {body: static, collider: box}
   rotation: {yaw: -90}
   scale: 1.75
-  state: {info: "Silver ball · free play", name: Pinball Machine, propKind: pinball, verb: Play}
+  state: {info: Multiball if you hit the ramp twice, name: Pinball Machine, propKind: pinball, verb: Play}
   tags: [bonus-arcade, usable]
 bc-planter-1:
   feetPosition: {x: -4.5, y: 0, z: 22}
@@ -1093,7 +1093,7 @@ bc-tokens:
   physics: {body: static, collider: box}
   rotation: {yaw: -90}
   scale: 1.4
-  state: {info: "Arcade tokens · free", name: Token Changer, propKind: tokens, verb: Dispense}
+  state: {info: Bill slot spits out singles, name: Token Changer, propKind: tokens, verb: Dispense}
   tags: [bonus-arcade, usable]
 bc-train:
   feetPosition: {x: -22.3, y: 5.15, z: -14}
@@ -1777,7 +1777,7 @@ bonus-ctr-clothes:
   id: bonus-ctr-clothes
   physics: {body: static, collider: box, trigger: true}
   primitive: {depth: 1.6, height: 1.2, kind: box, width: 1.6}
-  state: {c: {x: -19.4, y: 1.15, z: 18.5}, info: "", kind: clothes, name: Liminal Clothes, tint: "#ff71ce", verb: Browse}
+  state: {c: {x: -19.4, y: 1.15, z: 18.5}, info: Fitting room's in the back, kind: clothes, name: Liminal Clothes, tint: "#ff71ce", verb: Browse}
   tags: [usable]
   visible: false
 bonus-ctr-diner:
@@ -1786,7 +1786,7 @@ bonus-ctr-diner:
   id: bonus-ctr-diner
   physics: {body: static, collider: box, trigger: true}
   primitive: {depth: 1.6, height: 1.2, kind: box, width: 1.6}
-  state: {c: {x: -19.4, y: 1.15, z: -15}, info: "", kind: diner, name: Tom's Diner, tint: "#ff71ce", verb: Order}
+  state: {c: {x: -19.4, y: 1.15, z: -15}, info: Grill's on. Booth's free, kind: diner, name: Tom's Diner, tint: "#ff71ce", verb: Order}
   tags: [usable]
   visible: false
 bonus-ctr-furn:
@@ -1795,7 +1795,7 @@ bonus-ctr-furn:
   id: bonus-ctr-furn
   physics: {body: static, collider: box, trigger: true}
   primitive: {depth: 1.6, height: 1.2, kind: box, width: 1.6}
-  state: {c: {x: 19.4, y: 1.15, z: 18.5}, info: "", kind: furniture, name: Andrew's Furniture, tint: "#ff71ce", verb: Browse}
+  state: {c: {x: 19.4, y: 1.15, z: 18.5}, info: Delivery to any Bonus home, kind: furniture, name: Andrew's Furniture, tint: "#ff71ce", verb: Browse}
   tags: [usable]
   visible: false
 bonus-ctr-station:
@@ -1804,7 +1804,7 @@ bonus-ctr-station:
   id: bonus-ctr-station
   physics: {body: static, collider: box, trigger: true}
   primitive: {depth: 1.6, height: 1.2, kind: box, width: 1.6}
-  state: {c: {x: -19.6, y: 6.65, z: -3}, info: "", kind: station, name: Teleport Station, tint: "#ff71ce", verb: Travel}
+  state: {c: {x: -19.6, y: 6.65, z: -3}, info: Goes where you've been, kind: station, name: Teleport Station, tint: "#ff71ce", verb: Travel}
   tags: [usable]
   visible: false
 bonus-music:
