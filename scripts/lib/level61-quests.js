@@ -6,12 +6,13 @@
 //   4. "Two Menus Short" (Sal at Burger Bop -> Level 10 Outpost Bountiful Wren -> Level 11 Kael -> Level 6.1)
 //   5. Cross-level Guild customs & spillway clearance for Level 11's "The Paper Bird's Blessing" (craneQ).
 
-import { setQuest, tellQuest, claimReward, advanceQuest, finishLevelQuest, queuePayout } from "./quests.js";
+import { setQuest, endQuest, tellQuest, claimReward, advanceQuest, finishLevelQuest, queuePayout } from "./quests.js";
 import { rollCheck } from "./npc-talk.js";
 import { addRep, repOf } from "./rep.js";
 
 export const BUS_TRAY = ["l61-tray", "Bus Your Tray", "Finish your food, then slide the tray into the tray return rack in the Level 6.1 food court. Sal at Burger Bop and the facelings notice who cleans up."];
 const M61 = (id) => ({ place: "level61", id });
+const B4_WARNING = "amber-b4-warning";
 
 export const QUESTS61 = {
   bee: {
@@ -239,6 +240,31 @@ export function handleDialogueQuest61(ctx, p, npc, text) {
       return { reply: "Word already reached the glass doors: our barge docked with every sack of beans dry. Kael isn't the only trader who keeps his books. Take a pilgrim dividend from the forward crate.", mood: "happy" };
     }
   }
+  if (id === "hub-amber-jo" && s.l61GuildQ === 99) {
+    if (t === "did the guild's page 413 warning reach camp amber?" && s.l61GuildTo === "guild-warn") {
+      return { reply: "It did. We put a copy beside the newcomer box. B4 drops one way into the Snackrooms, so nobody should press it expecting a way back. Tell the Guild we got the warning.", mood: "happy" };
+    }
+    if (t === "i sold the survey to the m.e.g. can amber still warn people about b4?" && s.l61GuildTo === "meg" && !s.l61AmberB4) {
+      s.l61AmberB4 = 1;
+      setQuest(s, B4_WARNING, { name: "A Warning for the Road", step: "Ask Jo at Camp Amber to post a warning about the one-way B4 drop.", mark: { place: "thehub", id: "hub-amber-jo" } });
+      tellQuest(ctx, p, "A Warning for the Road · Speak to Jo");
+      return { reply: "The Guild trusted you with that survey. I can't put their routes back in their Book, but we can warn people what B4 does without publishing the vent coordinates. Want me to post it?", mood: "calm" };
+    }
+    if (t === "please post the b4 warning for travellers." && s.l61GuildTo === "meg" && s.l61AmberB4 === 1) {
+      s.l61AmberB4 = 2;
+      addRep(s, "amber", 3, "Helped Camp Amber warn travellers about the one-way B4 drop");
+      endQuest(s, B4_WARNING, "Jo posted a warning about the B4 drop without publishing the restricted survey.");
+      if (s.qdone?.["four-hundred-and-thirteen"]) {
+        const q = s.qdone["four-hundred-and-thirteen"];
+        s.qdone = { ...s.qdone, ["four-hundred-and-thirteen"]: { ...q, text: (q.text ?? "") + " Later, Jo posted a warning about B4." } };
+      }
+      tellQuest(ctx, p, "A Warning for the Road · Jo will warn travellers");
+      return { reply: "I'll put it by the newcomer box. A warning isn't the same as the route the Guild lost, but it might keep somebody from stepping through hungry and alone. Thank you for telling us.", mood: "calm" };
+    }
+    if (t === "is the b4 warning still up?" && s.l61GuildTo === "meg" && s.l61AmberB4 === 2) {
+      return { reply: "Right by the newcomer box. Pip replaces the paper when it gets damp. The one-way drop is marked, and the vent coordinates stay off the sheet.", mood: "calm" };
+    }
+  }
   if (id === "l61-guard-a" && s.l61GuildQ === 3 && t.includes("unguarded vent telemetry")) {
     s.l61GuildTo = "meg";
     finishQuest61(ctx, p, "guild", {
@@ -373,6 +399,12 @@ export function l61Choices(id, s) {
     out.push({ text: "Did you see a tall woman in a red wool coat come off the 8:15 bus?", tag: "Quest" });
     out.push({ text: "About the red wool coat, do you remember which tunnel she asked about?", tag: "Speech 30", check: { skill: "speech", difficulty: 30 } });
   } else if ((id === "hub-amber-jo" || id === "hub-amber-pip")) {
+    if (id === "hub-amber-jo" && s?.l61GuildQ === 99) {
+      if (s.l61GuildTo === "guild-warn") out.push({ text: "Did the Guild's Page 413 warning reach Camp Amber?", tag: "Talk" });
+      if (s.l61GuildTo === "meg" && !s.l61AmberB4) out.push({ text: "I sold the survey to the M.E.G. Can Amber still warn people about B4?", tag: "Ask" });
+      if (s.l61GuildTo === "meg" && s.l61AmberB4 === 1) out.push({ text: "Please post the B4 warning for travellers.", tag: "Quest Turn-In" });
+      if (s.l61GuildTo === "meg" && s.l61AmberB4 === 2) out.push({ text: "Is the B4 warning still up?", tag: "Talk" });
+    }
     if (s?.l61BeeQ === 2) {
       out.push({ text: "Camp Amber in 6.1 sent me. Did a woman in a red coat from 6.1 make it here?", tag: "Quest" });
       if (id === "hub-amber-jo") out.push({ text: "If she picked up frostbite from the tenth tunnel, let me check and wrap her hands.", tag: "Medicine 35", check: { skill: "medicine", difficulty: 35 } });
