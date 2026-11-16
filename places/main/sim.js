@@ -354,7 +354,7 @@ export function tick(ctx) {
   restyleSigns(ctx, "main"); // every sign dressed as its own board (scripts/lib/sign-style.js)
   dressThresholds(ctx, l0Ways()); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   const s = ctx.place.state, now = ctx.now();
-  const heavyInit = s.momentsV !== 15 || !s.furnished || s.sunkV !== 1;
+  const heavyInit = s.momentsV !== 16 || !s.furnished || s.sunkV !== 1;
   layXmas(ctx); // the Christmas Area off the north rim (scripts/lib/xmas-room.js)
   layL02Door(ctx); // Level 0.2: the half-built Remodeling Co. door (scripts/lib/level02.js)
   layZenithEntry(ctx); // Level 0.1: Kade and the B.N.T.G. bulkhead in the safe room
@@ -372,13 +372,13 @@ export function tick(ctx) {
       n++;
     }
   }
-  if (s.momentsV !== 15) { // 14 (2026-11-14): vending, payphone, chair and wanderer's camp now Tripo meshes; 15 (2026-11-14): payphone is the wall-hung steel pair
+  if (s.momentsV !== 16) { // 14 (2026-11-14): vending, payphone, chair and wanderer's camp now Tripo meshes; 15 (2026-11-14): payphone is the wall-hung steel pair
     if (s.momentsV) {
       for (const m of ctx.query({ tags: ["moment"] })) ctx.destroy(m.id);
       const at = s.moments?.manilaAt; // the old desk almonds lost their "moment" tag and stacked, one per re-lay
       if (at) for (const m of ctx.query({ tags: ["almond"], center: { x: at.x, y: 0.8, z: at.z }, radius: 2 })) ctx.destroy(m.id);
     }
-    s.momentsV = 15;
+    s.momentsV = 16; // 16 (2026-11-16): named ids so the usable kit dresses them
     s.moments = layMoments(ctx);
   }
   shift(ctx, s, now);
