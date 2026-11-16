@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9684,
-  "updatedAt": "2026-11-16T18:39:09.722Z",
-  "summary": "Spawned in the Backrooms is a multiplayer survival RPG across the Backrooms, Bonus mall, The Hub and authored destinations. Durable character progression lives in player.state while run/story state is mode-separated; shared scripts and data registries support gameplay, appearance and reactive props, and place scenes plus sims compose local spaces. Bed sleep now shares a detector/entry helper, with multiplayer clock consensus and a Level 178 futon route to Lumiria; creator tools include BodyWorks fitting, Advanced Transform, character posing and the Spawn 3D Modeling Studio.",
+  "basedOnSpecVersion": 9701,
+  "updatedAt": "2026-11-16T18:46:23.951Z",
+  "summary": "Spawned in the Backrooms is a multiplayer survival RPG across the Backrooms, Bonus mall, The Hub and authored destinations. Durable character progression lives in player.state while run/story state is mode-separated; shared scripts and data registries support gameplay, appearance and reactive props, and place scenes plus sims compose local spaces. Creator tools include BodyWorks fitting, Advanced Transform, character posing and the Spawn 3D Modeling Studio.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes and anomalies; cells hold authored maze pieces, moments and environmental dressing.",
-    "places/bonus + places/testlab (3D) - vaporwave mall with shops, homes, atlas Teleport Station and interactive props; x0y-1z5.scene is the hidden fitting/slim-body stand, away from public mall; Bonus config owns it.",
+    "places/bonus + places/testlab (3D) - vaporwave mall with shops, homes, atlas Teleport Station and interactive props; x0y-1z5.scene is hidden from the public mall and holds fitting/slim-body and editor-only head-swap comparison stands (old/new, cap, beanie).",
     "places/thehub (3D) - tunnel crossroads, keyed destinations and Camp Amber crews; sim builds tunnels/doors and staffs camps.",
     "places/intake + places/tutorial0 (3D; tutorial0 solo/ephemeral) - character creation/waking and staged tutorial office route; scenes and sims own local beats.",
     "places/level4 (3D) - authored and sim-built offices, Base Omega and fixtures; scripts/l4-home.js handles fixture interactions.",
     "places/level1, places/level1c, places/level2, places/level21, places/level26 (3D) - camps, procedural halls, pipe halls, Locked storage and authored levels with place-specific sims/signage.",
-    "places/level5, places/level9, places/level10, places/level11, places/level12, places/level61, places/level70 (3D) - hotel/outpost, Cave System, farm, city/Base Beta, Snackrooms and Froidetown; Level 10's sim applies shared kit dressing to farm fixtures.",
-    "places/level114, places/level27, places/gamma + places/level169, places/level132, places/level178, places/level31 and other authored special levels - local sims own setpieces and quests; Level 178 Kyoto futon sleep crosses to Lumiria in Level 132."
+    "places/level5, places/level9, places/level10, places/level11, places/level12, places/level61, places/level70 (3D) - hotel/outpost, Cave System, farm, city/Base Beta, Snackrooms and Froidetown; Level 10's sim applies shared kit dressing.",
+    "places/level114, places/level27, places/gamma + places/level169, places/level132, places/level178, places/level31 and other authored special levels - local sims own setpieces and quests; Level 178 Kyoto futon sleep crosses to Lumiria."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera and ordered behaviors/actions; fall-guard precedes movement and radio, barter and phone attach as player behaviors.",
@@ -22,7 +22,7 @@
     "places/level178/sim.js + x0z0.scene - Kyoto house, residents, arrival quest, finds, containers and breakable sweep; scripts/l178-prop.js owns the futon interaction and delayed Lumiria crossing.",
     "places/level31/sim.js + scripts/lib/level31.js and level31-{arcade,food,sideb}.js - one-time rink shell and delegated zone dressing/interaction behaviors.",
     "places/level1/sim.js + scripts/level1-geo.js + scripts/lib/wallgrid.js - Level 1.1 procedural hall geometry and lamp fixtures; wallgrid supplies corridor topology.",
-    "mods/modeling-studio/mod.json + god.js/player.js + lib/panel.js; mods/advanced-transform, mods/held-gizmo and mods/bodyworks - creator UI, transforms/posing and garment fitting/export."
+    "mods/modeling-studio/mod.json + god.js/player.js + lib/panel.js; mods/advanced-transform, mods/held-gizmo and mods/bodyworks - creator UI, transforms/posing and garment fitting/export; art/critter-heads/tripo-swap.py - offline Blender head replacement/fit pipeline."
   ],
   "shared": [
     "scripts/lib/places.js - canonical place names/labels/HUD titles and valid atlas destinations; consumed by feed, quests and scripts/ui.js.",
@@ -42,7 +42,7 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - journal/advancement/reward helpers; scripts/lib/containment.js - pen/door operations; scripts/lib/run-opts.js - run/mode helpers and keys.",
     "scripts/lib/cat-wardrobe.js - CAT_CUTE, CAT_SLIM, SLIM_ON, CAT_SLIM_FUR, bodyGlb, catModel, catChildren, skinParams and catMorph; scripts/lib/critter-model.js - STYLE_V, furrySpec, restyle and appearance builders.",
-    "scripts/lib/usable-kit.js - match, seatPart, kitted, kitPass; scripts/lib/kit-levels.js - dressLevel; scripts/usable-kit.js - onSpawn, dress, ears; scripts/lib/payphone.js - SFX, phoneCall, phoneRing; scripts/lib/sleep.js - isBed, bedNear, goToBed; scripts/rest.js - onInput; scripts/l178-prop.js - futonCross."
+    "scripts/lib/usable-kit.js - match, seatPart, kitted, kitPass; scripts/lib/kit-levels.js - dressLevel; scripts/usable-kit.js - onSpawn, dress, ears; scripts/lib/payphone.js - SFX, phoneCall, phoneRing; scripts/lib/sleep.js - isBed, bedNear, goToBed."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable character player.state: progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance/look, currency and gear shared across Solo/Multiplayer.",
@@ -52,10 +52,10 @@
     "scripts/main-menu.js + scripts/lib/tut0-cut.js + scripts/lib/tutorial.js - tutorial beat/cut and Field Guide state/preferences; scripts/lib/dina-quest.js - trail clue flags and legacy dinaQ continuation.",
     "scripts/lib/hub.js noteAtlas, called by scripts/player.js on arrival - player.state.atlas first-seen dates/visit counts; place sims own local texV/signTexV completion stamps.",
     "mods/modeling-studio/player.js + god.js - world.state.m3d gallery, pending asks, shares and library snapshot; scripts/critter.js applies player/NPC look fields to rebuilt body and session animation state.",
-    "scripts/usable-kit.js - each kitted prop's state.kit row and state.kcd per-user gift cooldown; scripts/lib/payphone.js writes caller relay tip/subtitle/sanity fields; sleep/rest use player.state.waitBed, bedId, inBedUntil, restFx and _clockNow, while scripts/l178-prop.js owns futon rest cooldown/pose."
+    "scripts/usable-kit.js - each kitted prop's state.kit row and state.kcd per-user gift cooldown; scripts/lib/payphone.js writes caller relay tip/subtitle/sanity fields; sleep/rest use player.state.waitBed, bedId, inBedUntil, restFx and clock fields."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion/player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused interactions and E on/near a bed calls scripts/lib/sleep.js.",
+    "world.config.yaml actions → templates/player.js ordered locomotion/player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused interactions.",
     "scripts/fall-guard.js holds velocity across place changes for ground streaming; grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; player.js builds local first-person viewmodel and avatar setup.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
@@ -65,8 +65,8 @@
     "scripts/player.js zone resolver → player.state.zone; scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass; place arrival → hub.noteAtlas writes player.state.atlas for the Bonus Teleport Station.",
     "Dina diary/records/Hub lead interactions → scripts/lib/dina-quest.js learn/questVoice → player.state.trail tracker and voiced dialogue; story-off runs and Multiplayer bypass the purser.",
     "Level 0 scripts/moments.js → scripts/lib/payphone.js phoneRing/phoneCall; scripts/level11-use.js and scripts/l61-use.js call phoneCall for 25¢ M.E.G. hotline access; relay writes caller phoneTip/subtitle and sound/voice.",
-    "Bonus usable props → scripts/interact.js → scripts/bonus-prop.js, arcade.js, bonus-counter.js or smoothie.js; home11 fixtures → scripts/home11-door.js ears.press; Level 31 arcade/food/Side B use the same press dispatch; kit registries → kitPass/dressLevel → scripts/usable-kit.js.",
-    "scripts/lib/sleep.js isBed/bedNear/goToBed → scripts/interact.js E focus/near-bed or scripts/rest.js T hours menu; solo advances world clock and heals, multiplayer bed rest skips clock only when all players' inBedUntil (20 s lease) are current; Level 178 futon press → scripts/l178-prop.js rest pose/fade → futonCross → Level 132 #l132-arrive."
+    "Bonus usable props → scripts/interact.js → scripts/bonus-prop.js, arcade.js, bonus-counter.js or smoothie.js; home11 fixtures → scripts/home11-door.js ears.press; Level 31 arcade/food/Side B use the same press dispatch; kit registries → kit dressing.",
+    "scripts/lib/sleep.js isBed/bedNear/goToBed → scripts/interact.js E focus/near-bed or scripts/rest.js T hours menu; solo advances world clock and heals, multiplayer bed rest skips clock only when all players' inBedUntil (20 s lease) are current."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
@@ -76,7 +76,7 @@
     "scripts/lib/sleep.js + scripts/interact.js + scripts/rest.js + scripts/l178-prop.js - common bed detection/entry, with ordinary rest and Kyoto futon crossing as distinct outcomes.",
     "scripts/lib/l169-road.js + l169-road-geo.js + l169-travel.js + l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
     "places/level132/sim.js + l132-{stalls,shops,land,people,duke,quests,barter}.js + barter-deal.js - staged town and keeper trades use eight goods categories; first gift then balanced currency-free barter; shop props animate wares on offer.",
-    "scripts/lib/usable-kit.js + scripts/lib/kit-levels.js + scripts/usable-kit.js + bespoke prop handlers - shared press dressing adds fitted motion/sound/light; registry variants include Level 10 farm fixtures while each prop retains its own context-specific state and payout."
+    "scripts/lib/usable-kit.js + scripts/lib/kit-levels.js + scripts/usable-kit.js + bespoke prop handlers - shared press dressing adds fitted motion/sound/light; registry variants include Level 10 farm fixtures while each prop retains its own interaction."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists; Level 26 placements/barrage use uploaded models.",
@@ -87,11 +87,11 @@
     "scripts/lib/data/l178-skins.json - slot-to-texture skin table has no current consumer; x0z0.scene carries material overrides inline."
   ],
   "migrationNotes": [
-    "Solo and Multiplayer share one character but not run/story state: scripts/lib/run-opts.js isStoryKey defines the swapped key family; MODE_SLOT 91/92 are separate SQL snapshots and hidden from ordinary Save Manager slots.",
-    "Multiplayer room ID is mp- plus sanitized party ID (or user ID); hub.js selects it only when leaving Bonus in multiplayer. Continue must not wake a multiplayer save into a solo room.",
+    "Solo and Multiplayer share one character but not run/story state: scripts/lib/run-opts.js isStoryKey defines the swapped key family; MODE_SLOT 91/92 are separate SQL snapshots and hidden from ordinary Save Manager slots. Multiplayer room ID is mp- plus sanitized party ID (or user ID); hub.js selects it only when leaving Bonus in multiplayer, so Continue must not wake a multiplayer save into a solo room.",
     "Tutorial finale cut ends at tut0-cut.js LEN.final = 14 s; THE WAY BACK / SOMEWHERE WET card is held over black and the crossing, then fades on Level 1 landing; retain ui.js lazy-load and main-menu.js t0lift stamp coupling.",
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with sim-created hub-from-l178.",
     "Level 169 uses x/z, north = -z and 1:10 map scale; Level 1.1 hall distance is +X (0–620 m), north at -Z. retextureOnce waits about 8 s with a player and stamps texV; texSigns preserves sign geometry and stamps signTexV.",
-    "Both usable-kit dress passes require a player and throttle each place to one look per 5 s, at most 12 matched props per pass; gifts use per-user state.kcd in seconds (data cd is seconds). Bed E-entry sets waitBed; multiplayer sleep's inBedUntil is a 20 s lease, and only collective bed rest advances the shared world clock; Level 178 futons cross to Level 132 after the fade."
+    "Both usable-kit dress passes require a player and throttle each place to one look per 5 s, at most 12 matched props per pass; gifts use per-user state.kcd in seconds (data cd is seconds). Bed E-entry sets waitBed; multiplayer sleep's inBedUntil is a 20 s presence lease.",
+    "art/critter-heads/tripo-swap.py outputs replacement head GLBs while preserving the old body's neck fit, vertex weights and face appearance; material classification keeps pink inner-ear faces on the ears. places/bonus/cells/x0y-1z5.scene references the latest v4 output for editor-only cap/beanie comparison stands; v2/v3 are earlier uploaded iterations."
   ]
 }
