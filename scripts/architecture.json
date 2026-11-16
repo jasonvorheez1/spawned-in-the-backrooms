@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9283,
-  "updatedAt": "2026-11-16T11:18:01.369Z",
-  "summary": "Spawned in the Backrooms is a multiplayer survival RPG spanning Level 0, the Bonus mall, The Hub and authored destinations. Character progress lives in player.state while Solo and Multiplayer keep separate run/story state; shared scripts and registries coordinate play, and local place scenes/sims compose their worlds. The title screen offers Continue, a Solo/Multiplayer switch and secondary expedition/save/settings controls.",
+  "basedOnSpecVersion": 9287,
+  "updatedAt": "2026-11-16T11:35:25.213Z",
+  "summary": "Spawned in the Backrooms is a multiplayer survival RPG spanning Level 0, the Bonus mall, The Hub and authored destinations. Character progress lives in player.state while Solo and Multiplayer keep separate run/story state; shared scripts and registries coordinate play, and local place scenes/sims compose their worlds. The optional main quest is Dina's clue trail, The Way Back; the title screen offers Continue/Start, a Solo/Multiplayer switch and secondary expedition/save/settings controls.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes and anomalies; momentsV gates wall moments/room-prop regeneration, sim handles ceiling-stuck enemies, objects.scene hosts shared controllers.",
@@ -21,7 +21,7 @@
     "places/level169/sim.js + scripts/lib/data/level169.yml + house/Ferry/Friends/road/Robotics helpers - desert setpieces, schedules, routes, quests and units.",
     "places/level132/sim.js + scripts/lib/data/level132.yml + scripts/lib/l132-*.js - town/countryside lay and tick orchestration for stalls, shops, land, people, Duke, quests and barter.",
     "places/level178/config.yaml + scripts/terrain178.js + x0z0.scene + sim.js - Kyoto terrain, house, residents, arrival quest, finds, containers and breakable sweep.",
-    "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js + scripts/ui.js - title/pause and save lifecycle, Solo/Multiplayer switching, expedition choices and HUD; title is taped paper with Continue/Start, a mode switch and four links.",
+    "scripts/main-menu.js + scripts/main-menu-ui.js + scripts/lib/run-opts.js + scripts/ui.js - title/pause and save lifecycle, Solo/Multiplayer switching, expedition choices and HUD; title is taped paper with Continue/Start, a mode switch and secondary controls.",
     "scripts/hub.js + scripts/hub-ui.js + scripts/lib/hub.js - Bonus mall counters and atlas Teleport Station UI/actions; shared hub library owns room routing, home access and atlas policy."
   ],
   "shared": [
@@ -32,7 +32,7 @@
     "scripts/lib/mp-guard.js - multiplayer-room detection and nonlethal NPC-down rule; scripts/player.js and scripts/meg-agent.js invoke spared().",
     "scripts/lib/containment.js - Level 109 persistent pen/loose-foe and door books; sim supplies room IDs/boxes and spawnFoe adapter.",
     "scripts/lib/prop-interactions.js + interactive-props data - shared usable-prop/container migration and geometry specs; scripts/interact.js dispatches.",
-    "scripts/lib/barter-deal.js + scripts/lib/screen.js + scripts/phone.js + phone-ui.js - shared barter valuation, wrist-panel exclusivity and phone apps."
+    "scripts/lib/dina-quest.js + scripts/lib/data/dlg-quest-main.yml - shared Dina main-quest trail, text/voice and legacy-stage continuation; diary, records, Hub leads and quest UI consume it."
   ],
   "notableExports": [
     "scripts/lib/places.js - PLACES, PLACE_NAMES, PLACE_LABELS, LEVEL_TITLES.",
@@ -42,16 +42,16 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - journal/advancement/reward helpers; scripts/lib/containment.js - pen/door operations; scripts/lib/run-opts.js - run/mode helpers and keys.",
     "scripts/lib/hub.js - HUB_ROOM, HUB_PLACE, isHubRoom, soloRoom, HOMES, LEVEL_NAMES, lastLevel, toHub, toSolo, ATLAS_SKIP, atlasKey, atlasable, ATLAS_ORDER, noteAtlas.",
-    "scripts/lib/mp-guard.js - shootable, multiRoom, spared; scripts/lib/dialogue.js - dialogue registry and choice/line helpers; scripts/lib/preload-next.js - preloadTick."
+    "scripts/lib/dina-quest.js - HOME, CAMP, DCUT_LEN, PAGE1/PAGE2/PAGES, TRAIL, learn, questVoice, trailStep/trailText, dinaLead."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable character player.state: progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance/look, currency and gear shared across Solo/Multiplayer.",
     "scripts/lib/stats.js - derived attributes, skills and combat/carry stats; scripts/stats-ui.js formats; scripts/lib/progression.js migrates xpCurve progression.",
-    "scripts/lib/modifiers.js - bookBonuses/readBooks/genericBooksRead/effects and modifier derivation; scripts/lib/clothes.js owns worn gear records/passives.",
-    "scripts/lib/manuals.js + scripts/player.js - player.state.recipes learned IDs; legacy manuals grants recipe kinds; reading a manual learns one recipe.",
+    "scripts/lib/modifiers.js - bookBonuses/readBooks/genericBooksRead/effects and modifier derivation; scripts/lib/clothes.js owns worn gear records/passives; scripts/lib/manuals.js + scripts/player.js own learned recipe IDs.",
     "scripts/lib/run-opts.js + scripts/main-menu.js - mode and run picks; run/quest/story/resume keys are swapped per mode through SQL save slots 91/92, while character, level, gear, cash and look remain on player.state.",
     "scripts/db.js + scripts/main-menu.js - SQL saves table owns named save-slot snapshots and hidden Solo/Multiplayer mode snapshots; live character state remains player.state.",
     "scripts/main-menu.js + scripts/lib/tut0-cut.js + scripts/lib/tutorial.js - tutorial beat/cut state (t0n, t0cut, t0Done) and Field Guide state/preferences; phone lesson requires tutorial completion, phone ownership and halogen.",
+    "scripts/lib/dina-quest.js - player.state.trail clue flags (name, word, list, tape, room, radio, pass) and legacy dinaQ continuation; scripts/lib/run-opts.js determines when story is disabled.",
     "scripts/lib/hub.js noteAtlas, called by scripts/player.js on place arrival - player.state.atlas maps canonical destination to first-seen date and visit count; unlike run/story keys it persists across modes."
   ],
   "flows": [
@@ -59,14 +59,14 @@
     "templates/player.js runs scripts/fall-guard.js before movement; place changes hold velocity for ground streaming, grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; player.js builds local first-person viewmodel and avatar setup.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
-    "scripts/main-menu-ui.js renders a primary Continue/Start action, Solo/Multiplayer switch and four links (expedition, saves, settings, controls) on taped paper; title/pause actions → scripts/main-menu.js mmenu handler; start routes by character/tutorial state, mode switches use SQL MODE_SLOT snapshots.",
+    "scripts/main-menu-ui.js renders Continue/Start, Solo/Multiplayer switch and expedition/save/settings/controls links; title/pause actions → scripts/main-menu.js; start routes by character state and run picks.",
     "scripts/lib/run-opts.js mpRoom(party/user) → scripts/lib/hub.js toSolo → party room mp-<party> (or user room); player wake avoids resuming a Multiplayer save in a solo room.",
     "scripts/lib/mp-guard.js multiRoom → scripts/player.js damage and scripts/meg-agent.js death handling → ordinary NPCs are restored at 30% HP, stunned and shown DOWN; shootable/born-hostile/killable NPCs still die.",
     "scripts/routing.js requested room → scripts/lib/hub.js Bonus solo-room selection; threshold handlers call carryAcross for held props/followers; Bonus/world/room links are excluded.",
     "scripts/player.js zone resolver → player.state.zone (Level 1.1 sectors, Level 178 house, Level 132 Lumiria); scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass.",
-    "scripts/player.js update detects place arrival → scripts/lib/hub.js noteAtlas writes player.state.atlas once per arrival (tutorial0 aliases main); old saved place is backfilled when absent.",
-    "Bonus Teleport Station in scripts/hub-ui.js renders ATLAS_ORDER as visited travel cards and locked unexplored slots; choice → scripts/lib/hub.js validates atlasable(destination) and discovery before routing, with last-level and Test Range exceptions.",
-    "scripts/player.js update → preloadTick(ctx) every tick; scripts/lib/body3.js reads combat-anims.yml and held weapon/session/camera aim → shared third-person pose for player and NPC bodies."
+    "scripts/player.js place arrival → scripts/lib/hub.js noteAtlas writes player.state.atlas once per arrival (tutorial0 aliases main); old saved place is backfilled when absent; Bonus Teleport Station renders discovered ATLAS_ORDER destinations and validates travel.",
+    "Dina diary/records/Hub lead interactions → scripts/lib/dina-quest.js learn/questVoice → player.state.trail tracker and voiced dialogue; after trail.pass the older dinaQ stages continue. Story-off runs and Multiplayer bypass the purser without gaining a pass.",
+    "scripts/lib/tut0-cut.js sets t0Done/t0fade at finale → scripts/ui.js lazy-loads scripts/cutscene-ui.js t0Fade; scripts/main-menu.js refreshes the fade stamp at Level 1 landing so the title card lifts on crossing."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
@@ -89,9 +89,9 @@
   "migrationNotes": [
     "Solo and Multiplayer share one character but not run/story state: scripts/lib/run-opts.js isStoryKey defines the swapped key family; MODE_SLOT 91/92 are separate SQL snapshots and hidden from ordinary Save Manager slots.",
     "Multiplayer room ID is mp- plus sanitized party ID (or user ID); hub.js selects it only when leaving Bonus in multiplayer. Continue must not wake a multiplayer save into a solo room.",
-    "Tutorial finale timing is coupled: tut0-cut.js LEN.final is 19 s, while cutscene-ui.js title starts at 9.8 s and the cresc cue in tut0-cut.js at 9.5 s; completion sets t0Done/t0fade then crosses to Level 1.",
+    "Tutorial finale cut ends at tut0-cut.js LEN.final = 14 s; the THE WAY BACK / SOMEWHERE WET card is held over black and the crossing, then fades on Level 1 landing. Keep the ui.js lazy-load condition and main-menu.js t0lift stamp refresh coupled.",
+    "scripts/lib/data/main-quest.yml is a retired, unread draft; live Dina story is scripts/lib/dina-quest.js + dlg-quest-main.yml + design/story-spine.md, with legacy dinaQ stages continuing only after trail.pass.",
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with sim-created hub-from-l178.",
-    "Level 169 uses x/z, north = -z and 1:10 map scale; Level 1.1 hall distance is +X (0–620 m), north at -Z; keep terrain/route landmarks and sector boundaries aligned.",
-    "Atlas state is character-level player.state.atlas keyed by places.js IDs; tutorial0 counts as main, atlas skips scripted/non-destination places, and kiosk travel requires an existing discovery entry."
+    "Level 169 uses x/z, north = -z and 1:10 map scale; Level 1.1 hall distance is +X (0–620 m), north at -Z; keep terrain/route landmarks and sector boundaries aligned."
   ]
 }
