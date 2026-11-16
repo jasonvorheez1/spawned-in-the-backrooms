@@ -169,7 +169,7 @@ def run(body, ZONES, DOC, a):
     for s, sg in SIDES:
         P = [J[f'shoulder.{s}'], J[f'elbow.{s}'], J[f'wrist.{s}']]
         a_ = add(Tube(f'top_sleeve_{s}', 'top', OFF['top'], 24, COL['top']))
-        u0s = min(0.3, 0.11 * S * 0.3 / max(float(np.linalg.norm(np.array(P[1]) - np.array(P[0]))), 1e-6))   # the yoke owns the shoulder cap to 0.8 capR: the sleeve starts just inside it, never flared over the deltoid
+        u0s = 0.0 * min(0.3, 0.11 * S * 0.3 / max(float(np.linalg.norm(np.array(P[1]) - np.array(P[0]))), 1e-6))   # the yoke owns the shoulder cap to 0.8 capR: the sleeve starts just inside it, never flared over the deltoid
         for u, p, tg in chain_samples(P, 0.025, u0=u0s, u1=2.0):
             r, b = frame(tg, FWD); o = recentre(p, tg, 0.025, isarm(s), 0.08)
             a_.ring(u, o, around(24, r, b), (lambda n, s=s: isarm(s)(n) or n.startswith('clavicle') or n in ('spine', 'none')) if u < 0.35 else isarm(s), maxr=0.12)   # near the joint the deltoid top is weighted to the clavicle: an arm-only ring left that skin bare behind the shoulder
