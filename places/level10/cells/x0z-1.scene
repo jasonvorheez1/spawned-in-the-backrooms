@@ -10,7 +10,7 @@ l10-fam-barrow:
   state: {"name":"Barrow of salvaged planks","items":"scrap_wood,scrap_wood,bobbypin","fixedStock":true,"scavved":true}
   tags: ["l10-family","container"]
 l10-fam-beds:
-  behavior: [scripts/field-fixture.js]
+  behavior: [scripts/field-fixture.js, scripts/usable-kit.js]
   castShadow: true
   feetPosition: {x: -53.8, y: {terrain: 0.01}, z: -104.2}
   id: l10-fam-beds
