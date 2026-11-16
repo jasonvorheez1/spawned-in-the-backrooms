@@ -33,9 +33,9 @@ prof = {round(y, 2): slab(y - 0.01, y + 0.01, 0.12) for y in [0.36 + 0.02 * i fo
 # the crotch: lowest y where the gap between the legs closes at x = 0
 crotch = min((v[1] for v in V if abs(v[0]) < 0.006 and 0.3 < v[1] < 0.55), default=None)
 # the tail: verts well behind the back at hip height and outward, centreline by distance from its root
-back = min(v[2] for v in V if 0.42 < v[1] < 0.5 and abs(v[0]) < 0.05)
-tv = [v for v in V if v[2] < back - 0.015 and 0.3 < v[1] < 0.5]
-root = min(tv, key=lambda v: v[0] ** 2 + (v[2] - back) ** 2) if tv else None
+back = -0.08   # the rump's back at hip height (PROFILE y 0.36: -0.074); everything behind it there is tail
+tv = [v for v in V if v[2] < back and 0.3 < v[1] < 0.62]
+root = min(tv, key=lambda v: v[0] ** 2 + (v[1] - 0.45) ** 2 + (v[2] - back) ** 2) if tv else None
 segs = []
 if tv:
     d = lambda v: math.dist(v, root); tv.sort(key=d); n = len(tv)
