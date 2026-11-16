@@ -1985,11 +1985,11 @@ bs-furniture:
   tags: [bonus-shop]
 bw-fitting-body:
   children: [{feetPosition: {x: 0, y: -0.06, z: 0}, id: plinth, material: {color: oklch(0.86 0.03 300), metalness: 0.2, roughness: 0.35}, primitive: {height: 0.06, kind: cylinder, radialSegments: 40, radiusBottom: 0.5, radiusTop: 0.45}}]
-  feetPosition: {x: 10.2, y: 5.52, z: -9.8}
+  feetPosition: {x: 7.4, y: 5.52, z: -15.2}
   id: bw-fitting-body
-  model: {forward: "+z", id: /cdn/value.e27f20a0704144602ecf83e9175b441f311c897720d04b97ea49d3db281c5ee2.glb}
+  model: {forward: "+z", id: /cdn/value.e27f20a0704144602ecf83e9175b441f311c897720d04b97ea49d3db281c5ee2.glb, parts: {cage_feet_boot: {visible: false}, cage_feet_sole: {visible: false}, cage_feet_tall: {visible: false}, cage_feet_upper: {visible: false}, cage_gloves_cuff_long: {visible: false}, cage_gloves_cuff_short: {visible: false}, cage_gloves_hand: {visible: false}, cage_legs_knee: {visible: false}, cage_legs_long: {visible: false}, cage_legs_seat: {visible: false}, cage_legs_short: {visible: false}, cage_neck_choker: {visible: false}, cage_neck_collar: {visible: false}, cage_neck_lace: {visible: false}, cage_skirt_knee: {visible: false}, cage_skirt_long: {visible: false}, cage_skirt_mini: {visible: false}, cage_top_chest: {visible: false}, cage_top_midriff: {visible: false}, cage_top_sleeve_long: {visible: false}, cage_top_sleeve_short: {visible: false}, cage_top_yoke: {visible: false}}}
   physics: static
-  rotation: {lookAt: {x: 8.3, y: 5.52, z: -11.5}}
+  rotation: {lookAt: {x: 6.4, y: 5.52, z: -12.1}}
   tags: [bodyworks]
 esc-down-hum:
   audio: {clip: /cdn/moodboard-realistic-gritty/sfx-mall-escalator-motor-hum-and-soft-step-clatter-loop.mp3, gain: 0.18, loop: true, maxDistance: 14, spatial: true}
