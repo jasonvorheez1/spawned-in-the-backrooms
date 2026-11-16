@@ -1,6 +1,6 @@
 # spawn-scene v2 yaml x1z-1
 l132-keep:
-  children: [{feetPosition: {x: 1.5, y: 24.6, z: 1}, fx: {script: "fx\npop smoke rate=?low:2|mobile:3|5 on=disc(.35) life=5..8 v=up(.7..1.1)+sdir()*.15 size=.6..1 acc=buoy(.15)+curl(.2)*.4+drag(.35)+wind()*.3 sz=$size*(.6>3.4) col=<.42,.4,.4>><.3,.3,.32> a=0>.1:.32>.6:.18>0 rot=spin(.05) r=sprite(smoke-puff,alpha)"}, id: chimney}, {feetPosition: {x: 0, y: 14.7, z: -5.6}, fx: {script: "fx\npop pane n=1 at=point() size=1.6 col=hdr(2.2,1.4,.45)*flick(.6,.08) a=.85 sz=$size r=sprite(soft-disc,add)\npop halo n=1 at=point() size=3.4 col=hdr(1,.6,.18) a=.35 sz=$size r=sprite(soft-disc,add)"}, id: window}]
+  children: [{feetPosition: {x: 1.5, y: 24.6, z: 1}, fx: {script: "fx\npop smoke rate=?low:2|mobile:3|5 on=disc(.35) life=5..8 v=up(.7..1.1)+sdir()*.15 size=.6..1 acc=buoy(.15)+curl(.2)*.4+drag(.35)+wind()*.3 sz=$size*(.6>3.4) col=<.42,.4,.4>><.3,.3,.32> a=0>.1:.32>.6:.18>0 rot=spin(.05) r=sprite(smoke-puff,alpha)"}, id: chimney}, {feetPosition: {x: 0, y: 14.7, z: -5.6}, fx: {script: "fx\npop pane n=1 at=point() size=1.1 col=hdr(2.2,1.4,.45)*flick(.6,.08) a=.85 sz=$size r=sprite(soft-disc,add)\npop halo n=1 at=point() size=2.4 col=hdr(1,.6,.18) a=.35 sz=$size r=sprite(soft-disc,add)"}, id: window}]
   feetPosition: {x: 110, y: 9, z: -110}
   id: l132-keep
   layout: {box: {max: {x: 15, y: 24, z: 15}, min: {x: -15, y: 0, z: -15}}}
@@ -28,7 +28,6 @@ l132-keep-torch-0:
   physics: {body: static, collider: box}
   rotation: {yaw: 135}
   tags: [l132, l132-palace]
-  visibleRange: {max: 90}
 l132-keep-torch-1:
   children: [{feetPosition: {x: 0, y: 1.9, z: 0}, fx: {script: "fx\npop flame rate=flick(.45,.2)*?low:18|30 on=disc(.06).c(.02) life=.35..0.6 v=up(1.1)+cone(18)*(.2..0.5) size=.12..0.22 acc=curl(.5)+buoy(1.8)+drag(1.4) sz=$size*(.5>.25:1>.7:.7>.1) col=hdr(4.6,3.2,1.3)>.3:hdr(3,1.3,.3)>.65:hdr(1.6,.45,.1)>hdr(.5,.1,.02) a=0>.12:1>.75:.85>0 rot=spin(.2) r=sprite(flame-wisp,add)\npop embers rate=2 on=disc(.06) life=.6..1.2 v=up(1.6)+cone(30)*(.3..0.8) size=.015..0.03 acc=curl(.8)+grav()*.4+drag(.5) col=hdr(5,2.6,.7)>hdr(1.4,.3,.05) a=(0>.1:1>.7:.9>0)*flick(11,.35) r=sprite(ember,add,velocity,.02)\npop smoke on=@flame?.15 inh=p;v:$v*.4 life=1.2..2 size=.1..0.18 acc=buoy(.8)+curl(.3)*.5+drag(.8) sz=$size*(.7>2.6) col=<.2,.19,.18> a=0>.2:.25>.7:.15>0 r=sprite(smoke-puff,alpha)\npop glow n=1 at=point().c(.2) glo=fire()*(#flame/16)~ r=light(<1,.58,.26>,$glo*14,9)"}, id: flame}]
   feetPosition: {x: 97.50502525316942, y: 9, z: -100.3334523779156}
@@ -38,4 +37,3 @@ l132-keep-torch-1:
   physics: {body: static, collider: box}
   rotation: {yaw: 135}
   tags: [l132, l132-palace]
-  visibleRange: {max: 90}
