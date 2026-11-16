@@ -227,7 +227,7 @@ export function mainMenu(ctx, player, launch = false) {
     const lk = (v, lbl) => `<button onclick="sendAction('mmenu',{k:'view',v:'${v}'})">${lbl}</button>`
     content = `<div class="memo">
       <h1>Spawned in the Backrooms</h1>
-      <button class="memo-go" onclick="${go("{k:'start'}")}">▶ ${returning ? 'Continue' : 'Start'}<small>${returning ? `${esc(where)} · level ${esc(s.level ?? 1)}` : (multi ? 'Bonus Rooms' : 'Level 0')}</small></button>
+      <button class="memo-go" onclick="${go("{k:'start'}")}">▶ ${returning ? 'Continue' : 'Start'}<small>${returning ? `${esc(where)} · lv ${esc(s.level ?? 1)}` : (multi ? 'Bonus Rooms' : 'Level 0')}</small></button>
       <div class="memo-mode" role="group" aria-label="Mode">${md('solo', !multi, 'Solo')}${md('multi', multi, 'Multiplayer')}</div>
       <div class="memo-hint">${multi ? 'no story · bring friends' : 'the story · your own run'}</div>
       <div class="memo-links">${lk('newgame', returning ? 'New expedition' : 'Custom start')}${lk('saves', 'Saves')}${lk('settings', 'Settings')}${lk('controls', 'Controls')}</div>
