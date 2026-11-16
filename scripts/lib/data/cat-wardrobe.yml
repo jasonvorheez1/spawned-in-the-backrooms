@@ -7,7 +7,8 @@
 # neck: [half width, front depth, back depth] of the collar scoop under `top[1]`; front: the z that splits front from back; tail: a 4-point line + radius fitted (max-distance) to the verts the Tail bones own, from the rigged glb
 body:
   # Nov 16 the slim Tripo kemono (art/kemono-slim/front.py): 1.0 m bind height, T-pose arms at y 0.698, crotch 0.399, knee 0.25, ankle 0.06; tail root behind the rump at y 0.46
-  slim: { top: [0.47, 0.684], arm: [0.074, 0.186, 0.29], leg: [0.40, 0.25, 0.062], waist: 0.505, neck: [0.04, 0.045, 0.024], front: 0.0, tail: [[0.0, 0.459, -0.07], [0.01, 0.497, -0.101], [0.042, 0.495, -0.158], [0.178, 0.379, -0.318]], tailR: 0.034, shIn: 0.042, shOut: 0.31 }
+  # Nov 16 (Shelly: top hem ragged over the waistband): measured on the slim body, waist (narrowest) 0.52 m, hips 0.42; the hem and waistband now meet at the waist, top 5 mm over the band, where the body is upright so the cut reads straight; tail hole tightened
+  slim: { top: [0.525, 0.684], arm: [0.074, 0.186, 0.29], leg: [0.40, 0.25, 0.062], waist: 0.53, neck: [0.04, 0.045, 0.024], front: 0.0, tail: [[0.0, 0.459, -0.07], [0.01, 0.497, -0.101], [0.042, 0.495, -0.158], [0.178, 0.379, -0.318]], tailR: 0.028, shIn: 0.042, shOut: 0.31 }
   f: { top: [0.425, 0.626], arm: [0.095, 0.245, 0.36], leg: [0.36, 0.19, 0.065], waist: 0.435, neck: [0.066, 0.056, 0.034], front: 0.045,
        tail: [[0.014, 0.412, -0.018], [0.053, 0.302, -0.179], [0.169, 0.359, -0.147], [0.385, 0.576, -0.111]], tailR: 0.068 }
   m: { top: [0.435, 0.705], arm: [0.11, 0.27, 0.405], leg: [0.40, 0.21, 0.075], waist: 0.47, neck: [0.074, 0.036, 0.018], front: 0.082,
