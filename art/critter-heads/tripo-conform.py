@@ -30,13 +30,20 @@ for i, v in enumerate(tri.data.vertices): v.co = tri.matrix_world.inverted() @ T
 tri.data.update()
 bvh = BVHTree.FromPolygons([tuple(T[i]) for i in range(len(T))], [tuple(p.vertices) for p in tri.data.polygons])
 # which head verts follow: not the ears, not the neck rim
-gi = {g.name: g.index for g in head.vertex_groups}
-EARS = {gi[n] for n in gi if n.lower().startswith("ear")}
+# ears: every vertex near the innerEar paint, and the ear shell above the crown band (one Head bone weights all)
+from mathutils.kdtree import KDTree
+IE = [i for i, m in enumerate(me.materials) if m.name == "innerEar"]
+iev = {v for p in me.polygons if p.material_index in IE for v in p.vertices}
+kd = KDTree(len(iev))
+for n, i in enumerate(iev): kd.insert(W[i], n)
+kd.balance()
 zlo = min(p.z for p in W)
 wgt = []
 for i, v in enumerate(me.vertices):
-    ear = sum(g.weight for g in v.groups if g.group in EARS)
-    w = (1 - min(1, ear * 2)) * sm((W[i].z - zlo - 0.03) / 0.07)
+    d = kd.find(W[i])[2] if iev else 9
+    ear = 1 - sm((d - 0.02) / 0.05)
+    if abs(W[i].x) > 0.11 and W[i].z > 0.975: ear = max(ear, sm((W[i].z - 0.975) / 0.03))
+    w = (1 - ear) * sm((W[i].z - zlo - 0.03) / 0.07)
     wgt.append(w)
 D = []
 for i, p in enumerate(W):
