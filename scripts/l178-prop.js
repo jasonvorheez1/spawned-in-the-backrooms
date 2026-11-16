@@ -478,7 +478,7 @@ function body(ctx, kind) {
 export const ears = {
   press(ctx, { by } = {}) {
     const s = ctx.self.state;
-    const p = ctx.place.players.find((q) => q.id === by);
+    const p = ctx.place.players.find((q) => q.id === by) ?? (by ? ctx.getObject(by) : null);
     const feet = p?.worldFeetPosition ?? p?.feetPosition;
     const at = s.c ?? ctx.self.worldFeetPosition;
     if (!feet || !at || p.state?.dead || Math.hypot(feet.x - at.x, feet.y - at.y, feet.z - at.z) > 4.5) return;
