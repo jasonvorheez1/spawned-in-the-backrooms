@@ -12,8 +12,9 @@ const ROCK = "cdn/texture-terrain-wet-dark-basalt-rock.png";
 const DAMASK = "cdn/texture-yellow-chevron-damask-wallpaper-aged.png";
 const WAINSCOT = { color: "oklch(0.86 0.04 88)", roughness: 0.85 };
 
+import { kitted } from "./usable-kit.js";
 export function layHouse(ctx, FY) {
-  const sp = (id, spec) => ctx.spawn(`l7h-${id}`, spec);
+  const sp = (id, spec) => ctx.spawn(`l7h-${id}`, kitted("level7", `l7h-${id}`, spec));
 
   // 1. Stacked Antique Bureau Drawers on Submerged Table (Central / Foreground Right, matching reference photo!)
   sp("drawers", {

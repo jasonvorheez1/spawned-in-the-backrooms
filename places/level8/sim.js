@@ -1,3 +1,4 @@
+import { kitPass } from "../../scripts/lib/usable-kit.js";
 import { texSigns } from "../../scripts/lib/sign-tex.js";
 // road markers: one painted blank board, each number hand-lettered over it (Shelly Nov 16: signs must not look generated)
 const MARKER_FACE = (num) => `<div face="front" width="0.9m" style="position:relative;width:100%;height:100%;padding:0;margin:0;overflow:hidden"><img src="/cdn/value.73c09b761201dcefebbab4392d4772d2713e68b8859fd84b97f78178fff70a83.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:fill"><div style="position:absolute;left:0;right:0;top:44%;text-align:center;font-family:'Comic Sans MS','Marker Felt',cursive;font-weight:900;font-size:150px;line-height:1;color:#16130f;opacity:.94;transform:rotate(${(num % 5) - 2}deg)">#${num}</div></div>`;
@@ -575,6 +576,7 @@ function lay(ctx) {
 // the tunnel mouth to Level 2.1: the cave floor there can't be probed from the sim, so its dressing trusts the arrival's own height
 const l8Ways = () => { const d = P(46, -8.9, 0), m = P(46, -5.4, 0), l = Math.hypot(m.x - d.x, m.z - d.z) || 1; return [{ id: "l8-to-l21", at: { x: d.x, y: m.y, z: d.z }, fwd: { x: (m.x - d.x) / l, z: (m.z - d.z) / l }, trust: true }]; };
 export function tick(ctx) {
+  if (ctx.place.players?.length) kitPass(ctx, "level8"); // every usable answers with its own part, sound and light (scripts/lib/data/usable-kit.json)
   texSigns(ctx, SIGN_TEX, 3);
   if ((ctx.place.state.markerV ?? 0) < 2 && ctx.place.players?.length) { let hit = 0;
     for (let n = 0; n < 9; n++) { const m = ctx.getObject(`l8-marker-${n}`); if (!m) continue; m.ui = MARKER_FACE(82 - n); hit++;

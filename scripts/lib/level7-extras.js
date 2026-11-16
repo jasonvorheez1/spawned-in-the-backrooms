@@ -11,8 +11,9 @@ pop b rate=%r|4 on=disc(.7) life=.7..1.4 v=up(.8..1.6) size=.05..0.16 acc=drag(1
 const CHALK = (t, sub) => `<div face="front" width="1.5m" style="font-size:84px;font-weight:900;color:#e8e2d0;text-align:center;line-height:1.05;font-family:cursive">${t}${sub ? `<div style="font-size:40px;opacity:.8">${sub}</div>` : ""}</div>`;
 const W = (a, r) => ({ x: FC.x + Math.cos(a) * r, z: FC.z - Math.sin(a) * r }); // a point at angle a (the model's frame) and radius r
 
+import { kitted } from "./usable-kit.js";
 export function layExtras(ctx, GLB, fit) {
-  const sp = (id, spec) => ctx.spawn(`l7x-${id}`, spec);
+  const sp = (id, spec) => ctx.spawn(`l7x-${id}`, kitted("level7", `l7x-${id}`, spec));
   // ---- inside the fort
   // the tar pit: a round pool in the courtyard that bubbles, faintly lit from below with the colour of the deep
   sp("tarpit", { feetPosition: { x: FC.x - 5.2, y: DECK + 0.06, z: FC.z + 1.5 }, primitive: { kind: "cylinder", radiusTop: 1.5, radiusBottom: 1.5, height: 0.08 }, material: TAR, fx: { script: BUBBLE, params: { r: 6 } }, children: [{ feetPosition: { x: 0, y: 0.6, z: 0 }, light: { kind: "point", color: "oklch(0.62 0.1 195)", intensity: 1.1, distance: 9 } }] });

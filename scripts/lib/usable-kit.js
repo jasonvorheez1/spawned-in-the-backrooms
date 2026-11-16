@@ -34,8 +34,17 @@ export function seatPart(ctx, o, row) {
   ctx.spawn(`kit-${row.p}`, { ...PART[row.p](row.mat), parent: o.id, feetPosition: seat(o, row), tags: ["kit-part"] });
   return true;
 }
+// a spec born dressed: the kit behavior beside its own, state.kit and the dry line; the part seats itself on spawn
+export function kitted(place, id, spec) {
+  const row = match(KIT[place] ?? {}, id, spec.tags ?? []); if (!row) return spec;
+  const beh = Array.isArray(spec.behavior) ? spec.behavior : spec.behavior ? [spec.behavior] : [];
+  const { i, ...kit } = row;
+  return { ...spec, behavior: [...beh, "scripts/usable-kit.js"], state: { ...(spec.state ?? {}), kit, kitV: KIT.v, ...(i ? { info: i } : {}) } };
+}
+const LAST = {};
 export function kitPass(ctx, place = ctx.self?.place ?? "main") {
   const rows = KIT[place]; if (!rows) return 0;
+  const now = ctx.now(); if (now - (LAST[place] ?? -1e9) < 5000) return 0; LAST[place] = now; // a look every 5 s, never per tick
   let n = 0;
   for (const r of ctx.query({ tags: ["usable"] })) {
     if (r.state?.kitV === KIT.v || r.id.includes("/")) continue;

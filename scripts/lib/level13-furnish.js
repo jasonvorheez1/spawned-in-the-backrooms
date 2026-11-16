@@ -108,7 +108,9 @@ function layFlat(ctx, a) {
   put("toilet", "toilet", 7.58, 6.3, -1, 0);
 }
 
+import { kitPass } from "./usable-kit.js";
 export function layFurnish(ctx) {
+  if (ctx.place.players?.length) kitPass(ctx, "level13");
   const st = ctx.place.state;
   if (st.fv === V) {
     if (st.bedUseV !== V) {

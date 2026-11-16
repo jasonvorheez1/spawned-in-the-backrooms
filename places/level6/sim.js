@@ -1,3 +1,4 @@
+import { kitPass } from "../../scripts/lib/usable-kit.js";
 import { retextureOnce } from "../../scripts/lib/retexture.js";
 import { sweepProps } from "../../scripts/lib/breakables.js";
 import { restyleSigns } from "../../scripts/lib/sign-style.js";
@@ -242,6 +243,7 @@ function layRelay(ctx) {
   });
 }
 export function tick(ctx) {
+  if (ctx.place.players?.length) kitPass(ctx, "level6"); // every usable answers with its own part, sound and light (scripts/lib/data/usable-kit.json)
   retextureOnce(ctx); // graphics pass: bare props get real surfaces
   if (ctx.place.players?.length) sweepProps(ctx); // props become breakable (scripts/lib/breakables.js)
   restyleSigns(ctx, "level6"); // every sign dressed as its own board (scripts/lib/sign-style.js)
