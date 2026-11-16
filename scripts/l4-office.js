@@ -5,6 +5,7 @@
 //   manager  keeps the phones ringing in turn and, every couple of minutes, plays an office sound somewhere behind a wanderer:
 //            a door, footsteps on the carpet, a copier starting up, a chair rolling.
 import { heard } from "./lib/hear.js";
+import { animate } from "builtin/tween";
 import { ROOMS } from "./lib/level4.js";
 import { spawnCrate } from "./lib/loot.js";
 import { skillsOf } from "./lib/stats.js";
@@ -93,8 +94,18 @@ function giveTask(ctx, who) {
   sub(who, `New task: ${t.text}.`, ctx, "Shift board")
 }
 
+// every press moves the thing itself: a phone jumps in its cradle, a printer shudders and lights its tray, the board's pins rattle
+function jolt(ctx, kind) {
+  const id = ctx.self.id, p = ctx.self.worldFeetPosition ?? ctx.self.feetPosition;
+  if (kind === "phone") animate(ctx, id, { "feetPosition.y": "+=0.035" }, { duration: 0.09, direction: "alternate", loop: 2, easing: "easeOutQuad" });
+  else if (kind === "printer") {
+    animate(ctx, id, { "feetPosition.x": "+=0.012" }, { duration: 0.05, direction: "alternate", loop: 6 });
+    ctx.emit("fx", { position: { ...p, y: p.y + 0.5 }, script: `fx\npop g n=1 life=.6 r=light(<.75,.95,.6>,1.4,2.5)` });
+  } else animate(ctx, id, { scale: [1, 1.03, 0.99, 1] }, { duration: 0.25, easing: "easeOutQuad" });
+}
 export const ears = {
   press: (ctx, { by }) => {
+    jolt(ctx, ctx.self.state.kind);
     const s = ctx.self.state, who = ctx.getObject(by), now = ctx.now(), p = ctx.self.worldFeetPosition ?? ctx.self.feetPosition;
     if (s.kind === "board") {
       const t = who?.state?.l4task
@@ -131,7 +142,7 @@ export const ears = {
       return;
     }
     if (s.kind === "printer") {
-      if (now < (s.readyAt ?? 0)) { sub(who, "The printer is warming up. It smells like burnt toner.", ctx, "Printer"); return; }
+      if (now < (s.readyAt ?? 0)) { sub(who, "Still warm from the last page. Toner smell, and something like burnt hair.", ctx, "Printer"); return; }
       s.readyAt = now + 60000;
       snd(ctx, G("office-printer-printing-page"), p, 0.7);
       sub(who, pick(ctx, MEMOS), ctx, "Printed memo");
