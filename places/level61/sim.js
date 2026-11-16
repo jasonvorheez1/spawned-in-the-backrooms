@@ -856,8 +856,9 @@ export function tick(ctx) {
   dressThresholds(ctx); // the ways in and out, dressed with what people left there (scripts/lib/thresholds.js)
   if (!ctx.place.players?.length) return; // empty level: nothing to run (perf)
   const st = ctx.place.state;
-  if ((st.builtV ?? 0) < V) { if (layStep(ctx)) { st.builtV = V; st.crewV = 0; st.serviceHingesV = 0; } else return; }
+  if ((st.builtV ?? 0) < V) { if (layStep(ctx)) { st.builtV = V; st.crewV = 0; st.serviceHingesV = 0; st.motionV = 0; } else return; }
   if (!st.serviceHingesV) { wireServiceDoors(ctx); st.serviceHingesV = 1; }
+  if ((st.motionV ?? 0) < 1) { st.motionV = 1; addMotion(ctx); } // every l61-use usable also rides the motion layer (scripts/lib/level61-service.js ears)
   if ((st.campBenchV ?? 0) < 1) { st.campBenchV = 1; ensureBenches(ctx, l61Benches()); }
   if ((st.crewV ?? 0) < 2) { // 2: facelings learn names, mimic, keep a temper (scripts/l61-staff.js)
     st.crewV = 2;
@@ -878,5 +879,13 @@ export function tick(ctx) {
       const curHp = p.state.hp ?? 80;
       if (curHp < (p.state.maxHp ?? 100)) p.state.hp = Math.min(p.state.maxHp ?? 100, curHp + 1);
     }
+  }
+}
+
+const MOTION_LAYER = "scripts/lib/level61-service.js";
+function addMotion(ctx) {
+  for (const r of ctx.query({ tags: ["usable"] })) {
+    const o = ctx.getObject(r.id), b = o?.behavior, list = Array.isArray(b) ? [...b] : b ? [b] : [];
+    if (list.includes("scripts/l61-use.js") && !list.includes(MOTION_LAYER)) o.behavior = [...list, MOTION_LAYER];
   }
 }
