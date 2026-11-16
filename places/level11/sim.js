@@ -246,13 +246,13 @@ function lay(ctx) {
     feetPosition: { x: -6.5, y: 5.2, z: 7.5 },
     primitive: { kind: "box", width: 2.0, height: 0.45, depth: 0.05 },
     material: { color: "oklch(0.3 0.12 240)" },
-    ui: `<div face="front" width="2.0m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#155490;border:3px solid #ffffff;color:#ffffff;font-family:Arial,sans-serif;font-weight:900;font-size:80px;letter-spacing:2px">11TH AVE</div>`,
+    ui: `<div face="front" width="2.0m" style="width:100%;height:100%;padding:0;margin:0;overflow:hidden"><img src="/cdn/value.7d5c6a5ec8eac6eef9834289c0a678dbbe418d9ea26000e702ae43f54aecff27.png" style="display:block;width:100%;height:100%;object-fit:fill"></div>`,
   });
   sp("l11-st-sign-blvd", {
     feetPosition: { x: -4.2, y: 5.2, z: 7.5 },
     primitive: { kind: "box", width: 2.4, height: 0.45, depth: 0.05 },
     material: { color: "oklch(0.3 0.12 240)" },
-    ui: `<div face="front" width="2.4m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#155490;border:3px solid #ffffff;color:#ffffff;font-family:Arial,sans-serif;font-weight:900;font-size:75px;letter-spacing:2px">METROPOLITAN BLVD</div>`,
+    ui: `<div face="front" width="2.4m" style="width:100%;height:100%;padding:0;margin:0;overflow:hidden"><img src="/cdn/value.2e15562766c6ff3b79af902cd96a7f008c2ee9a18fe754cb29dc719b5ddc0cd4.png" style="display:block;width:100%;height:100%;object-fit:fill"></div>`,
   });
 
   // 3-Aspect Signal Housings (Green, Amber, Red)
@@ -489,7 +489,7 @@ function lay(ctx) {
     rotation: { yaw: -90 },
     primitive: { kind: "box", width: 7.2, height: 1.0, depth: 0.14 },
     material: { color: "#111111" },
-    ui: `<div face="front" width="7.2m" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#181818;border:3px solid #ff6a00;box-sizing:border-box;color:#ff6a00;font-family:Arial Black,sans-serif;font-weight:900;font-size:105px;letter-spacing:6px;text-shadow:0 0 16px #ff6a00">SEDCO SPOTLIGHT</div>`,
+    ui: `<div face="front" width="7.2m" style="width:100%;height:100%;padding:0;margin:0;overflow:hidden"><img src="/cdn/value.727978fcf6cbd261906daa27d3a021cf57fc7de29f7ac30aa070cc2614c5925d.png" style="display:block;width:100%;height:100%;object-fit:fill"></div>`,
   });
 
   // Display Windows with Vintage Spotlight Display
@@ -981,7 +981,7 @@ pop flame rate=flick(.45,.2)*30 on=disc(.25) life=.4..0.7 v=up(.8)+cone(20)*(.2.
     rotation: { yaw: -90 },
     primitive: { kind: "box", width: 2.4, height: 0.8, depth: 0.04 },
     material: { color: "oklch(0.2 0.01 250)" },
-    ui: `<div face="front" width="2.4m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-weight:900;color:#ff3333;text-align:center"><div style="font-size:75px">DANGER: UNMAPPED EXITS</div><div style="font-size:32px;color:#ffffff">100+ NOCLIP RIFTS AHEAD · DO NOT ENTER</div></div>`,
+    ui: `<div face="front" width="2.4m" style="width:100%;height:100%;padding:0;margin:0;overflow:hidden"><img src="/cdn/value.115267fdb5912e0a6d931eeabe1effa3295671bc3ce0b63f2ac24d3091217df7.png" style="display:block;width:100%;height:100%;object-fit:fill"></div>`,
   });
 
   // Memorial Site: Tamsin Clarke Memorial ("For my little strawberry")
@@ -1477,11 +1477,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     rotation: { yaw: 180 },
     primitive: { kind: "box", width: 1.8, height: 1.1, depth: 0.05 },
     material: { color: "#ff6600" },
-    ui: `<div face="front" width="1.8m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#ff6600;color:#000000;font-family:Arial Black,sans-serif;font-weight:900;text-align:center;border:4px solid #000;box-sizing:border-box;padding:8px">
-      <div style="font-size:52px;letter-spacing:1px">ROAD WORK AHEAD</div>
-      <div style="font-size:24px;margin-top:6px;font-family:monospace">B.R.C. PERMIT #74-ROADS</div>
-      <div style="font-size:18px;color:#111">SPONTANEOUS INFRASTRUCTURE WORK</div>
-    </div>`,
+    ui: `<div face="front" width="1.8m" style="width:100%;height:100%;padding:0;margin:0;overflow:hidden"><img src="/cdn/value.454cd359ce81c11f2c7f0f3334f4e8e195253abfde9c12da2a7b8e8522223bb0.png" style="display:block;width:100%;height:100%;object-fit:fill"></div>`,
   });
 
   // ==========================================
@@ -1513,7 +1509,7 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
     sp("l11-th-sign", {
       feetPosition: { x: 0, y: 2.55, z: TZ + 0.1 }, rotation: { yaw: 180 },
       primitive: { kind: "box", width: 3.6, height: 1.0, depth: 0.04 }, material: { color: "#f2efe6", roughness: 0.8 },
-      ui: `<div face="front" width="3.6m" style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f2efe6;color:#141414;font-family:Arial Black,Arial,sans-serif;text-align:center;border:10px solid #9b1b1b;box-sizing:border-box"><div style="font-size:120px;line-height:1;letter-spacing:6px">THEBES</div><div style="font-size:40px;margin-top:10px">U.E.C. SETTLEMENT · RESIDENTS AND PERMITS ONLY</div><div style="font-size:36px;color:#9b1b1b;margin-top:6px">ENTITIES WILL BE SHOT ON SIGHT</div></div>`,
+      ui: `<div face="front" width="3.6m" style="width:100%;height:100%;padding:0;margin:0;overflow:hidden"><img src="/cdn/value.463c8f8639e75bd57e6ecc9a9dbe3b5e54a026edda84d464aefcfd6b01906813.png" style="display:block;width:100%;height:100%;object-fit:fill"></div>`,
     });
     // two guards on the gate, rifles out, facing the city
     const GUARDS = [
