@@ -8,7 +8,7 @@ bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.import_scene.gltf(file
 for o in list(bpy.data.objects):
     if o.name.startswith("Icosphere"): bpy.data.objects.remove(o)
 sm = lambda t: 0 if t <= 0 else 1 if t >= 1 else t * t * (3 - 2 * t)
-SC = Vector((0, -0.165, 0.796)); LY, HZ = 0.74, 1.12   # Nov 16 #shelly 'why is my snout pushed back': 0.5 sank it into the face
+SC = Vector((0, -0.165, 0.796)); LY, HZ = 0.9, 1.35   # Nov 16 "nope": a real short bump with height (guide small snout)
 def f(p):
     v = p - SC
     if v.y > 0.004: return Vector()
@@ -19,7 +19,7 @@ def f(p):
     # blunt: the front-most 1.5 cm squashes back a little more at the centre line, so the tip reads round, not pointed
     t = sm((-v.y - 0.02) / 0.04)   # how far out along the muzzle
     d.y += max(0, -v.y - 0.03) * 0.2 * (1 - sm(side / 0.9))
-    d.x += v.x * 0.35 * t; d.z += v.z * 0.25 * t   # fuller near the front: a round button, not a cone
+    d.x += v.x * 0.5 * t; d.z += v.z * 0.45 * t   # fuller near the front: a round button, not a cone
     return d
 n = 0
 for o in [o for o in bpy.data.objects if o.type == "MESH"]:
