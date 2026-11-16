@@ -597,5 +597,3 @@ export function update(ctx, dt) {
   if (m.lit && m.lit === m.focus?.id) ctx.emit('highlightSet', { target: m.lit, color: '#fff0b0', style: 'outline', duration: 0.45, width: 3 }, { audience: { player: ctx.self.id } })
 }
 
-// lib/sleep.js: Kyoto Dreams' futons carry you to Lumiria after the fade
-export function sleepCross(ctx, { to }) { if (ctx.self.place === 'level178') ctx.cross(ctx.self, to) }

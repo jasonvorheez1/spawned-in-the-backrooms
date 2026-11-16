@@ -18,7 +18,7 @@ export function goToBed(ctx, bed) {
     ctx.emit("playSound", { clip: "cdn/moodboard-realistic-gritty/sfx-bedsheets-rustle-settle-sigh.mp3", volume: 0.55 }, { audience: { player: ctx.self.id } });
     s.notice = { text: "The futon's warm. You're asleep before you finish the thought...", at: now };
     s.hp = Math.min(s.maxHp ?? s.hpMax ?? 100, (s.hp ?? 0) + 20); s.sanity = Math.min(100, (s.sanity ?? 0) + 25);
-    ctx.after(1.4, "sleepCross", { to: "level132#l132-arrive" });
+    ctx.cross(ctx.self, "level132#l132-arrive"); // under the fade; no player timer (they can stall after a host change)
     return true;
   }
   s.waitOpen = true; s.waitBed = true; s.bedId = bed?.id ?? null;
