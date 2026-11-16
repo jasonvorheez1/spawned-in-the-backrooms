@@ -13,6 +13,8 @@ export const CAT_OLD = { f: '/cdn/value.562ce0246eae9362d0d784854f5dff319bcc254c
 export const CAT_BODY2 = { f: CAT_BODY.f.glb, m: CAT_BODY.m.glb }
 // Nov 16 (Shelly 'yes' to wearing it): the cute pass on the female base (art/cat-wardrobe/cute.py + snout-short.py): short round button snout, perkier bust, rounder hips/thighs. Same mesh, bones and keys. Worn when look.cute is set; every other cat keeps CAT_BODY
 export const CAT_CUTE = { f: '/cdn/value.5c85f9937c2c419c5da4fc6b1391223512dbe030c1c93f995cdfb679359d4403.glb' }
+// Nov 16 (Shelly 'make her slimmer, more anime', 'yes' to wearing it): a new Tripo body from a blank-faced concept, Tripo-rigged (mixamo names), faces +x. No shape keys or face paint slots yet; garments not refit to it
+export const CAT_SLIM = { f: '/cdn/value.c962a4a4c551528d33eed4f4cc14468c38220eea5af67b1f156cf303f0cba7ab.glb' }
 export const bodyGlb = (sex, look) => (look?.cute && CAT_CUTE[sex]) || CAT_BODY[sex].glb
 // Nov 13 body pass (art/cat-wardrobe/body-pass): female waist and hips, seat/shoulder weights re-blended, tail root relaxed, Bob/Puff/Curl tails rebuilt. CAT_PREV: the bases before it
 export const CAT_PREV = { f: '/cdn/value.e8e63dfafb7285f7362bb87c7e685d38fda0180e9f00f711ec56436ff43fa0c4.glb', m: '/cdn/value.a935fee298a38e28d69d6472997a747507062f2507ac308f0db98fa42efa1dd3.glb' }
@@ -111,6 +113,7 @@ function noseParams(look) {
   return o
 }
 export function catModel(sex, look) {
+  if (look?.slim && CAT_SLIM[sex]) return { id: CAT_SLIM[sex], forward: '+x' }
   const params = skinParams(sex, look)
   const fur = liftFur(look?.fur || '#f3c98a')
   const faces = FACES.faces[sex === 'm' ? 'male' : 'female']
@@ -167,6 +170,7 @@ export function catMorph(look) {
 }
 // the Tripo garments a look wears, as skinned children of the cat
 export function catChildren(sex, look) {
+  if (look?.slim && CAT_SLIM[sex]) return []   // the slim body wears nothing fitted yet
   const l = dressed(sex, look), out = []
   for (const [slot, ck] of [['topw', 'top'], ['botw', 'bottom'], ['shoes', 'shoec'], ['hat', 'hatc'], ['neck', 'neckc'], ['eyew', 'eyewc']]) {
     const g = W.models[l[slot]]; if (!g?.[sex]) continue
