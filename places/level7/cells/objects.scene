@@ -14,7 +14,7 @@ l7-ezra/cw-hair:
 l7-ezra/cw-hat:
   attachment: {skin: true}
   id: l7-ezra/cw-hat
-  model: {forward: "+z", id: /cdn/value.e04fb17d20b9598a37445316ae596c63c9d555886f4741f72b71e19385fc4d80.glb, materials: {cloth: {color: "#c8a030", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  model: {forward: "+z", id: /cdn/value.6c4dc2d3990b288b4656200fab96c401aae6651aaa45c4e0a5839697628ac20d.glb, materials: {cloth: {color: "#c8a030", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
   parent: l7-ezra
 l7-ezra/cw-shoes:
   attachment: {skin: true}
@@ -108,7 +108,7 @@ l7-mara/cw-hair:
 l7-mara/cw-hat:
   attachment: {skin: true}
   id: l7-mara/cw-hat
-  model: {forward: "+z", id: /cdn/value.3a94635759b8f7b084bebfca6633e24194792055240896036903c273a70849fa.glb, materials: {cloth: {color: "#c8a030", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
+  model: {forward: "+z", id: /cdn/value.a88b4d642dc4ca05aba469b74fffbc20ee2e4000343570502c337fdacd6e2f2d.glb, materials: {cloth: {color: "#c8a030", kind: scripted, params: {pat: weave}, script: scripts/mat-cloth.js}}}
   parent: l7-mara
 l7-mara/cw-shoes:
   attachment: {skin: true}
