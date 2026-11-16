@@ -24,7 +24,7 @@ for i, p in enumerate(P):
     w = 1 - ss(R0, R1, r)
     if p.y > nose.y + 0.35 * H: w = 0
     if w > 0: touched += 1
-    n = cur[i].lerp(SN[i], w * 0.85); n.normalize(); N.append(n)
+    n = cur[i].lerp(SN[i], w); n.normalize(); N.append(n)
 me.normals_split_custom_set_from_vertices(N)
 print(f"cheek-normals H={H:.3f} touched={touched}")
 bpy.ops.export_scene.gltf(filepath=out, export_format="GLB", export_apply=False, export_morph=True, export_skins=True, export_animations=True, export_normals=True, export_morph_normal=False)
