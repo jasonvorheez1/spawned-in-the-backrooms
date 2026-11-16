@@ -4,7 +4,15 @@
 import D from "./data/l132-stalls.yml";
 import { say } from "./npc-social.js";
 const SELF = "scripts/lib/l132-stalls.js";
-export const ears = { press: (ctx, e) => { ctx.emit("l132:barter", { by: e?.by ?? null, ware: ctx.self.id }); } };
+import { animate } from "builtin/tween";
+// the ware jumps on its counter when you reach for it: a knock on wood, then the trade
+export const ears = { press: (ctx, e) => {
+  const p = ctx.self.worldFeetPosition ?? ctx.self.feetPosition, y = ctx.self.rotation?.yaw ?? 0;
+  if (!ctx.self.session.hop) { ctx.self.session.hop = 1; animate(ctx, ctx.self, { "feetPosition.y": "+=0.07", "rotation.yaw": [y, y + 14, y] }, { duration: 0.16, easing: "easeOutQuad", direction: "alternate" }); ctx.after(0.4, "landed"); }
+  if (p) ctx.emit("playSound", { clip: "/cdn/moodboard-realistic-gritty/sfx-knuckles-knock-on-market-stall-counter.mp3", position: p, volume: 0.45, refDistance: 2, maxDistance: 14 });
+  ctx.emit("l132:barter", { by: e?.by ?? null, ware: ctx.self.id });
+} };
+export function landed(ctx) { ctx.self.session.hop = 0; }
 export function frame(L, k) { // stall k: its spot, its forward (toward the tree) and its right
   const a = ((L?.stalls?.angle0 ?? 22.5) + 45 * k) * Math.PI / 180, R = L?.stalls?.radius ?? 15;
   const p = { x: +(R * Math.sin(a)).toFixed(2), y: 0, z: +(-R * Math.cos(a)).toFixed(2) }, n = Math.hypot(p.x, p.z);
