@@ -167,7 +167,7 @@ export function catMorph(look) {
   for (const k of Object.values(SNOUT_KEY)) m[k] = 0
   for (const k of Object.values(EAR_KEY)) m[k] = 0
   m.Ear_Hide = 0
-  if (SNOUT_KEY[look?.snout]) m[SNOUT_KEY[look.snout]] = SNOUT_AMT[look.snout] ?? 1
+  // Shelly Nov 16 'a cute small kemono snout rather than the anteater ones': every critter keeps the head's own short snout, no snout keys
   if (W.ears) m.Ear_Hide = EAR_HIDE   // the sculpted ear (catChildren) stands over the head's own, pressed flat under it (Ear_Hide: art/cat-wardrobe/ears.py body)
   else if (EAR_KEY[look?.ears]) m[EAR_KEY[look.ears]] = 1
   for (const k of Object.values(TAIL_KEY)) m[k] = 0
