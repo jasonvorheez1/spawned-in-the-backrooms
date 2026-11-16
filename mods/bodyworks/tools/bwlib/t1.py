@@ -444,14 +444,6 @@ def run(body, ZONES, DOC, a):
         bpy.ops.object.select_all(action='DESELECT')
         for o in parts: o.select_set(True)
         bpy.context.view_layer.objects.active = parts[0]; bpy.ops.object.join(); ob = bpy.context.active_object
-        if name in ('top_yoke', 'top_chest'):   # a decimated zone border reads as a ragged neckline / a notch under the bust: weld, then relax the open edges along themselves
-            import bmesh
-            bm = bmesh.new(); bm.from_mesh(ob.data); bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.002 / max(ob.matrix_world.to_scale()[0], 1e-6))
-            for _ in range(8):
-                edge = [v for v in bm.verts if v.is_boundary]
-                if not edge: break
-                bmesh.ops.smooth_vert(bm, verts=edge, factor=0.5, use_axis_x=True, use_axis_y=True, use_axis_z=True)
-            bm.to_mesh(ob.data); bm.free(); ob.data.update()
         if not split: ob.name = ob.data.name = 'cage_' + name; return {name: ob}
         import bmesh
         out = {}
