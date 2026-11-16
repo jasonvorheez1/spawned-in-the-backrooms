@@ -85,6 +85,11 @@ hum-bed:
   audio: {bus: Ambience, clip: /cdn/value.4f2ca6969e3919a947a1bb8c8c957185a3a208f8fdd1d35ecd8daa87bd5495ce.mp3, gain: 0.25, loop: true, spatial: false}
   feetPosition: {x: 0, y: 1, z: 0}
   id: hum-bed
+l0-air:
+  audience: all
+  feetPosition: {x: 0, y: 0, z: 0}
+  fx: {script: "fx follow=camera\npop motes n=?mobile:50|120 on=box(<14,3,14>) wrap=14;3;14 size=.007..0.016 v=sdir()*.03 acc=curl(.12)*.06+drag(.6) col=<1,.93,.7> a=(.2..0.5)*flick(.25,.4) sz=$size r=sprite(soft-disc,add)\npop haze n=?mobile:8|16 on=box(<24,1.2,24>) wrap=24;1.5;24 size=3..5 v=sdir()*.05 acc=curl(.08)*.04+drag(.4) col=<.95,.85,.55> a=.04..0.08 rot=spin(.02) sz=$size r=sprite(smoke-puff,alpha)"}
+  id: l0-air
 level0:
   castShadow: false
   feetPosition: {x: 0, y: 0, z: 0}
