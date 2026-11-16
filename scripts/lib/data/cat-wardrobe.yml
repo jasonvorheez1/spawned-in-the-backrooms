@@ -125,34 +125,34 @@ ears:
 
 # hairstyles (art/cat-wardrobe/hair-register.py); Nov 11 refit: each style uniformly scaled toward the head centre to sit on the skull (afropuff/twintails .85, undercut .88, pixie .87, sidetail .90, long .92, halfup .93, shaggy .98, crop 1); cleaned: strands smoothed away from the skull (seams kept as authored), a hair-coloured scalp cap under the strands (textured from the strand right above it), double-sided as authored: the Tripo hair carried onto the current cat heads, skinned to the head, tinted by look.hairc. look.hair: one key
 hair:   # each carries a Hatted key (art/cat-wardrobe/hair-hatted.py): flat to the skull under a hat
-  afropuff: { f: '/cdn/value.414f48145d4fa158d5c23c8992fbe378a939dff77ac649a6f80422eec3df2873.glb' }
-  crop: { m: '/cdn/value.410725092726c8466cfdaeebcddd5d1ed4b5dbf2f62b6197cd259d18fed6aaad.glb' }
-  halfup: { f: '/cdn/value.9215d38c49c8d2ff9f198ed9d54dfe5e27eb26628f9d55b12d3e284e0bfe3edd.glb' }
-  long: { m: '/cdn/value.417d03c1dddf3ef9c3e85ee0f2a55a205c19344dcf4b42af67111ac43a8e4b10.glb' }
-  pixie: { f: '/cdn/value.3dfb3ebff3285cea4aa0d1aa2a2994ea63a634853c1de4524f1a2aff36168cb4.glb' }
-  shaggy: { m: '/cdn/value.6be6920ce5aee2f2aa5fe2a0f7dc213ae6d0aa755c514f09a64fb0cb492629ba.glb' }
+  afropuff: { f: '/cdn/value.774750305def7bd7f39971e8b886f7f56c7cd83b5319c098c4ec8b6a4699a4c3.glb' }
+  crop: { m: '/cdn/value.68a52e1b08bb68adab0d925e287179909572280bda8749e4c99fb9b6c44f4089.glb' }
+  halfup: { f: '/cdn/value.ce322d3dd7d18b8bd390acdbf11dd5ba50b07f915ec77765825fa75f95a0cbe7.glb' }
+  long: { m: '/cdn/value.c3c7610eadbd86b2fb95fb41fed0d14b6d788b8d4490bab6c7923ff5492b6617.glb' }
+  pixie: { f: '/cdn/value.727d9e3c4c90321336293f098d81bf0c73793985c48b7849fa87851043fc73f4.glb' }
+  shaggy: { m: '/cdn/value.470bc7690b9a904b1ff980ba2b705c8a76c44ea910fb0debaa9a8576389b62b3.glb' }
   # Nov 13 unisex five (Shelly #328121 "add 5 unisex hairs"): Tripo, fitted to both bodies by art/cat-wardrobe/hair-newfit.py
-  wolfcut: { f: '/cdn/value.604f8b67369b936ccc4eb31eb4816b2cee4205f6575ce20595070d9437934fac.glb', m: '/cdn/value.97963f92dbaf234db82a4bcc6b5a9f527d79064f735956c633ec087d7894e350.glb' }   # Nov 15 face window (Shelly #410557): hair cleared off eyes and snout by art/cat-wardrobe/hair-facewindow.py, volume pulled 45% toward the skull
-  mullet: { f: '/cdn/value.59b484dccc58998a26191b2b0250da5c96b61aa0fbc47c740709366c9b7d4412.glb', m: '/cdn/value.3a3cc8524e123e4c4c26304ea32070bccaa39009bdb6c250a21fd142a9e35067.glb' }   # Nov 15 face window (Shelly #410557): hair cleared off eyes and snout by art/cat-wardrobe/hair-facewindow.py
-  curtains: { f: '/cdn/value.e2a876cb3cb8218f144acb39dd3a37135d91538a4f01f0d567d5a9bbf2a29ce0.glb', m: '/cdn/value.0a95a9c588f2620fb2ec6fa5a0e6037b04e7f2cdff9b3845d4cda44aac9bf7f2.glb' }
-  locs: { f: '/cdn/value.ac189cf43b0ec5f3169844bea7e17f4faf4dd3af472b54fa9fbe2307f66c8748.glb', m: '/cdn/value.28a5f285903172e717844c5c0b23687ade069bd4836209789db24ed793cdb925.glb' }   # Nov 15 face window (Shelly #410557): hair cleared off eyes and snout by art/cat-wardrobe/hair-facewindow.py
-  buzz: { f: '/cdn/value.c35946f753aaed325d819a99587a7ebef0de292a5c7c0d9abbd4de750284709a.glb', m: '/cdn/value.2e825a9b26d3b280226c242c7cdb03e9100d0c944d546e9c5fe96a5ba2ce3ad0.glb' }   # Nov 15 face window (Shelly #410557): hair cleared off eyes and snout by art/cat-wardrobe/hair-facewindow.py
+  wolfcut: { f: '/cdn/value.d59dde6dd2b70ce0cae6ba4830d616a89fa73f2de4f447e5a04b502967621763.glb', m: '/cdn/value.046f3e91f0eb4f12b3573877e3402593185f25dd77a33523110c90eb00a09e0e.glb' }   # Nov 15 face window (Shelly #410557): hair cleared off eyes and snout by art/cat-wardrobe/hair-facewindow.py, volume pulled 45% toward the skull
+  mullet: { f: '/cdn/value.f7b20e29a6b37802f884ff2e28ae4a4ca85d02b69c12960a6734abeaf54c04ab.glb', m: '/cdn/value.29337acee743ce6b8bd528279f4ce35d5c3dadefc766b32dd5ffd274993426e3.glb' }   # Nov 15 face window (Shelly #410557): hair cleared off eyes and snout by art/cat-wardrobe/hair-facewindow.py
+  curtains: { f: '/cdn/value.e69848d9b8dd56d0276f51c9a0c23a958b8df480edad5b1019a60e70abdddf28.glb', m: '/cdn/value.ea202dbd089b1381a9111ba4196125ecb0593ec61dd177d1d490e522ecf36535.glb' }
+  locs: { f: '/cdn/value.3f830ad58c269030dc71759fe0b15c448b6c581e2416a428a0cd55639ebd379e.glb', m: '/cdn/value.0bb0684e31d80144c72681bbc98bce0b5dfdb2099c19ea13c196339f6209c487.glb' }   # Nov 15 face window (Shelly #410557): hair cleared off eyes and snout by art/cat-wardrobe/hair-facewindow.py
+  buzz: { f: '/cdn/value.79b3ca9c9dd13dcb90452abf901b1fd7d5adf87476d6a5c213c2e06716d2bbaa.glb', m: '/cdn/value.c2d367679f0bc6ead789291c6a91e70d30783775a2fd81f2b76bc4bf0e1d4e70.glb' }   # Nov 15 face window (Shelly #410557): hair cleared off eyes and snout by art/cat-wardrobe/hair-facewindow.py
   # Nov 13 unisex three (Shelly #333472 "2 or 3 new unisex hairs"): Tripo, prefit + hair-newfit.py on both bodies
-  coils: { f: '/cdn/value.703836e7c003069b4b2710eccf2df0676f88f2a42c9fad929e4b42ca8ea6b59f.glb', m: '/cdn/value.505c1478e6707e9fbb421975efd715420fcf033f6484f98caa135562d6c08d5e.glb' }
-  slickback: { f: '/cdn/value.606cdbd0f4d14dd3e4707d5eb998dc13a847c731ba29631124089614c8da5a40.glb', m: '/cdn/value.20946c43da471400af8869d4bd48efa58cf5534e146d71dafb5e5a3e30524c0b.glb' }
-  topknot: { f: '/cdn/value.d4a05be85fcb207af45b544d228a036156470c72f9bac3456b72ff5e46768936.glb', m: '/cdn/value.64f6b6678860c31311179eb5b1dc221d817334b795c96a9e987e3cddd54f1044.glb' }
-  sidetail: { f: '/cdn/value.8370ca026f597a90421e9ea4f49d79a51ceeea2b573669422bcadb521e81ae7e.glb' }
-  twintails: { f: '/cdn/value.40a22c971ed4e3f1c46695d58f41d4feb6ca1220c852961e5d1ecee1c92b216c.glb' }   # Nov 11 Tripo remake (old one rejected #219816)
-  ponytail: { f: '/cdn/value.024f6f0f18d3e33bf0cd5f1b62d7b8ba43c747ec17a14e0da73b67ae65ba668e.glb' }
-  bob: { f: '/cdn/value.3e02a0c4e637591b8402d749e3a43fa4c37cd0ee7efc54400f905fcfdfc88292.glb' }
-  hime: { f: '/cdn/value.4e00267efb6d9fe6183acbf7b6465caf41c33907c0d85105157dc1ba7f04553e.glb' }
-  braid: { f: '/cdn/value.f5c7ef8c17b36611f6a68edece7f408f40d87328b818fb92ebd397bcd7d91c90.glb' }
-  messybun: { f: '/cdn/value.bfc4493e41ec6e45318dc83559c4bf6214525caec56099dda0d6820f53c8b552.glb' }
-  spiky: { m: '/cdn/value.c8423eab91b5493db94a7795cefe919a300e98772c7c00fc5ba511c12bfb0ac3.glb' }
-  fluffy: { m: '/cdn/value.7cbebb6a07c5f7f53a90810e0251ec05f751eb355dba4f8e342e2d4be4bcc44b.glb' }
-  undercut: { m: '/cdn/value.d3b64fac62bfe51787c44da9088326d791fdcfaaf51f9d307dd833444cd706ec.glb' }
-  lob: { f: '/cdn/value.36133abb3aaa50cbb1d20290028bfb1eada35ece640a6cd6c5b33e40cb4c7ea7.glb' }   # Nov 12 Tripo, Shelly's ref /cdn/image-u965cr5rc.webp; fitted by hair-newfit.py (no remesh)
-  shag: { m: '/cdn/value.8a1fa61dbb613fd3aa89b2d4b7c9ff21e25106436ec83a17624ac556ae784e98.glb' }   # Nov 12 Tripo, Shelly's ref /cdn/image-u5nlnvj4p.webp
+  coils: { f: '/cdn/value.cdacdb806e5ecbec3d2f257b86a9ce41276bd956a8f51ff17c3ad2f8ce10b7d4.glb', m: '/cdn/value.f17a280fa9ef0d39fe1059257ebec81026768cd60436ef67b56563cbd7341cf2.glb' }
+  slickback: { f: '/cdn/value.77b7e5b4df6ac99831fb8afded7260179a7b298df61cf643849a2f764f2be024.glb', m: '/cdn/value.95567265ea9c9c576ddc81b9fec54056e0cbbd6e299df2ccf32843aae6a06d04.glb' }
+  topknot: { f: '/cdn/value.da0d55a150d3873bcc553b13d9c26e6ee994cc47800786408228698f9b4e8066.glb', m: '/cdn/value.8ff81ebf616752b1c01be90bd555c116d3651fddfd7f0a781e5be3bac17267c0.glb' }
+  sidetail: { f: '/cdn/value.7d531d76171061b7088bb670af4714f3de00ab0d05670cb309deb689d4f80215.glb' }
+  twintails: { f: '/cdn/value.8f1bb6b811e96dfb2d7b8a34ab2bab88a1b0c77b25de78285b1fa39beafe736f.glb' }   # Nov 11 Tripo remake (old one rejected #219816)
+  ponytail: { f: '/cdn/value.eb578fbfea0dece93f3d61caf1298a61ed12d0f437d1668273100eb1cdd13e46.glb' }
+  bob: { f: '/cdn/value.c4b534d94ed1e6d0ea9dc8dff5a1663b8645332cfea951a1d723b1e78bf7e47b.glb' }
+  hime: { f: '/cdn/value.92415f42a8936f8461b9b1beecf0d6aef94a2b24e4d13e8e22d2c212786485b6.glb' }
+  braid: { f: '/cdn/value.9038015917b8c870defe74297ae9fa4a331bb788da38243dcb07a5a07f8281e5.glb' }
+  messybun: { f: '/cdn/value.df91d1ad63ab4dfda42f2a9cb7dbc769591017dda86f186bebc3297e909f131e.glb' }
+  spiky: { m: '/cdn/value.c58ab36442c8a5fe45e5ca3cc9f4acfea0431ad2de3b1369d0b81ab8a0a9ad9b.glb' }
+  fluffy: { m: '/cdn/value.e44115eeda12a7f3f2f2327a44e522bbe7c8cc2358ea5a35f510d34d75031690.glb' }
+  undercut: { m: '/cdn/value.4442346dee902a266d2664ed9fc2fa38e40b2124451367d0acf2bd07eaf6d467.glb' }
+  lob: { f: '/cdn/value.d3d4ff9b5fe92501958eb0cb5a13e34e2d6372c1ab519307f3e32bdd2782c25b.glb' }   # Nov 12 Tripo, Shelly's ref /cdn/image-u965cr5rc.webp; fitted by hair-newfit.py (no remesh)
+  shag: { m: '/cdn/value.8ff8ec87fc5e5cf81d880a0ca887abae916c997f89b8685db2ffc02cbd826486.glb' }   # Nov 12 Tripo, Shelly's ref /cdn/image-u5nlnvj4p.webp
 # the game's garments (scripts/lib/data/clothes.yml rows: loot, NPC outfits, what a player puts on) drawn on the new cats.
 # Shelly #224234: "the clothing all actually should be in the game world via npcs, loot like normal". A row id here reads as
 # the cat piece beside it; topp: a print the piece carries. Savi's picks where the cat set has no twin (a dress reads as a long tee).
