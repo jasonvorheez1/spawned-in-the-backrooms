@@ -712,7 +712,9 @@ l70-c-chair-1:
         y: 0.95
       min:
         y: 0
-  model: /cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb
+  model:
+    forward: +x
+    id: /cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb
   physics: static
   rotation:
     yaw: -126.5
@@ -764,7 +766,9 @@ l70-c-chair-3:
         y: 0.95
       min:
         y: 0
-  model: /cdn/value.b8d82a3ce214d0d151b9535237651d29ad5503bd098b052ed99e95be8d0fd779.glb
+  model:
+    forward: +z
+    id: /cdn/value.b8d82a3ce214d0d151b9535237651d29ad5503bd098b052ed99e95be8d0fd779.glb
   physics: static
   rotation:
     yaw: 186.50000000000006
@@ -844,7 +848,9 @@ l70-c-chair-6:
         y: 0.95
       min:
         y: 0
-  model: /cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb
+  model:
+    forward: +x
+    id: /cdn/value.e02cceb0c66d902fced411a31f21de9e9584de3272263a09e20b85c9455411be.glb
   physics: static
   rotation:
     yaw: 100.00000000000014

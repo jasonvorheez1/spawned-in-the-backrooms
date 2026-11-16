@@ -52,7 +52,7 @@ function lay(ctx) {
   // the table that won't move, the hole under it, the chair
   ctx.spawn("l12-table", { feetPosition: { x: 0, y: 0, z: -0.4 }, model: { id: MODEL.table }, physics: "static", state: { name: "Table", info: "It won't budge." } });
   ctx.spawn("l12-hole", { feetPosition: { x: 0.1, y: 0.012, z: -0.35 }, rotation: { pitch: -90 }, primitive: { kind: "circle", radius: 0.32 }, material: { color: "#050505", roughness: 1 }, castShadow: false });
-  ctx.spawn("l12-chair", { feetPosition: { x: 0, y: 0, z: 0.45 }, rotation: { yaw: 180 }, model: { id: MODEL.chair }, physics: "static" });
+  ctx.spawn("l12-chair", { feetPosition: { x: 0, y: 0, z: 0.45 }, rotation: { yaw: 0 }, model: { id: MODEL.chair, forward: "+x" }, physics: "static" });
   ctx.place.state.chair = ctx.spawn("l12-chair-seat", { feetPosition: { x: 0, y: 0, z: 0.45 }, rotation: { yaw: 0 }, tags: ["seat"], state: { seat: { w: 1, d: 0.02, y: 0.44 }, verb: "Sit", name: "Chair", c: { x: 0, y: 0.45, z: 0.45 } } });
   // the clock over the door: a full hour in R.hour seconds
   const clock = ctx.spawn("l12-clock", { feetPosition: { x: 0, y: 2.55, z: -2.91 }, rotation: { pitch: 90 }, pivot: "center", primitive: { kind: "cylinder", radiusTop: 0.22, radiusBottom: 0.22, height: 0.05, radialSegments: 40 }, material: { color: "oklch(0.97 0.004 95)", roughness: 0.4 }, castShadow: false,

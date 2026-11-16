@@ -18,9 +18,9 @@ l12-ceil:
 l12-chair:
   feetPosition: {x: 0, y: 0, z: 0.45}
   id: l12-chair
-  model: {id: /cdn/value.b579afa379fe0730c5aaa825796dba3705faf3c6b1ab0a11aaa6e326405aabe9.glb}
+  model: {forward: "+x", id: /cdn/value.b579afa379fe0730c5aaa825796dba3705faf3c6b1ab0a11aaa6e326405aabe9.glb}
   physics: static
-  rotation: {yaw: 180}
+  rotation: {yaw: 0}
 l12-chair-seat:
   feetPosition: {x: 0, y: 0, z: 0.45}
   id: l12-chair-seat

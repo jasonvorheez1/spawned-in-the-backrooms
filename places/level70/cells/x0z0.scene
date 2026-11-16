@@ -3084,6 +3084,7 @@ l70-cellar-shelf:
       min:
         y: 0
   model:
+    forward: +x
     id: /cdn/value.46d80755d855c5535290fea8d75a5658cdf88fa6dce42923dc581fca86d9ea8c.glb
   physics:
     body: static
@@ -3333,6 +3334,7 @@ l70-house-counter:
       min:
         y: 0
   model:
+    forward: +x
     id: /cdn/value.a20fba3c434168b19952322685f3330d2008347dad1871a8f40568a2e132841e.glb
   physics:
     body: static
@@ -3628,6 +3630,7 @@ l70-house-sofa:
       min:
         y: 0
   model:
+    forward: +x
     id: /cdn/value.e3bac760d95e24352729b7a778d467544edbbd0230f98be75c9166052dacd78d.glb
   physics:
     body: static
@@ -3635,7 +3638,7 @@ l70-house-sofa:
   rotation:
     pitch: 0
     roll: 0
-    yaw: 180
+    yaw: 0
   scale: 1
   tags: ["l70","l70-town","seat"]
   visible: true

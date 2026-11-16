@@ -75,8 +75,8 @@ const ROOMS = [ // [id, piece, x, y, z, yaw, container name, loot]; yaw 0 faces 
   ["fh-kcab1", "kcab", -19.95, 1.11, -34.42, 0, "Kitchen cupboard", "ration,ration,almond,wheat_sheaf"],
   ["fh-fridge", "fridge", -18.35, 1.11, -36.6, 90, "Farmhouse fridge", "almond,almond,ration,meat:fish"],
   ["fh-table", "table", -21, 1.11, -39.2, 0],
-  ["fh-chair-a", "chair", -21.8, 1.11, -39.2, 90],
-  ["fh-chair-b", "chair", -20.2, 1.11, -39.2, -90],
+  ["fh-chair-a", "chair", -21.8, 1.11, -39.2, -90],
+  ["fh-chair-b", "chair", -20.2, 1.11, -39.2, 90],
   // barn (floor y 0.62): feed and tool store along the back wall, a vet cabinet, bottle crates
   ["barn-shelf-a", "shelf", -51, 0.62, -59.05, 180, "Feed store shelf", "wheat_sheaf,wheat_sheaf,wire,tape"],
   ["barn-shelf-b", "shelf", -46.4, 0.62, -59.05, 180, "Hardware shelf", "scrap_metal,wire,battery,bobbypin"],
@@ -88,7 +88,7 @@ const ROOMS = [ // [id, piece, x, y, z, yaw, container name, loot]; yaw 0 faces 
   // the family's stable home (floor y 1.79): the table they ate at, her chair, their cupboard
   ["st-rug", "rug", -57.6, 1.795, -107.6, 0],
   ["st-table", "ptable", -57.6, 1.79, -107.6, 0],
-  ["st-chair", "chair", -57.6, 1.79, -106.7, 180],
+  ["st-chair", "chair", -57.6, 1.79, -106.7, 0],
   ["st-wing", "wing", -60.6, 1.79, -109.8, 45],
   ["st-cab", "cabinet", -54.95, 1.79, -109.6, 90, "Family cupboard", "ration,almond,bandage,bobbypin"],
   ["st-lantern", "lantern", -57.6, 2.55, -107.6, 0],
@@ -605,7 +605,7 @@ export function tick(ctx) {
     s.fieldFixtureV = 0;
   }
   if ((s.towerV ?? 0) < TW.v) { layTower(ctx); s.towerV = TW.v; }
-  if ((s.interiorsV ?? 0) < 2) { layInteriors(ctx); s.interiorsV = 2; }
+  if ((s.interiorsV ?? 0) < 3) { layInteriors(ctx); s.interiorsV = 3; }
   if ((s.campBenchV ?? 0) < 1) {
     s.campBenchV = 1;
     ensureBenches(ctx, [

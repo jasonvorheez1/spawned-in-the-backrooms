@@ -39,7 +39,7 @@ ir-closet:
   feetPosition: {x: 0.85, y: 0, z: -3.68}
   id: ir-closet
   layout: {box: {max: {x: 0.65, y: 2.05, z: 0.32}, min: {x: -0.65, y: 0, z: -0.32}}}
-  model: {id: /cdn/value.f9149dd202e038732657415827a7b4cde83cdcf3a88d3a34659b387a3c4da6f0.glb}
+  model: {forward: "+x", id: /cdn/value.f9149dd202e038732657415827a7b4cde83cdcf3a88d3a34659b387a3c4da6f0.glb}
   physics: {body: static, collider: box}
   rotation: 180
 ir-coke:

@@ -2,7 +2,7 @@
 // lay(ctx) builds it once per V (ctx.place.state.v70town), tick(ctx) runs each second. Every visible thing is a Tripo or Blender mesh
 // (art/l70-town/*.py build the house and igloo; art/l70-town/models.py fills M from the Tripo logs). Map: ./level70.js.
 import { HUT, SPOT } from "./level70.js";
-export const V = 6;
+export const V = 7;
 const M = /*M*/{"house": "/cdn/value.ccfc0d22611756b81211e7588895817d54099b9c9e953f4fc70666c13506c5a5.glb", "housecol": "/cdn/value.0edcb5f24560a45372d0b4c4c776acb8d9b4db9e4754df04f2d1b331c6228efd.glb", "igloo": "/cdn/value.ddbadda06e9aa49abab62ec4bf82e49b7b784eeb11bbfd52cf32bfd3f3e317d0.glb", "lamp": "/cdn/value.df187005a34dd410bd5de07e4253a96b988c4a12840d62b14ec6248dd28cfc52.glb", "pole": "/cdn/value.76853fda663d318c17f12d0d8b66410e8ba2b131260ef1a373fe11a2a1629d1e.glb", "sedan": "/cdn/value.8bab8a27c8807090412480c7a890104a34ddd3178edf5f288a57d6941440a8d0.glb", "pickup": "/cdn/value.077bedb487349a0148196019451d1bd4543792c89251898bc5e1cc6e8777b37d.glb", "snowbank": "/cdn/value.75d1df4b5d1422d80730a71a826476df08278524ae162e5b4a374b80d21e5e68.glb", "bldga": "/cdn/value.7e99de62f1d6a8e9730d41fbd07ad2686651db9127868f64e4c18fbbd1ef63ec.glb", "bldgb": "/cdn/value.198edb96a33553fe6d550ac9b35acc12754e4414467a7542fd372462df11898a.glb", "nhouse": "/cdn/value.82b465081f6775e6c5d0483430060c237943db4f47082b5d4e532099671dad29.glb", "shelter": "/cdn/value.e2e5e8dfabdb35770aee07467ae5acc35db33c82e79e3b110218ad9ad4318b03.glb", "swing": "/cdn/value.1d56eef705a4541fa9f97a6174118d8491550fe41610969a2420b08378acb671.glb"}/*M*/;
 const HUTG = "/cdn/value.0b1ccbbffd913e4a0cf600a19d17f5eb95171b6cb43c624ad0f61ee3fccf3f01.glb", DOORG = "/cdn/value.9fdae43fcaf5713af173eb262dfa4b526ccc98a79e34d99b72f458948db6e11d.glb";
 const HS = SPOT.house, IG = SPOT.igloo;
@@ -75,12 +75,12 @@ export function lay(ctx) {
   mesh("l70-bp-house", M.house, HS.x, HS.z, 6.9, { y: -0.3, layout: null, solid: false, materials: HOUSE_MATS });
   mesh("l70-house-shell", M.housecol, HS.x, HS.z, 6.5, { y: -0.3, layout: null, visible: false, shadow: false, physics: meshCol });
   const at = (x, z) => [HS.x + x, HS.z + z], F = 0.54, put = (id, g, x, z, h, o = {}) => mesh(id, g, ...at(x, z), h, { y: o.y ?? F, range: { max: 38 }, ...o });
-  put("l70-house-sofa", asset("sofa-4") ?? asset("sofa"), -1.2, 2.75, 0.85, { yaw: 180 }); put("l70-house-table", asset("coffee-table"), -1.3, 1.5, 0.45, {});
-  put("l70-house-fridge", asset("fridge"), 1.5, -2.9, 1.75, { yaw: 180 }); put("l70-house-stove", asset("stove"), 0.4, -2.95, 0.93, { yaw: 180 }); put("l70-house-counter", asset("counter-furniture") ?? asset("counter"), -0.9, -2.95, 0.93, { yaw: 180 });
+  put("l70-house-sofa", asset("sofa-4") ?? asset("sofa"), -1.2, 2.75, 0.85, { fwd: "+x", yaw: 0 }); put("l70-house-table", asset("coffee-table"), -1.3, 1.5, 0.45, {});
+  put("l70-house-fridge", asset("fridge"), 1.5, -2.9, 1.75, { yaw: 180 }); put("l70-house-stove", asset("stove"), 0.4, -2.95, 0.93, { yaw: 180 }); put("l70-house-counter", asset("counter-furniture") ?? asset("counter"), -0.9, -2.95, 0.93, { fwd: "+x", yaw: 180 });
   put("l70-house-crate", asset("crate-2"), 3.9, 2.7, 0.5, { yaw: 20 });
   lamp("l70-house-light-living", HS.x - 1.4, 2.85, HS.z + 1.4, "oklch(0.86 0.06 80)", 1.6, 8); lamp("l70-house-light-kitchen", HS.x - 1.4, 2.85, HS.z - 1.9, "oklch(0.9 0.03 220)", 1.3, 7); lamp("l70-house-light-hall", HS.x + 3.4, 2.85, HS.z, "oklch(0.86 0.06 80)", 1.2, 7);
   lamp("l70-house-light-porch", HS.x + 6.0, 2.6, HS.z, SODIUM, 1.4, 8);
-  put("l70-cellar-bench", asset("workbench"), -2.5, -6.9, 0.95, { y: 0.02, layout: H(1.0, 1.9, 0.75) }); put("l70-cellar-shelf", asset("shelf-2") ?? asset("shelf"), -0.62, -5.4, 1.9, { y: 0.02, yaw: 90 });
+  put("l70-cellar-bench", asset("workbench"), -2.5, -6.9, 0.95, { y: 0.02, layout: H(1.0, 1.9, 0.75) }); put("l70-cellar-shelf", asset("shelf-2") ?? asset("shelf"), -0.62, -5.4, 1.9, { y: 0.02, fwd: "+x", yaw: 90 });
   put("l70-cellar-furnace", asset("boiler"), -4.15, -6.6, 1.7, { y: 0.02 }); put("l70-cellar-crate", asset("wcrate") ?? asset("crate-2"), -4.2, -4.6, 0.55, { y: 0.02, yaw: 15 });
   sp("l70-cellar-bulb", { tags: ["l70", "l70-town", "l70-light"], feetPosition: { x: HS.x - 2.5, y: 1.78, z: HS.z - 5.4 }, light: { kind: "point", color: "oklch(0.85 0.1 75)", intensity: 1.8, distance: 7, shadow: { enabled: false } } });
   mesh("l70-nhouse-0", M.nhouse, HS.x + 3, HS.z + 20, 7.6, { layout: H(7.6, 11, 9.5), fwd: "+z", yaw: TUNE.bldgW, physics: { body: "static", collider: "box" } });

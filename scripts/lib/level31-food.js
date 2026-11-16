@@ -116,7 +116,7 @@ export function layFood(ctx) {
   const BOOTHZ = 29.1;
   for (let i = 0; i < 5; i++) {
     const x0 = 27.0 + i * 1.95; // each bay: bench facing +x, table, bench facing -x
-    BB(`booth${i}a`, x0, BOOTHZ, 90, i); BB(`booth${i}b`, x0 + 1.32, BOOTHZ, -90, i + 1);
+    BB(`booth${i}a`, x0, BOOTHZ, -90, i); BB(`booth${i}b`, x0 + 1.32, BOOTHZ, 90, i + 1);
     P(`btable${i}`, { feetPosition: { x: x0 + 0.66, y: floorY, z: BOOTHZ }, primitive: { kind: "scripted", script: "scripts/l31-diner-table.js", params: { round: false, size: 0.38 } }, scale: { x: 1, y: 1, z: 1.7 }, physics: "static", receiveShadow: true });
   }
   // what people left: drinks and a napkin pile on the folding tables

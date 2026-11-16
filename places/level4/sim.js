@@ -27,7 +27,7 @@ const KIT = { // real models at the old boxes' size (Shelly: never blocky)
 const box = (w, h, d) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
 const KITROW = {
   fountain: { model: { id: KIT.fountain }, layout: box(0.5, 1.0, 0.4), physics: { body: "static", collider: "box" } },
-  vend: { model: { id: KIT.vend }, layout: box(1, 1.85, 0.8), physics: { body: "static", collider: "box" } },
+  vend: { model: { id: KIT.vend, forward: "+x" }, layout: box(1, 1.85, 0.8), physics: { body: "static", collider: "box" } },
   phone: { model: { id: KIT.phone }, layout: box(0.24, 0.1, 0.2), physics: { body: "static", collider: "box" } },
   table: { model: { id: KIT.table }, layout: box(1.2, 0.74, 1.2), physics: { body: "static", collider: "box" } },
 };
@@ -218,15 +218,21 @@ export function tick(ctx) {
     const wear = (id, row) => { const h = ctx.place.objects[id]; if (!h) return null; for (const c of [...(h.children ?? [])]) ctx.destroy(c.id); h.primitive = null; h.material = null; Object.assign(h, row); return h; };
     for (const o of all("l4-island")) { const h = ctx.getObject(o.id), k = h?.primitive?.params?.kind;
       if (k === "chair" || /07a9798f6eec/.test(String(h?.model?.id ?? h?.model ?? ""))) wear(o.id, { ...FIT.chair });
-      else if (k === "desk") { wear(o.id, { ...FIT.desk }); ctx.spawn({ parent: o.id, feetPosition: { x: 0.18, y: 0.75, z: -0.14 }, rotation: { yaw: 180 }, castShadow: false, visibleRange: { max: 35 }, model: { id: FITM.crt }, layout: box(0.42, 0.38, 0.4) }); } }
+      else if (k === "desk") { wear(o.id, { ...FIT.desk }); ctx.spawn({ parent: o.id, feetPosition: { x: 0.18, y: 0.75, z: -0.14 }, rotation: { yaw: 180 }, castShadow: false, visibleRange: { max: 35 }, model: { id: FITM.crt, forward: "+x" }, layout: box(0.42, 0.38, 0.4) }); } }
     for (const o of all("l4-printer")) wear(o.id, { ...FIT.printer });
     if (ctx.place.objects["dina-carbon-copy"]) { wear("dina-carbon-copy", { ...FIT.cabinet }); ctx.spawn({ parent: "dina-carbon-copy", feetPosition: { x: 0, y: 1.3, z: 0 }, primitive: { kind: "box", width: 0.3, height: 0.03, depth: 0.22 }, material: { color: "oklch(0.9 0.02 90)", roughness: 0.9 } }); }
-  }  if ((s.fitV ?? 0) === 3 || s.fitV === 4) { // 2026-11-14 v5: panels stretched by scale (layout fits uniformly). v4 (Shelly: nothing blocky): the island desks turn long-ways with drawers and knee gap to the user; partitions become fabric panel models, same ids and tags
+  }
+  if ((s.fitV ?? 0) === 3 || s.fitV === 4) { // 2026-11-14 v5: panels stretched by scale (layout fits uniformly). v4 (Shelly: nothing blocky): the island desks turn long-ways with drawers and knee gap to the user; partitions become fabric panel models, same ids and tags
     s.fitV = 5;
     for (const o of ctx.query({ tags: ["l4-desk"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const h = ctx.place.objects[o.id]; if (h) { h.model = { ...FIT.desk.model }; h.layout = FIT.desk.layout; } }
     for (const o of ctx.query({ tags: ["l4-partition"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const h = ctx.place.objects[o.id]; if (!h) continue;
       for (const c of [...(h.children ?? [])]) ctx.destroy(c.id); h.primitive = null; h.material = null; h.physics = { body: "static", collider: "box" };
       for (const k of panelKids()) ctx.spawn({ parent: o.id, ...k }); }
+  }
+  if ((s.orientV ?? 0) < 1 && (s.fitV ?? 0) >= 5) {
+    s.orientV = 1;
+    for (const o of ctx.query({ tags: ["l4-vend"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const h = ctx.place.objects[o.id]; if (h?.model?.id === KIT.vend) h.model = { id: KIT.vend, forward: "+x" }; }
+    for (const o of ctx.query({ tags: ["l4-desk"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const h = ctx.place.objects[o.id]; for (const c of h?.children ?? []) { const ch = ctx.place.objects[c.id] ?? c; if (ch.model?.id === FITM.crt) ch.model = { id: FITM.crt, forward: "+x" }; } }
   }
 
   if (s.officeV < 2) { // the shift board: a corkboard on legs by the north desks, handing out office tasks (scripts/l4-office.js)
