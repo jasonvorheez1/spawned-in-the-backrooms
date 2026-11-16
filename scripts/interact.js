@@ -7,6 +7,7 @@ import { screen } from './lib/screen.js'
 import { regrowWrecks } from "./lib/breakables.js";
 import { vo, voiceKey } from './lib/voices.js';
 import { heard } from "./lib/hear.js";
+import { isBed, bedNear, goToBed } from './lib/sleep.js'
 import { sitDown, standUp, seatTick, spotsOf, holder } from './lib/seat.js'
 import { rollItemL3 } from './lib/loot3.js'
 import { startPick } from './lockpick.js'
@@ -394,9 +395,10 @@ function press(ctx) {
   if (s.sit && m.focus && m.focus.tag !== 'seat' && (m.focus.tag === 'npc' || m.focus.tag === 'usable')) { /* seated at a bar or desk: E talks or orders, a move key stands */ }
   else if (s.sit) { if (s.salonOpen) { s.salonOpen = false; s.wardrobeOpen = false } standUp(ctx); m.key = ''; return }
   const f = m.focus
-  if (!f) return
+  if (!f) { const b = bedNear(ctx, 1.8); if (b) { goToBed(ctx, b); m.key = '' } return } // E beside any bed: sleep (lib/sleep.js)
   const it = ctx.getObject(f.id)
   if (!it || it.state?.taken) return
+  if ((f.tag === 'usable' || f.tag === 'seat') && isBed(it)) { goToBed(ctx, it); m.key = ''; return } // every bed sleeps
   if (f.tag === 'npc' && pickChance(ctx, it) != null) { pickpocket(ctx, it); m.key = ''; refocus(ctx, true); return }
   if (f.tag === 'npc') { if (it.state?.dead) { if (it.state.items !== undefined) openLoot(ctx, it) } else if (hostileReason(ctx, it, ctx.self)) talk(ctx, it); else { openDialogue(ctx, it) } return } // the conversation card (scripts/talk.js); the old services sit on its buttons
   if (f.tag === 'usable' && it.state?.kind === 'computer') { // Back OS boots on the presser's own machine: their state, their screen
@@ -594,3 +596,6 @@ export function update(ctx, dt) {
   refocus(ctx, true) // a standing player with the mouse still: the world changed under the look ray
   if (m.lit && m.lit === m.focus?.id) ctx.emit('highlightSet', { target: m.lit, color: '#fff0b0', style: 'outline', duration: 0.45, width: 3 }, { audience: { player: ctx.self.id } })
 }
+
+// lib/sleep.js: Kyoto Dreams' futons carry you to Lumiria after the fade
+export function sleepCross(ctx, { to }) { if (ctx.self.place === 'level178') ctx.cross(ctx.self, to) }
