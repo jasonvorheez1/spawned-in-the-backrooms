@@ -69,6 +69,62 @@
     "l13p-*": { "m": "tap", "s": "locket-clasp-click" }
   },
   "level02": {
-    "#freshener": { "m": "tap", "s": "aerosol-air-freshener-spray-hiss" }
+    "#freshener": { "m": "tap", "s": "aerosol-air-freshener-spray-hiss" },
+    "l02-router": { "m": "lamp", "p": "lamp", "l": "0.4,1,0.5", "s": "router-relay-click-and-fan-whine", "i": "Full bars. Nobody's ever found the modem.", "t": "Four green lights. Somebody out there pays this bill.", "g": { "sanity": 3, "cd": 900 } },
+    "l02-issue-board": { "m": "flap", "p": "flap", "s": "paper-notice-flutter-on-board" },
+    "l02-clipboard": { "m": "flap", "p": "flap", "s": "clipboard-paper-flip", "t": "Overtime's signed off. In your handwriting.", "g": { "sanity": -2, "xp": 4, "cd": 1800 } },
+    "l02-letter": { "m": "flap", "p": "flap", "s": "paper-note-unfold-crisp" },
+    "l02-toaster": { "m": "lever", "p": "lever", "s": "toaster-lever-spring-pop", "l": "1,0.55,0.25", "i": "Unplugged. Still warm. Don't think about it.", "t": "Pops. One slice, toasted on one side.", "g": { "hunger": 6, "cd": 1200 } },
+    "l02-gd-plans": { "m": "flap", "p": "flap", "s": "blueprint-paper-unroll" },
+    "l02-paint*": { "m": "tap", "q": 0.1, "s": "paint-can-lid-pop" },
+    "#l02lamp": { "m": "lever", "p": "lever", "s": "work-lamp-toggle-clack", "l": "1,0.8,0.45" },
+    "#thr": { "m": "flap", "p": "flap", "s": "paper-note-unfold-crisp", "t": "Someone made it this far. So can you.", "g": { "sanity": 2, "cd": 1800 } }
+  },
+  "main": {
+    "manila-cassette": { "m": "button", "p": "button", "s": "tape-recorder-play-button-clunk", "i": "Harris's. He rationed the batteries; you don't have to.", "t": "His voice. Somebody else's company for a minute.", "g": { "sanity": 4, "cd": 900 } },
+    "manila-lastnote": { "m": "flap", "p": "flap", "s": "paper-note-unfold-crisp", "g": { "sanity": 2, "cd": 1800 } },
+    "manila-stairdoor": { "m": "lever", "p": "lever", "s": "stairwell-push-bar-latch-clank", "l": "1,0.35,0.2" },
+    "manila-filing": { "m": "flap", "p": "flap", "s": "filing-cabinet-drawer-rattle-slam" },
+    "#m-payphone": { "m": "dial", "p": "dial", "s": "payphone-coin-return-clink", "i": "Coin return sticks. Always worth a thumb.", "t": "A quarter. Warm, like someone just left.", "g": { "items": ["cash:25"], "cd": 3600 } },
+    "#m-water": { "m": "tap", "q": 0.08, "s": "wet-carpet-squelch-wring", "i": "Wring it. Tastes like a basement, counts as water.", "t": "Gritty. Your stomach files a complaint.", "g": { "thirst": 5, "sanity": -2, "cd": 900 } },
+    "#m-meg-board": { "m": "flap", "p": "flap", "s": "corkboard-thumbtack-press", "t": "Your name isn't on the MISSING list. Yet.", "g": { "sanity": 2, "xp": 3, "cd": 1800 } },
+    "#m-meg-locker": { "m": "flap", "p": "flap", "s": "metal-locker-door-clang" },
+    "#m-peeling": { "m": "tap", "q": 0.05, "s": "wallpaper-strip-slow-tear" },
+    "#m-noclip": { "m": "tap", "l": "0.6,0.9,1", "s": "drywall-hollow-knock" },
+    "#m-note": { "m": "flap", "p": "flap", "s": "paper-note-unfold-crisp", "g": { "sanity": 2, "cd": 1800 } },
+    "#thr": { "m": "flap", "p": "flap", "s": "paper-note-unfold-crisp", "t": "Someone made it this far. So can you.", "g": { "sanity": 2, "cd": 1800 } }
+  },
+  "level01": {
+    "z-drive": { "m": "lamp", "p": "lamp", "l": "0.45,1,0.55", "s": "hard-drive-spinup-whir-click" },
+    "#thr": { "m": "flap", "p": "flap", "s": "paper-note-unfold-crisp", "g": { "sanity": 2, "cd": 1800 } }
+  },
+  "level2": {
+    "dina-courier-crate": { "m": "flap", "p": "flap", "s": "wooden-crate-latch-snap", "mat": { "color": "oklch(0.55 0.06 70)", "roughness": 0.8, "texture": "cdn/texture-weathered-plywood.png", "pbr": true } },
+    "dina-cassette": { "m": "button", "p": "button", "s": "tape-recorder-play-button-clunk" },
+    "dina-handoff": { "m": "flap", "p": "flap", "s": "clipboard-paper-flip" },
+    "#thr": { "m": "flap", "p": "flap", "s": "paper-note-unfold-crisp", "g": { "sanity": 2, "cd": 1800 } }
+  },
+  "level21": {
+    "l21-radio-rack": { "m": "dial", "p": "dial", "l": "1,0.65,0.2", "s": "radio-tuning-static-sweep", "t": "Alef on channel two. Somebody laughs. Then static.", "g": { "sanity": 3, "cd": 900 } },
+    "l21-berries": { "m": "tap", "q": 0.1, "s": "dry-bush-leaves-rustle" },
+    "l21-faucet-use": { "m": "dial", "p": "dial", "s": "rusty-valve-wheel-squeal", "q": 0.03 },
+    "l21-saltines": { "m": "tap", "q": 0.08, "s": "cracker-wax-sleeve-crinkle" },
+    "l21-cooler": { "m": "dial", "p": "dial", "l": "0.45,0.8,1", "s": "freezer-coil-drip-hiss" },
+    "l21-board": { "m": "flap", "p": "flap", "s": "paper-notice-flutter-on-board" },
+    "l21-blaster": { "m": "lever", "p": "lever", "s": "blasting-plunger-ratchet-crank", "l": "1,0.5,0.2" },
+    "l21-lockout-*": { "m": "lamp", "p": "lamp", "l": "1,0.25,0.15", "s": "steel-shutter-chain-rattle" },
+    "#thr": { "m": "flap", "p": "flap", "s": "paper-note-unfold-crisp", "g": { "sanity": 2, "cd": 1800 } }
+  },
+  "level3": {
+    "l3-guild-plate": { "m": "lamp", "p": "lamp", "l": "1,0.75,0.3", "s": "brass-plate-knuckle-tap" },
+    "dina-cassette": { "m": "button", "p": "button", "s": "tape-recorder-play-button-clunk" },
+    "dina-handoff": { "m": "flap", "p": "flap", "s": "clipboard-paper-flip" },
+    "#thr": { "m": "flap", "p": "flap", "s": "paper-note-unfold-crisp", "g": { "sanity": 2, "cd": 1800 } }
+  },
+  "level1c": {
+    "l1c-cordon-log": { "m": "dial", "p": "dial", "l": "0.4,1,0.5", "s": "data-logger-chirp-click" },
+    "l1c-x-phone": { "m": "dial", "p": "dial", "s": "old-payphone-hook-switch-click", "t": "Dial tone. Then someone breathing. Then dial tone.", "g": { "sanity": -1, "xp": 4, "cd": 1800 } },
+    "#thr": { "m": "flap", "p": "flap", "s": "paper-note-unfold-crisp", "g": { "sanity": 2, "cd": 1800 } },
+    "l1c-*": { "m": "flap", "p": "flap", "s": "taped-paper-peel-off-wall", "g": { "sanity": 1, "cd": 1800 } }
   }
 }
