@@ -24,22 +24,19 @@ def lash(b0, tip):
     nx, ny = -(tip[1] - b0[1]), tip[0] - b0[0]; L = math.hypot(nx, ny); nx, ny = nx / L * 2.6, ny / L * 2.6
     d.polygon([P(b0[0] - nx, b0[1] - ny), P(b0[0] + nx, b0[1] + ny), P(*tip)], fill=INK)
 def open_eye(cx, cy, sx, rx, ry, small=False):
-    ell(cx, cy, rx, ry, fill=(255, 255, 255, 255))
-    k = 0.72 if small else 1.0
-    ix, iy, irx, iry = cx - sx * 2, cy + 3 * k, (rx - 6) * k, (ry - 5) * k
-    for i in range(int(iry * 2 * S)):
-        t = i / (iry * 2 * S); y = (iy - iry) * S + i
-        h = math.sqrt(max(0, 1 - (t * 2 - 1) ** 2)) * irx * S
-        d.line([(ix * S - h, y), (ix * S + h, y)], fill=(0, 0, int(110 + 145 * t ** 1.3), 255))
-    ell(ix, iy + 1, irx * 0.62, iry * 0.62, outline=(0, 0, 90, 255), width=int(1.6 * S))
-    ell(ix, iy - 1, irx * (0.3 if small else 0.42), iry * (0.36 if small else 0.5), fill=(8, 8, 12, 255))
-    ell(ix - sx * irx * 0.38, iy - iry * 0.42, 8.5 * k, 9.5 * k, fill=(255, 255, 255, 255))
-    ell(ix + sx * irx * 0.36, iy + iry * 0.48, 4 * k, 4 * k, fill=(255, 255, 255, 235))
-    arc(cx, cy, rx + 2, ry + 1, 200, 340, INK, 3.4 if male else 4.2)
-    arc(cx, cy, rx, ry, *((20, 60) if sx > 0 else (120, 160)), (40, 28, 32, 200), 1.4)
+    # Nov 16 (Shelly "redo the eyes and mouth too"; rule: black eyes): a glossy black bean, no white, no iris.
+    # Rubberhose-kawaii: tall oval, one big catchlight up and toward the nose side, one small one low and outside, soft sheen at the bottom.
+    k = 0.62 if small else 1.0
+    erx, ery = rx * 0.66 * k, ry * 0.86 * k
+    ell(cx, cy + 4, erx, ery, fill=(14, 10, 14, 255))
+    for i in range(10):                                   # a faint warm sheen along the lower rim, so the black reads round
+        t = i / 10
+        arc(cx, cy + 4, erx * (0.86 - t * 0.04), ery * (0.86 - t * 0.04), 35, 145, (58 + int(30 * (1 - t)), 40, 52, 255), 1.2)
+    ell(cx - sx * erx * 0.28, cy - ery * 0.34, erx * 0.36, ery * 0.27, fill=(255, 255, 255, 255))
+    ell(cx + sx * erx * 0.34, cy + ery * 0.42, erx * 0.14, ery * 0.11, fill=(255, 255, 255, 235))
     if not male:
-        for bx, by, tx, ty in ((0.55, -0.82, 12, -9), (0.85, -0.5, 14, -2)):
-            b0 = (cx + sx * bx * rx, cy + by * ry); lash(b0, (b0[0] + sx * tx, b0[1] + ty))
+        for bx, by, tx, ty in ((0.78, -0.74, 11, -9), (0.98, -0.36, 13, -2)):
+            b0 = (cx + sx * bx * erx, cy + 4 + by * ery); lash(b0, (b0[0] + sx * tx, b0[1] + ty))
 def lid_lashes(cx, cy, sx, rx, y):
     if not male: lash((cx + sx * rx * 0.95, y), (cx + sx * (rx + 12), y - 6))
 for sx in (-1, 1):
@@ -77,9 +74,15 @@ def open_mouth(cx, cy, rx, ry, top_flat=True, tongue_on=True):
     else: d.ellipse(box, fill=(110, 30, 45, 255), outline=LINE, width=int(2.2 * S))
     if tongue_on: tongue(cx, cy + ry * 0.55, rx * 0.55, ry * 0.4)
 if MOOD in ("neutral", "blink"): omega()
-elif MOOD == "smile":
-    line([(nx, ny + 6), (nx, ny + 11)], LINE, 2.2); arc(nx, ny + 4, 16, 12, 25, 155, LINE, 2.4)
-elif MOOD == "joy":   line([(nx, ny + 6), (nx, ny + 10)], LINE, 2.2); open_mouth(nx, ny + 12, 15, 13)
+elif MOOD == "smile":   # toothy grin: a wide crescent, top teeth showing, one fang
+    box = [P(nx - 18, ny + 4), P(nx + 18, ny + 26)]
+    d.chord(box, 0, 180, fill=(110, 30, 45, 255), outline=LINE, width=int(2.2 * S))
+    d.rectangle([P(nx - 14, ny + 15), P(nx + 14, ny + 19)], fill=(255, 255, 255, 255))
+    d.polygon([P(nx + 6, ny + 18), P(nx + 11, ny + 18), P(nx + 8.5, ny + 23)], fill=(255, 255, 255, 255))
+elif MOOD == "joy":
+    line([(nx, ny + 6), (nx, ny + 10)], LINE, 2.2); open_mouth(nx, ny + 12, 17, 15)
+    d.rectangle([P(nx - 13, ny + 12.5), P(nx + 13, ny + 16)], fill=(255, 255, 255, 255))   # top teeth
+    for fx in (-9, 9): d.polygon([P(nx + fx - 3, ny + 15.5), P(nx + fx + 3, ny + 15.5), P(nx + fx, ny + 21)], fill=(255, 255, 255, 255))
 elif MOOD == "blep":  omega(); tongue(nx + 3, ny + 21, 5, 6)
 elif MOOD == "sad":   arc(nx, ny + 24, 10, 8, 205, 335, LINE, 2.4)
 elif MOOD == "shock": open_mouth(nx, ny + 19, 6, 8, top_flat=False, tongue_on=False)
