@@ -486,10 +486,11 @@ def run(body, ZONES, DOC, a):
     # the collar tilts up toward the back (+Y): the nape skin sits higher than the throat, a level cut bared a strip behind the neck
     _cy = float(np.mean([(ZONES['neck'].matrix_world @ v.co).y for v in ZONES['neck'].data.vertices])) if ZONES.get('neck') is not None else 0.0
     collar_cut = ((0.0, _cy, z_mock), (0.0, -0.45, 1.0), True)
+    collar_cap = (z_mock + 0.01 * S, True)   # the tilt stops 1 cm up: past that it climbed onto the back of the head
     # ONE welded shell, collar to hem: the yoke and chest as two shells met on stair-stepped zone borders at the same offset and tore into slivers there
     _ZT = ('upperchest', 'shoulder_l', 'shoulder_r', 'neck', 'breast_l', 'breast_r', 'cleavage', 'upperback', 'chest', 'belly', 'side_l', 'side_r', 'armpit_front_l', 'armpit_front_r', 'armpit_back_l', 'armpit_back_r', 'upperarm_l', 'upperarm_r')
     # the head zone spills down onto the neck base (472 verts under the collar on the cute body): it pokes through as skin teeth unless the top takes that band too
-    for nm_, ob in shell([_ZT, 'head'], OFF['top'], 'top_chest', keepf={'head': lambda p: p[2] < z_mock + 0.45 * max(0.0, p[1] - _cy) + 0.002}, cuts={'head': [collar_cut], 'upperchest': [collar_cut, (z_underbust - 0.07 * S, False)] + sleeve_cap['upperarm_l'] + sleeve_cap['upperarm_r']}).items():
+    for nm_, ob in shell([_ZT, 'head'], OFF['top'], 'top_chest', keepf={'head': lambda p: p[2] < min(z_mock + 0.45 * max(0.0, p[1] - _cy), z_mock + 0.01 * S) + 0.002}, cuts={'head': [collar_cut, collar_cap], 'upperchest': [collar_cut, collar_cap, (z_underbust - 0.07 * S, False)] + sleeve_cap['upperarm_l'] + sleeve_cap['upperarm_r']}).items():
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
     for nm_, ob in shell(['foot_l', 'foot_r'], OFF['feet'], 'feet', {'feet_sole': lambda z: z < -0.5, 'feet_upper': lambda z: z >= -0.5}).items():
         CAGE[nm_] = (ob, COL['feet']); SEG[nm_] = []
