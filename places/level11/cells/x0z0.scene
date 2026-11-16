@@ -43,13 +43,14 @@ l11-lot-booth-sign:
   rotation: {yaw: 90}
   ui: "<div face=\"front\" class=\"w-full h-full flex flex-col items-center justify-center\" style=\"background:#f2ead2;border:30px solid #b8201c;font-family:display;color:#1b1b1b\"><div style=\"font-size:300px;line-height:1;color:#b8201c\">IDLE HANDS</div><div style=\"font-size:120px\">SALES · ASK INSIDE</div></div>"
 l11-lot-held:
+  behavior: [scripts/usable-kit.js]
   feetPosition: {x: 14.6, y: 0.14, z: 20}
   id: l11-lot-held
   model: {forward: "+x", id: /cdn/value.7b64aefa6629593ca0750e9cce606b15e70e31bfb9db56fd96b82432876ba685.glb, materials: {paint: {color: oklch(0.7 0.02 240), metalness: 0.3, roughness: 0.4}}}
   physics: {body: static, collider: box}
   rotation: {yaw: 90}
   scale: 1.15
-  state: {info: "ON HOLD · the buyer went to get cash in 1996", name: "'98 Sedan", verb: Look}
+  state: {info: "Unlocked. The dealer's tag says HOLD, in pencil.", kit: {g: {cd: 3600, items: [battery], xp: 5}, m: tap, q: 0.03, s: car-door-handle-locked-rattle, t: "Glovebox: a 9-volt and a tire gauge."}, kitV: 2, name: "'98 Sedan", verb: Look}
   tags: [usable]
 l11-lot-pennants:
   feetPosition: {x: 0, y: 0, z: 0}

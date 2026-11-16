@@ -1,0 +1,86 @@
+# spawn-scene v2 yaml objects
+l11-apt-radiator/kit-dial:
+  feetPosition: {x: 0.29707916, y: 0.44082, z: -0.09200182999999999}
+  id: l11-apt-radiator/kit-dial
+  material: {color: oklch(0.7 0.1 80), metalness: 0.8, pbr: true, roughness: 0.38, texture: cdn/texture-worn-brass.png}
+  parent: l11-apt-radiator
+  pivot: center
+  primitive: {height: 0.03, kind: cylinder, radialSegments: 24, radiusBottom: 0.05, radiusTop: 0.045}
+  rotation: {pitch: 90}
+  tags: [kit-part]
+l11-apt-radio/kit-dial:
+  feetPosition: {x: 0.06860077, y: 0.22010001240000002, z: -0.20400135}
+  id: l11-apt-radio/kit-dial
+  material: {color: oklch(0.7 0.1 80), metalness: 0.8, pbr: true, roughness: 0.38, texture: cdn/texture-worn-brass.png}
+  parent: l11-apt-radio
+  pivot: center
+  primitive: {height: 0.03, kind: cylinder, radialSegments: 24, radiusBottom: 0.05, radiusTop: 0.045}
+  rotation: {pitch: 90}
+  tags: [kit-part]
+l11-apt-sink/kit-lever:
+  feetPosition: {x: 0.16240051240000003, y: 0.3645600372, z: -0.25038425}
+  id: l11-apt-sink/kit-lever
+  material: {color: oklch(0.62 0.01 250), metalness: 0.75, pbr: true, roughness: 0.45, texture: cdn/texture-scratched-steel.png}
+  parent: l11-apt-sink
+  primitive: {halfHeight: 0.12, kind: capsule, radius: 0.022}
+  rotation: {pitch: -20}
+  tags: [kit-part]
+l11-atm/kit-screen:
+  feetPosition: {x: 0.22842959592616208, y: 1.1140366315841674, z: -0.41200000376310264}
+  id: l11-atm/kit-screen
+  material: {color: oklch(0.25 0.06 150), emissive: oklch(0.75 0.17 150), emissiveIntensity: 1.4, texture: cdn/texture-crt-scanlines.png}
+  parent: l11-atm
+  pivot: center
+  primitive: {height: 0.17, kind: plane, width: 0.26}
+  rotation: {yaw: 180}
+  scale: {x: 0.9, y: 0.02, z: 1}
+  tags: [kit-part]
+l11-canal-pump/kit-dial:
+  feetPosition: {x: 0.30800000667572025, y: 0.7440000295639038, z: -0.4120000059604645}
+  id: l11-canal-pump/kit-dial
+  material: {color: oklch(0.7 0.1 80), metalness: 0.8, pbr: true, roughness: 0.38, texture: cdn/texture-worn-brass.png}
+  parent: l11-canal-pump
+  pivot: center
+  primitive: {height: 0.03, kind: cylinder, radialSegments: 24, radiusBottom: 0.05, radiusTop: 0.045}
+  rotation: {pitch: 90}
+  tags: [kit-part]
+l11-dina-cache/kit-flap:
+  feetPosition: {x: 0, y: 0.185, z: 0}
+  id: l11-dina-cache/kit-flap
+  material: {color: oklch(0.7 0.1 80), metalness: 0.8, pbr: true, roughness: 0.38, texture: cdn/texture-worn-brass.png}
+  parent: l11-dina-cache
+  pivot: [0.5, 0.5, 1]
+  primitive: {height: 0.02, kind: cylinder, radialSegments: 28, radiusBottom: 0.15, radiusTop: 0.14}
+  tags: [kit-part]
+l11-elev-btn-ground/kit-button:
+  feetPosition: {x: 0.05039999904160083, y: 0.1984, z: -0.05200000171142706}
+  id: l11-elev-btn-ground/kit-button
+  material: {color: oklch(0.5 0.17 28), emissive: oklch(0.45 0.16 28), emissiveIntensity: 0.3, pbr: true, roughness: 0.3}
+  parent: l11-elev-btn-ground
+  primitive: {height: 0.03, kind: cylinder, radialSegments: 20, radiusBottom: 0.036, radiusTop: 0.03}
+  rotation: {pitch: 90}
+  tags: [kit-part]
+l11-elev-btn-interior/kit-button:
+  feetPosition: {x: 0.042, y: 0.1984, z: -0.052000000000000005}
+  id: l11-elev-btn-interior/kit-button
+  material: {color: oklch(0.5 0.17 28), emissive: oklch(0.45 0.16 28), emissiveIntensity: 0.3, pbr: true, roughness: 0.3}
+  parent: l11-elev-btn-interior
+  primitive: {height: 0.03, kind: cylinder, radialSegments: 20, radiusBottom: 0.036, radiusTop: 0.03}
+  rotation: {pitch: 90}
+  tags: [kit-part]
+l11-elev-btn-roof/kit-button:
+  feetPosition: {x: 0.05039999904160083, y: 0.1984, z: -0.05200000171142706}
+  id: l11-elev-btn-roof/kit-button
+  material: {color: oklch(0.5 0.17 28), emissive: oklch(0.45 0.16 28), emissiveIntensity: 0.3, pbr: true, roughness: 0.3}
+  parent: l11-elev-btn-roof
+  primitive: {height: 0.03, kind: cylinder, radialSegments: 20, radiusBottom: 0.036, radiusTop: 0.03}
+  rotation: {pitch: 90}
+  tags: [kit-part]
+l11-harris-log/kit-button:
+  feetPosition: {x: 0.06720000246437438, y: 0.0434, z: -0.08700000466197962}
+  id: l11-harris-log/kit-button
+  material: {color: oklch(0.5 0.17 28), emissive: oklch(0.45 0.16 28), emissiveIntensity: 0.3, pbr: true, roughness: 0.3}
+  parent: l11-harris-log
+  primitive: {height: 0.03, kind: cylinder, radialSegments: 20, radiusBottom: 0.036, radiusTop: 0.03}
+  rotation: {pitch: 90}
+  tags: [kit-part]
