@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9744,
-  "updatedAt": "2026-11-16T20:33:33.450Z",
+  "basedOnSpecVersion": 9761,
+  "updatedAt": "2026-11-16T21:00:13.588Z",
   "summary": "Spawned in the Backrooms is a multiplayer survival RPG spanning the Backrooms, Bonus mall, The Hub and authored destinations. Character progression persists in player.state while run/story state is mode-separated; shared scripts and data registries support gameplay, appearance and reactive props, with place scenes and sims composing local spaces. Creator and offline art tools cover modeling, transforms, posing and character/garment fitting.",
   "scriptPaths": [],
   "places": [
@@ -27,7 +27,7 @@
   "shared": [
     "scripts/lib/places.js - canonical place names/labels/HUD titles and valid atlas destinations; consumed by feed, quests and scripts/ui.js.",
     "scripts/lib/grid-path.js - configurable 4-neighbor grid BFS/cache/cell selection shared by Level 0, 1, 2, 2.1, 3, Boiler and 6 adapters.",
-    "scripts/lib/critter-model.js + scripts/lib/cat-wardrobe.js - common appearance/body/wardrobe builders for players and NPCs; scripts/mat-catskin.js projects tintable fur and face textures.",
+    "scripts/lib/critter-model.js + scripts/lib/cat-wardrobe.js + scripts/lib/data/cat-wardrobe.yml - common player/NPC body and outfit builders; refit garment GLBs are re-seated through restyle, with scripted cloth materials in scripts/mat-cloth.js and asset uses tracked in registry/meshes.json.",
     "scripts/lib/hub.js + scripts/lib/thehub.js + scripts/lib/hubkeys.js - Bonus solo/multiplayer routing, home/atlas eligibility and Hub tunnel/door key registry.",
     "scripts/lib/mp-guard.js - multiplayer-room detection and nonlethal NPC-down rule; scripts/player.js and scripts/meg-agent.js invoke spared().",
     "scripts/lib/prop-interactions.js + interactive-props data - shared usable-prop/container migration and geometry specs; scripts/interact.js dispatches.",
@@ -42,7 +42,7 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - journal/advancement/reward helpers; scripts/lib/containment.js - pen/door operations; scripts/lib/run-opts.js - run/mode helpers and keys.",
     "scripts/lib/cat-wardrobe.js - CAT_CUTE, CAT_SLIM, SLIM_ON, CAT_SLIM_FUR, bodyGlb, catModel, catChildren, skinParams, catMorph, faceLife, liveFace; scripts/lib/critter-model.js - STYLE_V, furrySpec, restyle and appearance builders.",
-    "scripts/lib/usable-kit.js - match, seatPart, kitted, kitPass; scripts/lib/kit-levels.js - dressLevel; scripts/usable-kit.js - onSpawn, dress, ears; scripts/lib/payphone.js - SFX, phoneCall, phoneRing; scripts/lib/sleep.js - isBed, bedNear."
+    "scripts/lib/usable-kit.js - match, seatPart, kitted, kitPass; scripts/lib/kit-levels.js - dressLevel; scripts/usable-kit.js - onSpawn, dress, ears; scripts/lib/payphone.js - SFX, phoneCall, phoneRing; scripts/lib/sleep.js - isBed, bedNear; scripts/rest.js - onSpawn, closeStale, onInput."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable character player.state: progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance/look, currency and gear shared across Solo/Multiplayer.",
@@ -52,10 +52,10 @@
     "scripts/main-menu.js + scripts/lib/tut0-cut.js + scripts/lib/tutorial.js - tutorial beat/cut and Field Guide state/preferences; scripts/lib/dina-quest.js - trail clue flags and legacy dinaQ continuation.",
     "scripts/lib/hub.js noteAtlas, called by scripts/player.js on arrival - player.state.atlas first-seen dates/visit counts; place sims own local texV/signTexV completion stamps.",
     "mods/modeling-studio/player.js + god.js - world.state.m3d gallery, pending asks, shares and library snapshot; scripts/critter.js applies player/NPC look fields to rebuilt body and session animation state.",
-    "scripts/usable-kit.js - each kitted prop's state.kit row and state.kcd per-user gift cooldown; scripts/lib/payphone.js writes caller relay tip/subtitle/sanity fields; sleep/rest use player.state wait-bed and rest fields."
+    "scripts/usable-kit.js - each kitted prop's state.kit row and state.kcd per-user gift cooldown; scripts/lib/payphone.js writes caller relay tip/subtitle/sanity fields; sleep/rest use player.state wait-bed, rest fields and waitOpen menu latch; scripts/rest.js clears stale waitOpen at spawn and again after 3 seconds."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion/player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused interactions.",
+    "world.config.yaml actions → templates/player.js ordered locomotion/player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused interaction to prop handlers.",
     "scripts/fall-guard.js holds velocity across place changes for ground streaming; grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; player.js builds local first-person viewmodel and avatar setup.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
@@ -66,7 +66,7 @@
     "Dina diary/records/Hub lead interactions → scripts/lib/dina-quest.js learn/questVoice → player.state.trail tracker and voiced dialogue; story-off runs and Multiplayer bypass the purser.",
     "Level 0 scripts/moments.js → scripts/lib/payphone.js phoneRing/phoneCall; scripts/level11-use.js and scripts/l61-use.js call phoneCall for 25¢ M.E.G. hotline access; relay writes caller phoneTip/subtitle and sound/voice.",
     "Bonus usable props → scripts/interact.js → scripts/bonus-prop.js, arcade.js, bonus-counter.js or smoothie.js; home11 and Level 31 press handlers share kit/press dressing while retaining bespoke interactions.",
-    "scripts/lib/sleep.js isBed/bedNear/goToBed → scripts/interact.js E focus/near-bed or scripts/rest.js T hours menu; solo advances world clock and heals, multiplayer rest skips clock only when all players' inBedUntil leases are current."
+    "scripts/lib/sleep.js isBed/bedNear/goToBed → scripts/interact.js E focus/near-bed or scripts/rest.js T hours menu; solo advances world clock and heals, multiplayer rest skips clock only when all players' inBedUntil leases are current; rest.onSpawn/closeStale clears a persisted waitOpen menu immediately and after 3 s."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
@@ -92,6 +92,6 @@
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with sim-created hub-from-l178.",
     "Level 169 uses x/z, north = -z and 1:10 map scale; Level 1.1 hall distance is +X (0–620 m), north at -Z. retextureOnce waits about 8 s with a player and stamps texV; texSigns preserves sign geometry and stamps signTexV.",
     "Both usable-kit dress passes require a player and throttle each place to one look per 5 s, at most 12 matched props per pass; gifts use per-user state.kcd in seconds. Bed E-entry sets waitBed; multiplayer sleep uses inBedUntil leases.",
-    "art/critter-heads/tripo-swap.py preserves headFur/innerEar slots, head/neck weights and snout/ear shape keys; art/cat-wardrobe/kemono-face.py projects moods on a 275x247 face layout at 4x. fit-audit.py uses body-<sex>.glb and g_*_<sex>.glb inputs and renders front/side pairs into <dir>/r/ for fit inspection."
+    "art/cat-wardrobe: sw218 fit-pass pushes changed Tripo garments to 4 mm clearance, sw219 cape-trim makes the cape a back drape; STYLE_V/restyle re-seats changed worn outfits. scripts/mat-cloth.js plain fabric roughness is 0.96. Keep cat-wardrobe.yml/mesh registry and directly placed scene asset IDs in sync; fit-audit.py uses body-<sex>.glb and g_*_<sex>.glb, while kemono-face.py projects onto a 275x247 face layout at 4x."
   ]
 }
