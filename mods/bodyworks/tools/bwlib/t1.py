@@ -453,7 +453,7 @@ def run(body, ZONES, DOC, a):
     # zone (heavy-set) the cap showed between yoke and sleeve, so the yoke also takes the upper arm skin near the joint
     capR = 0.11 * S
     near_sh = {f'upperarm_{s.lower()}': (lambda p, s=s: float(np.linalg.norm(p - np.array(J[f'shoulder.{s}']))) < capR) for s in 'LR'}
-    for nm_, ob in shell([('upperchest', 'shoulder_l', 'shoulder_r', 'neck'), 'upperarm_l', 'upperarm_r'], OFF['top'], 'top_yoke', keepf=dict(near_sh, upperchest=(lambda p: p[2] < z_neck - 0.01 * S)))   # the neck zone's base fills the collar; one level cut makes the neckline a clean line.items():
+    for nm_, ob in shell([('upperchest', 'shoulder_l', 'shoulder_r', 'neck'), 'upperarm_l', 'upperarm_r'], OFF['top'], 'top_yoke', keepf=dict(near_sh, upperchest=(lambda p: p[2] < z_neck - 0.01 * S))).items():   # the neck zone's base fills the collar; one level cut makes the neckline a clean line
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
     for nm_, ob in shell([('breast_l', 'breast_r', 'cleavage', 'upperback', 'chest', 'side_l', 'side_r', 'armpit_front_l', 'armpit_front_r', 'armpit_back_l', 'armpit_back_r')], OFF['top'], 'top_chest', zmin=z_underbust - 0.07 * S).items():
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
