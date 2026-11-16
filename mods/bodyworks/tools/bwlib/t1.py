@@ -138,6 +138,13 @@ def run(body, ZONES, DOC, a):
             for j, d in enumerate(g['dirs']):
                 cone = (Rl @ d) / Lt > 0.985
                 if cone.any() and Lt[cone].max() > tb.R[i, j] + 0.004 * S: tb.hole[i, j] = True
+        # only where the tail leaves the body: per column, the two highest holed rings; a tail hanging down behind the
+        # seat below that is covered by cloth, not cut round
+        zr = np.array([g['u'] for g in tb.rings]); order = np.argsort(-zr)
+        for j in range(tb.hole.shape[1]):
+            rows = [r for r in order if tb.hole[r, j]]
+            tb.hole[:, j] = False
+            for r in rows[:2]: tb.hole[r, j] = True
         h = tb.hole.copy()
         for dj in (-1, 1): h |= np.roll(tb.hole, dj, 1)
         for di in (-1, 1): h |= np.roll(tb.hole, di, 0) & (np.arange(len(tb.rings)) > 0)[:, None]
