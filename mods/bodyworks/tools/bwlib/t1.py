@@ -110,7 +110,8 @@ def run(body, ZONES, DOC, a):
                 if ok.any(): R[:, j] = np.interp(np.arange(len(col)), np.where(ok)[0], col[ok])
             if np.isnan(R).any(): raise SystemExit('BODYWORKS T1: tube %s has no skin under it (check the rig map: is this limb mapped?)' % s.name)
             for _ in range(smooth):
-                R = 0.5 * R + 0.25 * (np.roll(R, 1, 1) + np.roll(R, -1, 1))
+                for _ in range(6): R = 0.5 * R + 0.25 * (np.roll(R, 1, 1) + np.roll(R, -1, 1))   # several passes: one left a faceted, pleat-like silhouette
+    for _ in range(2): R[1:-1] = 0.5 * R[1:-1] + 0.25 * (R[:-2] + R[2:])
                 if len(R) > 2: R[1:-1] = 0.6 * R[1:-1] + 0.2 * (R[:-2] + R[2:])
             s.R = R
             s.P = np.array([[g['o'] + g['dirs'][j] * (R[i, j] + s.off) for j in range(n)] for i, g in enumerate(s.rings)])
@@ -468,8 +469,13 @@ def run(body, ZONES, DOC, a):
         sh, el = np.array(J[f'shoulder.{s}'], float), np.array(J[f'elbow.{s}'], float); ax = (el - sh) / max(np.linalg.norm(el - sh), 1e-6)
         return [(tuple(sh + ax * capR * 0.8), tuple(ax), True)]
     sleeve_cap = {f'upperarm_{s.lower()}': _cap(s) for s in 'LR'}
+    # the collar line sits where the neck skin starts, not at the neck joint: on a short-necked body the joint is below the
+    # collarbone and a cut there bared the whole upper chest
+    _nk = ZONES.get('neck'); z_collar = z_neck + 0.006 * S
+    if _nk is not None and len(_nk.data.vertices):
+        z_collar = max(z_collar, min((_nk.matrix_world @ v.co).z for v in _nk.data.vertices) + 0.006 * S)
     near_sh = {k: (lambda p, f=f: True) for k, f in near_sh.items()}   # the plane does the trimming now
-    for nm_, ob in shell([('upperchest', 'shoulder_l', 'shoulder_r', 'neck'), 'upperarm_l', 'upperarm_r'], OFF['top'], 'top_yoke', keepf=near_sh, cuts=dict({'upperchest': [(z_neck + 0.006 * S, True)]}, **sleeve_cap)).items():   # the neck's base closes the collar; one level plane makes the neckline a clean line
+    for nm_, ob in shell([('upperchest', 'shoulder_l', 'shoulder_r', 'neck'), 'upperarm_l', 'upperarm_r'], OFF['top'], 'top_yoke', keepf=near_sh, cuts=dict({'upperchest': [(z_collar, True)] + sleeve_cap['upperarm_l'] + sleeve_cap['upperarm_r']}, **sleeve_cap)).items():   # the neck's base closes the collar; one level plane makes the neckline a clean line
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
     for nm_, ob in shell([('breast_l', 'breast_r', 'cleavage', 'upperback', 'chest', 'belly', 'side_l', 'side_r', 'armpit_front_l', 'armpit_front_r', 'armpit_back_l', 'armpit_back_r')], OFF['top'], 'top_chest', cuts={'breast_l': [(z_underbust - 0.07 * S, False)]}).items():   # a level hem under the bust, overlapping the midriff tube
         CAGE[nm_] = (ob, COL['top']); SEG[nm_] = []
