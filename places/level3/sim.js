@@ -115,20 +115,17 @@ function layGammaSignage(ctx) {
   ctx.spawn({ tags: ["l3sign"], feetPosition: { x: a.x + 10.5, y: 1.8, z: a.z }, rotation: { yaw: -90 }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 2.2, height: 0.55, depth: 0.02 }, material: { color: "oklch(0.24 0.03 140)", roughness: 0.85 },
     ui: '<div face="left" width="2.2m" style="font-size:95px;font-weight:900;color:#d8e8b0;text-align:center">◄ M.E.G. BASE GAMMA<div style="font-size:55px;color:#a8c880">CHECKPOINT · WEAPONS HOLSTERED · REFUGE</div></div>' });
   // Blood test directive stencil on wall:
-  ctx.spawn({ tags: ["l3sign"], feetPosition: { x: a.x + 6.2, y: 0.9, z: a.z + 4.5 }, rotation: { yaw: 0 }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 2.0, height: 0.45, depth: 0.02 }, material: { color: "oklch(0.22 0.02 240)", roughness: 0.9 },
-    ui: '<div face="front" width="2.0m" style="font-size:80px;font-weight:900;color:#e8f0c0;text-align:center;line-height:1.2">SECURITY DIRECTIVE<div style="font-size:50px;color:#c8d890">MANDATORY BLOOD TEST · ANTI-STEALER PROTOCOL</div></div>' });
+  /* placard cut Nov 16 (Shelly: signs felt samey) */
   // High voltage caution stencil:
   if (GENS.length) {
     const g0 = GENS[0];
-    ctx.spawn({ tags: ["l3sign"], feetPosition: { x: g0.x - 3.8, y: 1.9, z: g0.z }, rotation: { yaw: 90 }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 1.8, height: 0.45, depth: 0.02 }, material: { color: "oklch(0.25 0.04 40)", roughness: 0.9 },
-      ui: '<div face="right" width="1.8m" style="font-size:85px;font-weight:900;color:#ffaa33;text-align:center;line-height:1.15">DANGER: 10,000 VOLTS<div style="font-size:50px;color:#ffd060">TRANSFORMER SUB-STATION · LIVE ARC HAZARD</div></div>' });
+    /* placard cut Nov 16 (Shelly: signs felt samey) */
   }
   // Indestructible bars caution stencil:
   if (OOB.length) {
     const o0 = OOB[0];
     const e = o0.d === 0 ? { x: (o0.cx + 1) * S - HALF, z: o0.cz * S - HALF + S / 2 } : { x: o0.cx * S - HALF + S / 2, z: (o0.cz + 1) * S - HALF };
-    ctx.spawn({ tags: ["l3sign"], feetPosition: { x: e.x, y: 0.9, z: e.z }, visibleRange: { max: 40 }, castShadow: false, primitive: { kind: "box", width: 0.8, height: 0.35, depth: 0.02 }, material: { color: "oklch(0.22 0.03 30)" },
-      ui: '<div face="front" width="0.8m" style="font-size:65px;font-weight:900;color:#ff7766;text-align:center">IMPERVIOUS<div style="font-size:42px;color:#ffa090">DO NOT APPROACH</div></div>' });
+    /* placard cut Nov 16 (Shelly: signs felt samey) */
   }
 }
 
@@ -214,6 +211,7 @@ export function tick(ctx) {
     for (const id of Object.keys(ctx.place.objects)) { const o = ctx.place.objects[id]; const m = o?.model; if ((typeof m === "string" ? m : m?.id) === OLD) ctx.destroy(id); }
     layLines(ctx);
   }
+  if (s.seeded && s.signCut !== 1) { s.signCut = 1; for (const o of ctx.query({ tags: ["l3sign"], radius: 1e5, center: { x: 0, y: 0, z: 0 } })) { const u = String(ctx.getObject(o.id)?.ui ?? ""); if (/SECURITY DIRECTIVE|10,000 VOLTS|IMPERVIOUS/.test(u)) ctx.destroy(o.id); } }
   if (s.seeded && s.texV !== 1) { s.texV = 1; retexture(ctx, { skipTags: ["sludge", "l3lamp", "l3oob", "l3sign"] }); } // graphics pass: bare props get real surfaces
   if (!s.arrive2 && s.seeded) { s.arrive2 = true; ctx.spawn("l3-from-l2", { feetPosition: { x: BACK.x + 2.4, y: 0.1, z: BACK.z }, rotation: { yaw: -90 } }); } // where the Level 2 door lets you out
   if (s.snackVent !== 3) {
