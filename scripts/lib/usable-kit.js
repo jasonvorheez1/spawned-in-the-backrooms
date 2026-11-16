@@ -47,8 +47,9 @@ export function kitPass(ctx, place = ctx.self?.place ?? "main") {
   const now = ctx.now(); if (now - (LAST[place] ?? -1e9) < 5000) return 0; LAST[place] = now; // a look every 5 s, never per tick
   let n = 0;
   for (const r of ctx.query({ tags: ["usable"] })) {
-    if (r.state?.kitV === KIT.v || r.id.includes("/")) continue;
+    if (r.id.includes("/")) continue;
     const row = match(rows, r.id, r.tags); if (!row) continue;
+    if (r.state?.kitV === KIT.v && (!row.p || ctx.getObject(`${r.id}/kit-${row.p}`))) continue; // dressed, part standing
     const o = ctx.getObject(r.id); if (!o || !o.bounds) continue;
     const beh = Array.isArray(o.behavior) ? o.behavior : o.behavior ? [o.behavior] : [];
     if (!beh.includes("scripts/usable-kit.js")) o.behavior = [...beh, "scripts/usable-kit.js"];
