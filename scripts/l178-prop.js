@@ -529,7 +529,8 @@ export const ears = {
         say(ctx, p, "Grilled fish, rice and pickles. There's always a place for a traveller.");
         break;
       case "futon":
-        if (!restore(ctx, p, "l178rest", L.rest, "You're already rested.")) break;
+        ctx.after((L.rest.fade ?? 1.6) + 0.9, "futonCross", { by }); // Shelly, Nov 16: sleep is the quick way on: you wake in Lumiria (Level 132)
+        if (!restore(ctx, p, "l178rest", L.rest, "You're already rested.")) { ctx.emit("screenFlash", { color: "oklch(0.05 0.01 60)", duration: 2.4, intensity: 1 }, { audience: { player: by } }); say(ctx, p, "You lie down anyway. Sleep comes easy here."); break; }
         startRestPose(ctx, p, L.rest.fade + 0.9);
         ctx.emit("screenFlash", { color: "oklch(0.05 0.01 60)", duration: L.rest.fade, intensity: 0.55 }, { audience: { player: by } });
         sound(ctx, "futon-rustle-soft-exhale");
@@ -540,3 +541,6 @@ export const ears = {
     if (beat && s.kind !== "read" && s.kind !== "qspot") say(ctx, p, beat);
   },
 };
+
+// a futon's sleep ends in Lumiria, as the warm spring's does
+export function futonCross(ctx, { by }) { const p = ctx.place.players.find((q) => q.id === by); if (p && !p.state?.dead) ctx.cross(p, "level132#l132-arrive"); }

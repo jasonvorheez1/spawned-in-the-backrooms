@@ -13,14 +13,7 @@ export const bedNear = (ctx, r = 2.6) => ctx.query({ radius: r }).find((o) => is
 // true when it handled the press
 export function goToBed(ctx, bed) {
   const s = ctx.self.state, now = ctx.now();
-  if (ctx.self.place === "level178") {
-    ctx.emit("screenFlash", { color: "oklch(0.04 0.01 60)", duration: 2.6, intensity: 1 }, { audience: { player: ctx.self.id } });
-    ctx.emit("playSound", { clip: "cdn/moodboard-realistic-gritty/sfx-bedsheets-rustle-settle-sigh.mp3", volume: 0.55 }, { audience: { player: ctx.self.id } });
-    s.notice = { text: "The futon's warm. You're asleep before you finish the thought...", at: now };
-    s.hp = Math.min(s.maxHp ?? s.hpMax ?? 100, (s.hp ?? 0) + 20); s.sanity = Math.min(100, (s.sanity ?? 0) + 25);
-    ctx.cross(ctx.self, "level132#l132-arrive"); // under the fade; no player timer (they can stall after a host change)
-    return true;
-  }
+  if (ctx.self.place === "level178") { if (bed?.id) ctx.emit("press", { by: ctx.self.id }, { to: bed.id }); return true; } // the futon itself rests you, then carries you to Lumiria (l178-prop.js)
   s.waitOpen = true; s.waitBed = true; s.bedId = bed?.id ?? null;
   return true;
 }
