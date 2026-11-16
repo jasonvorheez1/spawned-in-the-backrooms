@@ -210,7 +210,8 @@ export function lighting(surface, lights, ctx) {
   const direct = lights.each((light) => {
     const ndl = clamp(dot(surface.normal, light.direction), 0, 1);
     const band = mix(float(0.3), float(0.85), smoothstep(-0.1, 0.7, ndl));   // Nov 12: a light behind her no longer lights her half-bright, so stacked lamps stop burning pale fur white
-    return surface.albedo.mul(light.color).mul(band).mul(light.shadow);
+    // Nov 16 (Shelly: dark arcs beside the nose): the snout cast a hard self-shadow crescent onto the cheeks under ceiling lamps; fur takes shadow at most 45% deep
+    return surface.albedo.mul(light.color).mul(band).mul(mix(float(0.55), float(1), light.shadow));
   });
   return direct.add(surface.albedo.mul(lights.ambient.add(lights.environment)).mul(surface.occlusion).mul(0.45));
 }
