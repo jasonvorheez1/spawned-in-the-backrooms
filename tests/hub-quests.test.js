@@ -35,10 +35,38 @@ test("Lin's Speech 45 is rolled; a failed lie hides the option but returning the
 test('selling the tapes to Pip moves the blank-door lead to Pip, not Sato', () => {
   const s = { hubLR: 2 }
   say(ctx(), s, 'hub-amber-pip', 'Want to buy some M.E.G. recorders?')
-  expect(hubChoices(ctx(), { id: 'hub-meg-sato' }, s).length).toBe(0)
+  expect(hubChoices(ctx(), { id: 'hub-meg-sato' }, s).some((c) => c.text === 'What was on the recorders?')).toBe(false)
+  expect(s.rep.amber).toBe(4)
   say(ctx(), s, 'hub-amber-pip', 'Anything good on those tapes?')
   say(ctx(), s, 'hub-amber-pip', "I'll go and find that door.")
   expect(s.hubUP).toBe(1)
+})
+
+test('after selling the tapes, Sato can recover copies without closing Pip’s route', () => {
+  const s = { hubLR: 2, quests: { 'hub-lost-records': { name: 'Lost Expedition Records', step: 'Return the tapes' } } }
+  say(ctx(), s, 'hub-amber-pip', 'Want to buy some M.E.G. recorders?')
+  expect(say(ctx(), s, 'hub-meg-sato', 'What was on the recorders?')).toBeNull()
+  expect(say(ctx(), s, 'hub-meg-sato', "I'll go and look at it.")).toBeNull()
+  const confession = "I sold the recorders to Camp Amber. I'm sorry."
+  expect(hubChoices(ctx(), { id: 'hub-meg-sato' }, s).some(c => c.text === confession)).toBe(true)
+  say(ctx(), s, 'hub-meg-sato', confession)
+  const payment = "I'll pay to get copies of the tapes back. [$100]"
+  s.cents = 9999
+  expect(say(ctx(), s, 'hub-meg-sato', payment).reply).toContain('hundred')
+  expect(s.cents).toBe(9999)
+  expect(s.hubLRrecovered).toBeUndefined()
+  s.cents = 10000
+  say(ctx(), s, 'hub-meg-sato', payment)
+  expect(s.cents).toBe(0)
+  expect(s.hubLRrecovered).toBe(true)
+  expect(s.qdone['hub-lost-records'].text).toContain('paid for copies')
+  expect(say(ctx(), s, 'hub-meg-sato', payment)).toBeNull()
+  expect(hubChoices(ctx(), { id: 'hub-meg-sato' }, s).some(c => c.text === 'What was on the recorders?')).toBe(true)
+  expect(hubChoices(ctx(), { id: 'hub-amber-pip' }, s).some(c => c.text === 'Anything good on those tapes?')).toBe(true)
+  say(ctx(), s, 'hub-meg-sato', 'What was on the recorders?')
+  say(ctx(), s, 'hub-meg-sato', "I'll go and look at it.")
+  expect(s.hubUP).toBe(1)
+  expect(s.quests['hub-uncharted'].mark.id).toBe('hub-blank')
 })
 
 test('the blank-door objective points to the actual door and repairs older saves', () => {
@@ -67,7 +95,7 @@ test('Sato rewards a key that has an actual matching door', async () => {
 
 test('the missing key remains available to another player', async () => {
   const { ears } = await import('../scripts/hub-thing.js')
-  const item = { state: { kind: 'keytag' }, visible: true, tags: ['usable', 'hub-thing'] }
+  const item = { state: { kind: 'keytag' }, feetPosition: { x: 0, y: 0, z: 0 }, visible: true, tags: ['usable', 'hub-thing'] }
   const a = { id: 'a', state: { hubMK: 2 } }, b = { id: 'b', state: { hubMK: 2 } }
   const c = { ...ctx(), self: item, getObject: id => id === 'a' ? a : b }
   ears.press(c, { by: 'a' }); ears.press(c, { by: 'b' })
