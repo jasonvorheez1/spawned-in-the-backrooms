@@ -8,7 +8,7 @@ import { spawnPhoebe, dropPhoebe } from "./phoebe.js"
 import { noStory } from "./run-opts.js"
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 const SMILER_MODEL = { id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb", forward: "+x" } // scripts/smilers.js
-export const LEN = { encounter: 16.5, final: 23 }
+export const LEN = { encounter: 16.5, final: 19 } // Shelly Nov 16: the black before the name ran ~9 s; now ~2 s
 const GASP = "/cdn/value.1f5d195f954552c9304c8d13f9177b97b62b100316d004215a918c9282445aad.mp3"   // johnadams2 (Nov 9): "the cutscenes feel like bootleg mobile games": every shot is held by a person, never a tripod.
 // Savi's picks: a slow breathing drift (~1.5 cm at the eye, ~0.35 deg of aim) made of three sines, so no two seconds repeat
 const wob = (t, s) => Math.sin(t * 0.83 + s) * 0.6 + Math.sin(t * 2.1 + s * 2.3) * 0.3 + Math.sin(t * 4.7 + s * 3.7) * 0.1
@@ -214,8 +214,8 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
       fx1(ctx, "screenFlash", { color: "#fffbe0", duration: 0.6, intensity: 0.35 }); fx1(ctx, "screenShake", { intensity: 0.18, duration: 0.8 })
     })
     if (t > S + 2.7) once("gone", () => { me.hidden = [...(me.hidden || []), me.id]; raw(ctx, H.scream, 0.35) })
-    if (t > S + 6.2) once("thud", () => raw(ctx, H.slowst, 0.8))
-    if (t > 13.4) once("title", () => raw(ctx, H.cresc, 0.9)) // lands with the name (cutscene-ui: 13.7 s)
+    if (t > S + 3.8) once("thud", () => raw(ctx, H.slowst, 0.8))
+    if (t > 9.5) once("title", () => raw(ctx, H.cresc, 0.9)) // lands with the name (cutscene-ui: 9.8 s)
     if (t < 2) { const u = ss(0, 2, t); ctx.view.camera = { eye: { x: at.x + 0.4, y: 1.6, z: at.z + 0.6 }, aim: wall, fov: lerp(55, 32, u) } } // the wallpaper ahead, crawling
     else if (t < S) { const u = ss(2, S, t); ctx.view.camera = { eye: { x: 44.2, y: 1.5, z: 2.8 }, aim: L3({ x: 44.9, y: 1.45, z: -4 }, { x: 44.95, y: 1.4, z: -12 }, u), fov: lerp(46, 36, u) } } // from the wall: their face, oblivious, and far up the hall behind them half a shape round the corner
     else { const p = me.feetPosition, k = ss(S + 2.7, S + 3.4, t); ctx.view.camera = { eye: { x: at.x + 0.5, y: 1.75, z: lerp(Math.min(p.z - 2.2, 1.6), 4.4, k) }, aim: { x: wall.x, y: wall.y, z: wall.z + 1 }, fov: lerp(50, 80, k) } } // behind them as they press in, then the lens goes through after them
