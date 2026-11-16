@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9868,
-  "updatedAt": "2026-11-16T23:07:45.299Z",
+  "basedOnSpecVersion": 9870,
+  "updatedAt": "2026-11-16T23:11:39.468Z",
   "summary": "Spawned in the Backrooms is a multiplayer survival RPG spanning Level 0, the Bonus mall, The Hub and authored destinations. Character progression and inventory persist in player.state, while run/story keys are mode-separated; shared gameplay, quest, appearance and prop systems are composed with place scenes and sims.",
   "scriptPaths": [],
   "places": [
@@ -42,7 +42,7 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - journal/advancement/reward helpers; scripts/lib/containment.js - pen/door operations; scripts/lib/run-opts.js - run/mode helpers and keys.",
     "scripts/lib/cat-wardrobe.js - CAT_CUTE, CAT_SLIM, SLIM_ON, CAT_SLIM_FUR, bodyGlb, catModel, catChildren, skinParams, catMorph, faceLife, liveFace; scripts/lib/critter-model.js - STYLE_V (sw232), furrySpec, restyle and appearance builders.",
-    "scripts/lib/skill-check.js - SKILL_NAMES, parseCheck, checkOdds, formatCheckBanner, resolveCheck; scripts/lib/level1-quests.js - rationsOutcome; scripts/lib/usable-kit.js - match, seatPart, kitted, kitPass."
+    "scripts/lib/skill-check.js - SKILL_NAMES, parseCheck, checkOdds, formatCheckBanner, resolveCheck; scripts/lib/level1-quests.js - rationsOutcome; scripts/lib/level10-quests.js - QUESTS10, setWheatStep, setWatcherStep, setCellarStep, finishQuest, l10Choices, handleDialogueQuest10; scripts/lib/level178-quests.js - SPOTS, QUESTS178, REWARDS, touch178, questTick178, l178Choices, handleDialogueQuest178; scripts/lib/usable-kit.js - match, seatPart, kitted, kitPass."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable character player.state: progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance/look, currency and gear shared across Solo/Multiplayer.",
@@ -52,10 +52,10 @@
     "scripts/main-menu.js + scripts/lib/tut0-cut.js + scripts/lib/tutorial.js - tutorial beat/cut and Field Guide state/preferences; scripts/lib/dina-quest.js - trail clue flags and legacy dinaQ continuation.",
     "scripts/lib/hub.js noteAtlas, called by scripts/player.js on arrival - player.state.atlas first-seen dates/visit counts; place sims own local texV/signTexV completion stamps.",
     "mods/modeling-studio/player.js + god.js - world.state.m3d gallery, pending asks, shares and library snapshot; scripts/critter.js applies player/NPC look fields to rebuilt body and session animation state.",
-    "scripts/quest-prop-use.js - player.state page/read and clue flags for supply/shift/survey notes; quest modules own progression and queuePayout rewards. scripts/usable-kit.js owns prop state.kit and per-user state.kcd."
+    "scripts/quest-prop-use.js - player.state page/read and clue flags; scripts/lib/level10-quests.js owns watcherQ and the Still Watcher quest; scripts/lib/level178-quests.js owns Kyoto quest steps plus l178GuestbookSeen/l178BoardSeen discovery memory; scripts/usable-kit.js owns prop state.kit and per-user state.kcd."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered locomotion/player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused interactions.",
+    "world.config.yaml actions → templates/player.js ordered locomotion/player/foe, swim/climb/crawl, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone behaviors; scripts/interact.js dispatches focused in…",
     "scripts/fall-guard.js holds velocity across place changes for ground streaming; grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; player.js builds local first-person viewmodel and avatar through critter-model appearance builders.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
@@ -63,20 +63,20 @@
     "scripts/lib/run-opts.js mpRoom(party/user) → scripts/lib/hub.js toSolo → party room mp-<party> (or user room); scripts/routing.js requests Bonus solo-room selection and threshold handlers call carryAcross for held props/followers.",
     "scripts/lib/mp-guard.js multiRoom → scripts/player.js damage and scripts/meg-agent.js death handling → ordinary NPCs restored at 30% HP, stunned and shown DOWN; shootable/born-hostile/killable NPCs still die.",
     "scripts/player.js zone resolver → player.state.zone; scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass; arrival → hub.noteAtlas writes player.state.atlas for Bonus Teleport Station.",
-    "Level 1 Short Rations → scripts/lib/level1-quests.js outcome → Ortiz/Jo/Sato dialogue and follow-up branches; Level 1 supply note via scripts/quest-prop-use.js reads page 1101 and sets rationsClue.",
-    "Level 3 plate → scripts/quest-prop-use.js writes l61L3Seen and queues XP → scripts/lib/level61-quests.js resumes Four Hundred and Thirteen at the Level 4 survey; completion can branch to Jo's B4 warning.",
+    "Level 1 Short Rations → scripts/lib/level1-quests.js outcome → Ortiz/Jo/Sato follow-ups; page 1101 sets rationsClue. Level 3 plate → scripts/quest-prop-use.js writes l61L3Seen/XP → scripts/lib/level61-quests.js resumes Four Hundred and Thirteen at the Level 4 survey and may branch to Jo's B4 warning.",
     "Level 11 shift note → scripts/quest-prop-use.js sets sedcoNote/page 1102 → scripts/os-ui.js offers password action → scripts/os.js runs 'login spotlight'; Sedco quest can share courier footage with Vance.",
+    "Level 10 scarecrow press can discover page 24 before the Still Watcher quest; scripts/lib/level10-quests.js lets Maeve start at the log-return step and accept its hand-in. Kyoto guestbook/go-board presses in scripts/l178-prop.js remember l178GuestbookSeen/l178BoardSeen; scripts/lib/level178-quests.js uses those flags to resume the Order and route dialogue at the next step.",
     "scripts/lib/skill-check.js checkOdds → scripts/talk-ui.js displays actual skill odds → scripts/talk.js/npc-talk.js resolves chosen check and logs dialogue result; quest dialogue handlers consume the check result."
   ],
   "behaviorFamilies": [
-    "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table and fitted chairs with paired orientation.",
+    "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes a table and fitted chairs with paired orientatio…",
     "scripts/lib/data/weapons.yml + scripts/player.js + ballistics.js + knock.js + loot.js - weapon variants share combat and rarity/level gates; weights and upgrade rolls vary by level.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "scripts/lib/sleep.js + scripts/interact.js + scripts/rest.js + scripts/l178-prop.js - common bed detection/entry, with ordinary rest and Kyoto futon crossing as distinct outcomes.",
     "scripts/lib/l169-road.js + l169-road-geo.js + l169-travel.js + l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
     "places/level132/sim.js + l132-{stalls,shops,land,people,duke,quests,barter}.js + barter-deal.js - staged town and keeper trades use eight goods categories; first gift then balanced currency-free barter.",
-    "scripts/lib/critter-model.js + scripts/lib/cat-wardrobe.js + scripts/mat-catskin.js + critter-faces.yml - shared player/NPC bodies, fitted garments and painted fur/hair; wardrobe and eye-shape variants by look/sex/morph, refreshed by STYLE_V."
+    "scripts/lib/critter-model.js + scripts/lib/cat-wardrobe.js + scripts/mat-catskin.js + critter-faces.yml - shared player/NPC bodies, fitted garments and painted fur/hair; wardrobe and eye-shape variants by look/sex/morph, refreshed by STYLE…"
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists; Level 26 placements/barrage use uploaded models.",
