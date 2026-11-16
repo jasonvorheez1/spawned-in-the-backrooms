@@ -39,6 +39,9 @@ import MJ from "./lib/data/mahjong.yml";
 import LOOKS from "./lib/data/mahjong-looks.yml";
 const SND = "/cdn/moodboard-realistic-gritty/sfx-low-whisper-breath-swell-unsettling.mp3";
 const SIT = { m: "cdn/clip-sit-loop.glb", f: "cdn/clip-sit-female-loop.glb" };
+// the abandoned hand jumps and clatters on the felt
+const TILES = `fx
+pop tile burst=9..13 on=disc(.35) life=.55..0.8 v=up(1.4..2.2)+sdir()*.4 size=.035..0.045 spin=-9..9 acc=grav()*1.4 col=<.95,.93,.86> a=1 sz=$size rot=$age*$spin floor=bounce(.3) asp=1.35 r=sprite(soft-disc,alpha)`;
 export const updateSchedule = { every: { seconds: 0.5 } };
 export const ears = {
   press: (ctx, { by }) => {
@@ -46,7 +49,10 @@ export const ears = {
     if (ctx.self.state.kind !== "mahjong") return;
     if (who.state.mjWarned) { if (!who.state.mj) who.state.mj = { open: true, lobby: true }; return; } // the second time, you sit down anyway (scripts/mahjong.js)
     who.state.mjWarned = true;
-    who.state.notice = { text: "You feel a strong urge to step away from it. (Touch it again to sit and play.)", at: ctx.now() };
+    who.state.notice = { text: "A tile flips face-up by itself: the East Wind. It's not your turn, and it's not your seat. (Touch it again to sit in anyway.)", at: ctx.now() };
+    { const c = ctx.self.worldFeetPosition, t = { x: c.x, y: (c.y ?? 0) + 0.8, z: c.z };
+      ctx.emit("fx", { position: t, script: TILES }, { audience: { nearby: t, radius: 16 } });
+      heard(ctx, { maxDistance: 12, refDistance: 2, clip: "/cdn/moodboard-realistic-gritty/sfx-mahjong-tiles-clatter-shuffle.mp3", position: t, volume: 0.7 }); }
     const me = ctx.self.worldFeetPosition, p = who.worldFeetPosition;
     let dx = p.x - me.x, dz = p.z - me.z; const d = Math.hypot(dx, dz) || 1; dx /= d; dz /= d;
     who.state.l5Shove = { x: p.x + dx * 1.5, z: p.z + dz * 1.5, at: ctx.now() };
