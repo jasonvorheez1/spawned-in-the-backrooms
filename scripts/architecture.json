@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 9579,
-  "updatedAt": "2026-11-16T17:19:14.366Z",
+  "basedOnSpecVersion": 9593,
+  "updatedAt": "2026-11-16T17:28:22.663Z",
   "summary": "Spawned in the Backrooms is a multiplayer survival RPG across the Backrooms, Bonus mall, The Hub and authored destinations. Durable character progression lives in player.state while run/story state is mode-separated; shared scripts and data registries support gameplay and appearance, and place scenes plus sims compose local spaces. Creator tools include BodyWorks fitting, Advanced Transform, character posing and the Spawn 3D Modeling Studio.",
   "scriptPaths": [],
   "places": [
@@ -30,7 +30,7 @@
     "scripts/lib/critter-model.js + scripts/lib/cat-wardrobe.js - common appearance/body/wardrobe builders for player and NPCs; slim kemono support is retained behind SLIM_ON (currently false).",
     "scripts/lib/hub.js + scripts/lib/thehub.js + scripts/lib/hubkeys.js - Bonus solo/multiplayer routing, home/atlas eligibility and Hub tunnel/door key registry.",
     "scripts/lib/mp-guard.js - multiplayer-room detection and nonlethal NPC-down rule; scripts/player.js and scripts/meg-agent.js invoke spared().",
-    "scripts/lib/prop-interactions.js + interactive-props data - shared usable-prop/container migration and geometry specs; scripts/interact.js dispatches.",
+    "scripts/lib/prop-interactions.js + interactive-props data - shared usable-prop/container migration and geometry specs; scripts/interact.js dispatches. scripts/lib/usable-kit.js + usable-kit.json define optional decoration passes and scripts/usable-kit.js press behavior; no place sim currently calls kitPass.",
     "scripts/lib/retexture.js + scripts/lib/sign-tex.js - reusable surface dressing and marker-to-image sign faces; place sims supply per-place tables and completion stamps.",
     "scripts/lighting.js - shared lit-surface shader; roughness attenuates environment reflections on matte surfaces while ambient specular fill keeps indoor metals from going black."
   ],
@@ -42,7 +42,7 @@
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
     "scripts/lib/quests.js - journal/advancement/reward helpers; scripts/lib/containment.js - pen/door operations; scripts/lib/run-opts.js - run/mode helpers and keys.",
     "scripts/lib/cat-wardrobe.js - CAT_CUTE, CAT_SLIM, SLIM_ON, CAT_SLIM_FUR, bodyGlb, catModel, catChildren, skinParams and catMorph; scripts/lib/critter-model.js - STYLE_V, furrySpec, restyle and appearance builders.",
-    "scripts/l132-duke-gate.js, scripts/lib/l132-shops.js, scripts/l178-prop.js and scripts/l4-home.js - ears; l4-home.js also wireOfficeCots, vendReady, fillTick, updateSchedule and update."
+    "scripts/l132-duke-gate.js, scripts/lib/l132-shops.js, scripts/l178-prop.js and scripts/l4-home.js - ears; l4-home.js also wireOfficeCots, vendReady, fillTick, updateSchedule and update; scripts/lib/usable-kit.js - kitPass, match, seatPart; scripts/usable-kit.js - ears, onSpawn, dress."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable character player.state: progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance/look, currency and gear shared across Solo/Multiplayer.",
@@ -64,9 +64,9 @@
     "scripts/lib/mp-guard.js multiRoom → scripts/player.js damage and scripts/meg-agent.js death handling → ordinary NPCs restored at 30% HP, stunned and shown DOWN; shootable/born-hostile/killable NPCs still die.",
     "scripts/player.js zone resolver → player.state.zone; scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass; place arrival → hub.noteAtlas writes player.state.atlas for the Bonus Teleport Station.",
     "Dina diary/records/Hub lead interactions → scripts/lib/dina-quest.js learn/questVoice → player.state.trail tracker and voiced dialogue; story-off runs and Multiplayer bypass the purser.",
-    "Bonus usable props → scripts/interact.js press dispatch → scripts/bonus-prop.js reads propKind, per-object session cooldown and player position/yaw; emits sound/flash/light/FX and animated physical props/items rather than text notices.",
-    "places/level4/sim.js and cells/x0z0.scene fixtures → scripts/l4-home.js ears.press; plate ownership/IN-OUT drives homeKit and desk lamp or host knock notices, while cooler/fountain/vend update thirst/sanity, jugs and payouts; fountain mist and thirst/sanity gains are emitted on press.",
-    "Level 132 shop props → scripts/lib/l132-shops.js ears.press, keyed by scene id; animates/plays sound and handles needs, cents, items and quest clues. Palace gate → scripts/l132-duke-gate.js ears.press, writing player.state.l132used/snacks and notices for an hourly per-player ration."
+    "Bonus usable props → scripts/interact.js → scripts/bonus-prop.js (propKind, cooldown, positional sound/FX and physical actions); home11 fixtures → scripts/home11-door.js ears.press (TV/radio, food, rest, carry/tub transitions, fixture jiggles); Kyoto fixtures → scripts/l178-prop.js ears.press (in-place animation and nearby-player lookup).",
+    "places/level4/sim.js and cells/x0z0.scene fixtures → scripts/l4-home.js ears.press; plate ownership/IN-OUT drives homeKit and desk lamp or host knock notices, while cooler/fountain/vend update thirst/sanity, jugs and payouts; fountain mist follows use.",
+    "Level 132 shop props → scripts/lib/l132-shops.js ears.press, keyed by scene id; animates/plays sound and handles needs, cents, items and quest clues. Palace gate → scripts/l132-duke-gate.js ears.press, writing player.state.l132used/snacks and local gate state."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
@@ -74,8 +74,8 @@
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "scripts/lib/l169-road.js + l169-road-geo.js + l169-travel.js + l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
-    "places/level132/sim.js + l132-{stalls,shops,land,people,duke,quests,barter}.js + barter-deal.js - staged town and keeper trades use eight goods categories; first gift then balanced currency-free barter; shop props add per-ID animated/sounded interactions.",
-    "scripts/lib/cat-wardrobe.js + scripts/lib/critter-model.js + scripts/critter.js + scripts/mat-catskin.js + scripts/humanoid-locomotion.js - cute/legacy critters are active; slim Tripo rig and painted wardrobe are gated by SLIM_ON=false, with Salon/player look.slim using the same gate.",
+    "places/level132/sim.js + l132-{stalls,shops,land,people,duke,quests,barter}.js + barter-deal.js - staged town and keeper trades use eight goods categories; first gift then balanced currency-free barter; shop props add per-ID animated/sound responses.",
+    "scripts/lib/cat-wardrobe.js + scripts/lib/critter-model.js + scripts/critter.js + scripts/mat-catskin.js + scripts/humanoid-locomotion.js - cute/legacy critters are active; slim Tripo body uses the reshaped kemono asset but remains gated by SLIM_ON=false, with painted wardrobe and no old-body garment children when enabled.",
     "scripts/lib/retexture.js + scripts/lib/sign-tex.js + place sims - reusable surface dressing and marker-to-image sign faces; Level 8 and Level 2.1 supply bespoke face tables and completion versions."
   ],
   "probableOrphans": [
@@ -92,6 +92,6 @@
     "Tutorial finale cut ends at tut0-cut.js LEN.final = 14 s; THE WAY BACK / SOMEWHERE WET card is held over black and the crossing, then fades on Level 1 landing; retain ui.js lazy-load and main-menu.js t0lift stamp coupling.",
     "The Hub run frame/coordinates and OPEN/KEYED/SEALED door mapping are centralized in scripts/lib/thehub.js; preserve IDs and destinations together. t5-a2 is OPEN to Level 178; l178-to-hub pairs with sim-created hub-from-l178.",
     "Level 169 uses x/z, north = -z and 1:10 map scale; Level 1.1 hall distance is +X (0–620 m), north at -Z. retextureOnce waits about 8 s with a player and stamps texV; texSigns preserves sign geometry and stamps signTexV.",
-    "Slim body's Tripo model is 1 m, but its look scale uses x1.2 and humanoid-locomotion suppresses cute idle for its plain rig; SLIM_ON in scripts/lib/cat-wardrobe.js currently disables that path globally. Level 4 fountain/cooler press effects use per-player cooldowns; Kyoto one-time item claims and timed fixture benefits are persisted in player.state."
+    "Slim body's Tripo model is 1 m, forward +z, and uses x1.2 look scale; SLIM_ON in scripts/lib/cat-wardrobe.js currently disables it globally. Bonus hidden slim-lab-body uses the same reshaped asset; usable-kit rows stamp KIT.v and process at most 12 matches per pass."
   ]
 }
