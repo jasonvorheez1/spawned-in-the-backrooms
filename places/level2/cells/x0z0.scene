@@ -2,7 +2,7 @@
 l2-air:
   audience: all
   feetPosition: {x: 0, y: 0, z: 0}
-  fx: {script: "fx follow=camera\npop steam n=?mobile:10|22 on=box(<22,1.5,22>) wrap=22;2;22 c=.4 size=2.5..4.5 v=up(.06)+sdir()*.06 acc=curl(.12)*.05+drag(.4) col=<.85,.72,.55> a=.05..0.1 rot=spin(.03) sz=$size r=sprite(smoke-puff,alpha)\npop drips rate=?mobile:4|9 on=box(<16,.1,16>).c(3.4) life=.6 v=<0,-6,0> size=.012 col=<.8,.75,.6> a=.6 sz=$size floor=die r=sprite(ember,alpha,velocity,.06)\npop motes n=?mobile:40|90 on=box(<12,3,12>) wrap=12;3;12 size=.008..0.016 v=sdir()*.03 acc=curl(.1)*.06+drag(.6) col=<1,.8,.5> a=(.2..0.45)*flick(.3,.4) sz=$size r=sprite(soft-disc,add)"}
+  fx: {script: "fx follow=camera\npop steam n=?mobile:10|22 on=box(<22,1.5,22>) wrap=22;2;22 size=2.5..4.5 v=up(.06)+sdir()*.06 acc=curl(.12)*.05+drag(.4) col=<.85,.72,.55> a=.05..0.1 rot=spin(.03) sz=$size r=sprite(smoke-puff,alpha)\npop drips rate=?mobile:4|9 on=box(<16,.1,16>) pos=<0,3.4,0> life=.6 v=<0,-6,0> size=.012 col=<.8,.75,.6> a=.6 sz=$size floor=die r=sprite(ember,alpha,velocity,.06)\npop motes n=?mobile:40|90 on=box(<12,3,12>) wrap=12;3;12 size=.008..0.016 v=sdir()*.03 acc=curl(.1)*.06+drag(.6) col=<1,.8,.5> a=(.2..0.45)*flick(.3,.4) sz=$size r=sprite(soft-disc,add)"}
   id: l2-air
 l2-sd-bandl:
   feetPosition: {x: 25.39, y: 1.1, z: -42.5}
