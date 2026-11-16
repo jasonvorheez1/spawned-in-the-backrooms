@@ -281,7 +281,7 @@ export function update(ctx) {
     if ((st3?.aiming || (st3?.armed && s3.tp)) && s3.turnTo !== 'none') { if (s3.turnTo !== 'camera') s3.turnTo = 'camera' } else if (s3.turnTo === 'camera' && !st3?.armed) s3.turnTo = null
     if (ses.pose || had) applyBones(ctx)
   }
-  { const h = Number(l.heightS) || 1, w = Number(l.buildS) || 1, k = h + ':' + w // height and build: the whole body, everyone sees it
+  { const SK = l.slim ? 1.2 : 1, h = (Number(l.heightS) || 1) * SK, w = (Number(l.buildS) || 1) * SK, k = h + ':' + w // Nov 16 (Shelly 'am i smaller now'): the slim Tripo body exports 1.0 m; the old cat stood 1.2 m, so she wears x1.2 // height and build: the whole body, everyone sees it
     const sc = ctx.self.scale, off = !sc || typeof sc === 'number' ? (sc ?? 1) !== h || h !== w : Math.abs((sc.y ?? 1) - h) > 1e-3 || Math.abs((sc.x ?? 1) - w) > 1e-3
     if (ses.hw !== k || off) { ses.hw = k; ctx.self.scale = { x: w, y: h, z: w } } } // Shelly Nov 15: height reaches a plymodel or spawn avatar too: a re-dressed body (worn model swap, place crossing) came back at scale 1, so the scale is checked against the look, not only on a slider move
   const wornNow = !!((l.spawnAv && ctx.self.avatarUrl) || l.modelUrl || (l.model && C.models?.[l.model]))
