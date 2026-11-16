@@ -4,11 +4,12 @@
 // 2. "The Paper Bird's Blessing" (Entity 14 Lucky Crane / Grand Canal Lock Valve / Trader Kael)
 // 3. "Capital Infrastructure: The Night Shift" (Night Shift Janitor / Spontaneous Roadworks / Apartment Utilities)
 
-import { setQuest, tellQuest, advanceQuest, finishLevelQuest } from "./quests.js";
+import { setQuest, endQuest, tellQuest, advanceQuest, finishLevelQuest } from "./quests.js";
 import { rollCheck } from "./npc-talk.js";
-import { repOf } from "./rep.js";
+import { addRep, repOf } from "./rep.js";
 
 const MARK = (id) => ({ place: "level11", id });
+const SEDCO_COPY = "sedco-platform-footage";
 
 export const QUESTS = {
   sedco: {
@@ -139,8 +140,21 @@ export function handleDialogueQuest(ctx, p, npc, text) {
         ? { reply: "You gave it to the uniforms. My manifests are in an evidence box at Beta now. Thanks a lot, chief. No, really. They're paying me hazard rate until they give them back.", mood: "annoyed" }
         : { reply: "Sedco reopened the next morning like nothing happened. New guard, same sticky note. My manifests are signed and I got paid. Best week I've had in this city.", mood: "happy" };
     }
+    if (t === "could beta have a copy of the platform footage without your manifests?" && s.sedcoQ === 99 && s.sedcoTo === "courier" && !s.sedcoCopy) {
+      s.sedcoCopy = 1;
+      setQuest(s, SEDCO_COPY, { name: "A Copy for Beta", step: "Take the courier's copy of the 14th Street platform footage to Specialist Vance at Base Beta.", mark: MARK("l11-meg-agent-vance") });
+      tellQuest(ctx, p, "A Copy for Beta · Bring the platform footage to Vance");
+      return { reply: "Beta wants the platform? Fine. I'll copy those nights and leave my manifests off it. Take this to Vance, chief. My delivery records stay with me.", mood: "calm" };
+    }
   }
   if (npcId === "l11-meg-agent-vance") {
+    if (t === "the courier made a copy of the platform footage for beta." && s.sedcoQ === 99 && s.sedcoTo === "courier" && s.sedcoCopy === 1) {
+      s.sedcoCopy = 2;
+      addRep(s, "meg", 4, "Brought Base Beta a copy of the Sedco platform footage");
+      endQuest(s, SEDCO_COPY, "You brought Vance the platform footage while the courier kept their manifests.");
+      tellQuest(ctx, p, "A Copy for Beta · Footage delivered");
+      return { reply: "The platform nights, without the courier's manifests. That'll do, citizen. Give me a moment to look. Thank you for bringing it in.", mood: "happy" };
+    }
     if (t.includes("master security drive") && s.sedcoQ === 5) {
       s.sedcoTo = "vance";
       finishQuest(ctx, p, "sedco", {
@@ -149,7 +163,7 @@ export function handleDialogueQuest(ctx, p, npc, text) {
       });
       return { reply: "Sedco's camera four looks down the 14th Street platform, citizen. Past the dead train there's a service tunnel nobody on our roster has walked out of. Beta's wanted that footage for weeks. Bounty's approved. Sixty, a med kit, tools and a box of rounds.", mood: "happy" };
     }
-    if (t.includes("what did beta find on the drive") && s.sedcoQ === 99 && s.sedcoTo === "vance") {
+    if (t.includes("what did beta find on the drive") && s.sedcoQ === 99 && (s.sedcoTo === "vance" || s.sedcoCopy === 2)) {
       return { reply: "Three nights of the platform. Something in a work coat walks out of that tunnel at two in the morning, stands by the train, walks back. Same route, same minute, every night. It moves like it's still on shift. Stay off the platform after midnight.", mood: "calm" };
     }
     // ---- The Lit Window ----
@@ -244,10 +258,12 @@ export function l11Choices(id, s) {
       if (!s?.sedcoHaggle) out.push({ text: "Here's the master security drive. I did the crawling, so it's sixty-forty.", tag: "Speech 45" });
     }
     if (q === 99) out.push({ text: "Any trouble from Sedco since?", tag: "Talk" });
+    if (q === 99 && s?.sedcoTo === "courier" && !s?.sedcoCopy) out.push({ text: "Could Beta have a copy of the platform footage without your manifests?", tag: "Ask" });
   } else if (id === "l11-meg-agent-vance") {
     const q = s?.sedcoQ ?? 0;
     if (q === 5) out.push({ text: "I pulled the master security drive out of Sedco's vault. Want it?", tag: "Quest Turn-In" });
-    if (q === 99 && s?.sedcoTo === "vance") out.push({ text: "What did Beta find on the drive?", tag: "Talk" });
+    if (q === 99 && s?.sedcoTo === "courier" && s?.sedcoCopy === 1) out.push({ text: "The courier made a copy of the platform footage for Beta.", tag: "Quest Turn-In" });
+    if (q === 99 && (s?.sedcoTo === "vance" || s?.sedcoCopy === 2)) out.push({ text: "What did Beta find on the drive?", tag: "Talk" });
     if (!s?.quests?.[WINDOW.id] && !s?.qdone?.[WINDOW.id]) out.push({ text: "You said don't look in that window. What is it?", tag: "Quest Start" });
     if (s?.quests?.[WINDOW.id] && !s?.know12 && !s?.vanceWinAsk) out.push({ text: "You've heard the tape. What did Harris say?", tag: "Speech 35" });
     if (s?.qdone?.[WINDOW.id]) out.push({ text: "I walked through that window. And back.", tag: "Talk" });

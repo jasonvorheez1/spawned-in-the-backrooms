@@ -108,6 +108,26 @@ test('Spotlight on Sedco to Vance: Beta pays, and Vance tells you what the drive
   w.talk(V, "master security drive out of Sedco's vault"); expect(w.s.sedcoQ).toBe(99); expect(w.s.sedcoTo).toBe('vance')
   expect(w.pay().xp).toBe(135)
   expect(w.talk(V, 'What did Beta find')).toContain('platform')
+  expect(w.has('l11-walker-1', 'copy of the platform')).toBe(false)
+})
+
+test('the courier can share the platform footage with Beta without handing over manifests', () => {
+  const w = world('level11'), courier = 'l11-walker-1', vance = 'l11-meg-agent-vance'
+  w.s.sedcoQ = 5
+  w.talk(courier, 'Got it. The master security drive')
+  expect(w.s.sedcoTo).toBe('courier')
+  w.pay()
+  expect(w.has(vance, 'courier made a copy')).toBe(false)
+  expect(w.talk(courier, 'copy of the platform')).toContain('leave my manifests off')
+  expect(w.s.quests['sedco-platform-footage'].mark.id).toBe(vance)
+  expect(w.has(courier, 'copy of the platform')).toBe(false)
+  expect(w.talk(vance, 'courier made a copy')).toContain("without the courier's manifests")
+  expect(w.s.sedcoCopy).toBe(2)
+  expect(w.s.qdone['sedco-platform-footage'].text).toContain('courier kept their manifests')
+  expect(w.s.rep.meg).toBe(4)
+  expect(w.has(vance, 'courier made a copy')).toBe(false)
+  expect(w.talk(vance, 'What did Beta find')).toContain('platform')
+  expect(w.s.rep.meg).toBe(4)
 })
 
 test("The Paper Bird's Blessing: the crane's XP comes once, the valve, the sample, Kael's cut once", () => {
