@@ -139,8 +139,8 @@ export function talkUi(ctx, player) {
   const choiceItems = choices.map((c, i) => {
     const txt = typeof c === 'string' ? c : c.text
     const ck = typeof c === 'object' ? parseCheck(c) : null
-    const odds = ck ? checkOdds(s, ck, T.roll) : null
-    const pct = odds ? odds.pct : null
+    const odds = ck ? checkOdds(s, ck) : null
+    const meets = odds && odds.value >= odds.difficulty
     let tag = ''
     let tagCls = 'tc-tag-lore'
 
@@ -150,31 +150,20 @@ export function talkUi(ctx, player) {
         tag = c.tag
         tagCls = 'tc-tag-quest'
       } else if (ck) {
-        tag = `${ck.skill.toUpperCase()} ${ck.difficulty} · ${pct}%`
+        tag = `${odds.name.toUpperCase()} ${odds.value}/${ck.difficulty}`
       } else {
         tag = c.tag
       }
     } else if (ck) {
-      tag = `${ck.skill.toUpperCase()} ${ck.difficulty} · ${pct}%`
+      tag = `${odds.name.toUpperCase()} ${odds.value}/${ck.difficulty}`
     }
 
     if (ck) {
-      const sk = ck.skill.toLowerCase()
-      if (pct < 35) tagCls = 'tc-tag-fail'
-      else if (pct === 100) tagCls = 'tc-tag-pass'
-      else if (sk === 'speech') tagCls = 'tc-tag-speech'
-      else if (sk === 'barter') tagCls = 'tc-tag-barter'
-      else if (sk === 'medicine') tagCls = 'tc-tag-med'
-      else if (sk === 'survival') tagCls = 'tc-tag-surv'
-      else if (sk === 'guns') tagCls = 'tc-tag-guns'
-      else if (sk === 'science') tagCls = 'tc-tag-sci'
-      else if (sk === 'sneak') tagCls = 'tc-tag-sneak'
-      else if (sk === 'repair') tagCls = 'tc-tag-repair'
-      else if (sk === 'lockpick') tagCls = 'tc-tag-lockpick'
+      tagCls = meets ? 'tc-tag-pass' : 'tc-tag-fail'
     }
 
     const clickAction = `sendAction('talk',{id:'${q(it.id)}',text:'${q(txt)}'${ck ? `,check:{skill:'${q(ck.skill)}',difficulty:${Number(ck.difficulty) || 50}}` : ''}})`
-    const unlikelyCls = ck && pct < 35 ? ' is-unlikely' : ''
+    const unlikelyCls = ck && !meets ? ' is-unlikely' : ''
 
     return `<button class="tc-choice${unlikelyCls}" data-interactive ${s.talkBusy ? 'disabled' : ''} onclick="${clickAction}">
       <span class="tc-ch-num">${i + 1}.</span>

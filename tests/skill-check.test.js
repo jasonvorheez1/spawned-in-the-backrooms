@@ -52,7 +52,19 @@ test('resolveCheck and rollCheck share banner format and record ctx._lastCheck',
   expect(ctxFail._lastCheck.ok).toBe(false)
 })
 
-test('talkUi renders legacy skill tags with live % odds, band classes, and check banners', () => {
+test('dialogue checks use the displayed skill threshold without a random roll', () => {
+  const s = { attr: '5,5,5,5,5,5,5', skl: skWith(10, 20) }
+  const ctx = { _dialogueCheck: true, random: () => { throw new Error('dialogue must not roll') } }
+  const passed = rollCheck(ctx, s, { skill: 'speech', difficulty: 35 })
+  expect(passed.ok).toBe(true)
+  expect(passed.banner).toBe('[Speech 35/35] SUCCEEDED')
+  expect(ctx._lastCheck).toEqual(passed)
+  const failed = rollCheck(ctx, s, { skill: 'speech', difficulty: 36 })
+  expect(failed.ok).toBe(false)
+  expect(failed.banner).toBe('[Speech 35/36] FAILED')
+})
+
+test('talkUi shows the current skill and requirement for dialogue choices', () => {
   const npc = { id: 'l11-walker-1', state: { name: 'Courier', role: 'survivor' } }
   const player = {
     id: 'p',
@@ -78,8 +90,8 @@ test('talkUi renders legacy skill tags with live % odds, band classes, and check
   expect(html).toContain('tc-chk-pass')
   expect(html).toContain('[Speech 100%] SUCCEEDED')
   expect(html).toContain('tc-tag-pass')
-  expect(html).toContain('[SPEECH 30 · 100%]')
+  expect(html).toContain('[SPEECH 35/30]')
   expect(html).toContain('tc-tag-fail')
   expect(html).toContain('is-unlikely')
-  expect(html).toContain('[SPEECH 54 · 10%]')
+  expect(html).toContain('[SPEECH 35/54]')
 })

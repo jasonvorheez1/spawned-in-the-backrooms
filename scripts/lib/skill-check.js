@@ -42,6 +42,12 @@ export function formatCheckBanner(skill, pct, ok) {
 export function resolveCheck(ctx, s, check) {
   const rollMax = T.roll ?? 20
   const odds = checkOdds(s, check, rollMax)
+  if (ctx?._dialogueCheck) {
+    const ok = odds.value >= odds.difficulty
+    const res = { ...odds, ok, v: odds.value, pct: ok ? 100 : 0, band: ok ? 'guaranteed' : 'impossible', banner: `[${odds.name} ${odds.value}/${odds.difficulty}] ${ok ? 'SUCCEEDED' : 'FAILED'}` }
+    try { ctx._lastCheck = res } catch {}
+    return res
+  }
   const rand = typeof ctx?.random === 'function' ? ctx.random() : Math.random()
   const r = 1 + Math.floor(rand * rollMax)
   const ok = odds.value + r >= odds.difficulty
