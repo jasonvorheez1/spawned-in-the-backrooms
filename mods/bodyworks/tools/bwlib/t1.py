@@ -519,6 +519,20 @@ def run(body, ZONES, DOC, a):
                 _nkLoc, _nkN, _, _nkD = _nkBest
                 _nkSide = (_nkW - _nkLoc).dot(_nkN)
                 if _nkSide < _nkGap: _nkV.co = _nkMI @ (_nkLoc + _nkN.normalized() * _nkGap)
+            # a short lip up from the collar edge, held off the skin: the nape rose over the level edge as a sliver of skin
+            _nkE = [e for e in _nkB.edges if e.is_boundary and min((_nkMW @ x.co).z for x in e.verts) > z_mock - 0.01 * S]
+            if _nkE:
+                _nkX = _bm3.ops.extrude_edge_only(_nkB, edges=_nkE)
+                _nkNV = [g for g in _nkX['geom'] if isinstance(g, _bm3.types.BMVert)]
+                for _nkV in _nkNV:
+                    _nkW = _nkMW @ _nkV.co; _nkW.z += 0.012 * S; _nkBest = None
+                    for _nkT in _nkTr:
+                        _nkHit = _nkT.find_nearest(_nkW)
+                        if _nkHit[0] is not None and (_nkBest is None or _nkHit[3] < _nkBest[3]): _nkBest = _nkHit
+                    if _nkBest is not None:
+                        _nkLoc, _nkN, _, _nkD = _nkBest
+                        if (_nkW - _nkLoc).dot(_nkN) < _nkGap: _nkW = _nkLoc + _nkN.normalized() * _nkGap
+                    _nkV.co = _nkMI @ _nkW
             _nkB.to_mesh(ob.data); _nkB.free(); ob.data.update()
     for nm_, ob in shell(['foot_l', 'foot_r'], OFF['feet'], 'feet', {'feet_sole': lambda z: z < -0.5, 'feet_upper': lambda z: z >= -0.5}).items():
         CAGE[nm_] = (ob, COL['feet']); SEG[nm_] = []
