@@ -39,8 +39,8 @@ function carSpec(id, at, extra = {}) {
     state: { kind: "car", name: "The car", verb: "Get in", seat: SEAT, info: "Yours, apparently. Keys in it." },
     children: [
       { id: "hull", feetPosition: { x: 0, y: 0.35, z: 0 }, primitive: box(1.95, 1.0, 5.1), visible: false, physics: "static" },
-      { id: "hl-l", feetPosition: { x: -0.62, y: 0.72, z: -2.55 }, rotation: { pitch: -4 } },
-      { id: "hl-r", feetPosition: { x: 0.62, y: 0.72, z: -2.55 }, rotation: { pitch: -4 } },
+      { id: "hl-l", feetPosition: { x: -0.62, y: 0.72, z: -2.8 }, rotation: { pitch: -4 } },
+      { id: "hl-r", feetPosition: { x: 0.62, y: 0.72, z: -2.8 }, rotation: { pitch: -4 } },
       { id: "tail", feetPosition: { x: 0, y: 0.8, z: 2.62 }, light: { kind: "point", color: "#ff2010", intensity: 0.5, distance: 4 } },
       { id: "dash", feetPosition: { x: -0.4, y: 1.0, z: -0.6 } },
     ],
