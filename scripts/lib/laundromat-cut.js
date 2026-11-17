@@ -50,8 +50,10 @@ export function lmTick(ctx, ses, st) {
   else if (t < 8.5) { const u = S(4.5, 8.5, t); cam = { eye: { x: lerp(1.9, 2.1, u), y: 1.25, z: -4.42 }, aim: { x: 3.1, y: 1.2, z: -4.42 }, fov: lerp(34, 28, u) } } // the porthole, something knocking round inside
   else if (t < 12) { cam = { eye: { x: -1.2, y: 1.55, z: -6.1 }, aim: { x: 0.2, y: 1.0, z: -5.0 }, fov: 45 } } // across the counter: you, folding, the far light ticking
   else if (t < 15) { const u = S(12, 15, t); cam = { eye: { x: 0.2, y: 2.4, z: -0.6 }, aim: { x: 0.2, y: 0.8, z: lerp(-10, -5, u) }, fov: 55 } } // from the door: the room going dark, back to front, onto you
-  else if (t < 19.5) { const u = S(15, 19.5, t); cam = { eye: { x: 2.4, y: 0.35, z: lerp(-3.2, -3.6, u) }, aim: { x: me.feetPosition.x, y: 0.9, z: me.feetPosition.z }, fov: 40 } } // low by the dryers as you walk over
+  else if (t < 19.5) { const u = S(15, 19.5, t); cam = { eye: { x: 1.2, y: 0.5, z: lerp(-1.6, -2.0, u) }, aim: { x: me.feetPosition.x, y: 0.8, z: me.feetPosition.z }, fov: 50 } } // low by the dryers as you walk over
   else { const k = S(19.6, 22.5, t); cam = { eye: { x: 1.6, y: lerp(1.65, -1.5, S(21.4, 23.5, t)), z: -4.42 }, aim: { x: 3.1, y: lerp(1.2, -2, k), z: -4.42 }, fov: lerp(40, 75, S(21.4, 23.5, t)) } } // over the shoulder at the dark porthole, then the floor goes and the camera goes with it
+  const shot = t < 4.5 ? 0 : t < 8.5 ? 1 : t < 12 ? 2 : t < 15 ? 3 : t < 19.5 ? 4 : 5
+  cam.cut = c.shot !== shot; c.shot = shot // the first write of each shot is a hard cut
   ctx.view.camera = cam
   return true
 }
