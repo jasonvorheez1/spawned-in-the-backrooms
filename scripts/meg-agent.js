@@ -2,6 +2,7 @@ import { weaponsOf as sharedWeapons } from "./lib/npc-temper.js";
 import { clearSight } from './lib/sight.js';
 import { knocked } from "./lib/knock.js";
 import { spared } from "./lib/mp-guard.js";
+import { squadStep } from "./lib/hit-squad.js";
 import { vo, hasVoice, actedVoice } from "./lib/voices.js";
 import { social } from "./lib/npc-social.js";
 import { barkOf } from "./lib/dialogue.js";
@@ -388,6 +389,7 @@ export function update(ctx, dt) {
   m.nowT = now; tick3(me, now); // release finished combat takes
   { const A = WP[me.state.arm]; carry3(me, me.state.arm, !!A && !A.ranged && !!me.state.armed && (me.state.hp ?? 1) > 0 && now - (m3(me).at ?? 0) > 1000); } // a drawn melee weapon is carried across the body between swings, as a player's is (scripts/lib/body3.js)
   if (m.dressed !== 5) { m.dressed = 5; if (!s.dead) dress(ctx, me); }
+  if (s.hunting && !s.attackOnSight && squadStep(ctx, me)) return; // a hit squad says its piece first (Shelly Nov 17)
   // empty level or far-off NPC: sleep to save CPU (perf)
   const halt = () => { const v = me.velocity; if (v && (v.x || v.z)) me.velocity = { x: 0, y: v.y ?? 0, z: 0 }; }; // a sleeping walker keeps its last velocity and strolls off the map: stand still first
   if (!ctx.place.players.length) { halt(); ctx.sleep(2); return; }

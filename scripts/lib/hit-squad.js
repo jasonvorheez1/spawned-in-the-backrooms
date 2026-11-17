@@ -62,6 +62,24 @@ export function sendSquad(ctx, g, from, hunter, home, n = 3) {
   }
   return S.name;
 }
+// each squad member's own tick (scripts/meg-agent.js): the lead walks up, stops, says the line; 4.5 s later they all fight
+export function squadStep(ctx, me) {
+  const s = me.state; if (!s?.hunting || s.attackOnSight || s.dead) return false
+  const now = ctx.now(), tgt = ctx.getObject(s.hunting); if (!tgt?.feetPosition) return false
+  const d = Math.hypot(me.feetPosition.x - tgt.feetPosition.x, me.feetPosition.z - tgt.feetPosition.z)
+  const hurt = (s.hp ?? 1) < (s.maxHp ?? 1)
+  if (s.squadWarn === 1 && (d < WARN_AT || hurt)) {
+    const [line, voice] = WARN[s.faction] ?? WARN.meg
+    s.squadWarn = 2; s.warnAt = now; s.line = { t: line, at: now, d: WARN_HOLD }; s.talkAt = now; s.talkTo = tgt.id
+    ctx.emit("playSound", { clip: `/cdn/${voice}-saying-${line.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim().replace(/ +/g, "-")}.mp3`, position: { ...me.feetPosition, y: me.feetPosition.y + 1.5 }, volume: 1, maxDistance: 30 })
+    tgt.state.notice = { text: `${s.name}: "${line}"`, at: now }
+  }
+  if (hurt) { s.attackOnSight = true; return false }
+  const lead = s.squadWarn === 2 ? me : ctx.query({ tags: ["hit-squad"], radius: 60 }).find((q) => q.state?.squadKey === s.squadKey && q.state?.squadWarn === 2)
+  if (lead && now - (lead.state.warnAt ?? now) > WARN_HOLD) { s.attackOnSight = true; return false }
+  if (d < WARN_AT - 1.5) { const v = me.velocity; if (v) me.velocity = { x: 0, y: v.y ?? 0, z: 0 }; me.rotation = { yaw: Math.atan2(-(tgt.feetPosition.x - me.feetPosition.x), -(tgt.feetPosition.z - me.feetPosition.z)) * 180 / Math.PI }; return true } // stand and face you while it's said
+  return false
+}
 // keep each squad's home on the player it hunts, so the leash pulls them along; called from the same tick
 export function squadFollow(ctx) {
   const p = ctx.self.feetPosition;
