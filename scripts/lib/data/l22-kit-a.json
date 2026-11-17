@@ -1,0 +1,132 @@
+{
+ "car_husk_sedan": {
+  "glb": "/cdn/value.682706788ce608e6f1cfe3ed8ce639db82af9853e1aead5777c6c08bc2f27383.glb",
+  "tris": 5899,
+  "size": [
+   4.9,
+   1.62,
+   1.87
+  ],
+  "solid": true
+ },
+ "car_husk_frame": {
+  "glb": "/cdn/value.f86260eb398107cb19875cdbd4cb3b3180d14cf7e5ccad21d9ad543732e0d2bf.glb",
+  "tris": 5815,
+  "size": [
+   4.6,
+   1.3,
+   1.84
+  ],
+  "solid": true
+ },
+ "car_husk_blocks": {
+  "glb": "/cdn/value.a69fd035eb947a44069da8904dc45f8e7615aafcbb87f23bac4dc8d72f0f7304.glb",
+  "tris": 5611,
+  "size": [
+   4.7,
+   1.92,
+   1.91
+  ],
+  "solid": true
+ },
+ "tent_ridge": {
+  "glb": "/cdn/value.38df66c39278a35809c4d01d481dd80b751f058cfa313fee1ba4b946c9b80a18.glb",
+  "tris": 4765,
+  "size": [
+   1.91,
+   1.41,
+   2.4
+  ],
+  "solid": true
+ },
+ "tent_collapsed": {
+  "glb": "/cdn/value.343045cd5c9502011e70fa9f4075f4b929b3001e2cd8d66a1721a9832e95aff3.glb",
+  "tris": 5949,
+  "size": [
+   1.28,
+   0.45,
+   2.4
+  ],
+  "solid": false
+ },
+ "shack_leanto": {
+  "glb": "/cdn/value.df8e30efdfb007027000fa415d5469e73548ede2e91fe28bdfa62f6c49978394.glb",
+  "tris": 4695,
+  "size": [
+   3.0,
+   2.33,
+   2.5
+  ],
+  "solid": true
+ },
+ "rubble_big": {
+  "glb": "/cdn/value.23fda33d2442a8df7535ed77458d8110902f4db1c4e8c3787e9478c9ecd03631.glb",
+  "tris": 5558,
+  "size": [
+   3.2,
+   1.89,
+   2.95
+  ],
+  "solid": true
+ },
+ "rubble_small": {
+  "glb": "/cdn/value.1ad3f00881db489db6754a9a49e686838e0581f8b645f45f46845056b2f2544c.glb",
+  "tris": 5190,
+  "size": [
+   1.4,
+   0.47,
+   1.39
+  ],
+  "solid": false
+ },
+ "girder_fallen": {
+  "glb": "/cdn/value.fbe6ef08c7a51caeef38e8cc08456401cd0b23ee52aa212b648034acda6f278f.glb",
+  "tris": 5950,
+  "size": [
+   5.0,
+   0.51,
+   0.6
+  ],
+  "solid": true
+ },
+ "trolley": {
+  "glb": "/cdn/value.1e72f5b476b85cb15051474fbf4fb146c611db4074af268aad6c6edd2d292667.glb",
+  "tris": 5950,
+  "size": [
+   0.56,
+   1.0,
+   0.85
+  ],
+  "solid": true
+ },
+ "slab_tilted": {
+  "glb": "/cdn/value.019dd0448006198d98ac809b5d68f5d4a5c5e62c62c7c0aba6eb0ee690e01f2f.glb",
+  "tris": 5949,
+  "size": [
+   4.0,
+   1.58,
+   2.46
+  ],
+  "solid": true
+ },
+ "shoring_prop": {
+  "glb": "/cdn/value.9cbdbe8e6b8a401b1a889e8817fd5cf61e600bc7778fb4e010bb49938e29f093.glb",
+  "tris": 5865,
+  "size": [
+   0.42,
+   2.7,
+   0.49
+  ],
+  "solid": true
+ },
+ "oil_drum_fire": {
+  "glb": "/cdn/value.57c0fcf34d7d8adc448a616be8c55cceb03d04eac6f6aad0b90aa43303c52d9b.glb",
+  "tris": 5520,
+  "size": [
+   0.66,
+   0.9,
+   0.66
+  ],
+  "solid": true
+ }
+}
