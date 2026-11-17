@@ -44,6 +44,7 @@ import { factionReply } from './lib/faction-dialogue.js'
 import { megAssignmentReply } from './lib/meg-assignment.js'
 import { handleDialogueQuest70 } from './lib/level70-quest.js'
 import { handleDialogueQuest69 } from './lib/level69-quest.js'
+import { handleDialogueQuest22 } from './lib/level22-quest.js'
 
 import { greetingOf, rootChoices, childChoices, nodeOf, lineOf, barkOf, gestOf, BYE_CHOICE, warmDialogue } from './lib/dialogue.js'
 import { questChoices, realtyChoice } from './lib/npc-starters.js'
@@ -264,7 +265,7 @@ function send(ctx, d) {
     ctx._dialogueCheck = true
     try {
     qRes = handleDialogueQuest1c(ctx, ctx.self, it, questText) ?? handleDialogueQuest02(ctx, ctx.self, it, questText) ?? handleDialogueQuest13(ctx, ctx.self, it, questText) ?? handleDialogueQuest(ctx, ctx.self, it, questText) ?? handleDialogueQuest10(ctx, ctx.self, it, questText) ?? handleDialogueQuest8(ctx, ctx.self, it, questText)
-      ?? handleDialogueQuest21(ctx, ctx.self, it, questText) ?? handleDialogueQuestZ(ctx, ctx.self, it, questText) ?? handleDialogueQuest1(ctx, ctx.self, it, questText) ?? handleDialogueQuest31(ctx, ctx.self, it, questText) ?? handleDialogueQuest109(ctx, ctx.self, it, questText) ?? handleDialogueQuestBeast(ctx, ctx.self, it, questText) ?? handleDialogueQuest70(ctx, ctx.self, it, questText) ?? handleDialogueQuest69(ctx, ctx.self, it, questText) ?? handleDialogueQuestHub(ctx, ctx.self, it, questText) ?? handleDialogueQuest61(ctx, ctx.self, it, questText) ?? handleDialogueQuest178(ctx, ctx.self, it, questText) ?? handleDialogueQuest132(ctx, ctx.self, it, questText) ?? handleDialogueCh2(ctx, ctx.self, it, questText) ?? handleHubErrand(ctx, ctx.self, it, questText) ?? handleFieldErrand(ctx, ctx.self, it, questText) ?? factionReply(it, s, questText) ?? megAssignmentReply(it, s, questText)
+      ?? handleDialogueQuest21(ctx, ctx.self, it, questText) ?? handleDialogueQuestZ(ctx, ctx.self, it, questText) ?? handleDialogueQuest1(ctx, ctx.self, it, questText) ?? handleDialogueQuest31(ctx, ctx.self, it, questText) ?? handleDialogueQuest109(ctx, ctx.self, it, questText) ?? handleDialogueQuestBeast(ctx, ctx.self, it, questText) ?? handleDialogueQuest70(ctx, ctx.self, it, questText) ?? handleDialogueQuest69(ctx, ctx.self, it, questText) ?? handleDialogueQuest22(ctx, ctx.self, it, questText) ?? handleDialogueQuestHub(ctx, ctx.self, it, questText) ?? handleDialogueQuest61(ctx, ctx.self, it, questText) ?? handleDialogueQuest178(ctx, ctx.self, it, questText) ?? handleDialogueQuest132(ctx, ctx.self, it, questText) ?? handleDialogueCh2(ctx, ctx.self, it, questText) ?? handleHubErrand(ctx, ctx.self, it, questText) ?? handleFieldErrand(ctx, ctx.self, it, questText) ?? factionReply(it, s, questText) ?? megAssignmentReply(it, s, questText)
     } finally { delete ctx._dialogueCheck }
     const qChk = ctx._lastCheck
     ctx._lastCheck = null

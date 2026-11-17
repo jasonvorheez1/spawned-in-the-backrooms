@@ -1,0 +1,20 @@
+# Level 22 "Ruins Left Behind": every paper a player can read in Emstable. One row = one record object for the dress lane:
+# spawn the prop with tags ["usable"], behavior "scripts/l22-record.js", state { name, verb, page, rec: <id> }.
+# page -> scripts/lib/data/pages.yml. quest: which quest counts it (scripts/lib/level22-quest.js); null = flavour only.
+# Canon placement: the census was "found on the top floor"; Jacobs Opal's family lived on 21. Every other floor/where is game-original.
+sound: cdn/sfx-paper-page-turn-soft.mp3
+records:
+  - { id: l22-rec-hilda-1, floor: 21, page: 2201, name: "Transcript sheet, 02/08/14", verb: Read, where: "in a clear plastic sleeve weighted with a lump of cut concrete, at the lip of a mine pit", quest: hilda }
+  - { id: l22-rec-hilda-2, floor: 20, page: 2202, name: "Transcript sheet, 06/08/14", verb: Read, where: "in a plastic sleeve taped to a stripped column beside the ramp up to Floor 19", quest: hilda }
+  - { id: l22-rec-hilda-3, floor: 21, page: 2203, name: "Transcript sheet, 30/10/15", verb: Read, where: "in a plastic sleeve laid on a single sleeping bag set apart from the others", quest: hilda }
+  - { id: l22-rec-census, floor: 1, page: 2204, name: "Census report, carbon copy", verb: Read, where: "on the founders' good table, under a mug, near the electric cookers", quest: census }
+  - { id: l22-rec-leisure-rota, floor: 2, page: 2205, name: "Leisure rota", verb: Read, where: "pinned to the column nearest the pool table", quest: null }
+  - { id: l22-rec-tithe-slip, floor: 14, page: 2206, name: "Tithe slip", verb: Read, where: "on a crate at the foot of the ramp from Floor 15, under a barrow handle", quest: null }
+  - { id: l22-rec-parts-tally, floor: 13, page: 2207, name: "Parts tally", verb: Read, where: "on a mechanics' workbench, clipped to a board among car parts", quest: null }
+  - { id: l22-rec-clothes-order, floor: 13, page: 2208, name: "Clothes order", verb: Read, where: "on a sewing table inside a wood-and-concrete shack, beside folded cloth", quest: null }
+  - { id: l22-rec-chalk-count, floor: 20, page: 2209, name: "Chalk count", verb: Read, where: "chalked on the wall by the ramp, a tin crate of empty cans beneath it", quest: null }
+  - { id: l22-rec-tia-drawing, floor: 21, page: 2210, name: "Crayon drawing", verb: Look at, where: "flat on the floor under a stone, between three sleeping bags laid side by side", quest: null }
+  - { id: l22-rec-column-4, floor: 21, page: 2211, name: "Painted warning", verb: Read, where: "on a stripped column at the edge of the concrete mine, rebar showing", quest: null }
+  - { id: l22-rec-sealed-notice, floor: 1, page: 2212, name: "Notice, 1990", verb: Read, where: "glued to the bricked-up glass doors of an old entrance", quest: null }
+  - { id: l22-rec-meg-stub, floor: 2, page: 2213, name: "M.E.G. manifest stub", verb: Read, where: "on a sideboard among the good furniture, inside an open ledger", quest: null }
+  - { id: l22-rec-bntg-stub, floor: 14, page: 2214, name: "B.N.T.G. manifest stub", verb: Read, where: "on an exploration leaders' map table inside a tent", quest: null }
