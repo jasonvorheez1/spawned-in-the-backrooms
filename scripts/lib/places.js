@@ -25,7 +25,6 @@ export const PLACES = {
   level11:   { name: "Level 11",       label: "Level 11 · The Infinite City",          title: ["LEVEL 11", "THE INFINITE CITY"] },
   radio:     { name: "Radio Backrooms", label: "Radio Backrooms · 29.4 AM",          title: ["RADIO BACKROOMS", "29 HOURS A DAY"] },
   home11:    { name: "Your House",     label: "Level 11 · Your House",                 title: ["YOUR HOUSE", "THE INFINITE CITY"] },
-  radio:     { name: "Radio Backrooms", label: "Radio Backrooms",                    title: ["RADIO BACKROOMS", "29 HOURS A DAY"] },
   level12:   { name: "Level 12",       label: "Level 12 · Matrix",                     title: ["LEVEL 12", "MATRIX"] },
   level13:   { name: "Level 13",       label: "Level 13 · The Boiling Frogs",          title: ["LEVEL 13", "THE BOILING FROGS"] },
   level26:   { name: "SS Fun",         label: "Level 26 · SS Fun =)",                  title: ["LEVEL 26", "THE SS FUN =)"] },
