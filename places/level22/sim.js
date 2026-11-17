@@ -71,7 +71,7 @@ function lay(ctx, s) {
 function dress(ctx, r) {
   const d = DECKS.find((k) => k.floor === r.floor); if (!d || !r.glb) return;
   // what you can use (Shelly Nov 17): beds sleep through scripts/lib/sleep.js (its name says bed), sofas sit like Level 5's hotel, cookers are a cook bench
-  const id0 = String(r.id); const k = /sofa/.test(r.glb ? id0 : '') ? 'sofa' : null;
+  const id0 = String(r.id);
   if (/-sofa/.test(id0)) r = { ...r, seat: { d: 0.15, w: 2, gap: 0.62 }, name: r.name ?? 'Leather sofa', verb: 'Sit' };
   else if (/-bed\d?$/.test(id0)) r = { ...r, name: r.name ?? 'Double bed', verb: 'Sleep' };
   else if (/-(bag\d+|fam\d|alone|cb)$/.test(id0)) r = { ...r, name: r.name ?? (/cb$/.test(id0) ? 'Cardboard bedroll' : 'Sleeping bag bedroll'), verb: 'Sleep' };
@@ -84,10 +84,10 @@ function dress(ctx, r) {
   const [w, h, dp] = r.size ?? [1, 1, 1];
   const usable = r.page || r.items || r.verb;
   const extra = r.seat ? { tags: ['seat'], state: { seat: r.seat } } : r.station ? { tags: ['bench'], state: { station: r.station, name: r.name } } : r.use ? { state: { use: r.use } } : null;
-  ctx.spawn(`l22-${r.id}`, { tags: [...(r.items ? ["container"] : []), ...(usable ? ["usable"] : []), "l22dress"], feetPosition: { x: r.x, y: d.y + (r.y ?? 0), z: r.z }, rotation: { yaw: r.yaw ?? 0, ...(r.pitch ? { pitch: r.pitch } : {}), ...(r.roll ? { roll: r.roll } : {}) },
+  ctx.spawn(`l22-${r.id}`, { tags: [...(extra?.tags ?? []), ...(r.items ? ["container"] : []), ...(usable ? ["usable"] : []), "l22dress"], feetPosition: { x: r.x, y: d.y + (r.y ?? 0), z: r.z }, rotation: { yaw: r.yaw ?? 0, ...(r.pitch ? { pitch: r.pitch } : {}), ...(r.roll ? { roll: r.roll } : {}) },
     model: { id: r.glb }, layout: { box: { min: { x: -w / 2, y: 0, z: -dp / 2 }, max: { x: w / 2, y: h, z: dp / 2 } } }, physics: r.solid ? { body: "static", collider: "box" } : "none", castShadow: false,
     ...(r.page ? { behavior: "scripts/l22-record.js" } : r.use ? { behavior: "scripts/l22-use.js" } : {}), ...(r.light ? { children: [{ feetPosition: { x: 0, y: h + 0.3, z: 0 }, light: { kind: "point", color: r.light.color ?? "#ffcf8a", intensity: r.light.intensity ?? 3, distance: r.light.distance ?? 7, shadow: { enabled: false } } }] } : {}),
-    ...(usable ? { state: { name: r.name ?? "Something left behind", verb: r.verb ?? (r.page ? "Read" : "Search"), ...(r.page ? { page: r.page, rec: r.rec ?? r.id } : {}), ...(r.items ? { items: r.items } : {}), ...(r.info ? { info: r.info } : {}) } } : {}) });
+    ...(usable ? { state: { name: r.name ?? "Something left behind", verb: r.verb ?? (r.page ? "Read" : "Search"), ...(r.page ? { page: r.page, rec: r.rec ?? r.id } : {}), ...(r.items ? { items: r.items } : {}), ...(r.info ? { info: r.info } : {}), ...(extra?.state ?? {}) } } : extra ? { state: { name: r.name, ...extra.state } } : {}) });
 }
 
 export function tick(ctx) {
