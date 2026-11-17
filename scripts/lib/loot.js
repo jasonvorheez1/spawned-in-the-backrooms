@@ -54,12 +54,14 @@ export const PLACE_CATEGORY = {
 // Contextual category tables: weighted items & matched temporary skill magazines (never infini-respawning permanent Skill Books).
 export const LOOT_CATEGORIES = {
   office: [
+    ["stim_shot", 1], // Shelly Nov 17: the auto-injector is a leveled find everywhere (gateItems trims it early)
     ["almond", 24], ["cloudy_almond", 7], ["warm_tea", 7], ["lobby_wafer", 14], ["bar", 9],
     ["bobbypin", 12], ["battery", 9], ["tape", 6], ["keycard", 4], ["painkillers", 5], ["compass", 2.5],
     ["bandage", 5], ["weapon", 9], ["cloth", 6], ["mag:science", 2.5], ["mag:speech", 2.5],
     ["mag:lockpick", 2], ["mag:barter", 2], ["manual:tools", 3], ["manual:aid", 2],
   ],
   residential: [
+    ["stim_shot", 1.5], // Shelly Nov 17: the auto-injector is a leveled find everywhere (gateItems trims it early)
     ["almond", 18], ["cloudy_almond", 7], ["warm_tea", 8], ["beans", 9], ["bar", 9],
     ["stale_ration", 8], ["meat", 12], ["bandage", 7], ["painkillers", 6], ["antiseptic", 4],
     ["bobbypin", 9], ["cloth", 9], ["weapon", 9], ["ammo", 7],
@@ -71,12 +73,14 @@ export const LOOT_CATEGORIES = {
     ["cloth", 3], ["mag:medicine", 4], ["mag:science", 2], ["manual:aid", 6],
   ],
   industrial: [
+    ["stim_shot", 2], // Shelly Nov 17: the auto-injector is a leveled find everywhere (gateItems trims it early)
     ["battery", 16], ["tape", 14], ["kit", 10], ["fuse", 8], ["valve", 6],
     ["bobbypin", 9], ["ammo", 12], ["shells", 6], ["weapon", 14], ["cloth", 6],
     ["ration", 6], ["stale_ration", 6], ["painkillers", 5], ["splint", 4], ["firesalt", 4],
     ["mag:repair", 3], ["mag:energy", 2], ["mag:explosives", 2], ["manual:tools", 4], ["manual:weapons", 3],
   ],
   maintenance: [
+    ["stim_shot", 1.5], // Shelly Nov 17: the auto-injector is a leveled find everywhere (gateItems trims it early)
     ["tape", 16], ["battery", 15], ["kit", 9], ["fuse", 9], ["valve", 8],
     ["bobbypin", 10], ["almond", 10], ["cloudy_almond", 6], ["warm_tea", 5],
     ["bandage", 6], ["antiseptic", 5], ["charcoal", 4], ["weapon", 12], ["cloth", 5],
@@ -92,30 +96,35 @@ export const LOOT_CATEGORIES = {
     ["l178_bento", 3], ["l178_towel", 6], ["cloth", 10], ["bandage", 4], ["manual:food", 6],
   ],
   expedition: [
+    ["stim_shot", 3], // Shelly Nov 17: the auto-injector is a leveled find everywhere (gateItems trims it early)
     ["almond", 16], ["warm_tea", 9], ["ration", 12], ["bandage", 10], ["firstaid", 8],
     ["medkit", 4], ["ammo", 12], ["shells", 7], ["battery", 9], ["kit", 6],
     ["bobbypin", 7], ["compass", 5], ["repellent", 2], ["cashew", 1.5], ["weapon", 12], ["cloth", 8],
     ["mag:survival", 3], ["mag:guns", 2.5], ["mag:medicine", 2], ["mag:sneak", 2], ["manual:food", 3], ["manual:armor", 3], ["manual:weapons", 2],
   ],
   security: [
+    ["stim_shot", 3], // Shelly Nov 17: the auto-injector is a leveled find everywhere (gateItems trims it early)
     ["ammo", 20], ["shells", 11], ["weapon", 18], ["kit", 8], ["firstaid", 8],
     ["medkit", 5], ["stim_shot", 5], ["painkillers", 6], ["bandage", 7], ["bobbypin", 9],
     ["keycard", 4], ["cloth", 7], ["molotov", 3], ["frag", 3],
     ["mag:guns", 3], ["mag:explosives", 2.5], ["mag:melee", 2], ["mag:lockpick", 2], ["manual:ammo", 5], ["manual:weapons", 4],
   ],
   abandoned_settlement: [
+    ["stim_shot", 2], // Shelly Nov 17: the auto-injector is a leveled find everywhere (gateItems trims it early)
     ["stale_ration", 16], ["cloudy_almond", 12], ["ration", 7], ["beans", 8], ["bar", 7],
     ["meat", 8], ["bandage", 8], ["antiseptic", 6], ["splint", 5], ["painkillers", 6],
     ["bobbypin", 9], ["battery", 8], ["cloth", 7], ["weapon", 10],
     ["mag:survival", 2.5], ["mag:repair", 2.5], ["mag:sneak", 2],
   ],
   hazardous: [
+    ["stim_shot", 3], // Shelly Nov 17: the auto-injector is a leveled find everywhere (gateItems trims it early)
     ["almond", 14], ["cloudy_almond", 8], ["charcoal", 12], ["antiseptic", 10], ["bandage", 9],
     ["firstaid", 6], ["stim_shot", 5], ["firesalt", 8], ["repellent", 4], ["cashew", 2], ["battery", 9],
     ["ammo", 8], ["weapon", 9], ["cloth", 4],
     ["mag:medicine", 2.5], ["mag:explosives", 2.5], ["mag:energy", 2],
   ],
   rare_cache: [
+    ["stim_shot", 4], // Shelly Nov 17: the auto-injector is a leveled find everywhere (gateItems trims it early)
     ["medkit", 10], ["stim_shot", 9], ["royal_ration", 6], ["firstaid", 10], ["ammo", 14],
     ["shells", 9], ["weapon", 18], ["cloth", 10], ["kit", 8], ["molotov", 5], ["frag", 5],
     ["mag:guns", 3], ["mag:medicine", 3], ["mag:science", 2.5], ["mag:lockpick", 2.5],
@@ -165,6 +174,7 @@ export function rollWeapon(ctx, pool = "l0", cap, level, minLevel = 1) {
 export function gateItems(ctx, items, level, pool = "l0") {
   const lv = Math.max(1, Number(level) || 1), cap = rarityCap(lv);
   return String(items ?? "").split(",").filter(Boolean).map((t) => {
+    if (t === "stim_shot" && lv < 4 && ctx.random() < (4 - lv) * 0.25) return "bandage"; // leveled: early runs mostly find a bandage instead
     if (!t.startsWith("weapon:")) return t;
     const k = t.slice(7);
     if (!W[k] || W[k].unique || W[k].weight === 0 || authoredVariant(k)) return t; // keep authored discoveries

@@ -51,7 +51,7 @@ export function agilityProfile(state) {
   const agi = Math.max(1, Math.min(10, rawAgi));
   const delta = agi - 5;
   const prep = state?.ch2Prep ? 1 : 0;
-  const adr = state?.lrunAdrenOn ? 1 : 0; // the crash-cart adrenaline shot (scripts/lrun-adrenaline.js)
+  const adr = (state?.effects ?? []).some((e) => e?.stackingGroup === "med_stim") ? 1 : 0; // an Epinephrine auto-injector in your blood (scripts/lrun-adrenaline.js gives one at the start)
   return {
     agi,
     sprintDrainMul: Math.max(0.3, (1 - delta * 0.07) * (prep ? 0.88 : 1) * (adr ? 0.5 : 1)),

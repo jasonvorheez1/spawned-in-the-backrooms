@@ -373,7 +373,7 @@ export function tick(ctx) {
     st.seen ??= {};
     if (!st.seen[p.id]) { // a fresh solo copy: whatever an earlier run left on you starts over (intro, blackout, scares, the shot)
       st.seen[p.id] = 1;
-      Object.assign(ps, { lrunIntroDone: 0, lrunRescued: 0, lrunMid: 0, lrunScare: 0, lrunAdrenOn: 0, lrunAdren: 0, lrunRetry: 0, lrunCut: null });
+      Object.assign(ps, { lrunIntroDone: 0, lrunRescued: 0, lrunMid: 0, lrunScare: 0, lrunGotShot: 0, lrunRetry: 0, lrunCut: null });
     }
     if (ps.dead || (ps.hp ?? 1) <= 0) { // Shelly Nov 17: dying restarts the run, the music from the top
       if (!ps.lrunRescued && (chase.active || ps.lrunIntroDone)) {
@@ -384,7 +384,7 @@ export function tick(ctx) {
         const beam = ctx.place.objects?.["lrun-collapse-beam"]; if (beam) beam.feetPosition = { x: 0, y: 2.9, z: CORRIDOR.collapseZ - 0.6 };
         const cd = ctx.place.objects?.["lrun-chain-door"]; if (cd) cd.rotation = { yaw: 0 };
         ps.lrunIntroDone = 0; ps.lrunRetry = 1; ps.lrunMid = 0; ps.lrunScare = 0; ps.lrunCut = null;
-        ps.lrunAdrenOn = 0; ps.lrunAdren = 0; const v = ctx.getObject("lrun-adrenaline/vial"); if (v) v.visible = true;
+        ps.lrunGotShot = 0; const v = ctx.getObject("lrun-adrenaline/vial"); if (v) v.visible = true; // a fresh cart each try
       }
       continue;
     }
@@ -392,7 +392,6 @@ export function tick(ctx) {
       finishRescueToAlcove(ctx, p, null);
       continue;
     }
-    if (ps.lrunAdrenOn && now - (ps.lrunAdren ?? 0) > 30000) ps.lrunAdrenOn = 0; // the shot wears off
     if (ps.menuOpen) continue;
     // the intro cut is played by the player's own main-menu tick; when it never runs (story off, a stalled load), let them go after its length
     if (ps.lrunCut?.phase === "mid" && now - (ps.lrunCut.at ?? 0) > (LRUN_MID_LEN + 3) * 1000) { ps.lrunCut = null; continue; }
