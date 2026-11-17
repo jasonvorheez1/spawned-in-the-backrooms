@@ -1,3 +1,4 @@
+import { animate } from "builtin/tween";
 // Level 69 "The Road Trip of Affliction" (Wikidot). Shelly Nov 17: a solo adventure with an intro, food and water to find,
 // and a surveyor's quest. One endless highway toward -Z between 11 m concrete walls, fog that won't touch a running car.
 // The sim streams 40 m road slices around you, keeps your car, rolls the rare finds, and runs the two horrors:
@@ -59,13 +60,63 @@ function lamps(k) {
   }
   return out;
 }
+// overhead sign gantries (Nov 17, "improve level 69 some more"): every 400 m a steel gantry over the road. Ahead of the tunnel the
+// green sign counts the exit down; past it, the signs stop making sense. Behind the start, a red WRONG WAY faces anyone driving back.
+const STEEL = { texture: "cdn/texture-scratched-worn-steel.png", color: "#6f7378", metalness: 0.85, roughness: 0.5 };
+function gantry(k) {
+  const z0 = -k * L, z = -20, wz = z0 + z;
+  if (k === -2) return [ // the wrong way: a lone red sign on the right-hand post, facing anyone heading +Z
+    { feetPosition: { x: 6.2, y: 0, z }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.07, height: 3.1 }, material: STEEL },
+    { feetPosition: { x: 6.2, y: 2.0, z: z + 0.09 }, castShadow: false, primitive: { kind: "box", width: 1.6, height: 1.1, depth: 0.05 }, material: { color: "#b51e1e", roughness: 0.4, emissive: "#3a0606", emissiveIntensity: 1 },
+      ui: '<div face="front" style="width:1.6m;height:1.1m;display:flex;flex-direction:column;align-items:center;justify-content:center;border:40px solid #f2ede4;box-sizing:border-box;color:#f2ede4;font:900 230px Arial,sans-serif;line-height:1">WRONG<div>WAY</div></div>' },
+  ];
+  if (k <= 1 || k % 10 !== 5) return [];
+  const left = (wz - TUN_Z) / 1000;
+  const text = left > 0.05 ? `<div style="font-size:150px">EXIT 69</div><div style="font-size:120px;margin-top:30px">&#8598; ${left.toFixed(1)} km</div><div style="font-size:80px;margin-top:30px;opacity:.85">LEFT LANE</div>`
+    : ["<div style=\"font-size:130px\">YOU MISSED IT</div>", "<div style=\"font-size:120px\">EXIT 69</div><div style=\"font-size:100px;margin-top:30px\">&#8598; 2.2 km</div>", "<div style=\"font-size:120px\">TURN AROUND</div><div style=\"font-size:80px;margin-top:30px\">YOU CAN'T</div>", "<div style=\"font-size:120px\">REST AREA</div><div style=\"font-size:100px;margin-top:30px\">CLOSED</div>"][Math.abs(k) % 4];
+  const out = [];
+  for (const x of [-8.6, 8.6]) {
+    out.push({ feetPosition: { x, y: 0, z }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.16, radiusBottom: 0.2, height: 7.4, radialSegments: 16 }, material: STEEL });
+    out.push({ feetPosition: { x, y: 0, z }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.34, radiusBottom: 0.38, height: 0.35, radialSegments: 16 }, material: { texture: "cdn/texture-weathered-stained-poured-concrete-wall-panels.png", color: "#8a857c", roughness: 0.9 } });
+  }
+  out.push({ feetPosition: { x: 0, y: 6.7, z }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 17.6, radialSegments: 12 }, rotation: { roll: 90 }, pivot: "center", material: STEEL });
+  out.push({ feetPosition: { x: 0, y: 6.1, z }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.09, height: 17.6, radialSegments: 12 }, rotation: { roll: 90 }, pivot: "center", material: STEEL });
+  out.push({ feetPosition: { x: -3.6, y: 3.9, z: z + 0.15 }, castShadow: false, primitive: { kind: "box", width: 5.2, height: 2.3, depth: 0.08 }, material: { color: "#0e5a34", roughness: 0.35, metalness: 0.2, emissive: "#062a18", emissiveIntensity: 0.6 },
+    ui: `<div face="back" style="width:5.2m;height:2.3m;display:flex;flex-direction:column;align-items:center;justify-content:center;border:36px solid #e9f0ea;border-radius:60px;box-sizing:border-box;color:#e9f0ea;font:700 120px Arial,sans-serif;letter-spacing:6px;line-height:1">${text}</div>` });
+  out.push({ feetPosition: { x: -3.6, y: 6.3, z: z + 0.5 }, light: { kind: "spot", color: "#dfe8ff", intensity: 6, distance: 6, angle: 45, penumbra: 0.6, aim: { x: 0, y: -0.6, z: -0.3 }, shadow: { enabled: false } }, visibleRange: { max: 140 } });
+  return out;
+}
+// the ghost car: every minute or two, headlights in the far lane, coming at you. It passes close, the wind punches the car, and in the mirror there's nothing.
+function ghost(ctx, p, pos, now, inCar) {
+  const st = ctx.place.state, id = "l69-ghost";
+  if (!st.nextGhost) st.nextGhost = now + 50000;
+  const g = ctx.place.objects[id];
+  if (g && now > (st.ghostEnd ?? 0)) { ctx.destroy(id); return; }
+  if (g || now < st.nextGhost || !inCar) return;
+  st.nextGhost = now + (60 + ctx.random() * 70) * 1000;
+  const z0 = pos.z - 170, z1 = pos.z + 60, dur = 6.2;
+  st.ghostEnd = now + dur * 1000;
+  const h = ctx.getObject(ctx.spawn(id, { feetPosition: { x: 3.4, y: 0.02, z: z0 }, rotation: { yaw: 180 }, castShadow: false, model: { id: SEDAN, forward: "+x" }, layout: { box: CAR_BOX },
+    children: [
+      { feetPosition: { x: -0.62, y: 0.72, z: -2.8 }, light: { kind: "spot", color: "#f4f0e0", intensity: 120, distance: 60, angle: 30, penumbra: 0.5, aim: { x: 0, y: -0.1, z: -1 }, shadow: { enabled: false } } },
+      { feetPosition: { x: 0.62, y: 0.72, z: -2.8 }, light: { kind: "spot", color: "#f4f0e0", intensity: 120, distance: 60, angle: 30, penumbra: 0.5, aim: { x: 0, y: -0.1, z: -1 }, shadow: { enabled: false } } },
+      { feetPosition: { x: 0, y: 0.7, z: -2.7 }, primitive: { kind: "box", width: 1.7, height: 0.14, depth: 0.04 }, material: { color: "#fff6d8", emissive: "#fff2c0", emissiveIntensity: 6 } },
+    ] }));
+  if (h) animate(ctx, h, { "feetPosition.z": z1 }, { duration: dur, easing: "linear" });
+  sfx(ctx, p, G("distant-car-approaching-at-speed-then-roaring-past-doppler"), 0.9);
+  ctx.after?.(3.3, "ghostPass", { pid: p.id });
+}
+export function ghostPass(ctx, { pid } = {}) {
+  ctx.emit("screenShake", { intensity: 0.25, duration: 0.5 }, { audience: { player: pid } });
+  ctx.emit("playSound", { clip: G("violent-wind-gust-buffets-car-body"), volume: 0.7 }, { audience: { player: pid } });
+}
 function slice(ctx, k, want) {
   const id = `l69-road-${k}`; want.add(id);
   if (ctx.place.objects[id]) return;
   const z0 = -k * L, tunnel = k === TUN_K ? "left" : undefined;
   ctx.spawn(id, { tags: ["l69road"], feetPosition: { x: 0, y: 0, z: z0 }, physics: "static", receiveShadow: true,
     primitive: { kind: "scripted", script: "scripts/l69-road-geo.js", params: { seed: k, ...(tunnel ? { tunnel } : {}) } }, material: { pbr: true },
-    children: lamps(k) });
+    children: [...lamps(k), ...gantry(k)] });
   // what this slice carries: a survey post, a rare stalled car with something in the boot, the tunnel's glow
   for (const P of POSTS) if (P.z <= z0 && P.z > z0 - L) {
     const pid = `l69-post-${P.km}`; want.add(pid);
@@ -162,6 +213,14 @@ export function tick(ctx) {
     if (!inCar && !l.outAt) { l.outAt = now; l.creak = false; l.downAt = null; dirty = true; sfx(ctx, p, G("car-door-open-cold-wind-rushes-in"), 0.6); }
     if (inCar && l.outAt) { l.outAt = null; dirty = true; }
   }
+  // the road doesn't go back: 300 m the wrong way and it quietly folds you 600 m forward, the same stretch again (you passed that car already)
+  if (pos.z > 300 && !l.tunnelAt) {
+    if (inCar && car) car.feetPosition = { ...car.feetPosition, z: car.feetPosition.z - 600 };
+    else { const pl = ctx.getObject(p.id); if (pl) pl.feetPosition = { ...pl.feetPosition, z: pl.feetPosition.z - 600 }; }
+    ctx.session.l69streamAt = 0;
+    if (!l.foldSaid) { l.foldSaid = true; l.whisper = { text: "there's no going back", at: now }; dirty = true; ctx.emit("playSound", { clip: "/cdn/voice-the-whispers-saying-theres-no-going-back.mp3", volume: 0.6 }, { audience: { player: p.id } }); }
+  }
+  ghost(ctx, p, pos, now, inCar);
   being(ctx, p, l, now);
   // the whispers
   if (!st.nextWhisper) st.nextWhisper = now + 40000;
