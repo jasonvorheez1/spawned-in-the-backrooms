@@ -1,0 +1,152 @@
+{
+ "pool_table": {
+  "glb": "/cdn/value.1f81dd16e345547c6fa1d903248f3ddb44a8b24809bcebb8d907b7b6d40ecfa6.glb",
+  "size": [
+   2.6,
+   0.82,
+   1.45
+  ],
+  "tris": 5132,
+  "solid": true
+ },
+ "foosball_table": {
+  "glb": "/cdn/value.b7efb1e356b1fe7c9d1ec3513afa4af918672469c0cbb7ab71888e3e19cc9906.glb",
+  "size": [
+   1.4,
+   0.9,
+   1.106
+  ],
+  "tris": 5949,
+  "solid": true
+ },
+ "electric_cooker": {
+  "glb": "/cdn/value.2ee1e57990e2714bd8bdbccf691335cdf1815b5b14d7a8340bdfe5f3e4b18380.glb",
+  "size": [
+   0.6,
+   0.9,
+   0.6
+  ],
+  "tris": 5617,
+  "solid": true
+ },
+ "sofa_leather": {
+  "glb": "/cdn/value.e53ba0e7c927fd86093e71aa7d3f12a402a64ebdd3d2831bf23d5aad8756e424.glb",
+  "size": [
+   2.1,
+   0.85,
+   0.9
+  ],
+  "tris": 5854,
+  "solid": true
+ },
+ "wifi_desk": {
+  "glb": "/cdn/value.5acf8bfb06f7fc06ea80d47d0b888119fe32fe179939df0c307dbbe37df617f9.glb",
+  "size": [
+   1.2,
+   1.2,
+   0.646
+  ],
+  "tris": 5705,
+  "solid": true
+ },
+ "sewing_table": {
+  "glb": "/cdn/value.b1074d55ab032f0bc92d23ef6c5eab66d714b3cc7583b6c41aff2ee0eda38cd2.glb",
+  "size": [
+   0.9,
+   1.0,
+   0.5
+  ],
+  "tris": 5854,
+  "solid": true
+ },
+ "workbench": {
+  "glb": "/cdn/value.c7d87cb566742a0ed40c3e9dad60f958feffa556edb49a1ec34a5fb3e973830e.glb",
+  "size": [
+   1.8,
+   0.95,
+   0.57
+  ],
+  "tris": 5596,
+  "solid": true
+ },
+ "planter_trough": {
+  "glb": "/cdn/value.feb797846f5245e3f1d0ddf418f7b1041dd18e45830d8bd8faa1911182480792.glb",
+  "size": [
+   2.0,
+   0.624,
+   0.6
+  ],
+  "tris": 5245,
+  "solid": true
+ },
+ "shelf_empty": {
+  "glb": "/cdn/value.4aa12a06e067abd653702d96e47b4790ce898f63e30748c35b7d9dae99921167.glb",
+  "size": [
+   1.2,
+   1.9,
+   0.482
+  ],
+  "tris": 5992,
+  "solid": true
+ },
+ "pickaxe": {
+  "glb": "/cdn/value.ae13c8156666eaff5d7c3417c75e41eca48127e191724ae5fe5044e10c424a8c.glb",
+  "size": [
+   0.9,
+   0.12,
+   0.569
+  ],
+  "tris": 5457,
+  "solid": false
+ },
+ "wheelbarrow": {
+  "glb": "/cdn/value.4ff0e7079a215edf97e3b89faf5e0d6a78b8943b307eb36cff954fbafc755c8d.glb",
+  "size": [
+   1.4,
+   0.803,
+   0.681
+  ],
+  "tris": 5950,
+  "solid": true
+ },
+ "toolbox": {
+  "glb": "/cdn/value.a80e8b1f93fa3e368be1d2da707a10c3308097e4d9ab546b2f32d1ce8f523ab3.glb",
+  "size": [
+   0.5,
+   0.319,
+   0.266
+  ],
+  "tris": 5644,
+  "solid": false
+ },
+ "concrete_blocks": {
+  "glb": "/cdn/value.46d400b7b9d27a7a71e1363a531e9ec8e946329e64b3575e1c951ee83a063ef3.glb",
+  "size": [
+   1.2,
+   1.069,
+   1.0
+  ],
+  "tris": 5949,
+  "solid": true
+ },
+ "bedroll_cardboard": {
+  "glb": "/cdn/value.9555b1464eab81a3c90a570b9f0e2d154e1f282466196f3f0e4e8fe9cd933258.glb",
+  "size": [
+   1.137,
+   0.236,
+   1.9
+  ],
+  "tris": 5950,
+  "solid": false
+ },
+ "double_bed": {
+  "glb": "/cdn/value.62dbb827489efa29e5a847ed0719bb2c5e850154a07f2f9ab0913369ad343c3f.glb",
+  "size": [
+   1.6,
+   0.9,
+   2.101
+  ],
+  "tris": 5950,
+  "solid": true
+ }
+}
