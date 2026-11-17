@@ -1,9 +1,8 @@
 # the builders' emote wheel (Shelly Nov 17: builders only for now). slot order = clockwise from the top
-- id: timeless
-  label: Timeless
-  clip: cdn/clip-wave-hip-hop-dance-loop.glb
-  song: /cdn/value.16b5e89ce1f6c38fdb01184dfdd2f49eefcbd5360fe67b35d418f05e31f09f05.mp3  # Shelly's hummed melody played by a mallet lead, bass, drums; 17.1 s seamless loop, no voice (Nov 17)
-  clock: true
+- id: chase  # replaced Timeless (Shelly Nov 17); motion + song from her Riff's emote pack 2 (Unity humanoid .anim baked to a clip)
+  label: Chase Me Down
+  clip: cdn/clip-chase-me-down-5cc525d4-loop.glb
+  song: /cdn/value.a21c2e61743c4c01f8d0827eede40f87780c3c18e14580109d57a21cc4a2e324.mp3  # the pack's own track, 10.7 s, loops with the dance
   face: joy
 - id: dance
   face: beam
