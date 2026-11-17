@@ -193,7 +193,7 @@ export function maybeUnlockStage4(ctx, st) {
 }
 
 export function setCh2EchoStep(ctx, st, n, noteText) {
-  if (!st || st.ch2EchoDone) return false;
+  if (!st || st.ch2EchoDone || noStory(st)) return false;
   if (n <= (st.ch2EchoQ ?? 0) || !ECHO_STEP[n]) return false;
   st.ch2EchoQ = n;
   syncCh2Echo(st);
@@ -203,7 +203,7 @@ export function setCh2EchoStep(ctx, st, n, noteText) {
 }
 
 export function setCh2ToneStep(ctx, st, n, noteText) {
-  if (!st || st.ch2ToneDone) return false;
+  if (!st || st.ch2ToneDone || noStory(st)) return false;
   if (n <= (st.ch2ToneQ ?? 0) || !TONE_STEP[n]) return false;
   st.ch2ToneQ = n;
   syncCh2Tone(st);
