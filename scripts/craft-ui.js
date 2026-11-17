@@ -4,6 +4,7 @@ import { wristNav } from './lib/wrist-nav.js'
 // Layout: tabs across the top, the scrap you carry as chips, then recipes, the ones you can make first.
 import C from './lib/data/craft.yml'
 import { needsStatus } from './lib/survival.js'
+import { runOf } from './lib/run-opts.js'
 import B from './lib/data/breakables.yml'
 import { skillsOf } from './lib/stats.js'
 import { SKILL_NAMES as SKN } from './lib/skill-check.js'
@@ -74,8 +75,11 @@ export function craftUi(ctx, player) {
   const s = player.state ?? {}
   if (s.level == null || s.hunger == null) return ''
   const lo = C.needs.low
-  let out = CSS + `<div id="nd"><div class="r h ${s.hunger < lo ? 'lo' : ''}"><span>FOOD</span><div class="b"><u style="width:${s.hunger}%"></u></div></div><div class="r ${s.thirst < lo ? 'lo' : ''}"><span>WATER</span><div class="b"><u style="width:${s.thirst}%"></u></div></div>${(s.l169sun ?? 0) > 0 || s.l169lit ? `<div class="r ${s.l169sun >= 50 ? 'lo' : ''}"><span>SUN</span><div class="b"><u style="width:${Math.min(100, s.l169sun ?? 0)}%"></u></div></div>` : ''}${(s.l169chill ?? 0) > 5 ? `<div class="r ${s.l169chill >= 50 ? 'lo' : ''}"><span>COLD</span><div class="b"><u style="width:${s.l169chill}%"></u></div></div>` : ''}</div>`
-  out += `<div style="position:fixed;left:22px;bottom:175px;font-size:10px;color:#ffcf87;text-shadow:0 1px 3px #000;pointer-events:none">${needsStatus(s)} · Food ${Math.round(s.hunger)}% · Water ${Math.round(s.thirst ?? 100)}%</div>`
+  const needsOn = runOf(s).needs !== 'off'
+  let out = CSS
+  if (needsOn) {
+    out += `<div id="nd"><div class="r h ${s.hunger < lo ? 'lo' : ''}"><span>FOOD</span><div class="b"><u style="width:${s.hunger}%"></u></div></div><div class="r ${s.thirst < lo ? 'lo' : ''}"><span>WATER</span><div class="b"><u style="width:${s.thirst}%"></u></div></div>${(s.l169sun ?? 0) > 0 || s.l169lit ? `<div class="r ${s.l169sun >= 50 ? 'lo' : ''}"><span>SUN</span><div class="b"><u style="width:${Math.min(100, s.l169sun ?? 0)}%"></u></div></div>` : ''}${(s.l169chill ?? 0) > 5 ? `<div class="r ${s.l169chill >= 50 ? 'lo' : ''}"><span>COLD</span><div class="b"><u style="width:${s.l169chill}%"></u></div></div>` : ''}</div>`
+  }
   if (s.l4task) out += `<div id="tk">TASK · ${esc(s.l4task.text)} <b>${s.l4task.have ?? 0}/${s.l4task.need}</b></div>` // Level 4's office task (scripts/l4-office.js)
   if (!s.craftOpen) return out
   const sk = skillsOf(s), bench = s.craftOpen === 'bench', tab = CATS.some(([k])=>k===s.craftTab) ? s.craftTab : 'all'
@@ -100,7 +104,7 @@ export function craftUi(ctx, player) {
       <div class="bt"><button ${st.ok ? '' : 'disabled'} onclick="sendAction('make',{k:'make',id:'${id}',n:1})">Craft</button>${st.ok && mx > 5 ? `<button class="s" onclick="sendAction('make',{k:'make',id:'${id}',n:5})">Make 5</button>` : ''}${st.ok && mx >= 2 ? `<button class="s" onclick="sendAction('make',{k:'make',id:'${id}',n:'max'})">Make ${mx}</button>` : ''}</div></div>`
   }
   if (!rows) rows = `<div class="em">${tab === 'ready' ? 'Nothing you can make yet. Check All for recipe requirements.' : 'Nothing here.'}</div>`
-  return out + `<div id="cr" data-modal tabindex="0" onkeydown="if(event.key==='Escape'){event.preventDefault();event.stopPropagation();sendAction('make',{k:'close'})}"><div class="hd"><h2>${bench ? ({ cook: 'Cooking fire', ammo: 'Reloading bench' }[station] ?? 'Workbench') : 'Crafting'}</h2><span class="md">${bench ? 'This station only' : 'Everything · stations (B) unlock the rest'} · Recipes known ${all.filter((x) => x.st.known).length}/${all.length}</span></div>
+  return out + `<div id="cr" data-modal tabindex="0" onkeydown="if(!event.repeat&&(event.key==='Escape'||event.key==='y'||event.key==='Y'||(event.key==='e'||event.key==='E')&&${bench})){event.preventDefault();event.stopPropagation();sendAction('make',{k:'close'})}"><div class="hd"><h2>${bench ? ({ cook: 'Cooking fire', ammo: 'Reloading bench' }[station] ?? 'Workbench') : 'Crafting'}</h2><span class="md">${bench ? 'This station only' : 'Everything · stations (B) unlock the rest'} · Recipes known ${all.filter((x) => x.st.known).length}/${all.length}</span></div>
     ${wristNav('craft')}<div class="tb">${tabs}</div><details class="craft-stock"><summary>Materials on hand</summary><div class="sc">${stock}</div></details><div class="ls">${rows}</div>
     <div class="ft"><span>${ready} of ${all.length} recipes ready · ${all.filter((x) => x.st.known).length} known · Batch limit ${CRAFT_LIMIT}</span><button onclick="sendAction('make',{k:'close'})">Close · Y</button></div></div>`
 }

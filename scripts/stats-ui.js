@@ -221,7 +221,7 @@ export function statsUi(ctx, player) {
     }
   }
 
-  const kd = s.creating ? '' : escKeyHandler("sendAction('stat',{k:'close'})")
+  const kd = s.creating ? '' : "if(!event.repeat&&(event.key==='Escape'||event.key==='k'||event.key==='K')){event.preventDefault();event.stopPropagation();sendAction('stat',{k:'close'})}"
   out += `<div id="sh" data-modal tabindex="0" ${kd ? `onkeydown="${kd}"` : ''}>
     <div class="hd">
       <h2>${s.creating ? 'Create Character' : `Character · Level ${s.level}`}</h2>

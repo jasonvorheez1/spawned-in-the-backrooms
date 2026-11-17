@@ -17,6 +17,8 @@ const { spend } = await import('../scripts/stats.js')
 const { lootUi } = await import('../scripts/loot-ui.js')
 const { mainMenu } = await import('../scripts/main-menu-ui.js')
 const { default: renderHud } = await import('../scripts/ui.js')
+const { craftUi } = await import('../scripts/craft-ui.js')
+const { describe: describeItem } = await import('../scripts/lib/items.js')
 
 const baseState = {
   level: 4,
@@ -64,7 +66,7 @@ test('talkUi separates upper NPC speech region from lower player responses regio
   expect(html).toContain('tc-speech-region')
   expect(html).toContain('tc-responses-region')
   expect(html).toContain('M.E.G. Expedition Guard')
-  expect(html).toContain('SPEECH 40')
+  expect(html).toContain('[SPEECH 45/40]')
   expect(html.indexOf('tc-speech-region')).toBeLessThan(html.indexOf('tc-responses-region'))
 })
 
@@ -90,13 +92,32 @@ test('lootUi supports search filtering, value sort, and equipment comparison', (
   const player = {
     id: 'p1',
     place: 'main',
-    state: { ...baseState, invOpen: true, invSel: 'crowbar', invFilter: 'crow', invSort: 'val' },
+    state: { ...baseState, invOpen: true, invSel: 'crowbar', invFilter: 'crow', invSort: 'val', cells: 5, tapes: ['ted246'], pages: [2201] },
   }
   const html = lootUi({ now: () => 1000, world: { inputs: {} } }, player)
   expect(html).toContain('inv-search')
   expect(html).toContain('VS EQUIPPED')
   expect(html).toContain('Crowbar')
   expect(html).not.toContain('9mm Pistol')
+
+  const cellsHtml = lootUi({ now: () => 1000, world: { inputs: {} } }, {
+    ...player,
+    state: { ...player.state, invFilter: '', invTab: 'ammo', invSel: 'cells' },
+  })
+  expect(cellsHtml).toContain('ENERGY CELL')
+  expect(cellsHtml).toContain('5 CELLS')
+
+  const tapesHtml = lootUi({ now: () => 1000, world: { inputs: {} } }, {
+    ...player,
+    state: { ...player.state, invFilter: '', invTab: 'tapes', holotapes: 'ted246' },
+  })
+  expect(tapesHtml).toContain('Tape: Personal Entry · Ted Kowalski')
+
+  const miscHtml = lootUi({ now: () => 1000, world: { inputs: {} } }, {
+    ...player,
+    state: { ...player.state, invFilter: '', invTab: 'misc', pages: '2201' },
+  })
+  expect(miscHtml).toContain('Emstable record (1)')
 })
 
 test('mainMenu renders title, pause, settings, and controls views', () => {
@@ -104,13 +125,11 @@ test('mainMenu renders title, pause, settings, and controls views', () => {
   const titleHtml = mainMenu(ctx, { place: 'main', state: { ...baseState, menuOpen: true, menuKind: 'title', madeChar: true } })
   expect(titleHtml).toContain('Continue')
   expect(titleHtml).toContain('Settings')
-  expect(titleHtml).toContain('Controls &amp; Guide')
+  expect(titleHtml).toContain('Controls')
 
   expect(titleHtml).toContain("k:'start'")
-  expect(titleHtml).toContain('aria-label="Main menu"')
-  expect(titleHtml).toContain('<svg class="mm-scene"')
-  expect(titleHtml).toContain('class="mm-beam"')
-  expect(titleHtml).toContain('class="mm-dust"')
+  expect(titleHtml).toContain('class="memo"')
+  expect(titleHtml).toContain('class="mm-photo"')
   expect(titleHtml).not.toContain('Somewhere beyond the familiar')
   expect(titleHtml).not.toContain('Progress saves automatically')
   expect(titleHtml).toContain("v:'newgame'")
@@ -121,8 +140,8 @@ test('mainMenu renders title, pause, settings, and controls views', () => {
   expect(pauseHtml).toContain('class="mm-pause-title">Paused')
   expect(pauseHtml).not.toContain('<svg class="mm-scene"')
   expect(pauseHtml).toContain("k:'resume'")
-  expect(pauseHtml).toContain('Return to Title')
-  expect(mainMenu(ctx, { place: 'main', state: {} })).toContain('New Expedition')
+  expect(pauseHtml).toContain('Controls &amp; Guide')
+  expect(mainMenu(ctx, { place: 'main', state: {} })).toContain('▶ Start')
 
   const settingsHtml = mainMenu(ctx, { place: 'main', state: { ...baseState, menuOpen: true, menuKind: 'pause', menuView: 'settings' } })
   expect(settingsHtml).toContain('Interface Scale')
@@ -161,6 +180,13 @@ test('renderHud applies accessibility prefs, renders journal filters, and shows 
   expect(html).not.toContain('Old Task')
   expect(html).toContain('ui-toast')
   expect(html).toContain('Saved progress')
+
+  const kyotoHtml = renderHud(ctx, { ...player, place: 'level178', state: { ...baseState } })
+  expect(kyotoHtml).toContain('Kyoto Dreams')
+  expect(kyotoHtml).not.toContain('THE SAFE ROOM')
+
+  expect(craftUi(ctx, { state: { ...baseState, craftOpen: true, run: { needs: 'off' } } })).not.toContain('id="nd"')
+  expect(describeItem('page:1781').name).toBe('Kyoto house note (1)')
 })
 const { xpNeed, xpNeedFor, migrateXp } = await import('../scripts/lib/progression.js')
 const { derived, skillsOf, SKILLS } = await import('../scripts/lib/stats.js')

@@ -17,5 +17,5 @@ export function emoteWheel(ctx, player) {
 .ew-on{border-color:#fffde8;color:#fffde8}
 .ew-s small{font-size:10px;letter-spacing:.2em;opacity:.7;text-transform:uppercase}
 .ew-clk{font-size:16px;line-height:1}
-</style><div class="ew" data-modal><div class="ew-ring"></div><div class="ew-mid">EMOTE<br><span style="opacity:.6;font-size:10px">N to close · move to stop</span></div>${slices}</div>`
+</style><div class="ew" data-modal tabindex="0" onkeydown="if(!event.repeat&&(event.key==='Escape'||event.key==='n'||event.key==='N')){event.preventDefault();event.stopPropagation();sendAction('emote')}"><div class="ew-ring"></div><div class="ew-mid">EMOTE<br><span style="opacity:.6;font-size:10px">N to close · move to stop</span></div>${slices}</div>`
 }

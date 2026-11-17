@@ -84,14 +84,14 @@ function describe0(token) {
   if (token === 'holo:matrix') return { name: 'Tape: "Expedition Log: Matrix"', info: 'Cmdr. Harris, his own voice. Play it on HALOGEN (I > Tapes)', color: '#ff9a6a' }
   if (token === 'holo:ted246') return { name: 'Tape: "Personal Entry · Ted Kowalski"', info: 'M.E.G. Watchdogs, Level 246. A dream about admirals, the Eldridge and the ship you are standing on. Play it on HALOGEN (I > Tapes)', color: '#ff9a6a' }
   if (token === 'holo:janine') return { name: 'Tape: "M.E.G. Interview Log 10328"', info: 'Archivist Lake Kesler interviews Janine Brown about Level 114. Play it on HALOGEN (I > Tapes)', color: '#ff9a6a' }
-  if (token === 'holo:dina4') return { name: 'Tape: "Dina, Tape Four"', info: 'A cassette in Dina\'s handwriting, left at the checkpoint. Play it on HALOGEN (I > Misc)', color: '#ff9a6a' }
+  if (token === 'holo:dina4') return { name: 'Tape: "Dina, Tape Four"', info: 'A cassette in Dina\'s handwriting, left at the checkpoint. Play it on HALOGEN (I > Tapes)', color: '#ff9a6a' }
   if (token === 'holo:b8') return { name: 'Tape: "B8, Night Forty"', info: 'A cassette with a hallway count written on the label, crossed out and rewritten. Play it on HALOGEN (I > Tapes)', color: '#ff9a6a' }
-  if (token === 'holo:walt41') return { name: 'Tape: "Field Test 41"', info: 'A reel labelled in pencil: KESSLER, R-55, TEST 41. Play it on HALOGEN (I > Misc)', color: '#ff9a6a' }
-  if (token.startsWith('holo:')) return { name: 'Tape: "Atomic Age Defender"', info: 'A scuffed 1950s Backrooms Robotics ad reel. Play it on HALOGEN (I > Misc)', color: '#ff9a6a' }
+  if (token === 'holo:walt41') return { name: 'Tape: "Field Test 41"', info: 'A reel labelled in pencil: KESSLER, R-55, TEST 41. Play it on HALOGEN (I > Tapes)', color: '#ff9a6a' }
+  if (token.startsWith('holo:')) return { name: 'Tape: "Atomic Age Defender"', info: 'A scuffed 1950s Backrooms Robotics ad reel. Play it on HALOGEN (I > Tapes)', color: '#ff9a6a' }
   if (token.startsWith('manual:')) { const m = MANUALS[token.slice(7)]; return { name: m?.name ?? 'Crafting manual', info: m?.info ?? 'Unlocks recipes', color: '#e8b45a' } }
   if (token === 'page:30') return { name: "Tomorrow's newspaper", info: 'Printed before you arrived at the Level 11 newsstand', color: '#e8dcc0' }
   if (token === 'page:31') return { name: 'Channel 04 advisory', info: 'Copied from the television in Level 114', color: '#e8dcc0' }
-  if (token.startsWith('page:')) { const n = +token.slice(5); return n >= 101 && n <= 104 ? { name: `Neon Hospital record (${n - 100})`, info: 'Medical chart or M.E.G. hospital memo from Level 109', color: '#a8e6cf' } : n === 24 ? { name: `Level 10 field log (${n})`, info: 'M.E.G. Scarecrow observation report from Level 10', color: '#ffd36a' } : n >= 21 && n <= 23 ? { name: `Level 0 field document (${n - 20})`, info: 'Survey report & survivor notes from Level 0', color: '#ded3a0' } : n >= 11 && n <= 17 ? { name: `Base Alef papers (${n - 10})`, info: 'Written by someone locked in Level 2.1', color: '#e8e0a8' } : { name: `Torn notebook page (${token.slice(5)})`, info: 'Someone wrote this in a hurry', color: '#e8dcc0' } }
+  if (token.startsWith('page:')) { const n = +token.slice(5); return n >= 2201 && n <= 2214 ? { name: `Emstable record (${n - 2200})`, info: 'Recovered paper or manifest from Level 22', color: '#d8cfb8' } : n >= 3251 && n <= 3253 ? { name: `Boom Town note (${n - 3250})`, info: 'Trail note from Level 325', color: '#d8cfb8' } : n >= 1781 && n <= 1784 ? { name: `Kyoto house note (${n - 1780})`, info: 'Note from the machiya in Level 178', color: '#e8dcc0' } : n >= 1321 && n <= 1322 ? { name: `Lumiria notice (${n - 1320})`, info: 'Notice from Level 132', color: '#e8dcc0' } : n === 1101 ? { name: 'Supply count (1101)', info: "Callum's supply count from Level 1", color: '#e8dcc0' } : n === 1102 ? { name: 'Sedco shift note', info: 'Night-shift note from Sedco Spotlight in Level 11', color: '#e8dcc0' } : n === 1103 ? { name: 'Guild survey plate', info: 'Guild of Many survey note from Level 3', color: '#e8dcc0' } : n >= 110 && n <= 116 ? { name: `Hospital terminal record (${n - 109})`, info: 'Recovered Entity 19 record from Level 109', color: '#a8e6cf' } : n >= 101 && n <= 104 ? { name: `Neon Hospital record (${n - 100})`, info: 'Medical chart or M.E.G. hospital memo from Level 109', color: '#a8e6cf' } : n === 24 ? { name: `Level 10 field log (${n})`, info: 'M.E.G. Scarecrow observation report from Level 10', color: '#ffd36a' } : n >= 21 && n <= 23 ? { name: `Level 0 field document (${n - 20})`, info: 'Survey report & survivor notes from Level 0', color: '#ded3a0' } : n >= 11 && n <= 17 ? { name: `Base Alef papers (${n - 10})`, info: 'Written by someone locked in Level 2.1', color: '#e8e0a8' } : { name: `Torn notebook page (${token.slice(5)})`, info: 'Someone wrote this in a hurry', color: '#e8dcc0' } }
   if (token === 'wheat_sheaf') return { name: 'Golden Wheat Sheaf', info: 'Reaped from Level 10 fields · Grind at the Windmill Quern', color: '#ffd36a' }
   if (token === 'flour_sack') return { name: 'Sack of Fresh Flour', info: 'Ground Backrooms grain · Bake at the Farmhouse Hearth', color: '#f5f6fa' }
   if (token === 'bread') return { name: 'Warm Homestead Loaf', info: 'Freshly baked Level 10 bread · +35 HP · +25 Sanity', color: '#e67e22' }
@@ -116,13 +116,13 @@ function describe0(token) {
   if (token === 'akit') return { name: 'Armor repair kit', info: 'Mends every piece you wear · up to your Repair skill', color: '#9fb89a' }
   if (isBookToken(token)) {
     const b = getBookSpec(token)
-    if (b) return { name: b.title, info: `Skill Book (${b.kind === 'unique' ? 'Unique' : 'Rare'}) · Permanently +${b.bonus} ${b.skillName} (Read in I > Aid & Books)`, color: '#7fd1a8' }
+    if (b) return { name: b.title, info: `Skill Book (${b.kind === 'unique' ? 'Unique' : 'Rare'}) · Permanently +${b.bonus} ${b.skillName} (Read in I > Misc)`, color: '#7fd1a8' }
     const k = SKILLS.find((x) => x.k === token.slice(5))
     return { name: `Skill book: ${k?.name ?? '?'}`, info: `Permanently +3 ${k?.name ?? ''}`, color: '#7fd1a8' }
   }
   if (isMagToken(token)) {
     const m = getMagSpec(token)
-    if (m) return { name: m.title, info: `Skill Magazine · ${m.skillName} +${m.bonus} for ${m.durationMin} in-game min (Read in I > Aid & Books)`, color: m.color ?? '#9fd3ff' }
+    if (m) return { name: m.title, info: `Skill Magazine · ${m.skillName} +${m.bonus} for ${m.durationMin} in-game min (Read in I > Misc)`, color: m.color ?? '#9fd3ff' }
   }
   if (token.startsWith('cloth:')) { // a garment: "cloth:<slot>:<kind>:<hex>"
     const p = parseCloth(token)

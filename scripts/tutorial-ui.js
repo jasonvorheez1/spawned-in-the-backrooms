@@ -50,7 +50,7 @@ export function fieldGuideUi(s, place) {
   const groups = [...new Set(GUIDE_LESSONS.map((lesson) => lesson.group))]
   const archive = groups.map((group) => `<div class="guide-group">${group}</div>${GUIDE_LESSONS.filter((lesson) => lesson.group === group).map(({ title, text, keys }) =>
     `<details><summary>${title}</summary><div class="guide-note"><p>${text}</p>${bindings(keys)}</div></details>`).join("")}`).join("")
-  return CSS + `<div class="field-book" data-modal tabindex="0" role="dialog" aria-modal="true" aria-labelledby="field-guide-title"${s.uiPrefs?.motion === "reduced" ? ' data-motion="reduced"' : ""} onkeydown="if(event.key==='Escape'){event.preventDefault();event.stopPropagation();sendAction('journal')}">
+  return CSS + `<div class="field-book" data-modal tabindex="0" role="dialog" aria-modal="true" aria-labelledby="field-guide-title"${s.uiPrefs?.motion === "reduced" ? ' data-motion="reduced"' : ""} onkeydown="if(!event.repeat&&(event.key==='Escape'||event.key==='j'||event.key==='J'||event.key==='p'||event.key==='P')){event.preventDefault();event.stopPropagation();sendAction('journal')}">
     <section><header><h1 id="field-guide-title">Field Guide</h1><nav aria-label="Field Guide controls">
       <button aria-pressed="${!tipsMuted(s)}" onclick="sendAction('fieldGuide',{k:'mute'})">Automatic tips ${tipsMuted(s) ? "off" : "on"}</button>
       <button onclick="sendAction('fieldGuide',{k:'quests'})">Quests</button><button onclick="sendAction('journal')">Close <kbd>Esc</kbd></button>

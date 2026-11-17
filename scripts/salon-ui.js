@@ -126,7 +126,7 @@ export function salon(ctx, player) {
   return `${CSS}<div id="glw" style="position:absolute;left:50%;bottom:120px;translate:-50% 0;padding:12px 20px;background:#2a1030;color:#ffe3f4;border:3px solid #ff71ce;box-shadow:4px 4px 0 #120616;font-size:20px;text-align:center;pointer-events:none"><div style="font-size:24px">✂ ${w}</div><div style="opacity:.75;font-size:15px;margin-top:4px">${qi > 0 ? 'Gina will come to your chair' : 'Sit tight'} · ${ctx.world.inputs?.actions?.interact?.label ?? 'E'} to get up</div></div>`
   }
   const line = qi === 0 ? `<div class="q">✂ Gina is doing your hair</div>` : qi > 0 ? `<div class="q wait">Gina's finishing up with someone. You're ${qi === 1 ? 'next' : '#' + (qi + 1) + ' in line'}, change away meanwhile.</div>` : ''
-  return `${CSS}<div id="gl" data-modal>
+  return `${CSS}<div id="gl" data-modal tabindex="0" onkeydown="if(!event.repeat&&event.key==='Escape'){event.preventDefault();event.stopPropagation();${act('close')}}">
   <div class="hd"><h2>Glow Up Salon</h2><button class="x" onclick="${act('close')}">✕</button></div>
   <div class="svc">${SERVICES.map(([k, n, i]) => `<button class="${tab === k ? 'on' : ''}" onclick="${act('stab', k)}"><span class="i">${i}</span>${n}</button>`).join('')}</div>
   ${line}<div class="bd">${body}</div>

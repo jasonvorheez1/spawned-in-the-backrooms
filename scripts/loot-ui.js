@@ -608,9 +608,9 @@ function detail(t, s, def) {
       <div class="dt-header"><h4>${nm}</h4><span class="dt-rarity">AMMO</span></div>
 
       <div class="g">
-        ${cell('CALIBER', t === 'ammo' ? '9MM / .38' : '12 GAUGE')}
+        ${cell('CALIBER', t === 'ammo' ? '9MM / .38' : t === 'shells' ? '12 GAUGE' : 'ENERGY CELL')}
         ${cell('BOX QTY', `+${a.perPickup}`)}
-        ${cell('CARRIED', `${s[t] ?? 0} ROUNDS`)}
+        ${cell('CARRIED', `${s[t] ?? 0} ${t === 'cells' ? 'CELLS' : 'ROUNDS'}`)}
         ${cell('VAL', t === 'ammo' ? '$4.00' : '$5.00')}
       </div>
     </div>`
@@ -852,10 +852,10 @@ function inventory(s) {
     ${s.cashew > 0 ? `<button class="it" onclick="sendAction('inv',{k:'cashewDrink'})"><span class="cur">&gt;</span><span class="nm" style="color:#e8d2b0">Cashew Water</span><span class="stat-r">${s.cashew} · DRINK</span></button>${(s.almonds ?? 0) > 0 ? `<button class="it" onclick="sendAction('inv',{k:'cashewMix'})"><span class="cur">&gt;</span><span class="nm" style="color:#e8d2b0">Cashew + almond water</span><span class="stat-r">NEUTRALIZE</span></button>` : ''}` : ''}
     ${s.repellent > 0 ? `<button class="it" onclick="sendAction('inv',{k:'repellent'})"><span class="cur">&gt;</span><span class="nm" style="color:#cfe8c8">Smiler Repellent</span><span class="stat-r">${s.repellent} · SPRAY</span></button>` : ''}
     ${s.bobbypins ? `<button class="it${sel === 'bobbypin' ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'bobbypin'})" oncontextmenu="event.preventDefault();sendAction('inv',{k:'dropSel',t:'bobbypin'})"><span class="cur">&gt;</span><span class="nm">Bobby pins</span><span class="stat-r">${s.bobbypins}</span></button>` : ''}
-    ${s.pages ? String(s.pages).split(',').filter(Boolean).sort((x, y) => x - y).map((n) => `<button class="it" onclick="sendAction('inv',{k:'read',n:${+n}})"><span class="cur">&gt;</span><span class="nm" style="color:#e8dcc0">${+n === 30 || +n === 31 ? esc(describe('page:' + n).name) : +n === 24 ? 'Field doc 24' : +n >= 21 && +n <= 23 ? 'Field doc ' + (+n - 20) : +n >= 11 && +n <= 17 ? 'Alef papers ' + (+n - 10) : 'Torn page ' + +n}</span><span class="stat-r">READ</span></button>`).join('') : ''}` || '<div class="em">No miscellaneous items.</div>'
+    ${s.pages ? String(s.pages).split(',').filter(Boolean).sort((x, y) => x - y).map((n) => `<button class="it" onclick="sendAction('inv',{k:'read',n:${+n}})"><span class="cur">&gt;</span><span class="nm" style="color:#e8dcc0">${esc(describe('page:' + n).name)}</span><span class="stat-r">READ</span></button>`).join('') : ''}` || '<div class="em">No miscellaneous items.</div>'
 
   // tapes get their own tab, each by its own title (Shelly, Nov 10: "the tape for the 50s ad is nowhere to be seen")
-  const TAPE_NAMES = { r55: 'Atomic Age Defender (1950s ad)', walt41: 'Field Test 41', matrix: 'Expedition Log: Matrix' }
+  const TAPE_NAMES = { r55: 'Atomic Age Defender (1950s ad)', walt41: 'Field Test 41', matrix: 'Expedition Log: Matrix', ted246: 'Personal Entry · Ted Kowalski', janine: 'M.E.G. Interview Log 10328', beast18: 'Entity 18 · The Last Signatory', dina4: 'Dina, Tape Four', b8: 'B8, Night Forty' }
   const tapes = String(s.holotapes ?? '').split(',').filter(Boolean).map((id) => { const on = s.holoPlay?.id === id; return `<button class="it${on ? ' sel' : ''}" onclick="sendAction('inv',{k:'holo',id:'${id}'})"><span class="cur">&gt;</span><span class="nm" style="color:#ff9a6a">Tape: ${TAPE_NAMES[id] ?? id}</span><span class="stat-r">${on ? '■ STOP' : '▶ PLAY'}</span></button>` }).join('') || '<div class="em">No tapes.</div>'
   const keyRows0 = (s.keyItems ?? []).includes('spamton') ? `<div class="it on" title="Can't be dropped. Weighs nothing."><span class="cur">&gt;</span><span class="nm" style="color:#ff6fd0">[[SPAMTON G. SPAMTON]]</span><span class="stat-r"><span>0 kg</span><span style="color:#ffe14d">LOOT $$ +</span></span><div style="font-size:11px;opacity:.75;padding-left:18px">A [[Big Shot]] riding in your pocket. 10% chance of a backquarter in any loot, +2% on money you find.</div></div>` : ''
   const keyRows = keyRows0 + ((s.keyItems ?? []).includes('l132_daypass') ? `<div class="it on" title="Can't be dropped. Weighs nothing."><span class="cur">&gt;</span><span class="nm" style="color:#e8c766">Lumiria day pass</span><span class="stat-r"><span>0 kg</span><span>KEY</span></span><div style="font-size:11px;opacity:.75;padding-left:18px">Signed by half the square. Lumiria counts you a friend of the town.</div></div>` : '')
@@ -950,7 +950,7 @@ function storage(s, key) { // your fridge: two sides, one press moves one thing
   const left = Object.values(groups).map((g) => row(nameOf(g.t), g.n, `{k:'take',i:${g.i}}`, 'TAKE')).join('') || '<div class="em">Empty.</div>'
   const right = bagRows(s).map(([t, nm, n]) => row(nm, n, `{k:'store',t:'${t}'}`, 'PUT IN')).join('') || (s.lootName === 'Steamer trunk' ? '<div class="em">Nothing to stow.</div>' : '<div class="em">No food or drinks on you.</div>')
   const col = (title, body) => `<div style="flex:1;min-width:0"><div style="opacity:.7;letter-spacing:.15em;margin-bottom:6px">${title}</div><div style="max-height:46vh;overflow:auto">${body}</div></div>`
-  return `<div class="pbw pb"><div class="pbp" data-modal tabindex="0" onkeydown="if(event.key==='Escape'){event.preventDefault();event.stopPropagation();sendAction('loot',{k:'close'})}">
+  return `<div class="pbw pb"><div class="pbp" data-modal tabindex="0" onkeydown="if(!event.repeat&&(event.key==='Escape'||event.key==='e'||event.key==='E')){event.preventDefault();event.stopPropagation();sendAction('loot',{k:'close'})}else if(!event.repeat&&(event.key==='r'||event.key==='R')&&${items.length > 0}){event.preventDefault();event.stopPropagation();sendAction('loot',{k:'all'})}">
     <div class="nv-top"><div class="nv-top-left"><h2>${esc(s.lootName || 'STORAGE')}</h2></div><div class="nv-vitals"><span><b>SPACE</b>${items.length}/30</span></div></div>
     <div style="display:flex;gap:28px;margin-top:10px">${col('INSIDE', left)}${col('YOUR BAG', right)}</div>
     <div class="ft">
@@ -975,13 +975,13 @@ function container(s, key) {
   }).join('')
 
   const n = owned(s).length - 1
-  const carry = `Carrying ${n} weapon${n === 1 ? '' : 's'} · almond ${s.almonds ?? 0} · rounds ${s.ammo ?? 0} · shells ${s.shells ?? 0}`
+  const carry = `Carrying ${n} weapon${n === 1 ? '' : 's'} · almond ${s.almonds ?? 0} · rounds ${s.ammo ?? 0} · shells ${s.shells ?? 0}${s.cells ? ` · cells ${s.cells}` : ''}`
 
   // Nov 12 (Shelly: the case's list fell into squashed columns): the list keeps its own half; the item card takes the rest and never squeezes it
   const col = (title, body) => `<div style="flex:0 0 44%;min-width:0;display:flex;flex-direction:column"><div style="font-size:11px;letter-spacing:.2em;opacity:.7;border-bottom:1px solid currentColor;padding-bottom:4px;margin-bottom:6px;white-space:nowrap">${title}</div><div class="ls" style="display:block;flex:1 1 auto;max-height:340px;overflow-y:auto;overflow-x:hidden">${body}</div></div>`
   const left = col(`INSIDE · ${items.length}`, rows.replace(/<span class="stat-r">/g, '<span class="stat-r"><span style="opacity:.6">TAKE&nbsp;</span>') || '<div class="em">Empty.</div>')
   const right = items[0] ? detail(items[0], s, true) : ''
-  return `<div class="pbw pb"><div class="pbp" data-modal tabindex="0" onkeydown="if(event.key==='Escape'){event.preventDefault();event.stopPropagation();sendAction('loot',{k:'close'})}">
+  return `<div class="pbw pb"><div class="pbp" data-modal tabindex="0" onkeydown="if(!event.repeat&&(event.key==='Escape'||event.key==='e'||event.key==='E')){event.preventDefault();event.stopPropagation();sendAction('loot',{k:'close'})}else if(!event.repeat&&(event.key==='r'||event.key==='R')&&${items.length > 0}){event.preventDefault();event.stopPropagation();sendAction('loot',{k:'all'})}">
     <div class="nv-top"><div class="nv-top-left"><h2>${esc(s.lootName || 'CONTAINER')}</h2></div></div>
     <div style="display:flex;gap:18px;margin-top:8px;min-height:0;flex:1 1 auto;overflow:hidden">${left}<div style="flex:1 1 0;min-width:0;display:flex;overflow:hidden">${right}</div></div>
     <div class="ft">

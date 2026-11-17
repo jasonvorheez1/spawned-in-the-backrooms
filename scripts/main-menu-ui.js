@@ -145,7 +145,7 @@ function controlsView(ctx) {
     ['Interact / Loot / Talk', key('interact', 'E')],
     ['Attack / Aim / Reload', `LMB · RMB · ${key('reload', 'R')}`],
     ['Flashlight / Cycle Weapon', `${key('flashlight', 'F')} · ${key('cycleWeapon', 'X')}`],
-    ['Inventory / Character / Journal / Craft', `${key('inv', 'I')} · ${key('sheet', 'K')} · ${key('journal', 'P')} · ${key('craft', 'Y')}`],
+    ['Inventory / Character / Journal / Craft', `${key('inventory', 'I')} · ${key('sheet', 'K')} · ${key('journal', 'P')} · ${key('craft', 'Y')}`],
     ['Quick Slots', '0–9'],
     ['Field Guide', key('fieldGuide', 'J')],
     ['Pause Menu', key('mainmenu', 'Backspace')],

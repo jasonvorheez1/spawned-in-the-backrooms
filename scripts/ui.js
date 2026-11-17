@@ -6,9 +6,6 @@ import { UI_THEME } from './lib/ui-theme.js'
 import { uiPrefsAttrs, uiPrefsOf, noticeToast, escKeyHandler } from './lib/ui-kit.js'
 import { screen, hasHalogen } from './lib/screen.js'
 import { runOf } from './lib/run-opts.js'
-import { rulesHtml, grm as grmPress, grmType as grmTyped } from "../mods/game-rules-manager/lib/panel.js";
-export function grm(a, i, s) { grmPress(a, i, s); }
-export function grmType(i, v) { grmTyped(i, v); }
 // Rare/modal UI panels, debug overlays, and level data are loaded on demand via lazy()/lazyFn().
 const MODS = Object.create(null), MOD_WAIT = Object.create(null)
 const lazy = (k, load) => {
@@ -21,6 +18,9 @@ const lazyFn = (k, load, fn) => (...a) => {
   if (m?.[fn]) return m[fn](...a)
   return (MOD_WAIT[k] ??= load().then((mod) => (MODS[k] = mod)).catch(() => { delete MOD_WAIT[k]; return {} })).then((mod) => mod[fn]?.(...a))
 }
+const loadGrm = () => import('../mods/game-rules-manager/lib/panel.js')
+export const grm = lazyFn('grm', loadGrm, 'grm')
+export const grmType = lazyFn('grm', loadGrm, 'grmType')
 const loadM3d = () => import('../mods/modeling-studio/hud.js')
 export const m3dPvDown = lazyFn('m3d', loadM3d, 'm3dPvDown')
 export const m3dPvWheel = lazyFn('m3d', loadM3d, 'm3dPvWheel')
@@ -327,11 +327,11 @@ function restUi(ctx, s) {
     const body = s.elevAsk
       ? `<p>The hotel does not go to floor ${esc(s.elevAsk)}. Ride anyway?</p><div class="field-controls"><button class="primary" onclick="sendAction('elevdo',{f:'yes'})">Ride</button><button onclick="sendAction('elevdo',{f:'no'})">Back</button></div>`
       : `<div class="field-controls floors">${['1','2','3','4','5','6','7','8','9','10','11','12','13','66','382','B'].map((f) => `<button aria-label="Floor ${f}" onclick="sendAction('elevdo',{f:'${f}'})">${f}</button>`).join('')}</div><button class="field-cancel" onclick="sendAction('elevdo',{f:''})">Close</button>`
-    out += `<div class="field-shade" data-modal><section class="field-dialog" aria-labelledby="elevator-title"><h2 id="elevator-title">Hotel elevator</h2>${body}</section></div>`
+    out += `<div class="field-shade" data-modal tabindex="0" onkeydown="${escKeyHandler("sendAction('elevdo',{f:''})")}"><section class="field-dialog" aria-labelledby="elevator-title"><h2 id="elevator-title">Hotel elevator</h2>${body}</section></div>`
   }
   if (s.waitOpen) {
     const durations = [1, 2, 4, 8, 12, 24].map((h) => `<button onclick="sendAction('waitdo',{h:${h}})">${h} ${h === 1 ? 'hour' : 'hours'}</button>`).join('')
-    out += `<div class="field-shade" data-modal><section class="field-dialog" aria-labelledby="wait-title"><header><h2 id="wait-title">${s.waitBed ? 'Rest' : 'Wait'}</h2><span>${esc(s.waitClock ?? '')}</span></header><div class="field-controls durations">${durations}</div><button class="field-cancel" onclick="sendAction('waitdo',{h:0})">Cancel</button></section></div>`
+    out += `<div class="field-shade" data-modal tabindex="0" onkeydown="if(!event.repeat&&(event.key==='Escape'||event.key==='t'||event.key==='T')){event.preventDefault();event.stopPropagation();sendAction('waitdo',{h:0})}"><section class="field-dialog" aria-labelledby="wait-title"><header><h2 id="wait-title">${s.waitBed ? 'Rest' : 'Wait'}</h2><span>${esc(s.waitClock ?? '')}</span></header><div class="field-controls durations">${durations}</div><button class="field-cancel" onclick="sendAction('waitdo',{h:0})">Cancel</button></section></div>`
   }
   return out
 }
@@ -376,6 +376,8 @@ function questTracker(s, player, ctx) {
 function journalUi(s, player, ctx) {
   if (!s.jrnOpen) return ''
   if (s.jrnOpen === 'guide') return fieldGuideUi(s, player.place)
+  const acts = ctx?.world?.inputs?.actions ?? {}
+  const lab = (n, d) => acts[n]?.label ?? d
   const recent = (a, b) => (b.at ?? 0) - (a.at ?? 0)
   const errandLast = (a, b) => Number(a.kind === 'errand') - Number(b.kind === 'errand') // quests first, then errands (scripts/lib/quests.js errandStep)
   const open =Object.entries(s.quests ?? {}).map(([id, q]) => ({ ...q, id, status: 'Current' }))
@@ -425,8 +427,8 @@ function journalUi(s, player, ctx) {
     </div>`
   }
   const fbtn = (k, lbl, n) => `<button class="${qf === k ? 'on' : ''}" onclick="sendAction('qselect',{f:'${k}'})">${lbl} (${n})</button>`
-  return `<div id="journal" data-modal tabindex="0" onkeydown="${escKeyHandler("sendAction('journal')")}"><section class="journal-panel" aria-labelledby="journal-title">
-    <header class="journal-header"><h1 id="journal-title">Quests</h1><span>${tr.length} of ${MAX_TRACK} tracked</span><button onclick="sendAction('fieldGuide',{k:'open'})">Field Guide <kbd>J</kbd></button><button class="journal-close" onclick="sendAction('journal')">Close <kbd>P</kbd></button></header>
+  return `<div id="journal" data-modal tabindex="0" onkeydown="if(!event.repeat&&(event.key==='Escape'||event.key==='p'||event.key==='P')){event.preventDefault();event.stopPropagation();sendAction('journal')}else if(!event.repeat&&(event.key==='j'||event.key==='J')){event.preventDefault();event.stopPropagation();sendAction('fieldGuide',{k:'open'})}"><section class="journal-panel" aria-labelledby="journal-title">
+    <header class="journal-header"><h1 id="journal-title">Quests</h1><span>${tr.length} of ${MAX_TRACK} tracked</span><button onclick="sendAction('fieldGuide',{k:'open'})">Field Guide <kbd>${esc(String(lab('fieldGuide', 'J')).toUpperCase())}</kbd></button><button class="journal-close" onclick="sendAction('journal')">Close <kbd>${esc(String(lab('journal', 'P')).toUpperCase())}</kbd></button></header>
     ${wristNav('journal')}
     <div class="journal-filters" role="tablist" aria-label="Quest status filter">${fbtn('all', 'All', allList.length)}${fbtn('active', 'Active', open.length)}${fbtn('completed', 'Completed', completed.length)}${fbtn('failed', 'Failed', failed.length)}</div>
     <div class="quest-layout">
@@ -485,7 +487,7 @@ function ledgerUi(s) {
   if (!s.ledgerOpen) return ''
   const hands = ['Courier New,monospace', 'Georgia,serif', 'Comic Sans MS,cursive']
   const rows = LEDGER_ROWS.map((r, i) => `<tr style="font-family:${hands[i % 3]};${r[1] === 'Dina A.' ? 'color:#3b2a1a' : ''}">${r.map((c, j) => `<td style="padding:4px 6px;border-bottom:1px solid #b9ab88;${j === 2 ? 'font-size:16px;text-align:center' : ''}${j === 4 && c === 'NOT RETURNED' ? ';color:#8a1c12;font-weight:bold' : ''}">${c}</td>`).join('')}</tr>`).join('')
-  return `<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);pointer-events:auto;z-index:40" data-modal>
+  return `<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);pointer-events:auto;z-index:40" data-modal tabindex="0" onkeydown="${escKeyHandler("sendAction('inv',{k:'read',n:0})")}">
   <div style="width:min(720px,94vw);background:#e4d7b6;color:#2a241a;padding:22px 26px 16px;box-shadow:0 10px 40px rgba(0,0,0,.7);transform:rotate(-.6deg);border-left:10px solid #3a2a1c;background-image:repeating-linear-gradient(#e4d7b6 0 27px,#d6c79f 27px 28px)">
     <div style="display:flex;justify-content:space-between;font-family:Georgia,serif;font-size:13px;color:#6b5a3c;margin-bottom:10px"><span>M.E.G. · DOORSTEP CARPET</span><span style="letter-spacing:.2em">KEYS OUT</span></div>
     <table style="width:100%;border-collapse:collapse;font-size:13px"><tr style="font-family:Georgia,serif;font-size:11px;color:#7a6c50;text-align:left"><th>date</th><th>name</th><th>mark</th><th>key</th><th>status</th><th>signed</th></tr>${rows}</table>
@@ -522,7 +524,7 @@ function renderHud(ctx, player) {
   if (s.mj?.seats) return `${THEME}${LIVE}<div id="hud" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">${lazy('mahjong', () => import('./mahjong-ui.js'))?.mahjongPanel?.(s, ctx.now()) ?? ''}${chatBubbles(ctx, ctx.now(), player)}</div>` // at the mahjong table: only the game and who's talking
   const now = ctx.now(), lv = s.level, mh = maxHp(lv, s), ms = maxSan(lv, s)
   const hpF = Math.max(0, s.hp / mh), sanF = Math.max(0, s.sanity / ms)
-  const zone = player.place === 'bonus' ? 'bonus' : (s.zone ?? 'hub')
+  const zone = player.place === 'bonus' ? 'bonus' : (s.zone ?? (player.place === 'main' || String(player.place ?? '').startsWith('tutorial0') ? 'hub' : ''))
   const acts = ctx.world.inputs?.actions ?? {}
   const lab = (n, d) => acts[n]?.label ?? d
   const down = s.downAt && now - s.downAt < 3500
@@ -591,9 +593,9 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
     <div style="font-size:clamp(26px,7vw,56px);letter-spacing:.28em;line-height:1.1;margin:4px 0;white-space:nowrap">LIGHTS OUT</div>
     <div style="font-size:13px;letter-spacing:.18em;opacity:.75">THE DARK HERE IS OLDER THAN YOU</div>
   </div>` : `<div id="z-${zone}" class="zone" style="position:absolute;left:0;right:0;text-align:center;top:100px;animation:hud-fade 3.5s forwards;pointer-events:none">
-    <div style="font-size:22px;letter-spacing:0.12em">${(zone === 'halls' && player.place !== 'main' ? null : ZONE_NAMES[zone]) ?? (LEVEL_NAMES[player.place]?.[1] ?? 'THE LOBBY').toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}</div>
+    <div style="font-size:22px;letter-spacing:0.12em">${((zone === 'halls' || zone === 'hub') && player.place !== 'main' && !String(player.place ?? '').startsWith('tutorial0') ? null : ZONE_NAMES[zone]) ?? (LEVEL_NAMES[player.place]?.[1] ?? 'THE LOBBY').toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}</div>
     <div class="muted" style="font-size:12px;margin-top:2px">
-      ${zone === 'bonus' ? 'You feel safe. Everyone lands here.' : zone === 'manila' ? 'The Manila Room. The fluorescent hum softens. Sanity recovers.' : zone === 'hub' ? 'Sanity stabilizes here. Nothing follows.' : zone === 'dark' ? 'Total blackout. Watch the corners.' : zone === 'red' ? 'Severe sanity decay.' : zone === 'l5_housekeeping' ? 'M.E.G. Outpost Housekeeping. Sanity and health recover here.' : zone === 'l5_boiler' ? 'The Boiler Room. Extreme heat and heavy sanity drain.' : zone === 'l5_beverly' ? 'The Beverly Room. Hypnotic ballroom music echoes.' : ''}
+      ${zone === 'bonus' ? 'You feel safe. Everyone lands here.' : zone === 'manila' ? 'The Manila Room. The fluorescent hum softens. Sanity recovers.' : zone === 'hub' && (player.place === 'main' || String(player.place ?? '').startsWith('tutorial0')) ? 'Sanity stabilizes here. Nothing follows.' : zone === 'dark' ? 'Total blackout. Watch the corners.' : zone === 'red' ? 'Severe sanity decay.' : zone === 'l5_housekeeping' ? 'M.E.G. Outpost Housekeeping. Sanity and health recover here.' : zone === 'l5_boiler' ? 'The Boiler Room. Extreme heat and heavy sanity drain.' : zone === 'l5_beverly' ? 'The Beverly Room. Hypnotic ballroom music echoes.' : ''}
     </div>
   </div>`}` : ''}
 
@@ -621,9 +623,9 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
   </div>` : ''}
 
   ${(s.firesaltUntil ?? 0) > now ? `<div style="position:absolute;left:0;right:0;text-align:center;bottom:150px;font-size:13px;color:#ff9a4a;text-shadow:0 0 6px rgba(255,120,30,.6)">Firesalt on your weapon · x1.4 melee · ${Math.ceil((s.firesaltUntil - now) / 1000)}s</div>` : ''}
-  ${s.reading ? (() => { const PAGES = lazy('pages', () => import('./lib/data/pages.yml'))?.default; return PAGES?.[s.reading] ? `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);pointer-events:auto" data-modal>
+  ${s.reading ? (() => { const PAGES = lazy('pages', () => import('./lib/data/pages.yml'))?.default; return PAGES?.[s.reading] ? `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.55);pointer-events:auto" data-modal tabindex="0" onkeydown="${escKeyHandler("sendAction('inv',{k:'read',n:0})")}">
     <div style="width:min(440px,88vw);background:#e9dfc4;color:#2a241a;padding:22px 26px 16px;max-height:84vh;overflow-y:auto;font-family:'Courier New',monospace;font-size:14px;line-height:1.5;box-shadow:0 8px 30px rgba(0,0,0,.6);transform:rotate(-1.2deg);border-left:3px dashed #b9ab88">
-      <div style="font-size:11px;color:#7a6c50;margin-bottom:8px">${PAGES.titles?.[s.reading] ?? (s.reading >= 101 && s.reading <= 104 ? 'Level 109 · Neon Hospital record · ' + (s.reading - 100) + ' of 4' : s.reading === 24 ? 'Level 10 field observation · Entity 17' : s.reading >= 21 && s.reading <= 23 ? 'Level 0 field document · ' + (s.reading - 20) + ' of 3' : s.reading >= 11 && s.reading <= 17 ? 'Base Alef papers · ' + (s.reading - 10) + ' of 7' : 'torn page · ' + s.reading + ' of 8')}</div>
+      <div style="font-size:11px;color:#7a6c50;margin-bottom:8px">${PAGES.titles?.[s.reading] ?? (s.reading >= 110 && s.reading <= 116 ? 'Level 109 · Entity 19 record · ' + (s.reading - 109) + ' of 7' : s.reading >= 101 && s.reading <= 104 ? 'Level 109 · Neon Hospital record · ' + (s.reading - 100) + ' of 4' : s.reading === 24 ? 'Level 10 field observation · Entity 17' : s.reading >= 21 && s.reading <= 23 ? 'Level 0 field document · ' + (s.reading - 20) + ' of 3' : s.reading >= 11 && s.reading <= 17 ? 'Base Alef papers · ' + (s.reading - 10) + ' of 7' : 'torn page · ' + s.reading + ' of 8')}</div>
       <div style="white-space:pre-wrap">${String(PAGES[s.reading]).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/~~(.+?)~~/g, '<s style="text-decoration-thickness:3px">$1</s>')}</div>
       <div style="text-align:right;margin-top:12px"><button onclick="sendAction('inv',{k:'read',n:0})" style="background:#2a241a;color:#e9dfc4;border:0;padding:5px 14px;font-family:inherit;cursor:pointer">put it away</button></div>
     </div></div>` : '' })() : ''}
@@ -632,7 +634,7 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
   ${noticeToast(s, now)}
   <!-- Subdued Initial Hint -->
   ${!halogen || uiPrefsOf(s).hudMinimal ? '' : `<div id="hint" style="position:absolute;left:0;right:0;text-align:center;bottom:180px;font-size:12px;color:rgba(232,228,216,0.45);animation:hud-fade 7s 1s forwards;opacity:0">
-    <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('emote', 'T')}</kbd> face
+    <kbd>${lab('attack', 'Click')}</kbd> attack · <kbd>${lab('cycleWeapon', 'X')}</kbd> weapon · <kbd>${lab('sprint', 'Shift')}</kbd> sprint · <kbd>${lab('flashlight', 'F')}</kbd> light · <kbd>${lab('sheet', 'K')}</kbd> stats · <kbd>${lab('wait', 'T')}</kbd> wait
   </div>`}
 
 </div>${ledgerUi(s)}${journalUi(s, player, ctx)}${s.radioOpen ? (lazy('radio', () => import('./radio-ui.js'))?.radioUi?.(ctx, player) ?? '') : ''}${s.feed?.length ? (lazy('feed', () => import('./feed-ui.js'))?.feedUi?.(ctx, player) ?? '') : ''}${s.lootOpen || s.invOpen || (s.focus && screen(s, player.place) === 'play') ? (lazy('loot', () => import('./loot-ui.js'))?.lootUi?.(ctx, player) ?? '') : ''}${s.pick ? (lazy('pick', () => import('./lockpick-ui.js'))?.pickUi?.(ctx, player) ?? '') : ''}${s.spam?.on ? (lazy('spam', () => import('./spamton-ui.js'))?.spamUi?.(ctx, player) ?? '') : ''}${player?.place === 'spamton' && ctx.place?.state?.spam ? (lazy('spamArena', () => import('./spamton-arena-ui.js'))?.spamArenaUi?.(ctx, player) ?? '') : ''}${s.bt ? (lazy('barter', () => import('./barter-ui.js'))?.barterUi?.(ctx, player) ?? '') : ''}${s.phoneOpen ? (lazy('phone', () => import('./phone-ui.js'))?.phoneUi?.(ctx, player) ?? '') : ''}${(s.talkWith || s.shopOpen) && !s.bt ? (lazy('talk', () => import('./talk-ui.js'))?.talkUi?.(ctx, player) ?? '') : ''}${s.hubShop || (s.hubOffer && ctx.self?.place !== 'bonus') ? (lazy('hub', () => import('./hub-ui.js'))?.hubUi?.(ctx, player) ?? '') : ''}${s.building ? (lazy('build', () => import('./build-ui.js'))?.buildUi?.(ctx, player) ?? '') : ''}${s.sheetOpen ? (lazy('stats', () => import('./stats-ui.js'))?.statsUi?.(ctx, player) ?? '') : ''}${s.craftOpen ? (lazy('craft', () => import('./craft-ui.js'))?.craftUi?.(ctx, player) ?? needsHud(s)) : needsHud(s)}${(ctx.self?.place ?? player.place) === 'level169' && (s.l169trip || s.l169fall || s.l169board || s.l169read) ? (lazy('road', () => import('./l169-road-ui.js'))?.roadUi?.(ctx, player) ?? '') : ''}${s.os ? (lazy('os', () => import('./os-ui.js'))?.osUi?.(ctx, player) ?? '') : ''}${s.arcade ? (lazy('arcade', () => import('./arcade-ui.js'))?.arcadeUi?.(ctx, player) ?? '') : ''}${s.smoothieOpen || s.sCut ? (lazy('smoothie', () => import('./smoothie-ui.js'))?.smoothieUi?.(ctx, player) ?? '') : ''}${s.horde || (s.hordeResult && now - s.hordeResult.at < 7000) ? (lazy('horde', () => import('./horde-ui.js'))?.hordeUi?.(ctx, player) ?? '') : ''}${s.noclipIn != null || s.exitAt ? (lazy('noclip', () => import('./noclip-ui.js'))?.noclipUi?.(ctx, player) ?? '') : ''}`
@@ -671,7 +673,7 @@ function cctvUi(ctx, player) {
   <div style="position:absolute;top:110px;right:calc(var(--spawn-chrome-reservation-right-inset,50px) + 68px);font-size:16px;letter-spacing:.08em">${stamp}</div>
   <div style="position:absolute;bottom:136px;left:68px;font-size:13px;letter-spacing:.14em;opacity:.8">SEDCO SPOTLIGHT · LOSS PREVENTION · CH ${String(i + 1).padStart(2, '0')}/08</div>
   <div style="position:absolute;bottom:24px;left:0;right:0;display:flex;justify-content:center">
-    <div data-modal class="pointer-events-auto" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;max-width:calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 24px));background:#0c0c0be6;border:2px solid #5c5a52;padding:8px 10px;box-shadow:4px 4px 0 #000">
+    <div data-modal tabindex="0" onkeydown="if(!event.repeat&&(event.key==='Escape'||event.key==='e'||event.key==='E')){event.preventDefault();event.stopPropagation();sendAction('cctv',{go:'exit'})}else if(!event.repeat&&(event.key==='a'||event.key==='A'||event.key==='ArrowLeft')){event.preventDefault();event.stopPropagation();sendAction('cctv',{go:'prev'})}else if(!event.repeat&&(event.key==='d'||event.key==='D'||event.key==='ArrowRight')){event.preventDefault();event.stopPropagation();sendAction('cctv',{go:'next'})}" class="pointer-events-auto" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;max-width:calc(100vw - 2*(var(--spawn-chrome-reservation-right-inset,50px) + 24px));background:#0c0c0be6;border:2px solid #5c5a52;padding:8px 10px;box-shadow:4px 4px 0 #000">
       <button onclick="sendAction('cctv',{go:'prev'})" style="font:700 13px 'Courier New',monospace;padding:8px 12px;border:2px solid #5c5a52;background:#0c0c0b;color:#cfcbbd">◀ A</button>
       ${tabs}
       <button onclick="sendAction('cctv',{go:'next'})" style="font:700 13px 'Courier New',monospace;padding:8px 12px;border:2px solid #5c5a52;background:#0c0c0b;color:#cfcbbd">D ▶</button>

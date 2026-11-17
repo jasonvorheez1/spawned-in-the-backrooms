@@ -53,7 +53,7 @@ function stationUi(s, player) {
     (player?.isEditor ? card("testlab", "BUILDERS", "Test Range", "every weapon, physics, crafting") : "") +
     HOMES.map((h) => h.has(s) ? card(h.key, "HOME", h.name, typeof h.where === "function" ? h.where(s) : h.where) : card(null, "HOME", h.name, "not unlocked yet", "off")).join("")
   const grid = ATLAS_ORDER.map((p) => { const r = atlas[p], P = PLACES[p]; return r ? card(p, P.title[0], P.title[1].replace(/\b(\w)(\w*)/g, (_, a, b) => a + b.toLowerCase()), `${ago(r.at)} · ${r.n} visit${r.n === 1 ? "" : "s"}`) : card(null, "? ? ?", "Unexplored", "walk there once to add it", "off") }).join("")
-  return `${SCSS}<div id="stn" data-modal><button class="x" onclick="${act("close")}">×</button>
+  return `${SCSS}<div id="stn" data-modal tabindex="0" onkeydown="if(!event.repeat&&(event.key==='Escape'||event.key==='e'||event.key==='E')){event.preventDefault();event.stopPropagation();${act("close")}}"><button class="x" onclick="${act("close")}">×</button>
 <div class="hd"><div><div class="tag">Bonus Line · Departures</div><h2>TELEPORT STATION</h2></div><div class="cnt"><b>${seen.length}</b> / ${total} levels explored<div class="bar"><i style="width:${Math.round(seen.length / total * 100)}%"></i></div></div></div>
 <div class="bd"><div class="sec">Quick stops</div><div class="q">${quick}</div><div class="sec">Your atlas · every level you reach is saved here</div><div class="g">${grid}</div></div></div>`
 }
@@ -76,5 +76,5 @@ export function hubUi(ctx, player) {
     const order = FURN.order ?? Object.keys(FURN.pieces ?? {})
     rows = order.map((key) => { const f = FURN.pieces[key]; if (!f) return ""; const own = s.furn?.[key] ?? 0; return `<div class="row"><div><div class="n">${f.name}${own ? ` <span class="i">· own ${own}</span>` : ""}</div><div class="i">${f.info ?? ""}</div></div><button ${can(f.price) ? "" : "disabled"} onclick="${act("furn", key)}">${bd(f.price)}</button></div>` }).join("")
   } else if (k === "station") return stationUi(s, player)
-  return `${CSS}<div id="hubp" data-modal><button class="x" onclick="${act("close")}">×</button><h2>${title}</h2><div class="sub">${sub}</div>${k !== "station" ? `<div class="cash">Backdollars: ${bd(cash)}</div>` : ""}${rows}</div>`
+  return `${CSS}<div id="hubp" data-modal tabindex="0" onkeydown="if(!event.repeat&&(event.key==='Escape'||event.key==='e'||event.key==='E')){event.preventDefault();event.stopPropagation();${act("close")}}"><button class="x" onclick="${act("close")}">×</button><h2>${title}</h2><div class="sub">${sub}</div>${k !== "station" ? `<div class="cash">Backdollars: ${bd(cash)}</div>` : ""}${rows}</div>`
 }

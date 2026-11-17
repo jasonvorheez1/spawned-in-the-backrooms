@@ -134,8 +134,9 @@ function result(m, now) {
 export function mahjongPanel(s, now = 0) {
   const m = s.mj; if (!m?.open) return "";
   const money = cash(s.cents ?? 0);
-  if (!m.seats) return `${CSS}<div id="mj" data-modal><div class="pn" style="width:min(460px,92vw)"><div class="hd"><h2>THE BEVERLY ROOM · MAHJONG</h2><span class="sp"></span><button class="x" onclick="sendAction('mj',{k:'close'})">✕</button></div><div class="ms" style="color:#ffb0a0">${es(m.msg ?? "Taking a seat...")}</div><div class="lg">Your cash: ${money}</div></div></div>`;
-  if (m.phase === "intro") return `${CSS}<div id="mj" data-modal>${intro(m, now)}</div>`;
+  const mjEsc = `tabindex="0" onkeydown="if(!event.repeat&&event.key==='Escape'){event.preventDefault();event.stopPropagation();sendAction('mj',{k:'close'})}"`;
+  if (!m.seats) return `${CSS}<div id="mj" data-modal ${mjEsc}><div class="pn" style="width:min(460px,92vw)"><div class="hd"><h2>THE BEVERLY ROOM · MAHJONG</h2><span class="sp"></span><button class="x" onclick="sendAction('mj',{k:'close'})">✕</button></div><div class="ms" style="color:#ffb0a0">${es(m.msg ?? "Taking a seat...")}</div><div class="lg">Your cash: ${money}</div></div></div>`;
+  if (m.phase === "intro") return `${CSS}<div id="mj" data-modal ${mjEsc}>${intro(m, now)}</div>`;
   const me = m.seats[0], myTurn = m.phase === "turn" && m.turn === 0, canDisc = myTurn && m.mustDisc;
   const hand = (me.hand ?? []).map((t, i) => {
     const dealt = m.phase === "deal" ? `style="${an("mjDeal", 340, m.at + 200 + i * 95, now)}opacity:${now - m.at > 200 + i * 95 ? 1 : 0}"` : "";
@@ -152,7 +153,7 @@ export function mahjongPanel(s, now = 0) {
   const st = m.stamp && now - m.stamp.at < 1500 ? `<div class="st" style="color:${["#f2c14e", "#7ad0ff", "#ff90d0", "#b8e060"][m.stamp.q]};${an("mjStamp", 1400, m.stamp.at, now)}">${m.stamp.t}</div>` : "";
   const shaking = m.stamp && now - m.stamp.at < 260 ? an("mjShake", 260, m.stamp.at, now, "linear") : "";
   const wall = m.wall?.length ?? 0;
-  return `${CSS}<div id="mj" data-modal><div class="pn" style="${shaking}">
+  return `${CSS}<div id="mj" data-modal ${mjEsc}><div class="pn" style="${shaking}">
     <div class="hd"><h2>THE BEVERLY ROOM · MAHJONG</h2><span>Pot <b style="color:#f2c14e">${cash(m.pot ?? 0)}</b></span><span class="sp"></span><span>Your cash ${money}</span><button class="x" onclick="sendAction('mj',{k:'close'})">leave ✕</button></div>
     <div class="g"><div style="grid-column:2;grid-row:1">${seatCard(m, 2, now)}</div><div style="grid-column:1;grid-row:2">${seatCard(m, 1, now)}</div><div style="grid-column:3;grid-row:2">${seatCard(m, 3, now)}</div>
       <div class="ct" style="grid-column:2;grid-row:2"><div class="rv top" style="grid-row:1">${river(m, 2, now)}</div>

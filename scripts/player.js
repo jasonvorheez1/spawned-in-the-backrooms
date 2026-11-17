@@ -365,10 +365,10 @@ function takeToken0(ctx, token, opts) {
   if (token === 'repellent') { s.repellent = (s.repellent ?? 0) + 1; s.pickedAt = now; s.notice = { text: 'Smiler Repellent. A few drops, clear as almond water. Rare', at: now }; sound(ctx, 'plastic-bottle-pickup-rattle', 0.6, true); return { ok: true } }
   if (token === 'fs_ingot') { s.fsIngot = (s.fsIngot ?? 0) + 1; s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true } }
   if (token === 'firesalt') { s.firesalt = (s.firesalt ?? 0) + 1; s.pickedAt = now; sound(ctx, 'pickup-ammo', 0.6, true); return { ok: true } }
-  if (token.startsWith('holo:')) { // a tape: kept, played on HALOGEN (I > Misc > PLAY)
+  if (token.startsWith('holo:')) { // a tape: kept, played on HALOGEN (I > Tapes > PLAY)
     const id = token.slice(5), have = String(s.holotapes ?? '').split(',').filter(Boolean)
     if (!have.includes(id)) have.push(id)
-    s.holotapes = have.join(','); s.pickedAt = now; s.notice = { text: 'Tape · play it on HALOGEN (I > Misc)', at: now }
+    s.holotapes = have.join(','); s.pickedAt = now; s.notice = { text: 'Tape · play it on HALOGEN (I > Tapes)', at: now }
     sound(ctx, 'loot-take-all-rustle', 0.4, true); return { ok: true }
   }
   if (token.startsWith('page:')) { // a torn notebook page: kept and read now
@@ -404,7 +404,7 @@ function takeToken0(ctx, token, opts) {
     const spec = getBookSpec(token)
     if (!spec) return { ok: false, msg: '' }
     s.books = { ...(s.books ?? {}), [token]: (s.books?.[token] ?? 0) + 1 }; s.pickedAt = now
-    s.notice = { text: `${spec.title} · in your bag (I > Aid to read)`, at: now }
+    s.notice = { text: `${spec.title} · in your bag (I > Misc to read)`, at: now }
     sound(ctx, 'gun-raise-cloth-rustle', 0.5, true)
     return { ok: true }
   }
@@ -412,7 +412,7 @@ function takeToken0(ctx, token, opts) {
     const mag = getMagSpec(token)
     if (!mag) return { ok: false, msg: '' }
     s.mags = { ...(s.mags ?? {}), [token]: (s.mags?.[token] ?? 0) + 1 }; s.pickedAt = now
-    s.notice = { text: `${mag.title} · in your bag (+${mag.bonus} ${mag.skillName}, ${mag.durationMin}m)`, at: now }
+    s.notice = { text: `${mag.title} · in your bag (+${mag.bonus} ${mag.skillName}, ${mag.durationMin}m · I > Misc)`, at: now }
     sound(ctx, 'loot-take-all-rustle', 0.5, true)
     return { ok: true }
   }

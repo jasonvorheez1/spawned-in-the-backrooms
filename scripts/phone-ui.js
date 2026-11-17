@@ -81,7 +81,7 @@ export function phoneUi(ctx, player) {
   if (app === "radio") body = STATIONS.map((st) => { const on = s.radioOn && (s.radioSt | 0) === st.key;
     return `<div class="msg ${on ? "new" : ""}" onclick="sendAction('radio',{k:'tune',st:${st.key}})"><div class="row"><b>${esc(st.name)}</b><span class="from">${esc(st.freq)}</span></div><div class="from">${on ? "Playing · tap to turn off" : "Tap to tune in"}</div></div>`; }).join("");
   const back = app === "home" ? "" : app === "write" ? act({ k: "app", app: "friends" }) : app === "npcmsg" ? act({ k: "app", app: "msgs" }) : act({ k: "app", app: "home" });
-  return `${CSS}<div id="phone" data-modal tabindex="0" onkeydown="if(event.key==='Escape'){event.preventDefault();sendAction('phone')}">
+  return `${CSS}<div id="phone" data-modal tabindex="0" onkeydown="if(!event.repeat&&(event.key==='Escape'||((event.key==='m'||event.key==='M')&&event.target.tagName!=='TEXTAREA'&&event.target.tagName!=='INPUT'))){event.preventDefault();event.stopPropagation();sendAction('phone')}">
   <div class="ear"></div>
   <div class="scr"><div class="top"><span class="sig">${[1, 2, 3, 4].map((i) => `<i class="${i <= bars ? "" : "off"}" style="height:${i * 3}px"></i>`).join("")}</span><span>${esc(PLACE_LABELS?.[player.place] ?? "")}</span><span>${clock}</span></div>
   <div class="bar">${TITLE[app]}</div>
