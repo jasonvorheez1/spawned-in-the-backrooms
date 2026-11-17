@@ -54,7 +54,7 @@ export function update(ctx, dt) {
   poseViewmodel(ctx, dt)
 
   let target = ctx.self.target
-  { const me = ctx.player, f = target?.feetPosition, m = me?.feetPosition // a target lost in the void (a ride or body left behind, its position runaway) gives the eye back to the player
+  { const me = ctx.player, f = target?.worldFeetPosition ?? target?.feetPosition, m = me?.worldFeetPosition ?? me?.feetPosition // world feet: a seated body's own feet are local to its seat (Level 69, 500 m down the road); a target lost in the void (a ride or body left behind, its position runaway) gives the eye back to the player
     if (me && m && target && target.id !== me.id && (!f || ![f.x, f.y, f.z].every(Number.isFinite) || Math.abs(f.x - m.x) + Math.abs(f.y - m.y) + Math.abs(f.z - m.z) > 500)) {
       if (!ctx.self.session.lostTarget) { ctx.self.session.lostTarget = true; ctx.log('[camera] lost target dropped', target.id) }
       try { ctx.self.target = me.id } catch {} ; target = me } }
@@ -79,7 +79,7 @@ export function update(ctx, dt) {
   const crouchWant = sat ? 0.7 : !seated && body.id === ctx.player?.id && body.state?.crawl ? 0.34 : !seated && body.id === ctx.player?.id && (body.state?.crouch || resting) ? 0.62 : 1 // crawling (scripts/crawl.js): the eye half a metre off the floor
   const ck = (ctx.self.session.crouchK ??= 1), crouchK = ck + (crouchWant - ck) * Math.min(1, dt * (sat || ck < 0.69 ? 4.5 : 10))
   ctx.self.session.crouchK = crouchK
-  const pos = seated ? seated.worldFeetPosition : target.feetPosition
+  const pos = seated ? seated.worldFeetPosition : (target.worldFeetPosition ?? target.feetPosition)
   ctx.self.feetPosition = { x: pos.x, y: pos.y + eyeHeight * crouchK, z: pos.z }
 
   // The presented facing (radians) as the one rotation grammar (degrees): undefined before the first frame.
