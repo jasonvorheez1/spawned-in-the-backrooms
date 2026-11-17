@@ -2137,7 +2137,7 @@ function letFly(ctx) {
   }
   // a longer wind-up throws harder: a flick at 60%, full strength after 0.6 s held
   const power = (0.6 + 0.4 * Math.min(1, (now - n.at) / 600)) * hd.throwPower
-  const pc = Math.max(-0.6, Math.min(1.1, s.aimPitch ?? 0)), cp = Math.cos(pc), sp = T.speed * power
+  const pc = Math.max(n.kind === 'shock_pad' ? -1.45 : -0.6, Math.min(1.1, s.aimPitch ?? 0)) // a Shock Pad looked straight down drops at your feet, cp = Math.cos(pc), sp = T.speed * power
   const vel = { x: f.x * cp * sp, y: Math.sin(pc) * sp + T.lift * power, z: f.z * cp * sp }
   const half = T.size / 2
   ctx.spawn({ tags: ['thrown'], lifetime: 12, feetPosition: eye, ...(T.model ? { model: T.model, layout: { box: { min: { x: -half, y: 0, z: -half }, max: { x: half, y: T.size, z: half } } } } : FRESH_BODY),
@@ -2166,7 +2166,6 @@ export const ears = {
   },
   shockLaunch(ctx, b) { // a Shock Pad went off near you: up and away, and no fall damage on the landing that follows
     const s = ctx.self.state, w = walkOf(ctx), S = THROW.shock_pad
-    s.dbgShock = { at: now0(ctx), dead: !!s.dead, down: !!s.downAt, ctl: !!ctx.self.controlling, from: b?.from ?? null }
     if (s.dead || s.downAt || ctx.self.controlling || !b?.from) return
     const f = ctx.self.feetPosition, dx = f.x - b.from.x, dz = f.z - b.from.z, d = Math.hypot(dx, dz)
     const k = Math.max(S.edgeLaunch, 1 - d / S.radius), g = Math.abs(ctx.place.gravity?.y ?? -9.8)
