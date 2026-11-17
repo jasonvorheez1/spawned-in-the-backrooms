@@ -28,10 +28,10 @@ function harder(ctx, s) {
 export function tick(ctx) {
   dressLevel(ctx, "tutorial0");
   const s = ctx.place.state
-  if (s.built === 7) return harder(ctx, s)
+  if (s.built === 8) return harder(ctx, s)
   if (s.built) for (const o of ctx.query({ anyTags: ["t0prop", "furniture", "halogen-unit", "almond", "bench", "container"] })) ctx.destroy(o.id)
   for (let i = 0; i < LIGHTS.length; i++) if (ctx.getObject(`t0-light-${i}`)) ctx.destroy(`t0-light-${i}`)
-  s.built = 7; s.t0hard = 0
+  s.built = 8; s.t0hard = 0
   LIGHTS.forEach(([x, z, hall], i) => hall !== 2 && ctx.spawn({ id: `t0-light-${i}`, tags: hall ? ["t0hall"] : ["t0light"], feetPosition: { x, y: H - 0.3, z }, visibleRange: { max: 42 }, light: { kind: "point", color: "oklch(0.95 0.06 95)", intensity: 5, distance: 10, shadow: { enabled: false } } }))
   for (const [k, x, z, yaw] of PROPS) ctx.spawn({ tags: ["furniture", "t0prop", k], feetPosition: { x, y: 0, z }, rotation: yaw, physics: { body: "static", collider: "box" }, model: { id: FM[k], forward: "+z" } })
   // room B: the desk that gave out, one leg already off it, where they'll be cornered
@@ -45,5 +45,8 @@ export function tick(ctx) {
     ui: `<div face="front" width="0.85m" style="padding:9px 14px;border:2px solid #a49a75;background:#28271d;color:#f4e4b7;font:700 30px Geist,sans-serif">${label}<br><span style="font-size:22px">${line}</span></div>` })
   // corridor E and room F: the notes someone taped up on the way to the wet spot
   for (const [n, x, z, yaw, w] of DRAWINGS) ctx.spawn({ tags: ["t0prop", "t0-drawing"], feetPosition: { x, y: 1.45, z }, rotation: { yaw }, castShadow: false, primitive: { kind: "plane", width: w, height: w }, material: { texture: DRAW[n], transparent: true, alphaTest: 0.4, roughness: 0.95, side: "double" } })
+  // the long hall's mouth: someone scratched a warning into the wallpaper (teaches crouch and light without a card)
+  ctx.spawn({ id: "t0-scrawl", tags: ["t0prop"], feetPosition: { x: 6.2, y: 1.55, z: -26.56 }, rotation: { yaw: 0 }, visibleRange: { max: 18 },
+    vector: "<svg viewBox='0 0 260 90' width='1.5m'><g font-family='display' fill='#2a1a0e' opacity='0.82' transform='rotate(-3 130 45)'><text x='8' y='36' font-size='34'>STAY LOW</text><text x='18' y='76' font-size='30'>KEEP IT DARK</text></g><path d='M196 70 L248 70 M236 60 L248 70 L236 80' stroke='#2a1a0e' stroke-width='4' fill='none' opacity='0.8'/></svg>" })
   ctx.spawn({ id: "t0-almond", tags: ["almond"], feetPosition: ALMOND, rotation: 30, castShadow: false, model: "/cdn/value.d74570d765a2d43f965fc8756878f7bf22f833db5feaf4c335d84d8dc4ba5b62.glb", layout: { box: { min: { x: -0.07, y: 0, z: -0.07 }, max: { x: 0.07, y: 0.32, z: 0.07 } } } })
 }

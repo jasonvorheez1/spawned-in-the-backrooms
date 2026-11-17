@@ -12,19 +12,20 @@ const hasKey = (s) => Object.values(s.hubKeys ?? {}).some((n) => n > 0)
 const needsOn = (s) => s.run?.needs !== "off"
 export const GUIDE_CHAPTERS = ["Find supplies", "Cross the hall", "Get equipped", "Check your gear", "Find the way out"]
 
+// Shelly Nov 17 "complete tutorial rewrite": no cards. The rooms teach (a lit doorway, a scrawl in the hall, the drawings);
+// all that shows is one small key chip by the crosshair, only at the moment you need it.
+const inHall = (p) => p.x > 4 && p.x < 40 && p.z > -29.5 && p.z < -26.5
 export function orientation(s, place, p) {
   if (!inOrientation(place) || s.t0Done || !p) return null
   const chapter = s.t0n ?? 0
-  if (chapter === 0) {
-    if (p.z > -5.7) return { id: "wake", chapter, title: "Find the open doorway", text: "Walk toward the lit corridor. Save your breath for when you need to run.", keys: ["WASD · Move", "Shift · Sprint"] }
-    if (p.z > -19.5 && !hasSupplies(s)) return { id: "search", chapter, title: "Search the supply alcove", text: "The carton is beside the desk on your left. The alcove rejoins the corridor farther down if you want to keep moving.", keys: ["E · Search", "R · Take all"] }
-    return { id: "bend", chapter, title: "Check the bend", text: hasSupplies(s) ? "Keep what you found. Follow the corridor to the room where it turns." : "Keep going. The corridor turns at the room ahead.", keys: [] }
+  if (chapter === 0 && Math.hypot(p.x, p.z) < 1.2) return { id: "wake", chapter, keys: ["WASD · Move"] }
+  if (chapter === 0 && s.focus?.verb === "Search" && !hasSupplies(s)) return { id: "search", chapter, keys: ["E · Search"] }
+  if (chapter === 1 && inHall(p)) {
+    if (p.x > 18 && !s.crouch) return { id: "quiet", chapter, keys: ["C · Crouch"] }
+    if (!s.light && !s.crouch) return { id: "hall", chapter, keys: ["F · Light"] }
+    return null
   }
-  if (chapter === 1) return { id: s.crouch ? "quiet" : "hall", chapter, title: s.crouch ? "Keep low along the hall" : "Cross the long hall", text: s.crouch ? "You're moving quietly. Keep the light off when you need to stay out of sight." : "You can move more quietly by crouching. Use your flashlight only when you need to see.", keys: ["C · Crouch", "F · Light"] }
-  if (chapter === 2) return { id: "issue", chapter, title: "Use the wrist terminal", text: "There's a powered unit in the room at the end of the hall. Look at its arm slot to activate it.", keys: ["E · Activate"] }
-  if (chapter === 3 && !hasRecipe(s)) return { id: "manual", chapter, title: "Find a recipe", text: "The carton by the workbench has a manual. Taking it teaches a recipe. You can also follow the wall drawings and come back for supplies.", keys: ["E · Search", "Y · Crafting"] }
-  if (chapter === 3 && !hasSlot(s)) return { id: "bind", chapter, title: "Set a quick slot", text: "Open your inventory and select a carried item. Click a slot or press its number to assign it. The drawings by the south doorway point onward.", keys: ["I · Inventory", "0–9 · Assign"] }
-  if (chapter === 3 || chapter === 4) return { id: "follow", chapter, title: "Follow the drawings", text: "Take the narrow corridor and look for the soaked patch in the carpet. There might be a way through.", keys: ["J · Field Guide"] }
+  if (chapter === 3 && hasSupplies(s) && !hasSlot(s) && s.invOpen) return { id: "bind", chapter, keys: ["0–9 · Quick slot"] }
   return null
 }
 

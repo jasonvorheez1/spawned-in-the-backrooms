@@ -23,6 +23,7 @@ const CSS = `<style>
 .field-book details{border-top:1px solid var(--guide-line);background:#1c251e}.field-book details:last-child{border-bottom:1px solid var(--guide-line)}
 .field-book summary{cursor:pointer;padding:9px 10px;font-size:15px;font-weight:620;min-height:36px}.field-book details p{margin:0;color:var(--guide-muted)}
 .field-book .guide-note{padding:1px 12px 13px 21px;max-width:60ch}.field-book [open] summary{color:var(--guide-accent)}
+.t0-chip{position:fixed;z-index:35;left:50%;top:calc(50% + 46px);transform:translateX(-50%);display:flex;gap:6px;pointer-events:none;animation:guide-enter .3s ease-out both}.t0-chip kbd{background:#0d0c08cc;border:1px solid #a4925a;color:#f4e4b7;border-radius:3px;padding:3px 8px;font:500 13px/1.4 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.04em}
 @keyframes guide-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}@keyframes guide-fill{from{transform:scaleX(.12)}to{transform:none}}
 @media(max-width:570px){.orientation{top:58px;font-size:12px;padding:10px 12px}.orientation h2{font-size:17px}.field-book button{min-height:44px}}
 .orientation[data-motion="reduced"],.orientation[data-motion="reduced"] .guide-progress .active,.field-book[data-motion="reduced"] section{animation:none}
@@ -34,6 +35,7 @@ export function tutUi(s, now, player) {
   const place = player.place
   if (screen(s, place) !== "play" || s.dead || s.pick || s.os || s.building || s.l26cut) return ""
   const stage = orientation(s, place, player.feetPosition)
+  if (stage) return CSS + `<div id="guide-${stage.id}" class="t0-chip" aria-live="polite">${stage.keys.map((k) => `<kbd>${k}</kbd>`).join("")}</div>`
   const tip = stage ?? currentTip(s, place, now)
   if (!tip || (!stage && s.uiPrefs?.hudMinimal)) return ""
   const kind = stage ? "opening" : tip.now ? "now" : "tip"
