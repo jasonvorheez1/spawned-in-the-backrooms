@@ -16,6 +16,15 @@ const SQUADS = {
   froid: { look: "guard", role: "guard", guns: ["carbine", "pistol"], name: "River Guard" },
   gelu: { look: "pilgrim", role: "pilgrim", guns: ["knife", "crowbar", "pistol"], name: "Carnifex" },
 };
+// Shelly Nov 17: "they need to talk to me first": the lead walks up, says this, and they open fire once it's said
+const WARN = {
+  meg: ["You're the one on our list. Hands where I can see them. Actually, don't bother.", "voice-meg-retrieval-agent"],
+  bntg: ["You owe the Network. We're here to collect, one way or the other.", "voice-bntg-collector"],
+  surrender: ["Fort Surrender remembers what you did. This is the sentence.", "voice-fort-warden"],
+  froid: ["The River Guard sends its regards. You should have stayed out of Froidetown.", "voice-river-guard"],
+  gelu: ["The Carnifex found you. Kneel, or don't. It ends the same.", "voice-carnifex-pilgrim"],
+};
+const WARN_AT = 7, WARN_HOLD = 4500;
 const hates = (st, g) => infamyOf(st, g) >= 35 && fameOf(st, g) < 35;
 
 export function squadTick(ctx, ses, st, place) {
@@ -48,7 +57,7 @@ export function sendSquad(ctx, g, from, hunter, home, n = 3) {
     const look = npcLook(id, S.top ? { topw: "jacket", top: S.top } : {}, S.look, lv, S.role);
     ctx.spawn(id, { tags: ["npc", "hit-squad"], feetPosition: { x, y: from.y + 0.25, z }, physics: "character", lifetime: LIFE_S,
       ...critterSpec(look), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
-      state: { name: S.name, role: S.role, faction: g, gearLevel: lv, arm: gun, attackOnSight: true, hunting: hunter, home: { x: home.x, y: home.y, z: home.z }, hp, maxHp: hp } });
+      state: { name: S.name, role: S.role, faction: g, gearLevel: lv, arm: gun, attackOnSight: false, squadWarn: i === 0 ? 1 : 0, squadKey: `${g}-${Math.round(now)}`, hunting: hunter, home: { x: home.x, y: home.y, z: home.z }, hp, maxHp: hp } });
     ctx.spawn({ parent: id, attachment: { bone: "RightHand" }, state: { kind: gun }, ...weaponBody(gun) });
   }
   return S.name;
@@ -59,5 +68,16 @@ export function squadFollow(ctx) {
   for (const r of ctx.query({ tags: ["hit-squad"], radius: 120 })) {
     if (r.state?.hunting !== ctx.self.id || r.state?.dead) continue;
     const h = r.state.home; if (!h || Math.hypot(h.x - p.x, h.z - p.z) > 6) r.state.home = { x: p.x, y: p.y, z: p.z };
+    if (r.state.attackOnSight) continue
+    const o = ctx.getObject(r.id), now = ctx.now(), d = Math.hypot(r.feetPosition.x - p.x, r.feetPosition.z - p.z)
+    if (r.state.squadWarn === 1 && (d < WARN_AT || (r.state.hp ?? 1) < (r.state.maxHp ?? 1))) { // close enough, or you shot first
+      const [line, voice] = WARN[r.state.faction] ?? WARN.meg
+      o.state.squadWarn = 2; o.state.warnAt = now; o.state.line = { t: line, at: now, d: WARN_HOLD }; o.state.talkAt = now
+      ctx.emit("playSound", { clip: `/cdn/${voice}-saying-${line.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim().replace(/ +/g, "-")}.mp3`, position: { ...r.feetPosition, y: r.feetPosition.y + 1.5 }, volume: 1, maxDistance: 30 })
+      ctx.self.state.notice = { text: `${r.state.name}: "${line}"`, at: now }
+    }
+    const lead = ctx.query({ tags: ["hit-squad"], radius: 120 }).find((q) => q.state?.squadKey === r.state.squadKey && q.state?.squadWarn === 2)
+    if (lead && now - (lead.state.warnAt ?? now) > WARN_HOLD) o.state.attackOnSight = true
+    else if (!lead && (r.state.hp ?? 1) < (r.state.maxHp ?? 1)) o.state.attackOnSight = true // the lead's down: they fight
   }
 }
