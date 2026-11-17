@@ -22,7 +22,7 @@ const RIFLE_Q = { x: 0.352, y: -0.433, z: -0.342, w: -0.756 }, RIFLE_AT = { x: -
 const SHOTGUN_Q = { x: -0.342, y: 0.756, z: -0.352, w: -0.433 }, SHOTGUN_AT = { x: -0.041, y: -0.056, z: -0.048 }
 // where each Tripo long gun's grip lands in the palm (RightHand frame), fitted on preview renders of both body styles
 // (the shotgun's spot moved by the difference of their first-person offsets, which were all fitted against the same fist)
-const HELD_AT = { coach_gun: { x: 0.094, y: -0.118, z: -0.004 }, hunting_rifle: { x: 0.126, y: -0.266, z: 0.003 }, laser_rifle: { x: 0.08, y: 0.08, z: -0.033 } } // the ZR-7 then slid forward along itself (hand +y) so its pistol grip, not its middle, is in the palm
+const HELD_AT = { coach_gun: { x: 0.094, y: -0.118, z: -0.004 }, hunting_rifle: { x: 0.126, y: -0.266, z: 0.003 }, laser_rifle: { x: 0.08, y: 0.08, z: -0.033 }, m72: { x: 0.04, y: -0.02, z: -0.18 }, xbow325: { x: 0.0, y: -0.08, z: -0.08 } } // the ZR-7 then slid forward along itself (hand +y) so its pistol grip, not its middle, is in the palm
 const qmul = (a, b) => ({ w: a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z, x: a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y, y: a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x, z: a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w })
 const eulerQ = (yaw, pitch, roll) => { const h = Math.PI / 360, cy = Math.cos(yaw * h), sy = Math.sin(yaw * h), cp = Math.cos(pitch * h), sp = Math.sin(pitch * h), cr = Math.cos(roll * h), sr = Math.sin(roll * h); return { x: cy * sp * cr + sy * cp * sr, y: sy * cp * cr - cy * sp * sr, z: cy * cp * sr - sy * sp * cr, w: cy * cp * cr + sy * sp * sr } }
 const UNYAW = { x: 0, y: -1, z: 0, w: 0 } // yaw 180 undone
@@ -30,7 +30,7 @@ const r4 = (q) => ({ x: +q.x.toFixed(4), y: +q.y.toFixed(4), z: +q.z.toFixed(4),
 // a one-handed gun on the critters' hand needs no turn; the human rig's RightHand stands it barrel-up (seen live Nov 13, revolver and pistols alike),
 // so there it turns pitch 90 and rolls over, and its grip sinks into the palm (fitted on preview renders)
 const HUMAN_PISTOL_Q = { pitch: 90, roll: 180 }
-const HAND_FLIP = new Set(['xbow325']) // Shelly Nov 13: meshes built with barrel forward into the paw get un-yawed at hipfire
+const HAND_FLIP = new Set([]) // Shelly Nov 13: meshes built with barrel forward into the paw get un-yawed at hipfire
 // Third-person RightHand transforms for every Tripo melee mesh (1P MESHGRIP rotated pitch -90 into RightHand frame so grip sits at palm origin and striking head runs along -Z).
 const HELD_MELEE = {"table_leg":{"rotation":{"x":-1,"y":0,"z":0,"w":0},"feetPosition":{"x":0.01,"y":0.145,"z":-0.08}},"pipe_scrap":{"rotation":{"x":-1,"y":0,"z":-0.0038,"w":-0.0069},"feetPosition":{"x":-0.0058,"y":0.1055,"z":-0.1822}},"crowbar":{"rotation":{"x":-0.0378,"y":0.1285,"z":-0.9887,"w":-0.0671},"feetPosition":{"x":0.0318,"y":0.1989,"z":-0.2489}},"bat":{"rotation":{"x":-0.0422,"y":0.004,"z":0.9991,"w":-0.0002},"feetPosition":{"x":0.0191,"y":0.0841,"z":-0.2788}},"crook":{"rotation":{"x":-0.8543,"y":-0.5189,"z":-0.0311,"w":-0.0023},"feetPosition":{"x":-0.0665,"y":-0.0309,"z":-0.2088}},"bobette":{"rotation":{"x":0.6656,"y":0.6705,"z":-0.2387,"w":0.2246},"feetPosition":{"x":-0.0475,"y":-0.0589,"z":-0.0041}},"maul325":{"rotation":{"x":-0.9998,"y":-0.0001,"z":0.0075,"w":0.0175},"feetPosition":{"x":-0.0257,"y":0.2862,"z":-0.2474}},"hatchet":{"rotation":{"x":-0.707,"y":0.7069,"z":-0.0152,"w":-0.0117},"feetPosition":{"x":0.0621,"y":0.0112,"z":-0.329}},"fire_axe":{"rotation":{"x":-0.3197,"y":0.8462,"z":0.3697,"w":0.2125},"feetPosition":{"x":0.23,"y":-0.1807,"z":-0.4864}},"cleaver":{"rotation":{"x":-0.3118,"y":0.2412,"z":0.5778,"w":0.7147},"feetPosition":{"x":0.0702,"y":-0.0393,"z":-0.1119}},"knife":{"rotation":{"x":0.8844,"y":0.3439,"z":-0.2535,"w":0.1875},"feetPosition":{"x":-0.0411,"y":0.0273,"z":-0.1122}},"lineman_machete":{"rotation":{"x":0.5844,"y":0.6763,"z":-0.3114,"w":0.3229},"feetPosition":{"x":-0.0567,"y":-0.0908,"z":-0.3259}},"l178_bokken":{"rotation":{"x":0.0013,"y":-0.0021,"z":0,"w":1.0001},"feetPosition":{"x":0.0007,"y":-0.0545,"z":-0.389}},"l178_katana":{"rotation":{"x":0.0129,"y":0.0078,"z":0.0001,"w":0.9998},"feetPosition":{"x":-0.0024,"y":-0.08,"z":-0.3186}},"l178_tanto":{"rotation":{"x":-0.0036,"y":-0.0098,"z":0.0001,"w":0.9999},"feetPosition":{"x":0.0047,"y":-0.0362,"z":-0.1205}},"l178_naginata":{"rotation":{"x":-0.0019,"y":0.0153,"z":0,"w":0.9999},"feetPosition":{"x":-0.037,"y":-0.0536,"z":0.0022}},"l178_kiseru":{"rotation":{"x":-0.002,"y":0.0017,"z":-1,"w":0},"feetPosition":{"x":-0.0052,"y":0.0174,"z":-0.1994}},"pickaxe":{"rotation":{"x":-0.707,"y":0.707,"z":-0.0133,"w":0.011},"feetPosition":{"x":0.084,"y":0.0096,"z":-0.2355}},"screwdriver":{"rotation":{"x":0.2821,"y":0.1056,"z":-0.953,"w":-0.0313},"feetPosition":{"x":-0.0147,"y":0.0853,"z":-0.0968}},"stun_baton":{"rotation":{"x":-1,"y":0,"z":0.0048,"w":0.0007},"feetPosition":{"x":-0.0073,"y":0.0752,"z":-0.1568}},"wrench":{"rotation":{"x":-0.7016,"y":0.709,"z":-0.0484,"w":-0.0529},"feetPosition":{"x":0.0737,"y":-0.0953,"z":-0.1766}},"scrapper70":{"rotation":{"x":-0.946,"y":0.3111,"z":-0.0866,"w":-0.0301},"feetPosition":{"x":0.0737,"y":0.008,"z":-0.2236}},"icepick70":{"rotation":{"x":-0.6718,"y":-0.6667,"z":-0.2072,"w":0.2476},"feetPosition":{"x":-0.0615,"y":-0.0113,"z":-0.1848}}}
 export function heldRot(kind, human = false) {
@@ -156,6 +156,20 @@ const camYaw = (cam) => { if (!cam) return 0; if (typeof cam.yaw === 'number') r
 const isDown = (s, now) => !!s.downAt && now - s.downAt < 3200
 // the player's hands each tick (scripts/critter.js merges the bones it returns): aim/ready clips for guns, IK only for a long gun's grip, the rows and the rod.
 // `aiming` also tells the body to face the camera.
+// Map firstPersonGun's world-viewmodel fore-end point into the gun child's own local coordinates for 3P LeftHand IK.
+function longForeEnd(kind) {
+  const fp = firstPersonGun(baseOf(kind ?? ''), W[kind]?.look)
+  if (!fp?.left) return { x: 0, y: -0.04, z: 0.43 }
+  const q = eulerQ(...fp.turn), vx = fp.left[0] - fp.at[0], vy = fp.left[1] - fp.at[1], vz = fp.left[2] - fp.at[2]
+  // Rotate by conj(q) = (-q.x, -q.y, -q.z, q.w)
+  const qx = -q.x, qy = -q.y, qz = -q.z, qw = q.w
+  const tx = 2 * (qy * vz - qz * vy), ty = 2 * (qz * vx - qx * vz), tz = 2 * (qx * vy - qy * vx)
+  return {
+    x: +(vx + qw * tx + (qy * tz - qz * ty)).toFixed(3),
+    y: +(vy + qw * ty + (qz * tx - qx * tz) - 0.02).toFixed(3),
+    z: +(vz + qw * tz + (qx * ty - qy * tx)).toFixed(3),
+  }
+}
 export function stance(ctx) {
   const me = ctx.self, s = me.state, now = ctx.now()
   tick3(me, now)
@@ -191,6 +205,6 @@ export function stance(ctx) {
   aimPose(me, fam, s.reloading ? 'ready' : aimMode(me, aiming, s.crouch), pitch)
   // the clips pose the arms; on our own bodies a long gun's left hand also closes on the gun itself (it rides the gun, never a world point, so it can't flop). Shelly Nov 11: her plymodel held the gun right, the basic bodies' left arm hung off it
   const worn = !!(s.look?.modelUrl || s.look?.model), gun = me.session?.heldObj
-  if (fam === 'long' && gun && ctx.getObject(gun)) /* Nov 15 revamp: worn bodies too; on the ash rifle carry the plymodel's support paw floated off the gun (seen on Shelly's screen) */ { const LH = { reach: { object: gun, offset: { x: 0, y: -0.04, z: 0.43 }, blendIn: 0.18, blendOut: 0.25 } }; if (!aiming) return { bones: { LeftHand: LH }, aiming, armed: true }; const hh = longHands(me, gun, yaw, pitch, true, s.crouch); return { bones: { RightHand: { reach: { to: hh.RightHand.reach.to, blendIn: 0.12, blendOut: 0.25 } }, LeftHand: LH }, aiming, armed: true } } // Nov 15 (Shelly: 'now the aiming'): the sight clip lifts the grip to the eye and the gun crossed a snout; aimed, the grip hand is solved low at the shoulder pocket, forward of the face
+  if (fam === 'long' && gun && ctx.getObject(gun)) /* Nov 15 revamp: worn bodies too; on the ash rifle carry the plymodel's support paw floated off the gun (seen on Shelly's screen) */ { const LH = { reach: { object: gun, offset: longForeEnd(s.equipped), blendIn: 0.18, blendOut: 0.25 } }; if (!aiming) return { bones: { LeftHand: LH }, aiming, armed: true }; const hh = longHands(me, gun, yaw, pitch, true, s.crouch); return { bones: { RightHand: { reach: { to: hh.RightHand.reach.to, blendIn: 0.12, blendOut: 0.25 } }, LeftHand: LH }, aiming, armed: true } } // Nov 15 (Shelly: 'now the aiming'): the sight clip lifts the grip to the eye and the gun crossed a snout; aimed, the grip hand is solved low at the shoulder pocket, forward of the face
   return { bones: null, aiming, armed: true }
 }
