@@ -200,7 +200,7 @@ function layWren(ctx) {
   ctx.spawn("l325-wren-crate", { tags: ["container"], feetPosition: g(1.9, 7.6), rotation: { yaw: 12 }, model: CAMP.models["almond-crate"], layout: { box: { min: { x: -0.4, y: 0, z: -0.3 }, max: { x: 0.4, y: 0.5, z: 0.3 } } },
     state: { name: "Wren's supply crate", items: "almond,almond,beans", info: "M.E.G. stencil. Road rations. She says take what you need for the drive." } });
   const look = npcLook("l69-npc-wren", { species: "cat", sex: "f", topw: "jacket", botw: "cargo", shoes: "boots", hat: "beanie" }, "survivor", 2);
-  ctx.spawn("l69-npc-wren", { ...critterSpec(look), tags: ["npc", "l69npc"], feetPosition: g(3.4, 6.6), rotation: { yaw: 150 }, physics: { body: "kinematic", collider: "capsule" },
+  ctx.spawn("l69-npc-wren", { ...critterSpec(look), tags: ["npc", "l69npc"], feetPosition: g(3.4, 6.6), rotation: { yaw: 150 }, physics: { body: "kinematic", collider: "capsule" }, anim: { idle: { clip: "cdn/clip-idle-loop.glb", loop: true, weight: 1 } },
     state: { name: "Wren Adeyemi", dlg: "l69-npc-wren", faction: "meg", role: "scout", look, hostile: false, unconscious: false } });
 }
 export function tick(ctx) {
