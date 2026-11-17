@@ -45,7 +45,7 @@ function init(s, pos, now) {
 }
 // how far this body carries right now (0 = silent)
 function carries(t, B, v, d) {
-  if (!t.isP) return B.hearWalk;                               // a decoy is a noise-maker
+  if (!ISP.has(t.id)) return B.hearWalk;                               // a decoy is a noise-maker
   if (t.state?.crouch && v < T.crouchSlow) return T.crouchBump; // the stealth play
   if (v < 0.5) return T.stillBump;
   return v > T.sprintAt ? B.hearSprint : B.hearWalk;
@@ -58,6 +58,7 @@ function strike(ctx, f, B, v, pos, clip) {
   ctx.emit("squash", { target: f.id, axis: "z", intensity: 0.18, duration: 0.2 });
   ctx.emit("cameraPunch", { direction: { x: q.x - pos.x, y: 0, z: q.z - pos.z }, intensity: 0.35 }, { audience: { player: v.id } });
 }
+const ISP = new Set(), TV = new Map(); // this machine's read of who is a real player and how fast each body moves
 export function update(ctx, dt) {
   const foes = ctx.query({ tags: ["l21d-foe"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
   if (!foes.length) return ctx.sleep(2);
@@ -66,7 +67,7 @@ export function update(ctx, dt) {
   const targets = targetsOf(ctx, real).filter((p) => !(p.state?.hp <= 0) && !p.state?.dead);
   for (const t of targets) { // each body's speed, measured (blind things read motion, not a flag)
     const q = t.feetPosition, r = (pl[t.id] ??= { x: q.x, z: q.z, v: 0 }), raw = Math.min(12, Math.hypot(q.x - r.x, q.z - r.z) / Math.max(dt, 0.001));
-    r.v += (raw - r.v) * 0.35; r.x = q.x; r.z = q.z; t.isP = ids.has(t.id); t.v = r.v;
+    r.v += (raw - r.v) * 0.35; r.x = q.x; r.z = q.z; if (ids.has(t.id)) ISP.add(t.id); else ISP.delete(t.id); TV.set(t.id, r.v); // engine handles take no ad-hoc fields
   }
   const blk = blocks(Math.floor(now / SHIFT_MS)), noise = ses.noise ?? [];
   // the files: who stands where in each squad
@@ -99,7 +100,7 @@ export function update(ctx, dt) {
     };
     if (m.mode !== "home") {
       for (const t of targets) { const q = t.feetPosition, d = flat(q, pos); if (d > 95 || Math.abs(q.y - pos.y) > 5 || Math.hypot(q.x, q.z) < SAFE) continue;
-        const R = t.id === s.hunt && now - m.born < T.nestKnowMs ? 60 : carries(t, B, t.v ?? 0, d); if (d < R && d < ld) { ld = d; loud = t; } }
+        const R = t.id === s.hunt && now - m.born < T.nestKnowMs ? 60 : carries(t, B, TV.get(t.id) ?? 0, d); if (d < R && d < ld) { ld = d; loud = t; } }
       if (loud) hear(loud.feetPosition);
       else for (const n of noise) if (n.at > m.nSeen && flat(n, pos) < (n.loud ? B.hearShot : Math.min(n.r, B.hearShot))) hear(n);
     }
