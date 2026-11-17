@@ -146,10 +146,13 @@ export function handleDialogueQuestD21(ctx, p, npc, text) {
 
 // ---- every sim tick: objectives from what the sim counted ----
 export function questTick21(ctx) {
+  for (const p of ctx.place.players) stepPlayer21(ctx, p);
+}
+export function stepPlayer21(ctx, p) {
   const now = ctx.now();
-  for (const p of ctx.place.players) {
-    const s = p.state, f = p.worldFeetPosition ?? p.feetPosition; if (!s || !f) continue;
-    const a = s.l21dqa ?? 0, b = s.l21dqb ?? 0, c = s.l21dqc ?? 0; if (!a && !c) continue;
+  {
+    const s = p.state, f = p.worldFeetPosition ?? p.feetPosition; if (!s || !f) return;
+    const a = s.l21dqa ?? 0, b = s.l21dqb ?? 0, c = s.l21dqc ?? 0; if (!a && !c) return;
     const L = s.l21d ?? {}, r = rec(s);
     if (a === 1 && (L.doors ?? 0) - (r.base ?? 0) >= 5) advanceQuest(ctx, p, QA, 2);
     if (b === 1 && !r.spilled) {
