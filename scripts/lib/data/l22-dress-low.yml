@@ -1742,3 +1742,18 @@ rows:
   - 0.453
   - 1.339
   solid: false
+- id: f21-lamp2
+  floor: 21
+  x: 17.2
+  z: -31.2
+  yaw: 0
+  glb: /cdn/value.410024f3c007309ac70176030b519238843a9a494571accd8d24e23d375a1844.glb
+  size:
+  - 0.109
+  - 0.22
+  - 0.106
+  solid: false
+  light:
+    color: '#ffb070'
+    intensity: 5
+    distance: 10
