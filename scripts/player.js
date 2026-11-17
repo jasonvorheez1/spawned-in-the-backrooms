@@ -1704,6 +1704,8 @@ function fitPaws(body, w, left, both) {
 export function update(ctx, dt) {
   clockHeal(ctx) // future-dated stamps from another room's clock (lib/clock-heal.js)
   compassTick(ctx, dt) // the open compass's live needle (lib/compass.js)
+  { const me = ctx.self, ses = me.session, w0 = walkOf(ctx), n0 = ctx.now() // a limp body with no wake pending stands up (Shelly Nov 17: a lurker grab left her lying for good)
+    if (me.ragdoll && !(w0.respawnAt && n0 < w0.respawnAt + 2000)) { ses.ragSince ??= n0; if (n0 - ses.ragSince > 4000) { me.ragdoll = null; ses.ragSince = null; const v = me.velocity ?? {}; me.velocity = { x: 0, y: Math.max(-2, v.y ?? 0), z: 0 }; const yw = typeof me.rotation === 'number' ? me.rotation : me.rotation?.yaw; me.rotation = { yaw: yw ?? 0 } } } else ses.ragSince = null }
   { const s0 = ctx.self.state; if (s0.hp != null) { if (Number.isFinite(s0.hp)) ctx.self.session.hpOk = s0.hp; else { ctx.log('[hp-guard] non-finite hp', String(s0.hp), 'restored', ctx.self.session.hpOk ?? 100); s0.hp = ctx.self.session.hpOk ?? 100 } } } // Nov 15: hp once went to a broken number on Level 2; never let it stick
   preloadTick(ctx) // a level door within reach starts its level's models downloading (lib/preload-next.js)
   laterTick(ctx) // reload steps (later())
