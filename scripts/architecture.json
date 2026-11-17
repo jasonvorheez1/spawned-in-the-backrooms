@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 10392,
-  "updatedAt": "2026-11-17T13:17:01.840Z",
-  "summary": "Spawned in the Backrooms is a survival RPG across Level 0, the Hub and authored Backrooms destinations. Character progression and gear live in player.state, while Solo/Multiplayer story state is switched separately; shared player behaviors, quests and local place sims connect the world. Ralph's Radio Backrooms is built and maintained by its sim, entered from a Radio Station storefront in Level 11 and exited back outside that station.",
+  "basedOnSpecVersion": 10405,
+  "updatedAt": "2026-11-17T13:26:04.929Z",
+  "summary": "Spawned in the Backrooms is a survival RPG across Level 0, the Hub and authored Backrooms destinations. Character progression and gear live in player.state, while Solo/Multiplayer story state is switched separately; shared player behaviors, quests and local place sims connect the world. Radio stations share room-clock playback and now carry long-form host and guest broadcasts alongside their music.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes and anomalies; Bonus Rooms door is north of the waking point in x0z0.",
@@ -55,8 +55,8 @@
     "places/l31crawl/sim.js owns per-instance built flag; scripts/lib/l31crawl.js defines generated room/door/foe layout and Prize Locker contents; radio sim owns built/live/TV state and radio-use changes player snacks, cents or sanity."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered behavior stack for locomotion, interaction, combat, inventory, social, hub, camera, quests, CCTV, radio, barter, phone, emote and god mode; scripts/lib/data/throwables.yml parameters action behavior.",
-    "world.config.yaml nadeCycle (B) → scripts/player.js onInput cycles nadePick across carried frag/molotov/bauble/shock_pad/fresh; G/pullPin uses the selection, and scripts/ui.js HUD shows counts and swap hint; held nadevm is cleared on cycle/throw.",
+    "world.config.yaml actions → templates/player.js ordered behavior stack for locomotion, interaction, combat, inventory, social, hub, camera, quests, CCTV, radio, barter, phone, emote and god mode; scripts/lib/data/throwables.yml parameters …",
+    "world.config.yaml nadeCycle (B) → scripts/player.js onInput cycles nadePick across carried frag/molotov/bauble/shock_pad/fresh; G/pullPin uses the selection, and scripts/ui.js HUD shows counts and swap hint; held nadevm is cleared on cycle…",
     "templates/player.js god-kit.js onInput handles configured U/godMode → editor player.state.god and gear grant; update refills survival values before scripts/player.js core update.",
     "scripts/fall-guard.js holds velocity across place changes for ground streaming; grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit and aimPt/aimPitch → camera and ballistics/weaponAim; camera uses worldFeetPosition for parented/seated bodies.",
@@ -64,7 +64,7 @@
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
     "scripts/lib/run-opts.js mpRoom/toSolo → party or personal room; scripts/bonus-door.js → hub; Bonus glass hall routes to main and main-menu places player outside the return door.",
     "Level 3 door or Boom Town sedan → Level 69 solo instance; Level 69 sim streams road/beacon posts and ramps to Level 11/22; l69-car drives and l69-post → level69-quest plants beacon.",
-    "Level 13 tear → doors21; Level 21 exit door 13 → Level 13; west hall hole → Level 22 rubble arrival; Level 22 bottom-floor exit → Level 21 ARRIVE22. Level 21 door dispatch/layout and sim own shifting/RADIO routing.",
+    "Level 13 tear → doors21; Level 21 exit door 13 → Level 13; west hall hole → Level 22 rubble arrival; Level 22 bottom-floor exit → Level 21 ARRIVE22. Level 21 door dispatch/layout and sim own shifting/RADIO routing; the sim tethers distant l21d-foes to the nearby player so their proximity-driven brain ticks can hunt in the dark wing.",
     "Level 31 arcade back-room service hatch → scripts/level-door.js l31-to-crawl → l31crawl#crawl-from-l31; crawl-back/service ladder → level31#l31-from-crawl. Crawl sim builds once and returns arrivals below y=-1 to its landing.",
     "Level 11 l11-to-radio door → places/radio via scripts/level-door.js; Radio Backrooms radio-exit → level11#l11-from-radio, whose sim-maintained marker returns the player just outside the storefront station door."
   ],
@@ -76,7 +76,7 @@
     "scripts/lib/sleep.js + scripts/interact.js + scripts/rest.js + scripts/l178-prop.js - common bed detection/entry, with ordinary rest and Kyoto futon crossing as distinct outcomes.",
     "scripts/lib/l169-road.js + l169-road-geo.js + l169-travel.js + l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
     "scripts/lib/l31crawl.js + scripts/l31-bot.js - one crawl layout table and tagged-entity manager reuse patrol/attack/death logic across Rink Wardens and Level 13 lurkers/tenants; behavior/data vary by foe tag and brain stats.",
-    "scripts/lib/radio.js + scripts/radio.js + scripts/world-radio.js + places/radio/sim.js - stations share a room-clock timeline; HALOGEN is player-local while room receivers vary by station, reach and reception noise."
+    "scripts/lib/radio.js + scripts/radio.js + scripts/world-radio.js + places/radio/sim.js + scripts/lib/data/radio*.yml - stations share a room-clock timeline; HALOGEN is player-local while room receivers vary by station, reach and reception noise. art/radio-shows/shows.py, rec.py and out.json support the expanded timed host/guest clip sets."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists; Level 26 placements/barrage use uploaded models.",
@@ -91,7 +91,7 @@
     "Fresh-player opening chain is main-menu → intake → laundromat → tutorial0; lmDone/arrivePending are player.state flags, while lmSkip and cut timing are session state. Opening places are solo/ephemeral.",
     "Level ! uses places/levelrun/config.yaml solo/ephemeral; CORRIDOR and its 26 m chunk/door generation come from scripts/lib/levelrun-mechanics.js; keep sim geometry and hazard/pursuit/midpoint/collapse/exit depths aligned.",
     "Level 69 slices are 40 m along -Z; the left Level 11 tunnel and right Level 22 ramp repeat every 60 slices (2.4 km), with exits at slice offsets 55 and 28; preserve modulo-based sign, tunnel/ramp geometry and streamed positions.",
-    "Level 22 uses FF=3.2 m floor spacing; scripts/lib/l22-layout.js defines six tiered decks, cuts, mine/pit and exit; l22q quest progress is separate from per-player fallen state. scripts/lib/data/l22-dress-{top,mid,low}.yml supplies rows; sim's l22FitV refit stamp and tests/level22-placement.test.js guard footprint clearance and holes.",
-    "Level 31 crawl is solo/ephemeral and its sim builds on first tick, recovering arrivals below y=-1 to (0, 0.1, 1.5). Radio's cells/x0z0.scene is empty and places/radio/sim.js V=7 generates the room; its versioned layout and Level 11 station markers require matching placement/return coordinates."
+    "Level 22 uses FF=3.2 m floor spacing; scripts/lib/l22-layout.js defines six tiered decks, cuts, mine/pit and exit; l22q quest progress is separate from per-player fallen state. scripts/lib/data/l22-dress-{top,mid,low}.yml supplies rows.",
+    "Level 31 crawl is solo/ephemeral and its sim builds on first tick, recovering arrivals below y=-1 to (0, 0.1, 1.5). Radio's cells/x0z0.scene is empty and places/radio/sim.js V=7 generates the room; radio YAML holds timed station segments and the art/radio-shows tooling/output is a source for its expanded host/guest audio."
   ]
 }
