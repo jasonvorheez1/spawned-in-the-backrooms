@@ -53,6 +53,9 @@ const FOES = [
 function keepFoes(ctx) {
   const s = ctx.place.state, now = ctx.now(), dead = s.l21dDead ?? {};
   if (!ctx.place.objects["l21d-foes"]) ctx.spawn("l21d-foes", { tags: T, feetPosition: { x: 0, y: 0, z: 0 }, behavior: "scripts/l21d-foes.js" });
+  { // the foe brain ticks only near a player: it stands with one, so the dark wing's wardens (2 km out) hunt too
+    const M = ctx.place.objects["l21d-foes"], P = ctx.place.players[0];
+    if (M && P) { const q = P.feetPosition, m = M.feetPosition; if (Math.hypot(q.x - m.x, q.z - m.z) > 150) M.feetPosition = { x: q.x, y: 0, z: q.z }; } }
   for (const F of FOES) if (!ctx.place.objects[F.id] && now - (dead[F.id] ?? -1e12) > D.respawnMin * 60000) foe(ctx, F.id, F.kind, F.x, F.z, F.extra);
 }
 const lit = (h, k) => k < 2 || hash(h + 1, k + 1, 29) < 0.42;
