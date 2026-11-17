@@ -135,6 +135,10 @@ export function tick(ctx) {
   layWren(ctx);
   const car = ctx.place.objects["l69-car"];
   const s = p.state, l = s.l69 ? { ...s.l69 } : {}; let dirty = false;
+  // a death here (Nov 17, "im being rapidly spawn killed"): the clock above stops; back on your feet, you're back behind the wheel with a fresh grace
+  if (((s.hp ?? 1) <= 0 || s.dead) && !l.downed) { l.downed = true; l.outAt = null; l.hitAt = null; dirty = true; if (ctx.place.objects["l69-being"]) ctx.destroy("l69-being"); }
+  if (l.downed && (s.hp ?? 1) > 0 && !s.dead) { l.downed = false; dirty = true; ctx.session.l69seated = null; }
+  if (l.downed) { s.l69 = l; return; }
   // the wake-up: once per visit, seat them behind the wheel with the engine running
   const visit = ctx.place.mintedFrom ? String(ctx.self?.place ?? ctx.place.id ?? "") + (st.made ??= now) : (st.made ??= now); // one seat per copy of the level, not per machine
   if (ctx.session.l69seated !== visit && car) {
