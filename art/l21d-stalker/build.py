@@ -84,7 +84,7 @@ make("Idle", 120, idle)
 def crouch(t):  # pounce wind: sink low, hind legs coil, head down
     k = min(1, t * 1.6); p = {}
     leg(p, "FR", -10 * k, 0.8 * k); leg(p, "FL", -10 * k, 0.8 * k); leg(p, "HR", 18 * k, 1.3 * k); leg(p, "HL", 18 * k, 1.3 * k)
-    p["Root"] = [("loc", UP * (-0.12 * k))]; p[SPINE0] += [(LAT, -8 * k)] if SPINE0 in p else []
+    p["Root"] = [("loc", UP * (-0.12 * k))]; p[SPINE0] = [(LAT, -8 * k)]
     p.setdefault(HEAD[0], []).append((LAT, 14 * k + 3 * S2(t * 6)))
     return p
 make("Crouch", 18, crouch, loop=False)
