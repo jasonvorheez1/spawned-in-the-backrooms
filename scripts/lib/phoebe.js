@@ -41,6 +41,7 @@ export function dressPhoebe(ctx, me) {
 }
 // extra: fields laid over the cut defaults (a talking NPC Phoebe passes audience, tags, physics, behavior, state); same body either way
 export function spawnPhoebe(ctx, id, at, yaw, life, pose, extra) {
+  return null // Shelly Nov 17: "no more phoebe": she appears nowhere
   if (ctx.getObject(id)) return id
   const { human, ...spec } = phoebeSpec(ctx)
   const sid = ctx.spawn(id, {

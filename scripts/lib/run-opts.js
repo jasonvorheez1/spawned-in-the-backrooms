@@ -1,7 +1,6 @@
 // New-expedition options (Shelly Nov 14: "start with no main quest, no npcs, or both and some more heavily customizable settings").
 // player.state.run holds the picks for the current save; every reader goes through runOf(). Defaults = the game as it was.
 export const OPTS = [
-  { key: "story", label: "Main Story", hint: "Dina's trail, Chapter 2, its cutscenes and Phoebe", vals: [["on", "On"], ["off", "Off"]] },
   { key: "npcs", label: "NPCs", hint: "People in the levels: traders, crews, M.E.G. Monsters stay", vals: [["on", "On"], ["off", "Off"]] },
   { key: "tutorial", label: "Tutorial", hint: "The opening route and automatic Field Guide tips", vals: [["on", "Play it"], ["skip", "Skip"]] },
   { key: "needs", label: "Hunger & Thirst", hint: "How fast food and water run down", vals: [["off", "Off"], ["easy", "Slow"], ["normal", "Normal"], ["harsh", "Harsh"]] },
@@ -21,7 +20,7 @@ export const PRESETS = { // one press sets the row
 export const runOf = (s) => ({ ...DEFAULTS, ...(s?.run ?? {}) });
 export const needsMul = (s) => RATE[runOf(s).needs] ?? 1;
 export const sanityMul = (s) => RATE[runOf(s).sanity] ?? 1;
-export const noStory = (s) => runOf(s).story === "off" || s?.run?.mode === "multi"; // multiplayer has no story (Shelly Nov 15)
+export const noStory = (s) => true; // Shelly Nov 17: the main story is axed in every mode (its files stay for undo)
 export const noNpcs = (s) => runOf(s).npcs === "off";
 export function cleanPick(p) {
   const out = { ...PICK_DEFAULTS };

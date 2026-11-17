@@ -49,6 +49,7 @@ export function layThings(ctx) {
     children: [{ id: "leaf", feetPosition: { x: 0, y: 0.2, z: 0.78 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/hub-door-geo.js", params: { part: "leaf" }, seed: 9001 }, material: { roughness: 0.9 } }] });
 }
 function spawnHubPhoebe(ctx) {
+  if (ctx.place.objects["hub-phoebe"]) ctx.destroy("hub-phoebe"); return // Shelly Nov 17: no Phoebe in the Hub
   const old = ctx.place.objects["hub-phoebe"]; if (old && old.state?.phoebeV === 14) return; if (old) ctx.destroy("hub-phoebe");
   const { human, ...spec } = phoebeSpec(ctx);
   ctx.spawn("hub-phoebe", {

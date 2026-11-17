@@ -34,6 +34,7 @@ const me1 = (ctx) => ({ audience: { player: ctx.self.id } })
 const snd = (ctx, clip, v, at) => ctx.emit("playSound", { clip, position: at ?? ctx.self.feetPosition, volume: v, maxDistance: 200, bus: clip.includes("/voice-") ? "Voice" : undefined }, me1(ctx))
 
 export function hubCutTick(ctx, ses, st) {
+  if (st.hubcut) { st.hubcut = null; ctx.view.camera = null }; st.hubPhoebe = true; return false // Shelly Nov 17: her Hub scene is gone
   const me = ctx.self
   if (!st.hubcut) {
     if (st.hubPhoebe) return false

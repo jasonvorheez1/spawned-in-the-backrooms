@@ -1,4 +1,4 @@
-// A killed NPC stays gone for an hour of real time, then returns home (Shelly, 2026-11-07).
+// A killed NPC stays gone for 20 real minutes, then returns home (Shelly, 2026-11-07).
 // The clock starts the first tick the place's sim finds the NPC missing (its body vanishes ~90 s after death).
 import MEG from "./data/meg.yml";
 export const RESPAWN_MS = (MEG.respawn ?? 3600) * 1000;

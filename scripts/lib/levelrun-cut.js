@@ -33,7 +33,7 @@ const snd = (ctx, pid, clip, volume = 0.85, pos = null) =>
 export function startIntroCut(_ctx, player) {
   const s = player?.state;
   if (!s || s.lrunIntroDone || s.lrunRescued || s.lrunCut) return false;
-  s.lrunCut = { phase: "intro", at: _ctx.now() };
+  s.lrunIntroDone = 1; // Shelly Nov 17: the Level Run cutscene is removed: you start at the line and run
   if (player.feetPosition) {
     player.feetPosition = { x: 0, y: 0.1, z: 1.5 };
     player.velocity = { x: 0, y: 0, z: 0 };
@@ -48,6 +48,7 @@ export function startRescueCut(ctx, player) {
   s.hp = Math.max(4, Math.min(8, Math.round(s.hp ?? 6)));
   ctx.emit("screenFlash", { color: "#9c0000", duration: 0.65, intensity: 0.85 }, { audience: { player: player.id } });
   snd(ctx, player.id, CLIP_SLAM, 0.95);
+  finishRescueToAlcove(ctx, player, null); // no cutscene: the ceiling drops and you are in the alcove
   return true;
 }
 
@@ -62,7 +63,7 @@ export function finishRescueToAlcove(ctx, player, ses) {
   player.feetPosition = { ...CORRIDOR.safePos };
   player.rotation = { yaw: CORRIDOR.safeYaw };
   player.velocity = { x: 0, y: 0, z: 0 };
-  if (noStory(s)) { s.notice = { text: "The ceiling comes down behind you. A side door, a quiet alcove, and two ways out.", at: ctx.now() }; return; } // story off: no Phoebe, no quest step
+  if (noStory(s)) { s.notice = { text: "You dive through a side door as the ceiling comes down. A quiet alcove, and two ways out.", at: ctx.now() }; return; } // story off: no Phoebe, no quest step
   setCh2Step(ctx, s, 6, "Phoebe pulled you into a quiet alcove. Speak with her before leaving.");
 }
 
