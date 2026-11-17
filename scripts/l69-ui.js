@@ -25,7 +25,8 @@ export function l69Ui(ctx, player) {
   const w = l.whisper;
   if (w && now - w.at < 4200) { const a = Math.min(1, (now - w.at) / 600) * Math.min(1, (4200 - (now - w.at)) / 900);
     out.push(`<div style="position:fixed;left:0;right:0;top:30%;text-align:center;pointer-events:none;z-index:25;opacity:${(a * 0.8).toFixed(2)};font:italic 15px Georgia,serif;color:#d9d2c4;letter-spacing:.12em;filter:blur(.4px);text-shadow:0 0 8px #000">${w.text}</div>`); }
-  if (l.outAt && !player.controlling && t > 8) { const o = Math.min(1, (now - l.outAt) / 15000);
-    out.push(`<div style="position:fixed;inset:0;pointer-events:none;z-index:15;background:radial-gradient(ellipse at 50% 50%,transparent ${Math.round(60 - o * 30)}%,rgba(0,0,0,${(0.35 + o * 0.5).toFixed(2)}) 100%)"></div>`); }
+  if (l.outAt && !player.controlling && t > 8) { const sec = (now - l.outAt) / 1000, o = Math.min(1, sec / 20), left = Math.max(0, Math.ceil(20 - sec));
+    out.push(`<div style="position:fixed;inset:0;pointer-events:none;z-index:15;background:radial-gradient(ellipse at 50% 50%,transparent ${Math.round(70 - o * 25)}%,rgba(40,0,0,${(0.15 + o * 0.35).toFixed(2)}) 100%)"></div>`);
+    out.push(`<div style="position:fixed;left:0;right:0;top:18%;text-align:center;pointer-events:none;z-index:26;font:600 15px Georgia,serif;color:#e8d9c0;letter-spacing:.14em;text-shadow:0 0 10px #000">${left > 0 ? `something above has noticed you · back in the car · ${left}` : `it's here. get in the car.`}</div>`); }
   return out.join("");
 }

@@ -55,7 +55,7 @@ function lamps(k) {
     const n = k * 2 + j, side = n % 2 ? 1 : -1, dead = n % 6 === 4, x = side * 9.0, z = -10 - j * 20;
     out.push({ feetPosition: { x, y: 7.2, z }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.05, height: 0.9 }, rotation: { roll: 90 }, material: { color: "#2a2b2d", metalness: 0.7, roughness: 0.5 } });
     out.push({ feetPosition: { x: x - side * 0.45, y: 6.95, z }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.32, height: 0.22 }, material: dead ? { color: "#1d1e20", metalness: 0.6, roughness: 0.6 } : { color: "#3a3226", emissive: "#ffae4a", emissiveIntensity: 3 } });
-    if (!dead) out.push({ feetPosition: { x: x - side * 0.6, y: 6.6, z }, light: { kind: "point", color: "#ffa64a", intensity: 9, distance: 22, shadow: { enabled: false } }, visibleRange: { max: 70 } });
+    if (!dead) out.push({ feetPosition: { x: x - side * 0.6, y: 6.6, z }, light: { kind: "point", color: "#ffa64a", intensity: 16, distance: 26, shadow: { enabled: false } }, visibleRange: { max: 70 } });
   }
   return out;
 }
