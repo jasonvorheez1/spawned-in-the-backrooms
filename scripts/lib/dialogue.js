@@ -13,13 +13,13 @@ import DG from "./data/dlg-generic.yml";
 import DHUB from "./data/dlg-thehub.yml"; // The Hub
 // Nov 15 (arrival weight): only the archetypes and The Hub ride the boot. Every level's own table (300 KB together) is read
 // on first need after the player stands, in the same order as before, so a later table still wins a shared key.
-const LEVELS = ["levelrun", "level1c", null, "levels-1-3", "level4", "level5", "levels-7-8", "levels-10-11", "level13", "level31", "level70", "level109", "level169", "level178", "level132", "level69", "doors21"]; // null = dlg-generic's place in the order
+const LEVELS = ["levelrun", "level1c", null, "levels-1-3", "level4", "level5", "levels-7-8", "levels-10-11", "level13", "level31", "level70", "level109", "level169", "level178", "level132", "level69", "doors21", "radio"]; // null = dlg-generic's place in the order
 const LOADERS = {
   "levelrun": () => import("./data/dlg-levelrun.yml"), "level1c": () => import("./data/dlg-level1c.yml"), "levels-1-3": () => import("./data/dlg-levels-1-3.yml"),
   "level4": () => import("./data/dlg-level4.yml"), "level5": () => import("./data/dlg-level5.yml"), "levels-7-8": () => import("./data/dlg-levels-7-8.yml"),
   "levels-10-11": () => import("./data/dlg-levels-10-11.yml"), "level13": () => import("./data/dlg-level13.yml"), "level31": () => import("./data/dlg-level31.yml"),
   "level70": () => import("./data/dlg-level70.yml"), "level109": () => import("./data/dlg-level109.yml"), "level169": () => import("./data/dlg-level169.yml"),
-  "level178": () => import("./data/dlg-level178.yml"), "level132": () => import("./data/dlg-level132.yml"), "level69": () => import("./data/dlg-level69.yml"), "doors21": () => import("./data/dlg-doors21.yml"),
+  "level178": () => import("./data/dlg-level178.yml"), "level132": () => import("./data/dlg-level132.yml"), "level69": () => import("./data/dlg-level69.yml"), "doors21": () => import("./data/dlg-doors21.yml"), "radio": () => import("./data/dlg-radio.yml"),
 };
 const SHARED = { "l61-guard-b": "l61-guard-a", "l61-amber-b": "l61-amber-a", "l61-guild-b": "l61-guild-a", "l61-guild-c": "l61-guild-a", "l1c-gang-2": "l1c-gang-1", "l1c-gang-3": "l1c-gang-1", "l1c-gang-4": "l1c-gang-1" }; // people who share one script of lines (a pair of guards, a crew)
 const ALL = { ...DHUB, ...DG };

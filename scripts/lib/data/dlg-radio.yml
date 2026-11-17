@@ -1,0 +1,77 @@
+# Ralph, Radio Backrooms (Wikidot). Calm, late-night, short. Quest strings under quest (scripts/lib/radio-quest.js).
+radio-ralph:
+  hi:
+    - "Come in. Mind the cables. You're on the guest side of the glass."
+  back:
+    - "Back again. Good."
+    - "Sit anywhere. The coffee's endless."
+  warm:
+    - "There's my favourite listener."
+  cold:
+    - "Door's open. Kettle's on. That's the policy."
+  bye:
+    - "Stay tuned."
+    - "Walk easy out there."
+  walk:
+    - "Go on, then."
+  ask:
+    - q: "What is this place?"
+      a: ["Radio Backrooms. A studio, a guest room, a door. Nothing hostile gets past that door. I see to it."]
+      then:
+        - q: "How long have you been on air?"
+          a: ["Twenty-nine hours a day, four hundred fifty-six days a year. Don't do the maths. I stopped."]
+        - q: "And the door out?"
+          a: ["Level 11. Always Level 11. Doesn't matter how you came in."]
+    - q: "What shows do you run?"
+      a: ["Level of the Day. Talkin' with Ralph. Survival 101. Music in between. Between songs is the best time to talk."]
+      then:
+        - q: "Talkin' with Ralph?"
+          a: ["Guests. People like you. I ask, they talk, somebody out there feels less alone."]
+        - q: "Survival 101?"
+          a: ["Shoes, doors, light. The boring things that keep you breathing."]
+    - q: "Where were you before all this?"
+      a: ["Somewhere with weather, I think. Want a coffee?"]
+      then:
+        - q: "That's not an answer."
+          a: ["No. It's a coffee."]
+    - q: "Do you ever sleep?"
+      a: ["Never needed to. Never needed to eat, either. Coffee's a habit, not a need."]
+    - q: "What's the mirror for?"
+      a: ["Wasn't my idea. I'd leave it alone."]
+  barks:
+    idle: ["Mm.", "Next record's a good one.", "Twenty-nine hours. Easy."]
+    hi: ["Evening."]
+    drawn: ["Not in my studio."]
+    hurt: ["Easy now."]
+    close: ["Pull up a chair."]
+  gest:
+    wave: ["Evening."]
+    gift: ["Kind of you. Goes on the air."]
+    dance: ["Now that's radio."]
+    nodance: ["I'm on the board."]
+    insult: ["I've heard worse on the call-in line."]
+  quest:
+    q:
+      request: "Can I request a song?"
+      pick: "Play \"{title}\"."
+      milk: "You look like you're missing something."
+      remind: "Still no milk?"
+      give: "Here. A carton of milk."
+      more: "Brought you more milk."
+      air: "Put me on the air."
+    request: "Always. What'll it be?"
+    picked: "\"{title}.\" I'll spin it next. Stay by a speaker."
+    milk: "Milk. Coffee's endless here, milk isn't. Bring me a carton and I'll trade you something worth hearing."
+    remind: "Kitchens. Fridges. Somebody always leaves one behind."
+    nomilk: "That's not milk, friend."
+    give: "Ah. Now listen close. This one's off the air."
+    more: "You spoil me. All right. Another one."
+    thanks: "That's all the secrets I've got. Thank you, truly."
+    air: "Headphones on. Speak slow. You're live on Talkin' with Ralph."
+    aired: "You were good. People out there heard a friendly voice."
+  secrets:
+    - "Level 21's real EXIT door: East hall, thirty doors down. Red sign. Walk, don't run."
+    - "Level 22's rubble heap climbs back to Level 21, but only if you've stood on Floor 21 first."
+    - "On the Level 69 highway, the left tunnel goes to Level 11 and the right ramp to Level 22. They come round every couple of kilometres."
+    - "Level 21's halls rearrange every four minutes. Count doors, not steps."
+    - "Clickers hear a run from thirty yards and a walk from seven. Crouch and they hear nothing at all."

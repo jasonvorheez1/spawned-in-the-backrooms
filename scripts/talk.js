@@ -46,6 +46,7 @@ import { handleDialogueQuest70 } from './lib/level70-quest.js'
 import { handleDialogueQuest69 } from './lib/level69-quest.js'
 import { handleDialogueQuest22 } from './lib/level22-quest.js'
 import { handleDialogueQuestD21 } from './lib/doors21-quest.js'
+import { handleDialogueQuestRadio } from './lib/radio-quest.js'
 
 import { greetingOf, rootChoices, childChoices, nodeOf, lineOf, barkOf, gestOf, BYE_CHOICE, warmDialogue } from './lib/dialogue.js'
 import { questChoices, realtyChoice } from './lib/npc-starters.js'
