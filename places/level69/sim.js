@@ -68,12 +68,12 @@ function gantry(k) {
   if (k === -2) return [ // the wrong way: a lone red sign on the right-hand post, facing anyone heading +Z
     { feetPosition: { x: 6.2, y: 0, z }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.06, radiusBottom: 0.07, height: 3.1 }, material: STEEL },
     { feetPosition: { x: 6.2, y: 2.0, z: z + 0.09 }, castShadow: false, primitive: { kind: "box", width: 1.6, height: 1.1, depth: 0.05 }, material: { color: "#b51e1e", roughness: 0.4, emissive: "#3a0606", emissiveIntensity: 1 },
-      ui: '<div face="front" width="1.6m" style="width:1600px;height:1100px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:40px solid #f2ede4;box-sizing:border-box;color:#f2ede4;font:900 230px Arial,sans-serif;line-height:1">WRONG<div>WAY</div></div>' },
+      ui: '<div face="front" width="1.6m" style="width:1600px;height:1100px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:40px solid #f2ede4;box-sizing:border-box;color:#f2ede4;font:900 380px Arial,sans-serif;line-height:1">WRONG<div>WAY</div></div>' },
   ];
   if (k <= 1 || k % 10 !== 5) return [];
   const left = (wz - TUN_Z) / 1000;
-  const text = left > 0.05 ? `<div style="font-size:150px">EXIT 69</div><div style="font-size:120px;margin-top:30px">&#8598; ${left.toFixed(1)} km</div><div style="font-size:80px;margin-top:30px;opacity:.85">LEFT LANE</div>`
-    : ["<div style=\"font-size:130px\">YOU MISSED IT</div>", "<div style=\"font-size:120px\">EXIT 69</div><div style=\"font-size:100px;margin-top:30px\">&#8598; 2.2 km</div>", "<div style=\"font-size:120px\">TURN AROUND</div><div style=\"font-size:80px;margin-top:30px\">YOU CAN'T</div>", "<div style=\"font-size:120px\">REST AREA</div><div style=\"font-size:100px;margin-top:30px\">CLOSED</div>"][Math.abs(k) % 4];
+  const text = left > 0.05 ? `<div style="font-size:450px">EXIT 69</div><div style="font-size:360px;margin-top:40px">&#8598; ${left.toFixed(1)} km</div><div style="font-size:240px;margin-top:40px;opacity:.85">LEFT LANE</div>`
+    : ["<div style=\"font-size:390px\">YOU MISSED IT</div>", "<div style=\"font-size:360px\">EXIT 69</div><div style=\"font-size:300px;margin-top:40px\">&#8598; 2.2 km</div>", "<div style=\"font-size:360px\">TURN AROUND</div><div style=\"font-size:240px;margin-top:40px\">YOU CAN'T</div>", "<div style=\"font-size:360px\">REST AREA</div><div style=\"font-size:300px;margin-top:40px\">CLOSED</div>"][Math.abs(k) % 4];
   const out = [];
   for (const x of [-8.6, 8.6]) {
     out.push({ feetPosition: { x, y: 0, z }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.16, radiusBottom: 0.2, height: 7.4, radialSegments: 16 }, material: STEEL });
@@ -82,7 +82,7 @@ function gantry(k) {
   out.push({ feetPosition: { x: 0, y: 6.7, z }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.12, height: 17.6, radialSegments: 12 }, rotation: { roll: 90 }, pivot: "center", material: STEEL });
   out.push({ feetPosition: { x: 0, y: 6.1, z }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.09, height: 17.6, radialSegments: 12 }, rotation: { roll: 90 }, pivot: "center", material: STEEL });
   out.push({ feetPosition: { x: -3.6, y: 3.9, z: z + 0.15 }, castShadow: false, primitive: { kind: "box", width: 5.2, height: 2.3, depth: 0.08 }, material: { color: "#0e5a34", roughness: 0.35, metalness: 0.2, emissive: "#062a18", emissiveIntensity: 0.6 },
-    ui: `<div face="back" width="5.2m" style="width:5200px;height:2300px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:36px solid #e9f0ea;border-radius:60px;box-sizing:border-box;color:#e9f0ea;font:700 120px Arial,sans-serif;letter-spacing:6px;line-height:1">${text}</div>` });
+    ui: `<div face="back" width="5.2m" style="width:5200px;height:2300px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:60px solid #e9f0ea;border-radius:120px;box-sizing:border-box;color:#e9f0ea;font:700 360px Arial,sans-serif;letter-spacing:6px;line-height:1">${text}</div>` });
   out.push({ feetPosition: { x: -3.6, y: 6.3, z: z + 0.5 }, light: { kind: "spot", color: "#dfe8ff", intensity: 6, distance: 6, angle: 45, penumbra: 0.6, aim: { x: 0, y: -0.6, z: -0.3 }, shadow: { enabled: false } }, visibleRange: { max: 140 } });
   return out;
 }
