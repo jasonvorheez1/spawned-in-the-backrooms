@@ -28,7 +28,8 @@ export function update(ctx) {
 function throwAt(ctx, p) {
   const me = ctx.self, f = me.feetPosition, hand = { x: f.x, y: f.y + 1.5, z: f.z };
   const v = p.velocity ?? { x: 0, z: 0 }, d0 = Math.hypot(p.feetPosition.x - f.x, p.feetPosition.z - f.z), T = Math.max(0.6, Math.hypot(d0, f.y) / SPEED);
-  const aim = { x: p.feetPosition.x + (v.x ?? 0) * T * 0.6, y: p.feetPosition.y + 1, z: p.feetPosition.z + (v.z ?? 0) * T * 0.6 }; // leads you a little: a turn beats it
+  const sa = ctx.random() * 6.283, sr = ctx.random() * 0.9; // no lead, a little scatter: a body that keeps moving is gone from where it landed (Shelly ok'd, Nov 17)
+  const aim = { x: p.feetPosition.x + Math.cos(sa) * sr, y: p.feetPosition.y + 1, z: p.feetPosition.z + Math.sin(sa) * sr };
   const yaw = Math.atan2(-(aim.x - hand.x), -(aim.z - hand.z)) * 57.2958, pitch = -Math.atan2(hand.y - aim.y, d0) * 57.2958;
   const id = ctx.spawn({ feetPosition: hand, rotation: { yaw, pitch }, model: { id: BOLT, forward: "+x" }, scale: 1.4, lifetime: T + 0.4, physics: "none", castShadow: false,
     fx: { script: `fx\npop trail rate=40 life=.25 size=.04 col=<.6,.55,.5> a=.5>0 sz=$size r=sprite(soft-disc,alpha)` } });
