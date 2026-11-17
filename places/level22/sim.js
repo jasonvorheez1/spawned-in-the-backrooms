@@ -82,6 +82,8 @@ export function tick(ctx) {
   const now = ctx.now(), p = ctx.place.players[0]; if (!p) return;
   const s = p.state, st = ctx.place.state;
   if (!ctx.place.objects["l22-deck-1"]) { lay(ctx, s); st.laidAt = now; }
+  const nRows = (TOP?.rows?.length ?? 0) + (MID?.rows?.length ?? 0) + (LOW?.rows?.length ?? 0);
+  if (st.dressN !== nRows) { st.dressN = nRows; for (const tb of [TOP, MID, LOW]) for (const r of tb?.rows ?? []) if (!ctx.place.objects[`l22-${r.id}`]) dress(ctx, r); } // rows added after this copy was laid
   const l = s.l22 ? { ...s.l22 } : {}; let dirty = false;
   const pos = p.feetPosition, deck = deckOf(pos.y);
   if (!l.arrivedAt) { l.arrivedAt = now; l.fallen = l.fallen ?? []; dirty = true; startL22(ctx, p); }
