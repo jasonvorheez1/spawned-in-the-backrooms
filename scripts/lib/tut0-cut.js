@@ -190,22 +190,17 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
     else ctx.view.camera = { eye: { x: HALO.x - 1.0, y: 1.3, z: HALO.z - 0.85 }, aim: port, fov: lerp(40, 30, ss(2.5, 3.6, t)) } // the arm in the port
     return t > 4 && !st.sheetOpen
   },
-  // the far wall of room F won't sit still: Phoebe watches from the corridor mouth, they turn back, walk into the wallpaper and through it
+  // the far wall of room F won't sit still (Shelly Nov 17, no Phoebe): behind them the hall's lamps die one by one, coming closer, and they walk into the wallpaper and through it
   final(ctx, c, t, once, st) {
-    const me = ctx.self, at = { x: SOFT.x, y: 0, z: SOFT.z }, her = { x: 45.55, y: 1.15, z: -23.35 }, S = 5.2 // the walk starts
+    const me = ctx.self, at = { x: SOFT.x, y: 0, z: SOFT.z }, S = 5.2 // the walk starts
     const wall = { x: 45, y: 1.35, z: 4 }, past = { x: 45, y: 0, z: 4.6 }
     if (t < S) me.feetPosition = { x: lerp(c.p0.x, at.x, ss(0, 0.8, t)), y: 0, z: lerp(c.p0.z, at.z, ss(0, 0.8, t)) }
     else me.feetPosition = L3(at, past, ss(S, S + 3.0, t))
-    me.rotation = { yaw: 180 } // eyes on the wall the whole time: they never know she's there
-    once("phoebe", () => {
-      spawnPhoebe(ctx, "phoebe-end", { x: her.x, y: 0, z: her.z }, 180, 11 * PACE) // half of her round the corridor mouth's east corner, the rest behind the wall, watching
-      for (const [i, v] of [[18, 0.15], [19, 0.6], [20, 0.6]]) { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) o.light = { ...o.light, intensity: v } }
-      const h = ctx.getObject("t0-light-17"); if (h?.light) h.light = { ...h.light, intensity: 9 } // the lamp behind her burns: a shape, no face
-    })
-    if (t > 4.9) once("phoebeGone", () => dropPhoebe(ctx, "phoebe-end")) // gone in the cut, never seen leaving
+    me.rotation = { yaw: 180 } // eyes on the wall the whole time: they never see the dark coming
+    const dark = (i) => { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) { o.light = { ...o.light, intensity: 0 }; raw(ctx, H.switch, 0.55, o.feetPosition) } }
+    for (const [i, at2] of [[17, 2.2], [18, 3.0], [19, 3.7], [20, 4.3]]) if (t > at2) once("dark" + i, () => dark(i)) // far to near, each one closer
     once("hum", () => { raw(ctx, H.buzz, 0.7, wall); me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" } })
     if (t > 2.0) once("breath", () => raw(ctx, BREATH, 0.5))
-    if (t > 3.0) once("whisper", () => raw(ctx, PHOEBE_WHISPER, 0.5, her)) // under the hum, from down the hall
     if (t > 4.2) once("groan", () => raw(ctx, H.doom, 0.7))
     if (t > S) once("walk", () => { me.anim.cut = { clip: "cdn/clip-walk-loop.glb", weight: 4, loop: "loop", speed: 0.8 } })
     if (t > S + 2.2) once("score", () => raw(ctx, SCORE, 1.0)) // the score comes up as they touch the wall and carries the fall and the title
@@ -217,7 +212,7 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
     if (t > S + 3.8) once("thud", () => raw(ctx, H.slowst, 0.8))
     if (t > 9.5) once("title", () => raw(ctx, H.cresc, 0.9)) // lands with the name (cutscene-ui: 9.8 s)
     if (t < 2) { const u = ss(0, 2, t); ctx.view.camera = { eye: { x: at.x + 0.4, y: 1.6, z: at.z + 0.6 }, aim: wall, fov: lerp(55, 32, u) } } // the wallpaper ahead, crawling
-    else if (t < S) { const u = ss(2, S, t); ctx.view.camera = { eye: { x: 44.2, y: 1.5, z: 2.8 }, aim: L3({ x: 44.9, y: 1.45, z: -4 }, { x: 44.95, y: 1.4, z: -12 }, u), fov: lerp(46, 36, u) } } // from the wall: their face, oblivious, and far up the hall behind them half a shape round the corner
+    else if (t < S) { const u = ss(2, S, t); ctx.view.camera = { eye: { x: 44.2, y: 1.5, z: 2.8 }, aim: L3({ x: 44.9, y: 1.45, z: -4 }, { x: 44.95, y: 1.4, z: -12 }, u), fov: lerp(46, 36, u) } } // from the wall: their face, oblivious, and the hall behind them going dark lamp by lamp
     else { const p = me.feetPosition, k = ss(S + 2.7, S + 3.4, t); ctx.view.camera = { eye: { x: at.x + 0.5, y: 1.75, z: lerp(Math.min(p.z - 2.2, 1.6), 4.4, k) }, aim: { x: wall.x, y: wall.y, z: wall.z + 1 }, fov: lerp(50, 80, k) } } // behind them as they press in, then the lens goes through after them
     if (t > LEN.final) { st.t0Done = true; st.t0fade = ctx.now(); return true }
     return false
