@@ -13,6 +13,7 @@ CFG = {
   "door_ram":          dict(t="melee", len=0.78, ram=True),
   "concierge_key":     dict(t="melee", len=0.64, pca=True, flip=True),
   "wardens_lantern":   dict(t="melee", len=1.25, pca=True),
+  "valve_knuckles":    dict(t="knuck", len=0.14),  # worn over the fist: the wheel's face toward +X (the punch), centred on the origin
 }
 FL = json.loads(os.environ.get("FLIP", "{}"))
 only = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else list(CFG)
@@ -34,7 +35,11 @@ for kind in only:
     P = lambda: np.array([tuple(v.co) for v in ob.data.vertices])
     T = lambda M: ob.data.transform(M)
     if c.get("pre"): T(R(c["pre"][0], "X") @ R(c["pre"][1], "Y") @ R(c["pre"][2], "Z"))
-    if c["t"] == "gun":
+    if c["t"] == "knuck":
+        T(R(90, "Y")); p = P(); lo, hi = p.min(0), p.max(0)
+        T(Matrix.Scale(c["len"] / max(hi - lo), 4)); p = P(); lo, hi = p.min(0), p.max(0)
+        T(Matrix.Translation(Vector((-(lo[0] + hi[0]) / 2, -(lo[1] + hi[1]) / 2, -(lo[2] + hi[2]) / 2))))
+    elif c["t"] == "gun":
         p = P(); e = p.max(0) - p.min(0)
         if e[0] > e[1]: T(R(90, "Z"))
         p = P(); lo, hi = p.min(0), p.max(0); L = hi[1] - lo[1]
