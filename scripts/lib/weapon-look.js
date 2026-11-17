@@ -43,6 +43,7 @@ const MESH = { // kind: [model, offset y, scale, the mesh's material slot]
   crowbar:    ["/cdn/value.26a60582c956ed9c19efc83291207f82a25034b07e680abcc16ab6d45a6c39de.glb", 0.025, 0, "tripo_material_6333f5c1-aa76-413a-8dd2-d7483635f47f"],
   bat:        ["/cdn/value.b9230b65f07cc34951b4d05d221181af8b81a9c9ff633c17ee867660dc01d4a1.glb", 0.0, 0, "tripo_material_ed96b284-b120-41ec-a6e8-b5a6c27428df"],
   crook:      ["/cdn/value.e1c8a7a67bb1f12a8209b6c5232dcc822b30ee56bb39bd1f1247bd0fc2dad60d.glb", 0.0, 0, "", "+z"], // Tripo candy cane crook (Shelly: "improve the candy cane crook model"), fitted by art/weapons/build.py
+  knuckles22: ["/cdn/value.9e84f3ff5fd91015d8c2b87e73651907e0f2b0b69904fd6b5a5071c90a5ab02c.glb", 0.0, 0.28, "", "+z"], // Tripo bent-rebar knuckles, Level 22 (Shelly Nov 17), raw 0.45 m, scaled to a hand
   bobette:    ["/cdn/value.a10b82e72faac45fc3b41e6ee758e9fadc5b099e166032e697292ff348e993bb.glb", 0.0, 1.22, "", "+z"], // Tripo ornament knuckles (Shelly: the Bobette), fitted by art/weapons/build.py
   m72:        ["/cdn/value.bb66d3c4b6a15492ce37b279bdd8d956063d96a29e35f7d7e58e9fc0b77ea9f1.glb", -0.094, 0, "tripo_material_e34c95b6-f99b-4968-be9c-70a8f6efbce2"], // Tripo M.E.G. launcher, fitted by art/l109-dungeon/build.py: muzzle -z, grip at the origin
   maul325:    ["/cdn/value.b7ce7a938e9a4e772ab66addf447ed7328845554f64d1d6bd8d86bcc1c2d3d67.glb", 0.0, 0, ""], // Tripo rubble maul, fitted by art/weapons/build.py (Boom Town)
