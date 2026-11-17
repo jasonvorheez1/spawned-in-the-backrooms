@@ -1,0 +1,77 @@
+{
+  "name": "asset-library",
+  "displayName": "Asset Library",
+  "description": "Carry your assets and whole built scenes from one game into the next. Every model, image, sound and animation clip sits on one searchable shelf with your own tags and a real picture of each thing — drag a card into the world to place it, or drop it onto what you have selected to swap the model, skin the material or hand it new clips. Stretch the capture box over a market square, a camp, a room you already built, name it, and it becomes a set card that rebuilds the whole arrangement anywhere. Then copy the shelf as a crate, paste it into another project, and everything you have made is standing there waiting.",
+  "tags": [
+    "creator-tools",
+    "assets",
+    "workflow",
+    "god-mode",
+    "library",
+    "sets",
+    "sharing"
+  ],
+  "visibility": "public",
+  "version": "1.7.0",
+  "inputs": {
+    "actions": {
+      "alMint": {},
+      "alPick": {
+        "mouse": "right",
+        "activeOn": "keydown",
+        "modifiers": [
+          "shift"
+        ]
+      },
+      "alSave": {},
+      "alScan": {},
+      "alApply": {},
+      "alClear": {},
+      "alGhost": {},
+      "alPlace": {},
+      "alShare": {},
+      "alShoot": {},
+      "alThumb": {},
+      "alWheel": {},
+      "alMotion": {},
+      "alMatScan": {},
+      "alPreview": {},
+      "alRequest": {},
+      "alSetDrop": {},
+      "alSetSave": {},
+      "alSyncSel": {},
+      "alUnshoot": {},
+      "alMatPaint": {},
+      "alSetPlace": {},
+      "alCrateSave": {},
+      "alGhostDrop": {},
+      "alGhostMove": {},
+      "alCaptureBox": {},
+      "alMotionShot": {},
+      "alGhostCancel": {},
+      "alLocalAppend": {},
+      "alMotionApply": {},
+      "alMotionClear": {}
+    }
+  },
+  "attach": [
+    {
+      "target": {
+        "kind": "god"
+      },
+      "behavior": "god.js"
+    },
+    {
+      "target": {
+        "kind": "god"
+      },
+      "behavior": "capture.js"
+    }
+  ],
+  "tab": {
+    "id": "assets",
+    "label": "Assets",
+    "icon": "🗄️",
+    "render": "panel.js"
+  }
+}
