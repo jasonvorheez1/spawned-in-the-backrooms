@@ -5,7 +5,7 @@ import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 export const cadence = "1s";
-const V = 2;
+const V = 3;
 const RALPH = "radio-ralph", HOME = { x: 0, z: -3.6 };
 const FOES = ["hound", "stealer", "smiler", "lurker", "l5rat", "l3rat", "l5staff", "hostile", "moth", "moths", "l8spider", "l8-hostile", "zdrone", "l11foe", "l7beast", "l10worm"];
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
@@ -85,7 +85,7 @@ function lay(ctx) {
   sp("radio-lamp-light", { feetPosition: { x: -0.75, y: 1.45, z: -2.9 }, light: { kind: "point", color: "oklch(0.85 0.12 70)", intensity: 2.2, distance: 4.5 } });
   sp("radio-monitor-glow", { feetPosition: { x: 0, y: 1.35, z: -3.1 }, light: { kind: "point", color: "oklch(0.8 0.08 230)", intensity: 0.7, distance: 2.6 } });
   fit("radio-decks", M.decks, -1.6, 0.1, -2.9, 0, [0.55, 1.0, 0.5], { tags: ["radioprop"], state: { name: "CD decks" } });
-  for (const [i, x] of [[0, -2.6], [1, 0], [2, 2.6]]) fit(`radio-cds-${i}`, M.cdrack, x, 0.1, -4.72, 0, [2.5, 2.3, 0.5], { state: { name: "CD shelves" } });
+  for (const [i, x] of [[0, -2.6], [1, 0], [2, 2.6]]) fit(`radio-cds-${i}`, M.cdrack, x, 0.1, -4.72, 180, [2.5, 2.3, 0.5], { state: { name: "CD shelves" } });
   // the small TV on the deck rack: static, and now and then a camera somewhere else
   fit("radio-tv", M.tv, -1.6, 1.1, -2.9, 180, [0.48, 0.4, 0.42], use("tv", "Small TV", "Watch", { line: "" }));
   sp("radio-tv-screen", { feetPosition: { x: -1.6, y: 1.16, z: -2.67 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 0.3, height: 0.22, depth: 0.005 }, material: { color: "oklch(0.2 0 0)" },
