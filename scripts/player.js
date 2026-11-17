@@ -112,7 +112,8 @@ const ZONE_RESOLVERS = {
   level31: (ctx, x, z) => 'l31_' + (ctx.self.feetPosition.y > 2.5 && x < -24.9 ? 'mezz' : zoneAt31(x, z)),
 };
 const level0Zone = (ctx, x, z) => (ctx.place?.state?.moments?.manilaAt && Math.abs(x - ctx.place.state.moments.manilaAt.x) < 5.8 && Math.abs(z - ctx.place.state.moments.manilaAt.z) < 5.8 ? 'manila' : zoneAt(x, z));
-const zoneHere = (ctx, x, z) => (ZONE_RESOLVERS[ctx.self.place] ?? level0Zone)(ctx, x, z);
+const basePlace = (pl) => String(pl ?? '').replace(/-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/, ''); // a solo copy (level69-<uuid>) reads as its place
+const zoneHere = (ctx, x, z) => basePlace(ctx.self.place) === 'level69' ? 'l69' : (ZONE_RESOLVERS[basePlace(ctx.self.place)] ?? ZONE_RESOLVERS[ctx.self.place] ?? level0Zone)(ctx, x, z);
 
 import SOUNDS from './lib/data/sounds.yml'
 import THROW from './lib/data/throwables.yml'

@@ -23,6 +23,6 @@ export function watch(s, m, now, ctx) {
   say("dehydrated", th < 15, th > 30, "You are dehydrated.", "warn"); say("thirsty", th < 40 && th >= 15, th > 55, "You are thirsty.", "warn");
   const mh = s.maxHp ?? 100, hp = s.hp ?? mh; say("hurt", hp > 0 && hp < 0.25 * mh, hp > 0.5 * mh, "You are badly hurt.", "warn");
   const sn = s.sanity ?? 100; say("grip", sn < 25, sn > 40, "You are losing your grip.", "warn"); say("edge", sn < 50 && sn >= 25, sn > 65, "Your mind is fraying.", "warn");
-  { const seen = String(s.disc ?? "").split(",").filter(Boolean); if (ctx?.place && !seen.includes(ctx.place)) { s.disc = [...seen, ctx.place].join(","); pushFeed(s, `Location discovered: ${PLACE_NAMES[ctx.place] ?? ctx.place}`, now, "xp"); return { discovered: ctx.place } } }
+  { const seen = String(s.disc ?? "").split(",").filter(Boolean); if (ctx?.place && !seen.includes(ctx.place)) { s.disc = [...seen, ctx.place].join(","); pushFeed(s, `Location discovered: ${PLACE_NAMES[ctx.place] ?? PLACE_NAMES[String(ctx.place).replace(/-[0-9a-f]{8}-[0-9a-f-]{27}$/, '')] ?? ctx.place}`, now, "xp"); return { discovered: ctx.place } } }
   return null;
 }

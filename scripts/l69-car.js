@@ -46,7 +46,7 @@ export function lights(ctx) { // headlights and dash follow state: on, faults, d
     o.light = { kind: "spot", color: "oklch(0.95 0.05 85)", intensity: ok ? 60 : 0, distance: 42, angle: 30, penumbra: 0.55, aim: "forward", shadow: { enabled: id === "hl-r" } };
   }
   const d = ctx.getObject(ctx.self.id + "/dash");
-  if (d) d.light = { kind: "point", color: "oklch(0.75 0.12 200)", intensity: st.driver && (st.hp ?? 100) > 0 ? 0.6 : 0, distance: 1.6 };
+  if (d) d.light = { kind: "point", color: "oklch(0.75 0.1 200)", intensity: st.driver && (st.hp ?? 100) > 0 ? 0.05 : 0, distance: 1.1 };
 }
 
 export const ears = {
