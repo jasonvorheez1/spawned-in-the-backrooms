@@ -11,10 +11,10 @@ pop glow n=1 at=point() r=light(<1,.78,.42>,1.2,3)`
 // Timeless, keyed by hand from Shelly's gif (Nov 17): arms held out wide, a sideways kick left, then right, the hips leaning away from each kick.
 // mixamo bones on the critter rig: UpLeg yaw + swings a leg out to its own side (measured on test dummies); arms at rest are the wide T
 const K = (a) => a.map((v) => +v.toFixed(1))
-const L = [8, 48, 14, 2, 0, 0, 0, 2, 8], R = [0, 0, 0, 2, 8, 48, 14, 2, 0]
+const L = [25, 55, 55, 20, 0, 0, 0, 0, 25], R = [0, 0, 0, 0, 25, 55, 55, 20, 0]
 const TIMELESS = { duration: 2, tracks: {
-  "mixamorig:LeftUpLeg": { yaw: K(L), pitch: K(L.map((v) => v * 0.2)) },
-  "mixamorig:RightUpLeg": { yaw: K(R.map((v) => -v)), pitch: K(R.map((v) => v * 0.2)) },
+  "mixamorig:LeftUpLeg": { yaw: K(L) }, // yaw alone: a second axis on this bone cancelled the swing on the dummies
+  "mixamorig:RightUpLeg": { yaw: K(R.map((v) => -v)) },
   "mixamorig:Spine": { yaw: K(L.map((v, i) => (R[i] - v) * 0.22)) },
   "mixamorig:Spine2": { pitch: K([4, 0, 4, 0, 4, 0, 4, 0, 4]) },
   "mixamorig:Head": { yaw: K(L.map((v, i) => (v - R[i]) * 0.2)), pitch: K([0, -6, 0, 0, 0, -6, 0, 0, 0]) },
