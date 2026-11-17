@@ -105,7 +105,7 @@ function being(ctx, p, l, now) {
     const f = Math.min(1, (now - (l.downAt ?? now)) / 5000), y = 34 - f * 4;
     const t = o.feetPosition; o.feetPosition = { x: t.x + (pos.x + 2 - t.x) * 0.08, y, z: t.z + (pos.z - 3 - t.z) * 0.08 };
   }
-  if (out > 21 && now - (l.hitAt ?? 0) > 6000) {
+  if (out > 21 && now - (l.hitAt ?? 0) > 6000 && (p.state.hp ?? 0) > 0 && !p.state.dead) {
     l.hitAt = now; p.state.hp -= 55; p.state.sanity = Math.max(0, (p.state.sanity ?? 100) - 20);
     sfx(ctx, p, G("chitin-spike-impales-flesh-wet-crunch-and-scream-of-metal"), 1);
     ctx.emit("screenFlash", { color: "#300000", duration: 0.5, intensity: 0.6 }, { audience: { player: p.id } });
@@ -124,8 +124,9 @@ export function tick(ctx) {
   const car = ctx.place.objects["l69-car"];
   const s = p.state, l = s.l69 ? { ...s.l69 } : {}; let dirty = false;
   // the wake-up: once per visit, seat them behind the wheel with the engine running
-  if (!ctx.session.l69seated && car) {
-    ctx.session.l69seated = true; l.introAt = now; l.outAt = null; l.tunnelAt = null; dirty = true;
+  const visit = ctx.place.mintedFrom ? String(ctx.self?.place ?? ctx.place.id ?? "") + (st.made ??= now) : (st.made ??= now); // one seat per copy of the level, not per machine
+  if (ctx.session.l69seated !== visit && car) {
+    ctx.session.l69seated = visit; l.introAt = now; l.outAt = null; l.tunnelAt = null; dirty = true;
     car.controller = p.id; car.state.driver = p.id;
     const pl = ctx.getObject(p.id); if (pl) { pl.parent = car.id; pl.feetPosition = { ...SEAT }; pl.rotation = { yaw: 0 }; pl.velocity = { x: 0, y: 0, z: 0 }; }
     ctx.after?.(0.1, "noop", {});
