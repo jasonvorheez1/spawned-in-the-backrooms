@@ -49,7 +49,7 @@ export function t0Tick(ctx, ses, st) {
   const once = (k, fn) => { if (!c.did[k]) { c.did[k] = true; fn() } }
   if (id !== "final" || t < 3) { me.feetPosition = c.p0 }
   me.velocity = { x: 0, y: 0, z: 0 }
-  if (CUE[id]) once("cue", () => raw(ctx, CUE[id], 0.75))
+  if (CUE[id] && (id !== "encounter" || t >= 4.2)) once("cue", () => raw(ctx, CUE[id], 0.75)) // the encounter's score waits out the radio call
   const done = BEAT[id]?.(ctx, c, t, once, st) ?? true // an old room may still be playing a retired cut
   handheld(ctx, t)
   if (!done) return true
