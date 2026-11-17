@@ -208,7 +208,11 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
     })
     if (t > 0.8) once("thump", () => raw(ctx, W("muffled-tumble-dryer-thumping-a-shoe-heard-through-a-floor"), 0.85, { ...at, y: -1 }))
     const dark = (i) => { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) { o.light = { ...o.light, intensity: 0 }; raw(ctx, H.switch, 0.55, o.feetPosition) } }
-    for (const [i, a] of [[17, 2.4], [18, 3.1], [19, 3.7], [20, 4.2], [21, 4.6]]) if (t > a) once("dark" + i, () => dark(i))
+    for (const [i, a] of [[17, 2.4], [18, 3.1], [19, 3.7]]) if (t > a) once("dark" + i, () => dark(i))
+    // the two lamps over the patch hang on, dim and stuttering, so you watch it take you; they go with the last bubble
+    const dim = (k) => { for (const i of [20, 21]) { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) o.light = { ...o.light, intensity: k } } }
+    if (t > 4.2 && t < 9.4) dim(1.1 + (Math.sin(t * 23) > 0.6 ? -0.8 : 0) + Math.sin(t * 7.3) * 0.2)
+    if (t > 9.4) once("dark20", () => { dim(0); raw(ctx, H.switch, 0.6, { x: 45, y: 2.7, z: 0 }) })
     if (t > 3.0) once("breath", () => raw(ctx, BREATH, 0.45))
     if (t > SINK0) once("give", () => {
       raw(ctx, W("wet-carpet-tearing-floor-giving-way-into-deep-water-gulp"), 1.0, at)
