@@ -2,7 +2,7 @@
 - id: timeless
   label: Timeless
   clip: cdn/clip-wave-hip-hop-dance-loop.glb
-  # song: none until the instrument version of Shelly's melody is built (her voice never plays: Nov 17)
+  song: /cdn/value.16b5e89ce1f6c38fdb01184dfdd2f49eefcbd5360fe67b35d418f05e31f09f05.mp3  # Shelly's hummed melody played by a mallet lead, bass, drums; 17.1 s seamless loop, no voice (Nov 17)
   clock: true
   face: joy
 - id: dance

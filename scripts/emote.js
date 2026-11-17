@@ -23,14 +23,15 @@ const TIMELESS = { duration: 2, tracks: {
   "mixamorig:LeftForeArm": { yaw: K([10, 18, 10, 6, 10, 18, 10, 6, 10]) },
   "mixamorig:RightForeArm": { yaw: K([-10, -6, -10, -18, -10, -6, -10, -18, -10]) },
 } }
-const CLIPS = {} // TIMELESS T-posed real bodies (Shelly Nov 17); off until it plays right
-const SPIN = (r) => ({ clip: CLIPS[r.id] ?? r.clip, weight: 4, loop: "loop" })
-const UPPER = (r) => ({ clip: CLIPS[r.id] ?? r.clip, weight: 4, loop: "loop", mask: { from: "Spine" } })
+const CLIPS = { timeless: TIMELESS }
+const SPIN = (r) => ({ clip: CLIPS[r.id] ?? r.clip, weight: 10, loop: "loop" }) // Shelly Nov 17: no other animation's legs under the emote
+const UPPER = SPIN // walking keeps the whole dance too
 function stop(ctx) {
   const me = ctx.self, st = me.state, s = me.session
   if (!st.emote) return
   st.emote = null; me.anim.emote = null
   if (s.emoteSong) { ctx.emit("stopSound", { soundId: s.emoteSong }); s.emoteSong = null }
+  if (s.emoteSongObj) { ctx.destroy(s.emoteSongObj); s.emoteSongObj = null }
   if (s.emoteFx) { ctx.destroy(s.emoteFx); s.emoteFx = null }
   if (st.face?.emote) st.face = null
   if (s.emoteTp === false) st.tp = false
@@ -47,7 +48,7 @@ function play(ctx, row) {
   if (!st.sheathed) { st.sheathed = true; st.sheathAt = ctx.now() - 1000; s.emoteSheath = true } // both hands free to dance
   s.emoteTp = !!st.tp; st.tp = true // third person while it plays, put back after
   if (row.face) st.face = { expr: row.face, until: ctx.now() + 600000, emote: true }
-  if (row.song) s.emoteSong = ctx.emit("playSound", { clip: row.song, position: me.feetPosition, volume: 0.7, refDistance: 3, maxDistance: 30 })
+  if (row.song) s.emoteSongObj = ctx.spawn({ parent: me.id, audience: "all", scope: "session", feetPosition: { x: 0, y: 1, z: 0 }, audio: { clip: row.song, loop: true, gain: 0.7, spatial: true, maxDistance: 30 } }) // loops as long as the dance
   if (row.clock) s.emoteFx = ctx.spawn({ parent: me.id, audience: "all", scope: "session", feetPosition: { x: 0, y: 1.15, z: -0.75 }, fx: { script: CLOCK } }) // the side the camera looks past
 }
 export function onInput(ctx, input) {
