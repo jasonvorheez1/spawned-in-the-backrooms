@@ -11,7 +11,7 @@ import { heard } from "./lib/hear.js";
 import { C, HW, SEG, SEGS, SHIFT_MS, HALLS, at, blocks, DW } from "./lib/l21d-layout.js";
 import L from "./lib/data/l21d.yml";
 import { TUNE as T } from "./lib/l21d-foes-tune.js";
-import { CLIPS } from "./lib/l21d-body.js";
+import { CLIPS, foeBody } from "./lib/l21d-body.js";
 // stalker and warden are rigged: a channel is written only when what it plays changes
 function play(f, m, ch, key, row) { if (m["c_" + ch] === key) return; m["c_" + ch] = key; f.anim[ch] = row; }
 const GOTH = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
@@ -123,6 +123,7 @@ export function update(ctx, dt) {
     const pos = f.feetPosition, kind = s.kind, m = (mem[f.id] ??= init(s, pos, now));
     if (kind === "clicker") { typewriter(ctx, f, s, m, pos, real, blk, now, dt); continue; }
     const K = CLIPS[kind];
+    if (K && !m.skin) { m.skin = 1; const b = foeBody(kind); if (f.model?.id !== b.model.id && f.model !== b.model.id) { f.model = b.model; f.layout = b.layout; } } // rows laid before the rig take it
     if (K && (s.hp ?? 1) <= 0 || K && s.dead) { // die clip, lie still, then fade
       if (!m.diedAt) { m.diedAt = now; s.dead = s.dead || true; ctx.place.state.l21dDead = { ...(ctx.place.state.l21dDead ?? {}), [f.id]: now }; heard(ctx, { clip: S.die, position: pos, volume: 0.8, maxDistance: 26 }); f.material = { dissolve: 0 };
         play(f, m, "act", null, null); play(f, m, "body", "die", { clip: K.die, loop: "once", clampWhenFinished: true, weight: 1 }); f.rotation = { yaw: m.yaw, pitch: 0, roll: 0 }; }
