@@ -1,0 +1,23 @@
+# the laundromat (Shelly Nov 17): the new opening. 2 am, rain, one dryer thumping, then you fall through into Level 0
+mode: 3d
+instance: solo
+persistence: ephemeral
+terrain:
+  kind: "off"
+atmosphere:
+  clouds: {enabled: false}
+  fog: {kind: linear, near: 14, far: 40, color: oklch(0.12 0.02 250)}
+  look: {script: scripts/look-default.js, params: {bloomThreshold: 0.75, bloomStrength: 0.45}}
+  moon: {enabled: false, intensity: 0}
+  sky: {kind: color, color: oklch(0.08 0.02 250)}
+  stars: {enabled: false}
+  timeOfDay: 2
+  wind: {direction: 0, speed: 0}
+  ambient:
+    light: {color: oklch(0.85 0.03 160), intensity: 0.12}
+  hemisphere: {groundColor: oklch(0.2 0.02 60), intensity: 0.1, skyColor: oklch(0.4 0.03 250)}
+defaultSpawnPoint: {x: 0.8, y: 0.05, z: -5}
+defaultSpawnRotation: 90
+gravity: {x: 0, y: -24, z: 0}
+worldBounds:
+  bottom: -20
