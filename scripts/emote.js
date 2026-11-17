@@ -5,9 +5,9 @@ import EMOTES from "./lib/data/emotes.yml"
 const CLOCK_TEX = "/cdn/value.e42a4e3f680683976bc9f15ad7892b5ad20b1cb4c5762f5cf5c6ff772fa8edf6.png"
 const CLOCK = `fx
 pop face n=1 at=point() size=2.3 sz=$size*(1+.025*flick(1.6,1)) col=<.95,.85,.65> a=.7 rot=$age*.35 r=sprite(${CLOCK_TEX},alpha)
-pop halo n=1 at=point() size=3.2 col=hdr(1.6,1.1,.4) a=.08*flick(1.2,.4) r=sprite(soft-disc,add)
+pop halo n=1 at=point() size=3.2 col=<1,.75,.35> a=.05*flick(1.2,.4) r=sprite(soft-disc,add)
 pop tick rate=14 on=disc(1.05) life=.7..1.2 v=sdir()*.25+up(.2..0.5) size=.03..0.06 acc=drag(1.4) col=hdr(3.2,2.3,.8)>hdr(1.4,.7,.2) a=1>0 r=sprite(ember,add)
-pop glow n=1 at=point() r=light(<1,.78,.42>,5,5)`
+pop glow n=1 at=point() r=light(<1,.78,.42>,1.2,3)`
 const SPIN = (r) => ({ clip: r.clip, weight: 4, loop: "loop" })
 const UPPER = (r) => ({ clip: r.clip, weight: 4, loop: "loop", mask: { from: "Spine" } })
 function stop(ctx) {
