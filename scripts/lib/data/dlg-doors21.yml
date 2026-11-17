@@ -1,0 +1,93 @@
+# Level 21 "Numbered Doors": the one person at the desk. Wikidot: "If anybody is found at this Level they are not to be
+# trusted." He is polite, precise, never raises his voice, and never says the part that matters.
+# quest: the lines scripts/lib/doors21-quest.js speaks (q = what you say, the rest = what he answers).
+l21d-concierge:
+  hi:
+    - "Good evening. Mind the linoleum, it lifts by the east arch. How may I help?"
+  back:
+    - "You're back. Good."
+    - "Yes?"
+  warm:
+    - "There you are. I kept your page open."
+  cold:
+    - "The desk is open. That's all I'm obliged to say."
+  bye:
+    - "Walk, don't run. They hear running."
+    - "Good evening."
+  walk:
+    - "As you like."
+  ask:
+    - q: "What is this place?"
+      a: ["A residence. Four halls, numbered doors. I keep the desk."]
+      then:
+        - q: "Who lives here?"
+          a: ["Tenants. They keep to their rooms."]
+        - q: "And the things clicking in the halls?"
+          a: ["Blind. They hear a run from thirty yards and a walk from seven. Crouch and they hear nothing."]
+    - q: "How long have you been at this desk?"
+      a: ["Since my shift began."]
+      then:
+        - q: "When does it end?"
+          a: ["When the relief comes."]
+    - q: "Which doors go somewhere?"
+      a: ["The ones with tidy numbers. 104 and 211 I'd vouch for. The rest I couldn't say."]
+    - q: "The halls moved while I was out there."
+      a: ["Every four minutes. Housekeeping. Count doors, not steps."]
+  barks:
+    idle: ["Mm.", "Four minutes.", "One moment."]
+    hi: ["Good evening."]
+    drawn: ["Not at the desk, please."]
+    hurt: ["That was uncalled for."]
+    close: ["Sign in, please."]
+  gest:
+    wave: ["Good evening."]
+    gift: ["Kind of you. I'll note it."]
+    dance: ["Quietly, please."]
+    nodance: ["I'm on shift."]
+    insult: ["Noted. In ink."]
+  quest:
+    q: # what the player says
+      start1: "You need something done?"
+      remind1: "How many doors was it?"
+      sign: "Five doors. Here's what was behind each. Put my name down."
+      alias: "Five doors. I'll tell you what I saw. The name stays mine."
+      start2: "Anything else for the ledger?"
+      lift: "[Lift the cloth] What am I carrying?"
+      keep: "These are other people's keys. I'm keeping them."
+      hush: "What's it worth to you that I never saw this?"
+      cover: "Not my business. I'll deliver it."
+      spilled: "I ran. The tray's gone."
+      done2: "It's delivered. Something took it out of my hands."
+      start3: "People talk about an EXIT door on this floor."
+      remind3: "Tell me again there's no exit door."
+      tell: "I found your door. I went through it. Nobody else has to know."
+      after: "What happens to the desk now?"
+    start1: "Housekeeping. Open five numbered doors, any hall, and tell me what's behind each. I pay per door. Walk."
+    remind1: "Five. You've done {n}."
+    sign: "Closet, wall, closet... thank you. And your name, here. There. You're in the book. The key is for the tidy numbers."
+    alias: "No name. I'll write 'a guest'. The book prefers names, and so does the pay. The key is still yours."
+    aliasFail: "You hesitated. I've written what you first started to say. The key is yours."
+    start2: "Room service. {door}, south hall, well down. Knock, open it, hold the tray out. Keep the cloth on, and do not run with it."
+    lift: "Ah. Keys, yes. Guests leave them at the desk when they sign. That room likes them returned."
+    liftMarked: "Ah. Keys, yes. Guests leave them when they sign. Yours isn't cut yet. These things take time."
+    keep: "Then the room goes without tonight. Keep them. A few still turn. I'll note that you declined."
+    hush: "A fair question. This, and we say the tray went down the hall as usual."
+    hushFail: "Nothing. You saw a ring of keys. Deliver it or don't."
+    cover: "Sensible. Cloth on. Walk."
+    spilled: "I heard. So did they. Here is another. It comes out of your pay."
+    done2: "Good. It's quieter after it eats. Your pay, and something from the back shelf."
+    start3: "There's no such door. East hall, people say, thirty down. People say a lot. I wouldn't walk that far."
+    remind3: "There is no exit door. If you saw a red sign, the tubes do that when they fail."
+    tell: "Then we understand each other. That's the staff door. This opens the ones I don't list. The M.E.G. needn't trouble themselves."
+    afterMeg: "Men in vests came. They taped the red door and asked for the ledger. I gave them last year's."
+    afterDesk: "Nothing happens to the desk. That's what the desk is for."
+    afterKeys: "You kept the keys. The room has been asking after you by number."
+# Okafor, Post Lead at the Hub's M.E.G. post: the other end of "The Rumoured Door"
+l21d-okafor:
+  quest:
+    q:
+      start3: "Anything the post wants from Level 21?"
+      report: "Level 21 has an EXIT door. East hall, thirty doors down. I've been through it."
+    start3: "Survey says there's an exit door on that floor nobody's logged. If anyone's at the desk there, don't believe him. Find it, go through, come back with proof something lives past it."
+    report: "East, thirty down. Wardens past it, in threes. That's logged, and that floor gets a warning sheet. Pay, and the post owes you."
+    reportLantern: "East, thirty down, and you can keep that lantern off my table. Logged. Pay, and the post owes you."
