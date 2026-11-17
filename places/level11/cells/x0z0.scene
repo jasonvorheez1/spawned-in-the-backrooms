@@ -1,15 +1,4 @@
 # spawn-scene v2 yaml x0z0
-l11-sedco-shift-note:
-  behavior: scripts/quest-prop-use.js
-  castShadow: false
-  feetPosition: {x: 15.65, y: 1.095, z: 12.68}
-  id: l11-sedco-shift-note
-  material: {color: "#d8cda9", roughness: 0.95}
-  physics: none
-  primitive: {kind: box, width: 0.24, height: 0.008, depth: 0.17}
-  rotation: {yaw: -10}
-  state: {kind: l11-sedco-note, name: Folded shift note, verb: Read}
-  tags: [usable]
 l11-footbridge:
   feetPosition: {x: 42, y: 0, z: -30}
   id: l11-footbridge
@@ -44,8 +33,8 @@ l11-lot-booth:
   model: {forward: "+z", id: /cdn/value.81df5dcd9facfce891f660c61a078c0a091ea5cbaa3d866169dcc9e3bc139d88.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: 90}
-  state: {"name":"Idle Hands sales booth","items":"battery,tape","fixedStock":true,"scavved":true}
-  tags: ["container"]
+  state: {fixedStock: true, items: "battery,tape", name: Idle Hands sales booth, scavved: true}
+  tags: [container]
 l11-lot-booth-sign:
   feetPosition: {x: 10.9, y: 3.15, z: 31.4}
   id: l11-lot-booth-sign
@@ -191,8 +180,26 @@ l11-newsstand:
   model: {id: /cdn/value.38a910ab7dd9da93467fddaca8b97b42d2de3d34aa73ca56ed83b8ee4fe9c594.glb}
   physics: {body: static, collider: box}
   rotation: {yaw: -90}
-  state: {"name":"Tomorrow's newspaper","items":"page:30","fixedStock":true,"scavved":true}
-  tags: ["container"]
+  state: {fixedStock: true, items: "page:30", name: Tomorrow's newspaper, scavved: true}
+  tags: [container]
+l11-sedco-shift-note:
+  behavior: scripts/quest-prop-use.js
+  castShadow: false
+  feetPosition: {x: 15.65, y: 1.095, z: 12.68}
+  id: l11-sedco-shift-note
+  material: {color: "#d8cda9", roughness: 0.95}
+  physics: none
+  primitive: {depth: 0.17, height: 0.008, kind: box, width: 0.24}
+  rotation: {yaw: -10}
+  state: {kind: l11-sedco-note, name: Folded shift note, verb: Read}
+  tags: [usable]
+l11-site-noclip:
+  behavior: scripts/l11-site-noclip.js
+  feetPosition: {x: 22, y: 0.1, z: 31}
+  id: l11-site-noclip
+  physics: {body: static, collider: box, trigger: true}
+  primitive: {depth: 5, height: 2.1, kind: box, width: 5}
+  visible: false
 l11-sub-nose-0:
   feetPosition: {x: 13.6, y: 0.048727272727272744, z: 58.44}
   id: l11-sub-nose-0
