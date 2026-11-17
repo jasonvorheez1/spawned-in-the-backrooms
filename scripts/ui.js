@@ -580,7 +580,7 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
     <div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px">
       <span>LIGHT</span><span style="${s.light ? '' : 'opacity:.45'}">${s.light ? Math.round(s.battery) + '%' : 'OFF'}${s.batteries ? ` · ${s.batteries} spare` : ''}</span>
     </div>
-    ${(s.grenades ?? 0) + (s.molotovs ?? 0) + (s.shockpads ?? 0) > 0 ? `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px"><span>G</span><span>${s.grenades ? `FRAG ${s.grenades}` : ''}${s.grenades && s.molotovs ? ' · ' : ''}${s.molotovs ? `MOLOTOV ${s.molotovs}` : ''}${s.shockpads ? `${s.grenades || s.molotovs ? ' · ' : ''}SHOCK ${s.shockpads}` : ''}</span></div>` : ''}
+    ${(() => { const T = [['frag', 'grenades', 'FRAG'], ['molotov', 'molotovs', 'MOLOTOV'], ['bauble', 'baubles', 'BAUBLE'], ['shock_pad', 'shockpads', 'SHOCK']].filter(([, k]) => (s[k] ?? 0) > 0); if (!T.length) return ''; const pick = T.some(([t]) => t === s.nadePick) ? s.nadePick : T[0][0]; return `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px"><span>G</span><span>${T.map(([t, k, n]) => t === pick ? `<b style="color:#ffd9a0">${n} ${s[k]}</b>` : `<span style="opacity:.5">${n} ${s[k]}</span>`).join(' · ')}</span>${T.length > 1 ? '<span style="opacity:.6">B swap</span>' : ''}</div>` })()}
   </div>
 
   <!-- CENTER: Minimal Zone Header -->
