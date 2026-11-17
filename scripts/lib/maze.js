@@ -79,6 +79,7 @@ import { L325_NAMES } from './level325.js'
 export const ZONE_NAMES = {
   l02_remodel: "Level 0.2 · Remodeled Mess", l12_matrix: "Level 12 · Matrix", l13_halls: "Level 13 · The Boiling Frogs", l02_basement: "The Unfinished Basement",
   ...L3_NAMES, ...L4_NAMES, ...L5_NAMES, ...L21_NAMES, ...L31_NAMES, ...L70_NAMES, ...L325_NAMES, l8_cave: "Level 8 · Cave Systems", l9_street: "Level 9 · The Suburbs", l9_house: "Level 9 · A House",
+  l22_top: "Emstable · The High Floors", l22_cut: "Emstable · The Cut", l22_mid: "Emstable · The Working Floors", l22_low: "Emstable · The Low Floors",
   l69: "Level 69 · The Road Trip of Affliction", l6_halls: "Level 6 · Lights Out", l7_room1: "Level 7 · The Floating House", l7_pier: "Level 7 · Entrance Pier", l7_seawatch: "Level 7 · M.E.G. Outpost Seawatch", l7_fort: "Level 7 · Fort Surrender", l7_sea: "Level 7 · The Abyssal Ocean", l7_ocean: "Level 7 · The Abyssal Ocean", manila: "The Manila Room", hub: "The Safe Room", halls: "The Yellow Halls", arches: "Arch Rooms", pillars: "Pillar Field",
   l109_halls: "Level 109 · The Neon Hospital",
   hub_road: "The Hub", hub_meg: "The Hub · Doorstep Carpet (M.E.G.)", hub_amber: "The Hub · Camp Amber", hub_dark: "The Hub · The Dark Road",

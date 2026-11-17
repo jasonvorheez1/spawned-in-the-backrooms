@@ -109,6 +109,7 @@ const ZONE_RESOLVERS = {
   level21: (_ctx, x, z) => 'l21_' + zoneAt21(x, z),
   level70: (_ctx, x, z) => 'l70_' + zoneAt70(x, z),
   level325: (_ctx, x, z) => 'l325_' + zoneAt325(x, z),
+  level22: (ctx) => { const y = ctx.self.worldFeetPosition?.y ?? ctx.self.feetPosition.y; return y > -4.2 ? 'l22_top' : y > -37.4 ? 'l22_cut' : y > -42.6 ? 'l22_mid' : y > -59.8 ? 'l22_cut' : 'l22_low'; }, // Level 22's tiers (scripts/lib/l22-layout.js)
   level31: (ctx, x, z) => 'l31_' + (ctx.self.feetPosition.y > 2.5 && x < -24.9 ? 'mezz' : zoneAt31(x, z)),
 };
 const level0Zone = (ctx, x, z) => (ctx.place?.state?.moments?.manilaAt && Math.abs(x - ctx.place.state.moments.manilaAt.x) < 5.8 && Math.abs(z - ctx.place.state.moments.manilaAt.z) < 5.8 ? 'manila' : zoneAt(x, z));
