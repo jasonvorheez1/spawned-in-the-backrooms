@@ -132,6 +132,12 @@ export function onInput(ctx, input) {
     if (d.k === "view") { st.menuView = ["settings", "controls", "newgame", "saves"].includes(d.v) ? d.v : ""; if (d.v === "newgame") st.newRun = { ...cleanPick(st.newRun), confirm: false }; if (d.v === "saves") listSaves(ctx) }
     if (d.k === "opt" && d.key) st.newRun = { ...cleanPick({ ...st.newRun, [d.key]: d.v }), confirm: false }
     if (d.k === "preset" && PRESETS[d.v]) st.newRun = { ...PRESETS[d.v].v, confirm: false }
+    if (d.k === "surv" && (d.key === "needs" || d.key === "sanity") && !isMulti(st)) { // solo switches, mid-run (Shelly Nov 17: "in solo play let me disable food and water and sanity")
+      const r = { ...(st.run ?? {}) }, was = { ...(r.survWas ?? {}) }
+      if (d.v === "off") { if (r[d.key] && r[d.key] !== "off") was[d.key] = r[d.key]; r[d.key] = "off"; if (d.key === "needs") { st.hunger = 100; st.thirst = 100 } }
+      else r[d.key] = was[d.key] ?? "normal"
+      r.survWas = was; st.run = r
+    }
     if (d.k === "begin") beginRun(ctx, st, !!d.sure)
     if (d.k === "save" && d.slot >= 1 && d.slot <= SLOTS) saveSlot(ctx, d.slot | 0)
     if (d.k === "load" && d.slot >= 1 && d.slot <= SLOTS) loadSlot(ctx, d.slot | 0)

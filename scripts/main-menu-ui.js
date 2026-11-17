@@ -1,6 +1,6 @@
 import { esc, uiPrefsOf, SCALE_LABELS } from './lib/ui-kit.js'
 import { PLACE_NAMES } from './lib/quests.js'
-import { OPTS, PRESETS, cleanPick } from './lib/run-opts.js'
+import { OPTS, PRESETS, cleanPick, runOf, isMulti } from './lib/run-opts.js'
 
 // A drawn corridor gives the title a consistent setting regardless of the player's current level.
 const CORRIDOR = `<svg class="mm-scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -129,6 +129,10 @@ function settingsView(ctx, player, prefs) {
         ${seg('Minimal', prefs.hudMinimal, "{k:'pref',key:'hudMinimal',val:true}")}
       </div>
     </div>
+    ${isMulti(player.state) ? '' : [['needs', 'Hunger & Thirst', 'Food and water run down. Off: they stay full'], ['sanity', 'Sanity', 'The halls wear on you. Off: your mind holds']].map(([key, label, hint]) => { const on = runOf(player.state)[key] !== 'off'; return `<div class="mm-row">
+      <div><strong>${label}</strong><small>${hint} · solo</small></div>
+      <div class="mm-seg">${seg('On', on, `{k:'surv',key:'${key}',v:'on'}`)}${seg('Off', !on, `{k:'surv',key:'${key}',v:'off'}`)}</div>
+    </div>` }).join('')}
     <button class="mm-back" onclick="sendAction('mmenu',{k:'view',v:''})">← Back</button>
   </div>`
 }

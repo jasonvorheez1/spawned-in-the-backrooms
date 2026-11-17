@@ -1870,6 +1870,7 @@ function tickStats(ctx, t, moving) {
   if (s.onLedge !== rest) s.onLedge = rest
   if (s.wet !== wet) s.wet = wet
   if (s.sanity > ms) s.sanity = ms
+  if (sanityMul(s) === 0 && !isMulti(s) && s.sanity < ms) s.sanity = ms // Sanity off (solo): nothing gets to you
   if (s.sanity < 0) s.sanity = 0
   if (!s.startFull) { s.startFull = 1; s.hp = maxHp(s.level, s); s.hunger = 100; s.thirst = 100 } // Shelly: a run starts with full health, food and water (once per save)
   if (s.god) { if (s.sanity < ms) s.sanity = ms; if ((s.hunger ?? 100) < 100) s.hunger = 100; if ((s.thirst ?? 100) < 100) s.thirst = 100; const gh = maxHp(s.level, s); if ((s.hp ?? gh) < gh) s.hp = gh; if (s.dead) s.dead = false } // god mode (creator's testing switch): topped up every tick
