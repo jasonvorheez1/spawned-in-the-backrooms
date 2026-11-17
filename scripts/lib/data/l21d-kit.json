@@ -54,11 +54,11 @@
   "tris": 5111
  },
  "guest_ledger": {
-  "glb": "/cdn/value.28da9cc6d531a213e09f1bc657d528902c1ef958b4b5dcf6fd45d9a8e87012d6.glb",
+  "glb": "/cdn/value.224738a60e9ccbdf7f458031b481b0a287ad7cc0aaba97b953f22700d04f095f.glb",
   "size": [
    0.4,
-   0.275,
-   0.194
+   0.096,
+   0.293
   ],
   "tris": 5098
  },
