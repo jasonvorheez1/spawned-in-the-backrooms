@@ -45,6 +45,8 @@ const MESH = { // kind: [model, offset y, scale, the mesh's material slot]
   crook:      ["/cdn/value.e1c8a7a67bb1f12a8209b6c5232dcc822b30ee56bb39bd1f1247bd0fc2dad60d.glb", 0.0, 0, "", "+z"], // Tripo candy cane crook (Shelly: "improve the candy cane crook model"), fitted by art/weapons/build.py
   bobette:    ["/cdn/value.a10b82e72faac45fc3b41e6ee758e9fadc5b099e166032e697292ff348e993bb.glb", 0.0, 0, "", "+z"], // Tripo ornament knuckles (Shelly: the Bobette), fitted by art/weapons/build.py
   m72:        ["/cdn/value.bb66d3c4b6a15492ce37b279bdd8d956063d96a29e35f7d7e58e9fc0b77ea9f1.glb", -0.094, 0, "tripo_material_e34c95b6-f99b-4968-be9c-70a8f6efbce2"], // Tripo M.E.G. launcher, fitted by art/l109-dungeon/build.py: muzzle -z, grip at the origin
+  maul325:    ["/cdn/value.b7ce7a938e9a4e772ab66addf447ed7328845554f64d1d6bd8d86bcc1c2d3d67.glb", 0.0, 0, ""], // Tripo rubble maul, fitted by art/weapons/build.py (Boom Town)
+  xbow325:    ["/cdn/value.5108ca42873421f5ad38e30801deb473c97dbc02cccc270b49ca027917de511b.glb", 0.0, 0, ""], // Tripo scaffold crossbow, fitted by art/weapons/build.py (Boom Town)
   carolynne:  ["/cdn/value.25923b866d3963ca40cae6caa7be344b5ef3cd2cac065f33b93be4b1d7bf75c2.glb", 0.0, 0, "", "+z"], // Tripo ornament launcher (Shelly: the Carolynne)
   hatchet:    ["/cdn/value.d5b03aa12f7ca58bef143468cf20432b163cb8a0b43a9d4d72190c9228502761.glb", 0.012, 0, "tripo_material_be6f1bf1-a677-4411-ad71-24b6df60e92c"],
   fire_axe:   ["/cdn/value.4cfc50ea098875687d7a11fbd93a6b8adc191957807e0b002f30007a8eead02e.glb", 0.008, 0.62, "tripo_material_3cfa6f0b-ba20-4b5f-9185-3a08bf3967ed"],
@@ -117,7 +119,7 @@ export const SPLIT_FWD = { pocket9: "+z", govt45: "+z", target22: "+z" }
 const SPLIT_MAT = { pocket9: "tripo_material_0a924838-8023-4c3e-a417-fcb5379f1afc", govt45: "tripo_material_085dbb74-0a50-4c2b-bc14-2a1a7eda6b6c", target22: "tripo_material_826773d8-4906-4323-91c4-8de54c5e4054" }
 const splitBody = (kind, tint) => ({ children: SPLIT[kind].map(([id, url, at]) => ({ id, model: { id: url, forward: SPLIT_FWD[kind], ...(tint && SPLIT_MAT[kind] ? { materials: { [SPLIT_MAT[kind]]: { color: tint } } } : {}) }, feetPosition: { x: at[0], y: at[1], z: at[2] }, castShadow: false })) })
 export const HOLD = {
-  l178_bokken: 0.1, l178_kiseru: 0.07, l178_tanto: 0.05, l178_katana: 0.12, l178_naginata: 0.4,
+  maul325: 0.16, xbow325: 0.1, l178_bokken: 0.1, l178_kiseru: 0.07, l178_tanto: 0.05, l178_katana: 0.12, l178_naginata: 0.4,
   fists: null, soup_bowl: 0.0, table_leg: 0.16, pipe_scrap: 0.12, crowbar: 0.14, bat: 0.14, hatchet: 0.12, fire_axe: 0.18, pistol: 0.04, pocket9: 0.04, govt45: 0.04, target22: 0.04, shotgun: 0.14, rebar: 0.14, wrench: 0.12, scrapper70: 0.14, icepick70: 0.1, flaregun70: 0.04, screwdriver: 0.05, sledgehammer: 0.14, stun_baton: 0.10, lineman_machete: 0.09, crook: 0.14, knife: 0.05, smg: 0.14, golf_club: 0.14, tire_iron: 0.12, pickaxe: 0.16, baton: 0.1, cleaver: 0.06, revolver: 0.05, laser_pistol: 0.04, raygun: 0.04, laser_rifle: 0.14, coach_gun: 0.14, lever_rifle: 0.14, hunting_rifle: 0.14, carbine: 0.14, fishing_rod: 0.14,
 }
 export function weaponBody(kind) {
