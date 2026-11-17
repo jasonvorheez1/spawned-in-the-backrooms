@@ -739,7 +739,7 @@ function inventory(s) {
     const c = cndOf(s, k)
     const ammoStat = w.ranged ? `${s['loaded_' + k] ?? 0}/${s[w.ammoType ?? 'ammo'] ?? 0}` : `DAM ${w.damage}`
     const inner = `<span class="cur">&gt;</span><span class="eq-tag">EQ</span><span class="nm">${w.name}${cnt > 1 ? ` ×${cnt}` : ''}</span><span class="stat-r"><span>${ammoStat}</span>${k !== 'fists' ? cndMini(c) : ''}</span>`
-    return `<button class="it${on ? ' on' : ''}${sel === k ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${k}'})" ondblclick="sendAction('inv',{k:'equip',w:'${k}'})">${inner}</button>`
+    return `<button class="it${on ? ' on' : ''}${sel === k ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${k}'})" oncontextmenu="event.preventDefault();sendAction('inv',{k:'dropSel',t:'${k}'})" ondblclick="sendAction('inv',{k:'equip',w:'${k}'})">${inner}</button>`
   }).join('')
 
   // Aid list
@@ -751,14 +751,14 @@ function inventory(s) {
   ]
   const anyAw = AWK.some(([, k]) => s[k])
   const aid0 = anyAw ? AWK.filter(([, k, nm]) => s[k] && matchesFilter(nm)).map(([c, k, nm, col]) => `
-    <button class="it${sel === 'almond:' + c ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'almond:${c}'})" ondblclick="sendAction('inv',{k:'drink',c:'${c}'})">
+    <button class="it${sel === 'almond:' + c ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'almond:${c}'})" oncontextmenu="event.preventDefault();sendAction('inv',{k:'dropSel',t:'almond:${c}'})" ondblclick="sendAction('inv',{k:'drink',c:'${c}'})">
       <span class="cur">&gt;</span><span class="nm" style="color:${col}">${nm}</span>
       <span class="stat-r"><span>×${s[k]}</span><span style="color:#9ee08a">+${AW[c]?.hp ?? 25} HP</span></span>
 
     </button>`).join('') + `` : ''
 
   const meatRows = Object.entries(s.meat ?? {}).filter(([c, n]) => n > 0 && MEAT[c] && matchesFilter(MEAT[c].name)).map(([c, n]) => `
-    <button class="it${sel === 'meat:' + c ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'meat:${c}'})" ondblclick="sendAction('inv',{k:'eat',c:'${c}'})">
+    <button class="it${sel === 'meat:' + c ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'meat:${c}'})" oncontextmenu="event.preventDefault();sendAction('inv',{k:'dropSel',t:'meat:${c}'})" ondblclick="sendAction('inv',{k:'eat',c:'${c}'})">
       <span class="cur">&gt;</span><span class="nm" style="color:${MEAT[c].color}">${MEAT[c].name}</span>
       <span class="stat-r"><span>×${n}</span><span style="color:#9ee08a">+${MEAT[c].hp} HP</span></span>
     </button>`).join('')
@@ -767,7 +767,7 @@ function inventory(s) {
     const v = SNACKS[c]
     const tags = snackEffectTags(v)
     const hint = tags.slice(0, 2).join(' · ') || (v.drink ? `THI +${v.thirst}` : `HUN +${v.hunger ?? 0}`)
-    return `<button class="it${sel === 'snack:' + c ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'snack:${c}'})" ondblclick="sendAction('inv',{k:'snack',c:'${c}'})">
+    return `<button class="it${sel === 'snack:' + c ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'snack:${c}'})" oncontextmenu="event.preventDefault();sendAction('inv',{k:'dropSel',t:'snack:${c}'})" ondblclick="sendAction('inv',{k:'snack',c:'${c}'})">
       <span class="cur">&gt;</span><span class="nm">${esc(v.name)}</span>
       <span class="stat-r"><span>×${n}</span><span>${esc(hint)}</span></span>
     </button>`
@@ -790,7 +790,7 @@ function inventory(s) {
   const app = on.sort(clothOrder).map((t) => {
     const p = parseCloth(t); if (!p) return ''
     const c = armorCnd(s.look, t)
-    return `<button class="it on${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})" ondblclick="sendAction('inv',{k:'unwear',w:'${p.slot}'})">
+    return `<button class="it on${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})" oncontextmenu="event.preventDefault();sendAction('inv',{k:'dropSel',t:'${t}'})" ondblclick="sendAction('inv',{k:'unwear',w:'${p.slot}'})">
       <span class="cur">&gt;</span><span class="eq-tag">EQ</span>
       <span class="nm">${esc(p.row.name)}</span>
       <span class="stat-r"><span>DR ${p.row.dr}${esc(modHint(p.row))}</span>${cndMini(c)}</span>
@@ -799,7 +799,7 @@ function inventory(s) {
   }).join('') + [...new Set(bag)].sort(clothOrder).map((t) => {
     const p = parseCloth(t); if (!p) return ''
     const n = bag.filter((x) => x === t).length, c = armorCnd(s.look, t)
-    return `<button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})" ondblclick="sendAction('inv',{k:'wear',w:'${t}'})">
+    return `<button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})" oncontextmenu="event.preventDefault();sendAction('inv',{k:'dropSel',t:'${t}'})" ondblclick="sendAction('inv',{k:'wear',w:'${t}'})">
       <span class="cur">&gt;</span><span class="nm">${esc(p.row.name)}${n > 1 ? ` ×${n}` : ''}</span>
       <span class="stat-r"><span>DR ${p.row.dr}${esc(modHint(p.row))}</span>${cndMini(c)}</span>
 
@@ -808,7 +808,7 @@ function inventory(s) {
 
   // Ammo list
   const ammo = ['ammo', 'shells', 'cells'].filter((t) => s[t]).map((t) => `
-    <button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})">
+    <button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})" oncontextmenu="event.preventDefault();sendAction('inv',{k:'dropSel',t:'${t}'})">
       <span class="cur">&gt;</span>
       <span class="nm">${AMMO_NAMES[t]}</span>
       <span class="stat-r"><span>×${s[t]}</span></span>
@@ -816,7 +816,7 @@ function inventory(s) {
 
   // Throwables: listed with the ammo, a THROW button and a card each
   const throwRows = Object.entries(THROW).filter(([, row]) => row?.key && s[row.key] > 0).map(([t, { key: k, name: nm }]) => `
-    <button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})">
+    <button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${t}'})" oncontextmenu="event.preventDefault();sendAction('inv',{k:'dropSel',t:'${t}'})">
       <span class="cur">&gt;</span><span class="nm" style="color:${t === 'frag' ? '#b8c49a' : t === 'fresh' ? '#9fd8e6' : '#f0a050'}">${nm}</span>
       <span class="stat-r"><span>×${s[k]}</span></span>
     </button>`).join('')
@@ -829,7 +829,7 @@ function inventory(s) {
     const sp = getBookSpec(t)
     const chk = canReadBook(s, t, permanentSkillsOf(s)[sp.skill] ?? 0)
     const tag = chk.ok ? `+${sp.bonus} ${sp.skillName.slice(0, 4).toUpperCase()} · PERM` : 'READ'
-    return `<button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${esc(t)}'})" ondblclick="sendAction('inv',{k:'readBook',t:'${esc(t)}'})">
+    return `<button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${esc(t)}'})" oncontextmenu="event.preventDefault();sendAction('inv',{k:'dropSel',t:'${esc(t)}'})" ondblclick="sendAction('inv',{k:'readBook',t:'${esc(t)}'})">
       <span class="cur">&gt;</span><span class="nm" style="color:#ffcf6a">${esc(sp.title)}${n > 1 ? ` ×${n}` : ''}</span>
       <span class="stat-r"><span style="color:${chk.ok ? '#8fd67c' : '#888'}">${tag}</span></span>
     </button>`
@@ -840,7 +840,7 @@ function inventory(s) {
     return sp && matchesFilter(sp.title + ' ' + sp.skillName + ' magazine')
   }).map(([t, n]) => {
     const sp = getMagSpec(t)
-    return `<button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${esc(t)}'})" ondblclick="sendAction('inv',{k:'readMag',t:'${esc(t)}'})">
+    return `<button class="it${sel === t ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'${esc(t)}'})" oncontextmenu="event.preventDefault();sendAction('inv',{k:'dropSel',t:'${esc(t)}'})" ondblclick="sendAction('inv',{k:'readMag',t:'${esc(t)}'})">
       <span class="cur">&gt;</span><span class="nm" style="color:${sp.color}">${esc(sp.title)}${n > 1 ? ` ×${n}` : ''}</span>
       <span class="stat-r"><span style="color:#8fd67c">+${sp.bonus} ${sp.skillName.slice(0, 4).toUpperCase()} · ${sp.durationMin}M</span></span>
     </button>`
@@ -851,7 +851,7 @@ function inventory(s) {
     ${s.fsIngot > 0 ? `<button class="it" onclick="sendAction('inv',{k:'fsIngot'})"><span class="cur">&gt;</span><span class="nm" style="color:#c8261a">Firesalt ingot</span><span class="stat-r">${s.fsIngot} · THROW</span></button>` : ''}
     ${s.cashew > 0 ? `<button class="it" onclick="sendAction('inv',{k:'cashewDrink'})"><span class="cur">&gt;</span><span class="nm" style="color:#e8d2b0">Cashew Water</span><span class="stat-r">${s.cashew} · DRINK</span></button>${(s.almonds ?? 0) > 0 ? `<button class="it" onclick="sendAction('inv',{k:'cashewMix'})"><span class="cur">&gt;</span><span class="nm" style="color:#e8d2b0">Cashew + almond water</span><span class="stat-r">NEUTRALIZE</span></button>` : ''}` : ''}
     ${s.repellent > 0 ? `<button class="it" onclick="sendAction('inv',{k:'repellent'})"><span class="cur">&gt;</span><span class="nm" style="color:#cfe8c8">Smiler Repellent</span><span class="stat-r">${s.repellent} · SPRAY</span></button>` : ''}
-    ${s.bobbypins ? `<button class="it${sel === 'bobbypin' ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'bobbypin'})"><span class="cur">&gt;</span><span class="nm">Bobby pins</span><span class="stat-r">${s.bobbypins}</span></button>` : ''}
+    ${s.bobbypins ? `<button class="it${sel === 'bobbypin' ? ' sel' : ''}" onclick="sendAction('inv',{k:'sel',t:'bobbypin'})" oncontextmenu="event.preventDefault();sendAction('inv',{k:'dropSel',t:'bobbypin'})"><span class="cur">&gt;</span><span class="nm">Bobby pins</span><span class="stat-r">${s.bobbypins}</span></button>` : ''}
     ${s.pages ? String(s.pages).split(',').filter(Boolean).sort((x, y) => x - y).map((n) => `<button class="it" onclick="sendAction('inv',{k:'read',n:${+n}})"><span class="cur">&gt;</span><span class="nm" style="color:#e8dcc0">${+n === 30 || +n === 31 ? esc(describe('page:' + n).name) : +n === 24 ? 'Field doc 24' : +n >= 21 && +n <= 23 ? 'Field doc ' + (+n - 20) : +n >= 11 && +n <= 17 ? 'Alef papers ' + (+n - 10) : 'Torn page ' + +n}</span><span class="stat-r">READ</span></button>`).join('') : ''}` || '<div class="em">No miscellaneous items.</div>'
 
   // tapes get their own tab, each by its own title (Shelly, Nov 10: "the tape for the 50s ad is nowhere to be seen")
