@@ -203,7 +203,7 @@ export function material(ctx) {
     let mk = float(0);
     if (fpat === "tuxedo") mk = max(bib, max(mitts, boots));
     else if (fpat === "socks") mk = max(smoothstep(elbow.add(0.03), elbow.add(0.05), ax.add(wob)), smoothstep(knee.sub(0.02), knee.sub(0.04), q.y.add(wob)));
-    else if (fpat === "belly") mk = max(bib, frontN.mul(smoothstep(knee, knee.sub(0.03), q.y)).mul(0)).max(boots.mul(0.0)).max(bib);
+    else if (fpat === "belly") mk = bib;
     else if (fpat === "points") mk = max(max(smoothstep(elbow, wrist, ax), smoothstep(knee, ankle, q.y)), smoothstep(tailR.add(0.01), tailR, tailD));
     else if (fpat === "tabby") { const s = smoothstep(0.55, 0.75, sin(q.y.mul(70).add(mx_noise_float(q.mul(9)).mul(3.5)).add(ax.mul(18))).mul(0.5).add(0.5)); mk = s.mul(frontN.oneMinus().mul(0.9).add(0.1)).mul(0.85); }
     else if (fpat === "patches") mk = smoothstep(0.18, 0.24, mx_fractal_noise_float(q.mul(vec3(7, 6, 7)).add(P("pSeed", 0))));
