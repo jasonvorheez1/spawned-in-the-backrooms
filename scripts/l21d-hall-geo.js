@@ -23,7 +23,7 @@ function box(x0, y0, z0, x1, y1, z1) {
 }
 // a papered wall: green gloss dado below the rail, yellowed plaster above, and the rail itself
 function wall(x0, z0, x1, z1, top, dark, nx, nz) {
-  g.albedo(TX.dado); g.color(dark ? "#3a4038" : "#7d8a74"); face(x0, z0, x1, z1, 0, DADO);
+  g.albedo(TX.dado); g.color(dark ? "#8a9484" : "#e4efd8"); face(x0, z0, x1, z1, 0, DADO);
   g.albedo(TX.wall); g.color(dark ? "#5b5a4c" : "#d9d2ac"); face(x0, z0, x1, z1, DADO, top);
   if (nx !== undefined) { g.albedo(TX.wood); g.color("#2b241b"); const t = 0.025; box(Math.min(x0, x1) + Math.min(0, nx * t), DADO - 0.04, Math.min(z0, z1) + Math.min(0, nz * t), Math.max(x0, x1) + Math.max(0, nx * t), DADO + 0.04, Math.max(z0, z1) + Math.max(0, nz * t)); }
 }
