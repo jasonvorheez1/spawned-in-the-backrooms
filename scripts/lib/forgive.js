@@ -28,7 +28,7 @@ export function disguised(npc, player) {
 export function hostileReason(ctx, npc, player) {
   if (!npc || npc.state?.dead || (npc.state?.hp ?? 1) <= 0 || npc.state?.follow === player.id) return null;
   if (npc.state?.attackOnSight || npc.tags?.includes("l8-hostile") || BORN_HOSTILE.has(short(npc.id)) || faction(npc) === "lightless") return "hostile";
-  if (!REP_EXEMPT.has(short(npc.id)) && isVilified(player.state, npc) && !disguised(npc, player)) return "reputation";
+  // Shelly Nov 17: reputation still counts (prices, talk, hit squads) but never turns anyone hostile
   return incidentOf(ctx, npc, player)?.kind ?? null;
 }
 

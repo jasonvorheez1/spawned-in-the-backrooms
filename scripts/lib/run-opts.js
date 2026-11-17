@@ -41,6 +41,6 @@ export function mpRoom(who) { // your party's room, else your own: friends join 
   return "mp-" + (String(raw).toLowerCase().replace(/[^a-z0-9_-]/g, "").slice(0, 48) || "guest");
 }
 // what belongs to one mode's run, not to the character
-const STORY = new Set(["run", "quests", "qdone", "qtrack", "quest", "errands", "savePlace", "savePos", "visited", "explored", "zone", "rep", "repHistory", "fame", "infamy", "karma", "talks",
+const STORY = new Set(["run", "npcDead", "quests", "qdone", "qtrack", "quest", "errands", "savePlace", "savePos", "visited", "explored", "zone", "rep", "repHistory", "fame", "infamy", "karma", "talks",
   "hubOffer", "hubSeen", "introFrom", "arrive", "arrivePending", "cut", "dark", "feed", "fieldErrAsk", "funAsk", "phoneNpc", "phoneHello", "pages", "tagsLeft", "escapes", "hordeT", "xfer", "xferTo", "wakeAtSave", "roomHop", "apts", "lootStore", "lootList", "lootName", "lootOpen"]);
 export const isStoryKey = (k) => STORY.has(k) || /^(l\d|t0|lrun|dina|ch2|dcut|home|hub(?!Keys))/.test(k);

@@ -19,7 +19,7 @@ export function keepPeople(ctx, ids, spawn) {
     const o = ctx.place.objects[id], down = !o || o.state?.dead || (o.state?.hp ?? 1) <= 0;
     if (!down) { if (gone[id] != null) { gone = { ...gone }; delete gone[id]; changed = true; } continue; }
     if (gone[id] == null) { gone = { ...gone, [id]: now }; changed = true; continue; }
-    if (now - gone[id] < RESPAWN_MS) continue;
+    if (now - gone[id] < RESPAWN_MS || s.npcPerm?.[id]) continue; // solo: the dead stay dead
     gone = { ...gone }; delete gone[id]; changed = true;
     if (o) ctx.destroy(id);
     spawn(ctx, id);

@@ -23,6 +23,15 @@ export function setQuest(s, id, q) {
   s.qtrack = tr;
   return !old;
 }
+// Shelly Nov 17: a quest whose person died (solo, for good) fails with their name on it
+export function deadCheck(s) {
+  const dead = s?.npcDead; if (!dead || !s.quests) return null;
+  for (const [id, q] of Object.entries(s.quests)) {
+    const who = q.mark?.id ? String(q.mark.id).split("/").pop() : null;
+    if (who && dead[who]) { endQuest(s, id, `${dead[who]} is dead. This can't be finished now.`, "failed"); return q.name; }
+  }
+  return null;
+}
 export function endQuest(s, id, doneText, outcome = "completed") {
   const old = s.quests?.[id];
   if (old) {

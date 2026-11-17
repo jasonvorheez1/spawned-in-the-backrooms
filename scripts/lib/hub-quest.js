@@ -5,7 +5,7 @@ import { setQuest, endQuest, tellQuest, queuePayout } from "./quests.js";
 import { rationsOutcome } from "./level1-quests.js";
 import { addRep, isVilified } from "./rep.js";
 // the M.E.G. hates you: their post won't talk, so Camp Amber carries Dina's lead (Shelly Nov 13: alternate routes when a faction is hostile)
-export const megHostile = (s) => isVilified(s, { id: "hub-meg-okafor", state: { faction: "meg" } });
+export const megHostile = (s) => false; // Shelly Nov 17: reputation never turns anyone hostile
 import { giveKey, hasKey, keysOf, keyDoor } from "./hubkeys.js";
 import { runOf, KEYED, KEY_NAMES, sealed } from "./thehub.js";
 import { rollCheck } from "./npc-talk.js";

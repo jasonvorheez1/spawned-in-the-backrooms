@@ -3,7 +3,7 @@ import { xpNeed, migrateXp } from './lib/progression.js'
 export { xpNeed } from './lib/progression.js'
 import { migrate, wakePlace, wakeLog, canSaveHere } from "./lib/save.js"
 import { sanityMul, isMulti } from "./lib/run-opts.js"
-import { spared } from "./lib/mp-guard.js"
+import { spared, markDead } from "./lib/mp-guard.js"
 import { CORRIDOR, agilityProfile, hitObstacle } from './lib/levelrun-mechanics.js'
 import { layout as layout9, zoneAt as zoneAt9 } from './lib/level9.js'
 import { firstPersonGun, firstPersonTuning } from './lib/fp-gun.js'
@@ -733,6 +733,7 @@ export function hitTarget(ctx, s, m, dmg, f, loud = true, heavy = 0, pen = 0, pe
   if (m.state.hp <= 0 && !m.state.dead && npc) spared(ctx, m) // multiplayer: people get knocked down, not killed (scripts/lib/mp-guard.js)
   if (m.state.hp <= 0 && !m.state.dead) {
     m.state.dead = true
+    if (npc) markDead(ctx, m)
     if (W[s.equipped]?.vaporize) vaporize(ctx, m, hit, npc) // the R-55: the thing burns to light and ash where it stood
     { const seen = markKill(ctx, m, ctx.self); if ((m.tags ?? []).includes('npc')) { repKill(ctx, m, ctx.self, seen, defending); if (ctx.self.place === 'level1' || ['meg-ale', 'meg-callum', 'meg-ortiz'].includes(m.id)) callLazy('l1q', () => import('./lib/level1-quests.js'), 'questKill1', ctx, ctx.self, m) } if (npc && !seen.length && s.crouch) s.notice = { text: 'Nobody saw that', at: ctx.now() } } // witnesses: scripts/lib/witness.js
     s.kills += 1
