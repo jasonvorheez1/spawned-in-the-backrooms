@@ -93,38 +93,6 @@ segments:
   dur: 106.58
   clip: /cdn/music-insertion-machine-gun-kelly-mix-xx3amhfq.mp3
 - kind: host
-  title: Life of the Sword (Takeshi)
-  dur: 14.54
-  clip: /cdn/value.6e5234407fa4a7e7e571ad64779a150eb7df0a5d8f9c4957cebeaa8e5146bbc1.mp3
-- kind: host
-  title: Life of the Sword (Hana)
-  dur: 12.05
-  clip: /cdn/value.8daecc0af94981156557a98fc57fabaca713aca86697d05a46b97f1a1afa99bb.mp3
-- kind: host
-  title: Life of the Sword (Takeshi)
-  dur: 1.73
-  clip: /cdn/value.6e2669db6e330116ba0689fc9d9c51ed2a48d5d16e0ff40eb1dc0b1fbd5f146a.mp3
-- kind: host
-  title: Life of the Sword (Hana)
-  dur: 3.58
-  clip: /cdn/value.97da5888713600f5156d5590180624f080d23b3b4ba21d1ffc45bd3cb4f79278.mp3
-- kind: host
-  title: Life of the Sword (Takeshi)
-  dur: 3.41
-  clip: /cdn/value.d76ebec3ec6b2031e2d53426f374e8093e1d0466e1dd9b95983d9a2dcc763662.mp3
-- kind: host
-  title: Life of the Sword (Hana)
-  dur: 3.74
-  clip: /cdn/value.d1de07276bea7d3be5ecaa1f5781e4d3349d44fdd7d8b236b96b3a1678f9ac1d.mp3
-- kind: host
-  title: Life of the Sword (Takeshi)
-  dur: 2.06
-  clip: /cdn/value.f0a14c2b96ddfd15208fb0945010c334e3491cefe3d6c3e79f9f2e8b5c9bffbb.mp3
-- kind: song
-  title: Smile dk
-  dur: 199.03
-  clip: /cdn/music-smile-dk-japanese-boy-ag96kxmb.mp3
-- kind: host
   title: A Caller from Radio Backrooms (sound)
   dur: 6.62
   clip: /cdn/moodboard-realistic-gritty/sfx-old-studio-phone-ringing-two-rings-then-pickup.mp3
@@ -190,6 +158,38 @@ segments:
   clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Neither%20does%20the%20coffee%20here.%20We%27ll%20trade..mp3
   show: 1
 - kind: host
+  title: Life of the Sword (Takeshi)
+  dur: 14.54
+  clip: /cdn/value.6e5234407fa4a7e7e571ad64779a150eb7df0a5d8f9c4957cebeaa8e5146bbc1.mp3
+- kind: host
+  title: Life of the Sword (Hana)
+  dur: 12.05
+  clip: /cdn/value.8daecc0af94981156557a98fc57fabaca713aca86697d05a46b97f1a1afa99bb.mp3
+- kind: host
+  title: Life of the Sword (Takeshi)
+  dur: 1.73
+  clip: /cdn/value.6e2669db6e330116ba0689fc9d9c51ed2a48d5d16e0ff40eb1dc0b1fbd5f146a.mp3
+- kind: host
+  title: Life of the Sword (Hana)
+  dur: 3.58
+  clip: /cdn/value.97da5888713600f5156d5590180624f080d23b3b4ba21d1ffc45bd3cb4f79278.mp3
+- kind: host
+  title: Life of the Sword (Takeshi)
+  dur: 3.41
+  clip: /cdn/value.d76ebec3ec6b2031e2d53426f374e8093e1d0466e1dd9b95983d9a2dcc763662.mp3
+- kind: host
+  title: Life of the Sword (Hana)
+  dur: 3.74
+  clip: /cdn/value.d1de07276bea7d3be5ecaa1f5781e4d3349d44fdd7d8b236b96b3a1678f9ac1d.mp3
+- kind: host
+  title: Life of the Sword (Takeshi)
+  dur: 2.06
+  clip: /cdn/value.f0a14c2b96ddfd15208fb0945010c334e3491cefe3d6c3e79f9f2e8b5c9bffbb.mp3
+- kind: song
+  title: Smile dk
+  dur: 199.03
+  clip: /cdn/music-smile-dk-japanese-boy-ag96kxmb.mp3
+- kind: host
   title: Traveler's Advice (Hana)
   dur: 11.74
   clip: /cdn/value.fd4d5b041b1532b25850737fd9d2a05d13abaf849f7f5879d1fbd7f607373590.mp3
@@ -213,50 +213,6 @@ segments:
   title: Nadeshiko Rock
   dur: 187.12
   clip: /cdn/music-nadeshiko-rock-popn-cafe-j5adxd18.mp3
-- kind: host
-  title: The Eastern Banner (Takeshi)
-  dur: 8.86
-  clip: /cdn/value.0c99d4aa3ea4c287768ec54b506889cf6c8a9a100504f0418a4be246bf7ba893.mp3
-- kind: host
-  title: The Eastern Banner (Hana)
-  dur: 1.73
-  clip: /cdn/value.6cb29948febbb5e03f6000037544a4fae6455b5219a242a38d28c28c64206dde.mp3
-- kind: host
-  title: The Eastern Banner (Takeshi)
-  dur: 2.86
-  clip: /cdn/value.412254db52ea87e24092e24e728a4c7b5d684d2c95ff3b8bfedead258ba0522a.mp3
-- kind: host
-  title: The Eastern Banner (Hana)
-  dur: 5.09
-  clip: /cdn/value.9508c9524bd1986160c43b8f66711070235a9448f985457b1601f6fb3a39f1ff.mp3
-- kind: host
-  title: The Eastern Banner (Takeshi)
-  dur: 4.22
-  clip: /cdn/value.01f53edf5425348624ab93ed5f90bb8a48e1ce17366a3637c1f4e7ea7f555694.mp3
-- kind: host
-  title: The Eastern Banner (Hana)
-  dur: 3.98
-  clip: /cdn/value.d294eac6cda6582c4506cea9d4ce40efc29e194d8e356200a87f7b973d16455e.mp3
-- kind: host
-  title: The Eastern Banner (Takeshi)
-  dur: 4.22
-  clip: /cdn/value.efb356f4906536d8e5800550d3b2333b377cd59429d087e7b10074b16e73cda9.mp3
-- kind: host
-  title: The Eastern Banner (Hana)
-  dur: 1.66
-  clip: /cdn/value.f4b56987146f0d4a4a9bac10ba237ad8e4807ae8da5fd594414c5c918ad518aa.mp3
-- kind: host
-  title: The Eastern Banner (Takeshi)
-  dur: 2.06
-  clip: /cdn/value.0f4cc2b7465a1ebfd05ce51a8ec588f8db0e2c945c1d867e2c74b1fc393fbf62.mp3
-- kind: host
-  title: The Eastern Banner (Hana)
-  dur: 4.3
-  clip: /cdn/value.b6d4a3f2577b0679c9ccbaef8b56b831bffef0117ec0019a01d37aeff406e3db.mp3
-- kind: song
-  title: Red Zone
-  dur: 216.32
-  clip: /cdn/music-red-zone-full-version-f8fdfkay.mp3
 - kind: host
   title: The Concierge Takes Tea (sound)
   dur: 1.22
@@ -318,49 +274,49 @@ segments:
   clip: /cdn/value.caca366da0678abeb3fcd12d9d4018a1d89aff0cf9166f165e192824e2f87afa.mp3
   show: 1
 - kind: host
-  title: Dead Air (Hana)
-  dur: 6.94
-  clip: /cdn/value.6212ed0656b839ba0bf1ddd8c33b3f879c07ff33557a37d5d15b851519b04508.mp3
+  title: The Eastern Banner (Takeshi)
+  dur: 8.86
+  clip: /cdn/value.0c99d4aa3ea4c287768ec54b506889cf6c8a9a100504f0418a4be246bf7ba893.mp3
 - kind: host
-  title: Dead Air (Hana)
-  dur: 11.9
-  clip: /cdn/value.488b2fc066bdace899587dfe04b3ede373b4d78cb9d5bb6bdd901368fc17daf2.mp3
+  title: The Eastern Banner (Hana)
+  dur: 1.73
+  clip: /cdn/value.6cb29948febbb5e03f6000037544a4fae6455b5219a242a38d28c28c64206dde.mp3
 - kind: host
-  title: Dead Air (Hana)
-  dur: 9.26
-  clip: /cdn/value.2a5309238f5a7102a145d8c9077ddbff3665ddd1062bf6aa20bda16ae4e48ad5.mp3
+  title: The Eastern Banner (Takeshi)
+  dur: 2.86
+  clip: /cdn/value.412254db52ea87e24092e24e728a4c7b5d684d2c95ff3b8bfedead258ba0522a.mp3
+- kind: host
+  title: The Eastern Banner (Hana)
+  dur: 5.09
+  clip: /cdn/value.9508c9524bd1986160c43b8f66711070235a9448f985457b1601f6fb3a39f1ff.mp3
+- kind: host
+  title: The Eastern Banner (Takeshi)
+  dur: 4.22
+  clip: /cdn/value.01f53edf5425348624ab93ed5f90bb8a48e1ce17366a3637c1f4e7ea7f555694.mp3
+- kind: host
+  title: The Eastern Banner (Hana)
+  dur: 3.98
+  clip: /cdn/value.d294eac6cda6582c4506cea9d4ce40efc29e194d8e356200a87f7b973d16455e.mp3
+- kind: host
+  title: The Eastern Banner (Takeshi)
+  dur: 4.22
+  clip: /cdn/value.efb356f4906536d8e5800550d3b2333b377cd59429d087e7b10074b16e73cda9.mp3
+- kind: host
+  title: The Eastern Banner (Hana)
+  dur: 1.66
+  clip: /cdn/value.f4b56987146f0d4a4a9bac10ba237ad8e4807ae8da5fd594414c5c918ad518aa.mp3
+- kind: host
+  title: The Eastern Banner (Takeshi)
+  dur: 2.06
+  clip: /cdn/value.0f4cc2b7465a1ebfd05ce51a8ec588f8db0e2c945c1d867e2c74b1fc393fbf62.mp3
+- kind: host
+  title: The Eastern Banner (Hana)
+  dur: 4.3
+  clip: /cdn/value.b6d4a3f2577b0679c9ccbaef8b56b831bffef0117ec0019a01d37aeff406e3db.mp3
 - kind: song
-  title: Live A Live
-  dur: 182.88
-  clip: /cdn/live-a-live-opening-theme-5wx2x2tv.mp3
-- kind: host
-  title: The Dark Wall (Takeshi)
-  dur: 7.01
-  clip: /cdn/value.33a08fd98eeea0116359a1c1e3d7b8d67bd1ea8996c72e3ac24af61ad24a1de7.mp3
-- kind: host
-  title: The Dark Wall (Hana)
-  dur: 1.9
-  clip: /cdn/value.04ed35dae114f0f277910d5f27c24e943f4552d2dcb5d2a5129e2ec1c34e8e7e.mp3
-- kind: host
-  title: The Dark Wall (Takeshi)
-  dur: 6.22
-  clip: /cdn/value.22aad1d8867bc389a7bc4536c585bfd5ede87a290c402ea86ac7a724dd0be24b.mp3
-- kind: host
-  title: The Dark Wall (Hana)
-  dur: 6.14
-  clip: /cdn/value.44feff46efed53c1450a04fe5aed0bc26e27c307441b9cc28b2dddcc3511b21c.mp3
-- kind: host
-  title: The Dark Wall (Takeshi)
-  dur: 1.58
-  clip: /cdn/value.90422856bf528988a1f405fbe73ef75e0a41827cc3a767e643e8f50869eaf1a9.mp3
-- kind: host
-  title: The Dark Wall (Hana)
-  dur: 5.81
-  clip: /cdn/value.3b48126d703d49198b034fe4782f97d3a9b599eb9927630d5a141bf59f591961.mp3
-- kind: song
-  title: Archon's Roost
-  dur: 226.09
-  clip: /cdn/music-archons-roost-orchestral-theme-xhamppti.mp3
+  title: Red Zone
+  dur: 216.32
+  clip: /cdn/music-red-zone-full-version-f8fdfkay.mp3
 - kind: host
   title: Wren's Road (sound)
   dur: 6.62
@@ -407,37 +363,49 @@ segments:
   clip: /cdn/moodboard-realistic-gritty/sfx-phone-hang-up-click-and-dial-tone.mp3
   show: 1
 - kind: host
-  title: Dawn Duel (Takeshi)
-  dur: 7.66
-  clip: /cdn/value.184504f1ef46feb669eeec29da586ff03a93293edce084a6897e6eaa643ece2f.mp3
+  title: Dead Air (Hana)
+  dur: 6.94
+  clip: /cdn/value.6212ed0656b839ba0bf1ddd8c33b3f879c07ff33557a37d5d15b851519b04508.mp3
 - kind: host
-  title: Dawn Duel (Hana)
-  dur: 4.78
-  clip: /cdn/value.eeda098022a2b013189777dc985a96d7a97b0defdce37a89be5e0738197d876d.mp3
+  title: Dead Air (Hana)
+  dur: 11.9
+  clip: /cdn/value.488b2fc066bdace899587dfe04b3ede373b4d78cb9d5bb6bdd901368fc17daf2.mp3
 - kind: host
-  title: Dawn Duel (Takeshi)
-  dur: 2.45
-  clip: /cdn/value.70b1a4f440076e4c9ae54068611d44ab29dcf36f907c2317fd35e5d15e725eaa.mp3
-- kind: host
-  title: Dawn Duel (Hana)
-  dur: 2.14
-  clip: /cdn/value.087371f3ed5686a78095ddc2ab0d4d7fa8e0ce79e4e929b938f077afeebcb472.mp3
-- kind: host
-  title: Dawn Duel (Takeshi)
-  dur: 1.49
-  clip: /cdn/value.9cce36aa4f7ae649ae16c0141849298e265a50d4659740c764b4870a2129f54f.mp3
-- kind: host
-  title: Dawn Duel (Hana)
-  dur: 5.66
-  clip: /cdn/value.b7d18ab60905976eeaa89d4c84a3397992a774bac4d3142d8bd0aa7c322f058f.mp3
-- kind: host
-  title: Dawn Duel (Takeshi)
-  dur: 2.45
-  clip: /cdn/value.7f7d8ecb1665ce376e9abcf2982819609a666502974e3fdf5820578edcf6cfc4.mp3
+  title: Dead Air (Hana)
+  dur: 9.26
+  clip: /cdn/value.2a5309238f5a7102a145d8c9077ddbff3665ddd1062bf6aa20bda16ae4e48ad5.mp3
 - kind: song
-  title: Musashi Project
-  dur: 266.97
-  clip: /cdn/music-musashi-project-naruto-theme-1oi9ccto.mp3
+  title: Live A Live
+  dur: 182.88
+  clip: /cdn/live-a-live-opening-theme-5wx2x2tv.mp3
+- kind: host
+  title: The Dark Wall (Takeshi)
+  dur: 7.01
+  clip: /cdn/value.33a08fd98eeea0116359a1c1e3d7b8d67bd1ea8996c72e3ac24af61ad24a1de7.mp3
+- kind: host
+  title: The Dark Wall (Hana)
+  dur: 1.9
+  clip: /cdn/value.04ed35dae114f0f277910d5f27c24e943f4552d2dcb5d2a5129e2ec1c34e8e7e.mp3
+- kind: host
+  title: The Dark Wall (Takeshi)
+  dur: 6.22
+  clip: /cdn/value.22aad1d8867bc389a7bc4536c585bfd5ede87a290c402ea86ac7a724dd0be24b.mp3
+- kind: host
+  title: The Dark Wall (Hana)
+  dur: 6.14
+  clip: /cdn/value.44feff46efed53c1450a04fe5aed0bc26e27c307441b9cc28b2dddcc3511b21c.mp3
+- kind: host
+  title: The Dark Wall (Takeshi)
+  dur: 1.58
+  clip: /cdn/value.90422856bf528988a1f405fbe73ef75e0a41827cc3a767e643e8f50869eaf1a9.mp3
+- kind: host
+  title: The Dark Wall (Hana)
+  dur: 5.81
+  clip: /cdn/value.3b48126d703d49198b034fe4782f97d3a9b599eb9927630d5a141bf59f591961.mp3
+- kind: song
+  title: Archon's Roost
+  dur: 226.09
+  clip: /cdn/music-archons-roost-orchestral-theme-xhamppti.mp3
 - kind: host
   title: Moon Viewing (Takeshi)
   dur: 6.6
@@ -484,6 +452,103 @@ segments:
   clip: /cdn/value.63801034509baebea65a64770f6607b89795e9cae94d09ba6442b2a2554ccef6.mp3
   show: 1
 - kind: host
+  title: Dawn Duel (Takeshi)
+  dur: 7.66
+  clip: /cdn/value.184504f1ef46feb669eeec29da586ff03a93293edce084a6897e6eaa643ece2f.mp3
+- kind: host
+  title: Dawn Duel (Hana)
+  dur: 4.78
+  clip: /cdn/value.eeda098022a2b013189777dc985a96d7a97b0defdce37a89be5e0738197d876d.mp3
+- kind: host
+  title: Dawn Duel (Takeshi)
+  dur: 2.45
+  clip: /cdn/value.70b1a4f440076e4c9ae54068611d44ab29dcf36f907c2317fd35e5d15e725eaa.mp3
+- kind: host
+  title: Dawn Duel (Hana)
+  dur: 2.14
+  clip: /cdn/value.087371f3ed5686a78095ddc2ab0d4d7fa8e0ce79e4e929b938f077afeebcb472.mp3
+- kind: host
+  title: Dawn Duel (Takeshi)
+  dur: 1.49
+  clip: /cdn/value.9cce36aa4f7ae649ae16c0141849298e265a50d4659740c764b4870a2129f54f.mp3
+- kind: host
+  title: Dawn Duel (Hana)
+  dur: 5.66
+  clip: /cdn/value.b7d18ab60905976eeaa89d4c84a3397992a774bac4d3142d8bd0aa7c322f058f.mp3
+- kind: host
+  title: Dawn Duel (Takeshi)
+  dur: 2.45
+  clip: /cdn/value.7f7d8ecb1665ce376e9abcf2982819609a666502974e3fdf5820578edcf6cfc4.mp3
+- kind: song
+  title: Musashi Project
+  dur: 266.97
+  clip: /cdn/music-musashi-project-naruto-theme-1oi9ccto.mp3
+- kind: host
+  title: Okafor Inspects the House (sound)
+  dur: 1.22
+  clip: /cdn/moodboard-realistic-gritty/sfx-three-knocks-on-a-heavy-studio-door.mp3
+  show: 1
+- kind: host
+  title: Okafor Inspects the House (Okafor)
+  dur: 6.0
+  clip: /cdn/value.4558f568a4c9471ec676b97e2c4f5d85800ade7fbb50709c7611047cde4398fe.mp3
+  show: 1
+- kind: host
+  title: Okafor Inspects the House (Takeshi)
+  dur: 7.0
+  clip: /cdn/value.92a296606000bb58076c8460ad230690f179bc0ce65fd03d11da53843ddaa962.mp3
+  show: 1
+- kind: host
+  title: Okafor Inspects the House (Hana)
+  dur: 5.7
+  clip: /cdn/value.9076559f58ff704b0e6ae55496846f85937d46cb9edbfd61b22ee5731c7974fb.mp3
+  show: 1
+- kind: host
+  title: Okafor Inspects the House (Okafor)
+  dur: 3.6
+  clip: /cdn/value.f74d71aaacbc8f78a8a524129d89af1909734cd72da8bc28d799106067158a27.mp3
+  show: 1
+- kind: host
+  title: Okafor Inspects the House (Takeshi)
+  dur: 3.6
+  clip: /cdn/value.8d5c563bab620fdfa3a733914c4b1b91cba929203d3279536d818a90690e0e77.mp3
+  show: 1
+- kind: host
+  title: Okafor Inspects the House (Hana)
+  dur: 3.4
+  clip: /cdn/value.bf2ec9dcbc97b3fb83482137f930212014ca86061870e5bae54296ec03db72a2.mp3
+  show: 1
+- kind: host
+  title: Okafor Inspects the House (Okafor)
+  dur: 4.6
+  clip: /cdn/value.b8fa3b5f343313f9828512ab370d40773ed7b757a3ffcf669f5364229f807159.mp3
+  show: 1
+- kind: host
+  title: Okafor Inspects the House (Takeshi)
+  dur: 2.1
+  clip: /cdn/value.5266d3b7d8f1cc300d413d564fe757e4fbd0903538c8f247a09a187c74705157.mp3
+  show: 1
+- kind: host
+  title: Okafor Inspects the House (Hana)
+  dur: 2.4
+  clip: /cdn/value.77b551468d02e9c161d025cecadca7e57b293603950d8245c567f9b9d481f274.mp3
+  show: 1
+- kind: host
+  title: Okafor Inspects the House (Okafor)
+  dur: 5.5
+  clip: /cdn/value.0baf032966ef7a462a75d43e0466898171ae49a3a713c89bac4f2b15512f8e99.mp3
+  show: 1
+- kind: host
+  title: Okafor Inspects the House (Takeshi)
+  dur: 2.9
+  clip: /cdn/value.2fc248d148d415b303c355549fd06dfccf6b00e97eac54d9b0d3ea10ba2e442f.mp3
+  show: 1
+- kind: host
+  title: Okafor Inspects the House (Hana)
+  dur: 4.7
+  clip: /cdn/value.04c76f4380ec8af8bc9b3002f2ff40700d66cb4923c3a4a0e5636b06d031be08.mp3
+  show: 1
+- kind: host
   title: The Duel (Hana)
   dur: 6.29
   clip: /cdn/value.7cc5370146b1bcf4e442558f4d2880d7369f9270283a59570954cf958bb97558.mp3
@@ -512,6 +577,56 @@ segments:
   dur: 232.65
   clip: /cdn/music-illusion-live-a-live-remastered-8rttqzfq.mp3
 - kind: host
+  title: Sword and Tea (sound)
+  dur: 1.1
+  clip: /cdn/moodboard-realistic-gritty/sfx-pouring-hot-tea-into-ceramic-cup.mp3
+  show: 1
+- kind: host
+  title: Sword and Tea (Takeshi)
+  dur: 8.4
+  clip: /cdn/value.1853a7a3689d9defc892d0e4d058752db3d6e9c13414380171cccb2c6a8ea0c7.mp3
+  show: 1
+- kind: host
+  title: Sword and Tea (Hana)
+  dur: 3.7
+  clip: /cdn/value.b49778d64e33430f60331694ab461612e4bc0bd43b56fd8ca010b55030e4b87d.mp3
+  show: 1
+- kind: host
+  title: Sword and Tea (Takeshi)
+  dur: 2.8
+  clip: /cdn/value.a0e85c24598aaec1a5d399e9fa5fdc858820e5736c2b355f77869d8e914e894c.mp3
+  show: 1
+- kind: host
+  title: Sword and Tea (Hana)
+  dur: 2.9
+  clip: /cdn/value.61498a4374a576e7eed7745eb63db299d5b928ea81097fd171cb97b138b3243c.mp3
+  show: 1
+- kind: host
+  title: Sword and Tea (Takeshi)
+  dur: 1.8
+  clip: /cdn/value.e8c6c59cb26965491082e049fe55714cf52aa48855899f00dd6f6dc1ae68c03d.mp3
+  show: 1
+- kind: host
+  title: Sword and Tea (Hana)
+  dur: 8.4
+  clip: /cdn/value.b642b4d3b8d51c7fa2d0e0a9d73ac30bee8471aef63300f2d2d5d747c5e47299.mp3
+  show: 1
+- kind: host
+  title: Sword and Tea (Takeshi)
+  dur: 2.2
+  clip: /cdn/value.44d62a31381636e1553dd5ec66ea183b455196e71d104236a19ff22d7cb35879.mp3
+  show: 1
+- kind: host
+  title: Sword and Tea (Hana)
+  dur: 4.0
+  clip: /cdn/value.d63bccaeed5ea7c548bc44ee5e8eaa917444d2e951be7cbf26ff59d60ffaa68b.mp3
+  show: 1
+- kind: host
+  title: Sword and Tea (Takeshi)
+  dur: 2.5
+  clip: /cdn/value.5d78627927291afdc25be1e6fdf1114659636746d8486e76666eb2cb2be3b582.mp3
+  show: 1
+- kind: host
   title: Swords Down (Takeshi)
   dur: 7.25
   clip: /cdn/value.2ddd855df2765fc1d1823148104945f5a929489c376afca68b01cff67e59f794.mp3
@@ -539,6 +654,30 @@ segments:
   title: Tokyo Roman
   dur: 379.45
   clip: /cdn/music-tokyo-roman-jpop-song-wtwijajp.mp3
+- kind: host
+  title: Sign-Off (Takeshi)
+  dur: 6.7
+  clip: /cdn/value.b9c4749fdbca41f3f1ece2d1b88a4888b91da94ef562753304e5b489a8009aed.mp3
+- kind: host
+  title: Sign-Off (Hana)
+  dur: 6.46
+  clip: /cdn/value.2484cbebfefe241d4118602fbc5830a799cdb8685f6bbb5f03a14b922bf2ba69.mp3
+- kind: host
+  title: Sign-Off (Takeshi)
+  dur: 4.13
+  clip: /cdn/value.9ee375a83a2ffd331d80990b598cac6399ccba7c0b196ff08ddc465c868b20f4.mp3
+- kind: host
+  title: Sign-Off (Hana)
+  dur: 3.34
+  clip: /cdn/value.dd79fe14226e409ad5448130e26fe6a2448e6cbd1ba2f540d66fa8bb543ae60d.mp3
+- kind: host
+  title: Sign-Off (Takeshi)
+  dur: 1.82
+  clip: /cdn/value.532080b8b059c104552fe60fb4ff9458ebd0fa34102c0090b54f140b8b71abf0.mp3
+- kind: song
+  title: Heroic Struggle
+  dur: 401.03
+  clip: /cdn/heroic-struggle-gameplay-ost-ke3ng26y.mp3
 - kind: host
   title: Letters from Level Eleven (Hana)
   dur: 11.4
@@ -569,27 +708,3 @@ segments:
   dur: 3.6
   clip: /cdn/value.02a0749962fcd01563c771bf3c43d1d3adce7fc75d02c3f95b40e798335e8b0a.mp3
   show: 1
-- kind: host
-  title: Sign-Off (Takeshi)
-  dur: 6.7
-  clip: /cdn/value.b9c4749fdbca41f3f1ece2d1b88a4888b91da94ef562753304e5b489a8009aed.mp3
-- kind: host
-  title: Sign-Off (Hana)
-  dur: 6.46
-  clip: /cdn/value.2484cbebfefe241d4118602fbc5830a799cdb8685f6bbb5f03a14b922bf2ba69.mp3
-- kind: host
-  title: Sign-Off (Takeshi)
-  dur: 4.13
-  clip: /cdn/value.9ee375a83a2ffd331d80990b598cac6399ccba7c0b196ff08ddc465c868b20f4.mp3
-- kind: host
-  title: Sign-Off (Hana)
-  dur: 3.34
-  clip: /cdn/value.dd79fe14226e409ad5448130e26fe6a2448e6cbd1ba2f540d66fa8bb543ae60d.mp3
-- kind: host
-  title: Sign-Off (Takeshi)
-  dur: 1.82
-  clip: /cdn/value.532080b8b059c104552fe60fb4ff9458ebd0fa34102c0090b54f140b8b71abf0.mp3
-- kind: song
-  title: Heroic Struggle
-  dur: 401.03
-  clip: /cdn/heroic-struggle-gameplay-ost-ke3ng26y.mp3

@@ -708,5 +708,265 @@
   "clip": "/cdn/value.335d245de002a76b8aab2856029def6796611dc92d0f666646dd7994402ab107.mp3",
   "dur": 6.0,
   "who": "sprinkles"
+ },
+ "radio-45bd146b6322": {
+  "clip": "/cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Line%20two.%20Radio%20Backrooms%2C%20you%27re%20on..mp3",
+  "dur": 3.24,
+  "who": "ralph"
+ },
+ "radio-2100457d104b": {
+  "clip": "/cdn/value.87cd8aa16f3c3ddfaf92e95dcbe4370dc30bb0ac8033dfb006f1424515fe9445.mp3",
+  "dur": 3.4,
+  "who": "hana"
+ },
+ "radio-c4021712e8b2": {
+  "clip": "/cdn/value.e6750a34950b3a4189ab64c342e7838ca58f295d8259a3c1beafaf3197b62455.mp3",
+  "dur": 2.9,
+  "who": "takeshi"
+ },
+ "radio-c40fce04bafa": {
+  "clip": "/cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Good%20to%20hear%20you%20both.%20Folks%2C%20these%20two%20broadcast%20from%20a%20house%20in%20old%20Kyoto%20that%20never%20runs%20out%20of%20rooms..mp3",
+  "dur": 6.5,
+  "who": "ralph"
+ },
+ "radio-2927c7df7d59": {
+  "clip": "/cdn/value.71de427b1600b17016307de6f65a52aa0287bc70fcf099b4035f657f3e2c5131.mp3",
+  "dur": 4.5,
+  "who": "hana"
+ },
+ "radio-828b2edc44a0": {
+  "clip": "/cdn/value.72e9bb75c2422e5412842b33dedb17dbe17fc49ad3a249dc3e26fbd040fea256.mp3",
+  "dur": 6.7,
+  "who": "takeshi"
+ },
+ "radio-d7cb94e4e74d": {
+  "clip": "/cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-What%27s%20the%20one%20thing%20you%27d%20tell%20somebody%20who%20just%20noclipped%20in%20tonight%3F.mp3",
+  "dur": 3.62,
+  "who": "ralph"
+ },
+ "radio-b931ccf1eede": {
+  "clip": "/cdn/value.d417a70cede6b31a60f3db178af570ed894096f586410298242141305dc2736f.mp3",
+  "dur": 2.2,
+  "who": "hana"
+ },
+ "radio-01cb2a28851a": {
+  "clip": "/cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-I%20heard%20it.%20Goodnight%2C%20you%20two..mp3",
+  "dur": 2.28,
+  "who": "ralph"
+ },
+ "radio-5a51e95788a1": {
+  "clip": "/cdn/value.f4c4a639980a021718e92e0c0f4d322a3e465cebf57479064354f685f1b2caa9.mp3",
+  "dur": 5.5,
+  "who": "hana"
+ },
+ "radio-a4adb0074037": {
+  "clip": "/cdn/value.7b1207e26f0351ff15376fd57022412ec9c5bbf7c741b89749c9c92aa0afadf6.mp3",
+  "dur": 4.5,
+  "who": "takeshi"
+ },
+ "radio-7fbeedbb25e6": {
+  "clip": "/cdn/value.1af65565322ffec5f1596ac392fdb1e8cd807caa7512d497eac9e47f927dde69.mp3",
+  "dur": 4.5,
+  "who": "takeshi"
+ },
+ "radio-43d7b3f0205b": {
+  "clip": "/cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Before%20the%20next%20song%2C%20a%20question%20I%20ask%20myself%20on%20slow%20nights.%20If%20there%27s%20a%20way%20out%2C%20would%20you%20take%20it%3F.mp3",
+  "dur": 6.67,
+  "who": "ralph"
+ },
+ "radio-53b941b4293c": {
+  "clip": "/cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Alright.%20Enough%20heavy%20stuff.%20Here%27s%20one%20you%20can%20tap%20your%20foot%20to..mp3",
+  "dur": 4.1,
+  "who": "ralph"
+ },
+ "radio-f1136ddf0da2": {
+  "clip": "/cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Maybe%20the%20way%20out%20isn%27t%20a%20door.%20Maybe%20it%27s%20just%20somebody%20to%20talk%20to%20when%20the%20lights%20hum%20too%20loud..mp3",
+  "dur": 5.88,
+  "who": "ralph"
+ },
+ "radio-9dbce5d4d5ba": {
+  "clip": "/cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Call%20in%20and%20tell%20me%20what%20you%27d%20do.%20The%20line%27s%20always%20open.%20Even%20when%20I%27m%20asleep.%20Especially%20then..mp3",
+  "dur": 6.26,
+  "who": "ralph"
+ },
+ "radio-94458ed90a0c": {
+  "clip": "/cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-I%20used%20to%20say%20yes%2C%20right%20away.%20Now%20I%27m%20not%20so%20sure.%20The%20folks%20who%20call%20this%20station%2C%20the%20songs%2C%20the%20coffee.%20That%27s%20a%20life..mp3",
+  "dur": 9.62,
+  "who": "ralph"
+ },
+ "radio-kyoto-30fae8ebcf70": {
+  "clip": "/cdn/value.4558f568a4c9471ec676b97e2c4f5d85800ade7fbb50709c7611047cde4398fe.mp3",
+  "dur": 6.0,
+  "who": "okafor"
+ },
+ "radio-kyoto-afa336c7f8ca": {
+  "clip": "/cdn/value.f74d71aaacbc8f78a8a524129d89af1909734cd72da8bc28d799106067158a27.mp3",
+  "dur": 3.6,
+  "who": "okafor"
+ },
+ "radio-kyoto-d6623f96cc74": {
+  "clip": "/cdn/value.92a296606000bb58076c8460ad230690f179bc0ce65fd03d11da53843ddaa962.mp3",
+  "dur": 7.0,
+  "who": "takeshi"
+ },
+ "radio-kyoto-9d9f051ecfb5": {
+  "clip": "/cdn/value.9076559f58ff704b0e6ae55496846f85937d46cb9edbfd61b22ee5731c7974fb.mp3",
+  "dur": 5.7,
+  "who": "hana"
+ },
+ "radio-kyoto-58b976ef8597": {
+  "clip": "/cdn/value.8d5c563bab620fdfa3a733914c4b1b91cba929203d3279536d818a90690e0e77.mp3",
+  "dur": 3.6,
+  "who": "takeshi"
+ },
+ "radio-kyoto-070daf56f2e0": {
+  "clip": "/cdn/value.bf2ec9dcbc97b3fb83482137f930212014ca86061870e5bae54296ec03db72a2.mp3",
+  "dur": 3.4,
+  "who": "hana"
+ },
+ "radio-kyoto-f1f374c34b42": {
+  "clip": "/cdn/value.5266d3b7d8f1cc300d413d564fe757e4fbd0903538c8f247a09a187c74705157.mp3",
+  "dur": 2.1,
+  "who": "takeshi"
+ },
+ "radio-kyoto-860c6ba84360": {
+  "clip": "/cdn/value.77b551468d02e9c161d025cecadca7e57b293603950d8245c567f9b9d481f274.mp3",
+  "dur": 2.4,
+  "who": "hana"
+ },
+ "radio-kyoto-be90513ff4c3": {
+  "clip": "/cdn/value.b8fa3b5f343313f9828512ab370d40773ed7b757a3ffcf669f5364229f807159.mp3",
+  "dur": 4.6,
+  "who": "okafor"
+ },
+ "radio-kyoto-2f70fd9eb12c": {
+  "clip": "/cdn/value.2fc248d148d415b303c355549fd06dfccf6b00e97eac54d9b0d3ea10ba2e442f.mp3",
+  "dur": 2.9,
+  "who": "takeshi"
+ },
+ "radio-kyoto-2b461d499d14": {
+  "clip": "/cdn/value.0baf032966ef7a462a75d43e0466898171ae49a3a713c89bac4f2b15512f8e99.mp3",
+  "dur": 5.5,
+  "who": "okafor"
+ },
+ "radio-kyoto-34bd0be39a61": {
+  "clip": "/cdn/value.04c76f4380ec8af8bc9b3002f2ff40700d66cb4923c3a4a0e5636b06d031be08.mp3",
+  "dur": 4.7,
+  "who": "hana"
+ },
+ "radio-kyoto-8a5f9c59069b": {
+  "clip": "/cdn/value.b49778d64e33430f60331694ab461612e4bc0bd43b56fd8ca010b55030e4b87d.mp3",
+  "dur": 3.7,
+  "who": "hana"
+ },
+ "radio-kyoto-39753074620d": {
+  "clip": "/cdn/value.a0e85c24598aaec1a5d399e9fa5fdc858820e5736c2b355f77869d8e914e894c.mp3",
+  "dur": 2.8,
+  "who": "takeshi"
+ },
+ "radio-kyoto-14b390d2898e": {
+  "clip": "/cdn/value.61498a4374a576e7eed7745eb63db299d5b928ea81097fd171cb97b138b3243c.mp3",
+  "dur": 2.9,
+  "who": "hana"
+ },
+ "radio-kyoto-814679db4c23": {
+  "clip": "/cdn/value.1853a7a3689d9defc892d0e4d058752db3d6e9c13414380171cccb2c6a8ea0c7.mp3",
+  "dur": 8.4,
+  "who": "takeshi"
+ },
+ "radio-kyoto-0e1d6d6c7f98": {
+  "clip": "/cdn/value.e8c6c59cb26965491082e049fe55714cf52aa48855899f00dd6f6dc1ae68c03d.mp3",
+  "dur": 1.8,
+  "who": "takeshi"
+ },
+ "radio-kyoto-a915a5caea3d": {
+  "clip": "/cdn/value.44d62a31381636e1553dd5ec66ea183b455196e71d104236a19ff22d7cb35879.mp3",
+  "dur": 2.2,
+  "who": "takeshi"
+ },
+ "radio-kyoto-39d193cca01d": {
+  "clip": "/cdn/value.d63bccaeed5ea7c548bc44ee5e8eaa917444d2e951be7cbf26ff59d60ffaa68b.mp3",
+  "dur": 4.0,
+  "who": "hana"
+ },
+ "radio-kyoto-d9444468f148": {
+  "clip": "/cdn/value.5d78627927291afdc25be1e6fdf1114659636746d8486e76666eb2cb2be3b582.mp3",
+  "dur": 2.5,
+  "who": "takeshi"
+ },
+ "radio-kyoto-36e776ba141b": {
+  "clip": "/cdn/value.b642b4d3b8d51c7fa2d0e0a9d73ac30bee8471aef63300f2d2d5d747c5e47299.mp3",
+  "dur": 8.4,
+  "who": "hana"
+ },
+ "radio-party-4682dfb2ae31": {
+  "clip": "/cdn/value.733df8e0235fc1a238d899fb6c6478bc9fb067200a3e4a0c6aebeedc8088355c.mp3",
+  "dur": 6.0,
+  "who": "sprinkles"
+ },
+ "radio-party-3713b4dcc8d4": {
+  "clip": "/cdn/value.ab31dbb99381524d7df8a34a18ce894c7a5f8f2e5c785a96212fbc5939f77be3.mp3",
+  "dur": 4.4,
+  "who": "takeshi"
+ },
+ "radio-party-1e337fd8945d": {
+  "clip": "/cdn/value.f5c7aff4c0a7fc6b4fb5a6924fbbf4439d3943b3368c4bb110a08c91cd56c0b3.mp3",
+  "dur": 4.7,
+  "who": "hana"
+ },
+ "radio-party-703c729a33e0": {
+  "clip": "/cdn/value.3710d1e79089d7c7af1b7f6105e503c8e6089f91ec54a2b9c44cefe3cbfa70fe.mp3",
+  "dur": 4.0,
+  "who": "sprinkles"
+ },
+ "radio-party-f95ba87a5994": {
+  "clip": "/cdn/value.d391dc95571200dffe851e1bf0fe20cf7606cba740fea16f5274fa3b2ac6c056.mp3",
+  "dur": 6.6,
+  "who": "sprinkles"
+ },
+ "radio-party-f3bcc5bf8bad": {
+  "clip": "/cdn/value.e6b8f1dc97fd344c2f33dbb8298dd94168c204c83f4d601ea4c9e5527af47b91.mp3",
+  "dur": 1.9,
+  "who": "takeshi"
+ },
+ "radio-party-8e3ec58ba4d4": {
+  "clip": "/cdn/value.5e2b82467ff590f273874ae91dbbdbb2530540808aa89f848440088074128b8b.mp3",
+  "dur": 1.6,
+  "who": "hana"
+ },
+ "radio-party-2ed577264bfc": {
+  "clip": "/cdn/value.bb7cdfa0dfcfbef26fedb7b9b0bc5dcbfecc290c183ecf24435dd023fad23ecc.mp3",
+  "dur": 4.1,
+  "who": "sprinkles"
+ },
+ "radio-party-e021e4f31159": {
+  "clip": "/cdn/value.f6e7de26707e26996932ccd2a905706763c2258dedec68d89a8b250a54665b1c.mp3",
+  "dur": 5.3,
+  "who": "sprinkles"
+ },
+ "radio-party-afcf708e5505": {
+  "clip": "/cdn/value.7084e5be345b8be45c5ac5c882dce7fa0c2da6ae58e0b61866deba8719d11091.mp3",
+  "dur": 8.1,
+  "who": "sprinkles"
+ },
+ "radio-party-a0003573d449": {
+  "clip": "/cdn/value.34cefa113f4eba1e91d400db722af6ac617e7ce6b9d8abc45dd61880ee2d728c.mp3",
+  "dur": 9.4,
+  "who": "sprinkles"
+ },
+ "radio-party-6c1155a62f5b": {
+  "clip": "/cdn/value.75281a58692c29d215f410ffb8a3f020b7b3b5edada88ec09c0fa5aede411abf.mp3",
+  "dur": 7.9,
+  "who": "sprinkles"
+ },
+ "radio-party-a468750634d2": {
+  "clip": "/cdn/value.10a98640ae0988aac395decd63b2994a415733291c943baf5aa4e072786cbe14.mp3",
+  "dur": 5.7,
+  "who": "sprinkles"
+ },
+ "radio-party-a2b619380d10": {
+  "clip": "/cdn/value.86e91e2a977174b730af132dc3399bd9fa8aa4181b059cf155ec37d8792c01d3.mp3",
+  "dur": 7.9,
+  "who": "sprinkles"
  }
 }

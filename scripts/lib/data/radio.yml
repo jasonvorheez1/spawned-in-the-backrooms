@@ -41,14 +41,6 @@ segments:
   dur: 190.69
   clip: /cdn/music-radiowave-romantic-ballad-retro-3ryjduje.mp3
 - kind: host
-  title: 'Survival 101: Light'
-  dur: 7.56
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Tip%20number%20fourteen%3A%20carry%20a%20light.%20Smilers%20hate%20it%2C%20Hounds%20don%27t%20love%20it%2C%20and%20you%27ll%20want%20to%20see%20who%27s%20sharing%20the%20hallway..mp3
-- kind: song
-  title: Sisters' Song
-  dur: 167.13
-  clip: /cdn/music-radiowave-sisters-song-kb2wvpde.mp3
-- kind: host
   title: 'Guest Hour: Wren (sound)'
   dur: 2.38
   clip: /cdn/moodboard-realistic-gritty/sfx-warm-radio-station-jingle-three-note-chime.mp3
@@ -114,6 +106,14 @@ segments:
   clip: /cdn/value.05f6ca89007e1d45438da89eee2017daec791e22d4755a8ebbe63c3347068dda.mp3
   show: 1
 - kind: host
+  title: 'Survival 101: Light'
+  dur: 7.56
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Tip%20number%20fourteen%3A%20carry%20a%20light.%20Smilers%20hate%20it%2C%20Hounds%20don%27t%20love%20it%2C%20and%20you%27ll%20want%20to%20see%20who%27s%20sharing%20the%20hallway..mp3
+- kind: song
+  title: Sisters' Song
+  dur: 167.13
+  clip: /cdn/music-radiowave-sisters-song-kb2wvpde.mp3
+- kind: host
   title: Mail Bag
   dur: 10.58
   clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Got%20a%20letter%20in%20the%20mail%20bag.%20Well%2C%20a%20napkin.%20It%20says%3A%20Ralph%2C%20how%20do%20I%20get%20out%3F%20Friend%2C%20I%27ll%20tell%20you%20as%20soon%20as%20I%20find%20out.%20Keep%20the%20napkins%20coming..mp3
@@ -133,14 +133,6 @@ segments:
   title: Hey Ba-Ba-Re-Bop
   dur: 179.83
   clip: /cdn/music-hey-ba-re-bop-jazz-hhw3m53t.mp3
-- kind: host
-  title: 'Level of the Day: The Poolrooms'
-  dur: 11.71
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Level%20of%20the%20day%2C%20Level%20Thirty-Seven%2C%20the%20Poolrooms.%20Warm%20water%2C%20white%20tile%2C%20nobody%20around.%20Prettiest%20place%20you%27ll%20ever%20feel%20completely%20alone%20in.%20Bring%20a%20towel..mp3
-- kind: song
-  title: Radio Wave
-  dur: 187.22
-  clip: /cdn/radio-wave-rw-music-u90uzzqa.mp3
 - kind: host
   title: 'Guest Hour: Okafor (sound)'
   dur: 1.22
@@ -197,6 +189,14 @@ segments:
   clip: /cdn/value.8987f691be13743a8f05420b3a737143b262085bab46aea05c13f6429e4527f1.mp3
   show: 1
 - kind: host
+  title: 'Level of the Day: The Poolrooms'
+  dur: 11.71
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Level%20of%20the%20day%2C%20Level%20Thirty-Seven%2C%20the%20Poolrooms.%20Warm%20water%2C%20white%20tile%2C%20nobody%20around.%20Prettiest%20place%20you%27ll%20ever%20feel%20completely%20alone%20in.%20Bring%20a%20towel..mp3
+- kind: song
+  title: Radio Wave
+  dur: 187.22
+  clip: /cdn/radio-wave-rw-music-u90uzzqa.mp3
+- kind: host
   title: 'Level of the Day: Level 4'
   dur: 11.3
   clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Level%20of%20the%20day%2C%20Level%20Four.%20Empty%20offices%2C%20water%20coolers%20that%20actually%20work.%20Feels%20like%20Monday%20morning%20with%20nobody%20to%20boss%20you%20around.%20Paradise%2C%20almost..mp3
@@ -204,34 +204,6 @@ segments:
   title: Beginner's Luck
   dur: 163.71
   clip: /cdn/music-radiowave-beginners-luck-qfe75qz3.mp3
-- kind: host
-  title: Weather
-  dur: 12.19
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Weather%20report.%20Level%20Zero%3A%20humid%2C%20buzzing%2C%20seventy%20two%20degrees%20forever.%20Level%20Six%3A%20dark.%20Level%20Eleven%3A%20lovely%2C%20actually.%20Go%20see%20Level%20Eleven..mp3
-- kind: host
-  title: A Note from Ralph
-  dur: 11.16
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-A%20personal%20note%20to%20my%20listeners.%20Ralph%20is%20out%20of%20milk.%20Again.%20Anybody%20who%20brings%20a%20carton%20to%20the%20studio%20gets%20a%20secret%20about%20this%20place.%20A%20juicy%20one.%20That%27s%20a%20promise..mp3
-- kind: song
-  title: Vintage Song
-  dur: 194.19
-  clip: /cdn/music-radio-wave-vintage-song-pdq3t52q.mp3
-- kind: host
-  title: Almond Water Moment
-  dur: 9.96
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-This%20is%20your%20almond%20water%20moment.%20Stop.%20Take%20a%20sip.%20Breathe.%20You%27re%20still%20here%2C%20and%20that%20counts%20for%20something.%20Okay.%20Back%20to%20it..mp3
-- kind: song
-  title: Jubilee
-  dur: 193.78
-  clip: /cdn/music-radiowave-jubilee-song-ksc3daf9.mp3
-- kind: host
-  title: Ralph's Story
-  dur: 10.44
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-People%20ask%20how%20I%20ended%20up%20behind%20a%20mic.%20I%20found%20this%20room%2C%20found%20this%20board%2C%20flipped%20one%20switch%2C%20and%20the%20light%20came%20on.%20Been%20talking%20ever%20since.%20Seemed%20rude%20to%20stop..mp3
-- kind: song
-  title: Tea Garden
-  dur: 208.72
-  clip: /cdn/music-radio-wave-tea-garden-4cnr9ket.mp3
 - kind: host
   title: 'Guest Hour: The Concierge (sound)'
   dur: 6.62
@@ -288,33 +260,33 @@ segments:
   clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-...Let%27s%20play%20a%20song.%20A%20loud%20one..mp3
   show: 1
 - kind: host
-  title: Shout Out
-  dur: 7.8
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Shout%20out%20to%20whoever%20left%20a%20full%20can%20of%20beans%20by%20the%20stairwell%20on%20Level%20Two.%20You%27re%20a%20saint.%20I%20ate%20them.%20Sorry%20to%20the%20next%20guy..mp3
+  title: Weather
+  dur: 12.19
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Weather%20report.%20Level%20Zero%3A%20humid%2C%20buzzing%2C%20seventy%20two%20degrees%20forever.%20Level%20Six%3A%20dark.%20Level%20Eleven%3A%20lovely%2C%20actually.%20Go%20see%20Level%20Eleven..mp3
 - kind: host
-  title: 'Survival 101: Almond Water'
-  dur: 10.75
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Survival%20101%2C%20part%20two.%20Almond%20water.%20Drink%20it%2C%20carry%20it%2C%20trade%20for%20it.%20If%20it%20smells%20like%20anything%20other%20than%20almonds%2C%20pour%20it%20out%20and%20walk%20away..mp3
+  title: A Note from Ralph
+  dur: 11.16
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-A%20personal%20note%20to%20my%20listeners.%20Ralph%20is%20out%20of%20milk.%20Again.%20Anybody%20who%20brings%20a%20carton%20to%20the%20studio%20gets%20a%20secret%20about%20this%20place.%20A%20juicy%20one.%20That%27s%20a%20promise..mp3
 - kind: song
-  title: Don't Lose Your Head
-  dur: 193.93
-  clip: /cdn/music-dont-lose-your-head-0dczv9um.mp3
+  title: Vintage Song
+  dur: 194.19
+  clip: /cdn/music-radio-wave-vintage-song-pdq3t52q.mp3
 - kind: host
-  title: Sprinkles Report
-  dur: 10.92
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Word%20is%20Sprinkles%20over%20on%20Join%20Us%20Radio%20is%20throwing%20another%20party.%20Friendly%20reminder%20from%20your%20pal%20Ralph%3A%20do%20not%20RSVP.%20Do%20not%20bring%20cake.%20Do%20not%20go..mp3
+  title: Almond Water Moment
+  dur: 9.96
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-This%20is%20your%20almond%20water%20moment.%20Stop.%20Take%20a%20sip.%20Breathe.%20You%27re%20still%20here%2C%20and%20that%20counts%20for%20something.%20Okay.%20Back%20to%20it..mp3
 - kind: song
-  title: Vocal Jazz Ballad
-  dur: 196.1
-  clip: /cdn/music-romantic-vocal-jazz-ballad-9aez2oit.mp3
+  title: Jubilee
+  dur: 193.78
+  clip: /cdn/music-radiowave-jubilee-song-ksc3daf9.mp3
 - kind: host
-  title: Ole'hba Report
-  dur: 9.38
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Our%20friend%20Ole%27hba%20over%20on%20eight-eight-point-eight%20says%20hello.%20Well%2C%20he%20said%20something.%20I%27m%20choosing%20to%20hear%20hello.%20Keep%20your%20lights%20on%2C%20folks..mp3
+  title: Ralph's Story
+  dur: 10.44
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-People%20ask%20how%20I%20ended%20up%20behind%20a%20mic.%20I%20found%20this%20room%2C%20found%20this%20board%2C%20flipped%20one%20switch%2C%20and%20the%20light%20came%20on.%20Been%20talking%20ever%20since.%20Seemed%20rude%20to%20stop..mp3
 - kind: song
-  title: Sad Song
-  dur: 185.13
-  clip: /cdn/radiowave-rwmusic-sad-song-ups3cl7o.mp3
+  title: Tea Garden
+  dur: 208.72
+  clip: /cdn/music-radio-wave-tea-garden-4cnr9ket.mp3
 - kind: host
   title: Call-In Hour (sound)
   dur: 6.62
@@ -386,45 +358,33 @@ segments:
   clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-For%20Bill.%20With%20horns..mp3
   show: 1
 - kind: host
-  title: 'Song Intro: Slow One'
-  dur: 10.1
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Here%27s%20a%20slow%20one.%20For%20anybody%20walking%20a%20long%20hallway%20right%20now%2C%20wondering%20if%20it%20ever%20ends.%20It%20does.%20Then%20there%27s%20another%20one.%20But%20this%20song%20helps..mp3
+  title: Shout Out
+  dur: 7.8
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Shout%20out%20to%20whoever%20left%20a%20full%20can%20of%20beans%20by%20the%20stairwell%20on%20Level%20Two.%20You%27re%20a%20saint.%20I%20ate%20them.%20Sorry%20to%20the%20next%20guy..mp3
 - kind: host
-  title: 'Level of the Day: Level 11'
-  dur: 13.46
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Level%20of%20the%20day.%20Level%20Eleven.%20The%20endless%20city.%20Rain%2C%20offices%2C%20a%20coffee%20machine%20that%20never%20runs%20dry.%20If%20you%27re%20there%20now%2C%20wave%20at%20the%20window.%20I%20can%27t%20see%20you%2C%20but%20it%27s%20polite..mp3
+  title: 'Survival 101: Almond Water'
+  dur: 10.75
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Survival%20101%2C%20part%20two.%20Almond%20water.%20Drink%20it%2C%20carry%20it%2C%20trade%20for%20it.%20If%20it%20smells%20like%20anything%20other%20than%20almonds%2C%20pour%20it%20out%20and%20walk%20away..mp3
 - kind: song
-  title: Romantic Vocal
-  dur: 185.03
-  clip: /cdn/music-radiowave-romantic-vocal-track-7aqj0jk8.mp3
+  title: Don't Lose Your Head
+  dur: 193.93
+  clip: /cdn/music-dont-lose-your-head-0dczv9um.mp3
 - kind: host
-  title: 'Song Intro: Swing'
-  dur: 7.39
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Let%27s%20pick%20it%20up%20a%20little.%20Something%20with%20some%20swing.%20Dance%20if%20you%20want.%20Nobody%27s%20watching.%20Well.%20Probably%20nobody..mp3
+  title: Sprinkles Report
+  dur: 10.92
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Word%20is%20Sprinkles%20over%20on%20Join%20Us%20Radio%20is%20throwing%20another%20party.%20Friendly%20reminder%20from%20your%20pal%20Ralph%3A%20do%20not%20RSVP.%20Do%20not%20bring%20cake.%20Do%20not%20go..mp3
 - kind: song
-  title: Vintage Vocal Jazz
-  dur: 172.77
-  clip: /cdn/radio-wave-vintage-vocal-jazz-3xrjqvvm.mp3
+  title: Vocal Jazz Ballad
+  dur: 196.1
+  clip: /cdn/music-romantic-vocal-jazz-ballad-9aez2oit.mp3
 - kind: host
-  title: Late Night Thoughts
-  dur: 8.76
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-You%20ever%20notice%20the%20hum%20sounds%20like%20a%20note%3F%20I%20think%20it%27s%20a%20B%20flat.%20Been%20trying%20to%20harmonize%20with%20it%20for%20years.%20Might%20be%20the%20reason%20I%27m%20still%20single..mp3
-- kind: host
-  title: Talkin' with Ralph
-  dur: 8.35
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Coming%20up%20after%20the%20music%2C%20Talkin%27%20with%20Ralph.%20Phones%20are%20open%2C%20if%20your%20phone%20works.%20If%20it%20doesn%27t%2C%20try%20anyway.%20Sometimes%20it%20does..mp3
+  title: Ole'hba Report
+  dur: 9.38
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Our%20friend%20Ole%27hba%20over%20on%20eight-eight-point-eight%20says%20hello.%20Well%2C%20he%20said%20something.%20I%27m%20choosing%20to%20hear%20hello.%20Keep%20your%20lights%20on%2C%20folks..mp3
 - kind: song
-  title: Savoy Swing Serenade
-  dur: 142.45
-  clip: /cdn/music-savoy-swing-serenade-vocal-5vsb3auh.mp3
-- kind: host
-  title: Advice Line
-  dur: 11.78
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Advice%20line.%20Caller%20asks%3A%20Ralph%2C%20the%20walls%20keep%20moving.%20What%20do%20I%20do%3F%20Honestly%3F%20Move%20with%20them.%20Pick%20a%20wall%2C%20make%20friends.%20Walls%20are%20good%20listeners..mp3
-- kind: song
-  title: Vintage Ballad
-  dur: 193.2
-  clip: /cdn/music-radio-wave-vintage-ballad-hwjkki9k.mp3
+  title: Sad Song
+  dur: 185.13
+  clip: /cdn/radiowave-rwmusic-sad-song-ups3cl7o.mp3
 - kind: host
   title: Sprinkles Calls In (sound)
   dur: 6.62
@@ -481,6 +441,116 @@ segments:
   clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-If%20you%20hear%20balloons%20and%20you%20didn%27t%20bring%20any%2C%20run..mp3
   show: 1
 - kind: host
+  title: 'Song Intro: Slow One'
+  dur: 10.1
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Here%27s%20a%20slow%20one.%20For%20anybody%20walking%20a%20long%20hallway%20right%20now%2C%20wondering%20if%20it%20ever%20ends.%20It%20does.%20Then%20there%27s%20another%20one.%20But%20this%20song%20helps..mp3
+- kind: host
+  title: 'Level of the Day: Level 11'
+  dur: 13.46
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Level%20of%20the%20day.%20Level%20Eleven.%20The%20endless%20city.%20Rain%2C%20offices%2C%20a%20coffee%20machine%20that%20never%20runs%20dry.%20If%20you%27re%20there%20now%2C%20wave%20at%20the%20window.%20I%20can%27t%20see%20you%2C%20but%20it%27s%20polite..mp3
+- kind: song
+  title: Romantic Vocal
+  dur: 185.03
+  clip: /cdn/music-radiowave-romantic-vocal-track-7aqj0jk8.mp3
+- kind: host
+  title: 'Song Intro: Swing'
+  dur: 7.39
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Let%27s%20pick%20it%20up%20a%20little.%20Something%20with%20some%20swing.%20Dance%20if%20you%20want.%20Nobody%27s%20watching.%20Well.%20Probably%20nobody..mp3
+- kind: song
+  title: Vintage Vocal Jazz
+  dur: 172.77
+  clip: /cdn/radio-wave-vintage-vocal-jazz-3xrjqvvm.mp3
+- kind: host
+  title: Late Night Thoughts
+  dur: 8.76
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-You%20ever%20notice%20the%20hum%20sounds%20like%20a%20note%3F%20I%20think%20it%27s%20a%20B%20flat.%20Been%20trying%20to%20harmonize%20with%20it%20for%20years.%20Might%20be%20the%20reason%20I%27m%20still%20single..mp3
+- kind: host
+  title: Talkin' with Ralph
+  dur: 8.35
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Coming%20up%20after%20the%20music%2C%20Talkin%27%20with%20Ralph.%20Phones%20are%20open%2C%20if%20your%20phone%20works.%20If%20it%20doesn%27t%2C%20try%20anyway.%20Sometimes%20it%20does..mp3
+- kind: song
+  title: Savoy Swing Serenade
+  dur: 142.45
+  clip: /cdn/music-savoy-swing-serenade-vocal-5vsb3auh.mp3
+- kind: host
+  title: 'Guest Hour: Takeshi and Hana (sound)'
+  dur: 6.62
+  clip: /cdn/moodboard-realistic-gritty/sfx-old-studio-phone-ringing-two-rings-then-pickup.mp3
+  show: 1
+- kind: host
+  title: 'Guest Hour: Takeshi and Hana (Ralph)'
+  dur: 3.24
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Line%20two.%20Radio%20Backrooms%2C%20you%27re%20on..mp3
+  show: 1
+- kind: host
+  title: 'Guest Hour: Takeshi and Hana (Takeshi)'
+  dur: 6.7
+  clip: /cdn/value.72e9bb75c2422e5412842b33dedb17dbe17fc49ad3a249dc3e26fbd040fea256.mp3
+  show: 1
+- kind: host
+  title: 'Guest Hour: Takeshi and Hana (Hana)'
+  dur: 4.5
+  clip: /cdn/value.71de427b1600b17016307de6f65a52aa0287bc70fcf099b4035f657f3e2c5131.mp3
+  show: 1
+- kind: host
+  title: 'Guest Hour: Takeshi and Hana (Ralph)'
+  dur: 6.5
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Good%20to%20hear%20you%20both.%20Folks%2C%20these%20two%20broadcast%20from%20a%20house%20in%20old%20Kyoto%20that%20never%20runs%20out%20of%20rooms..mp3
+  show: 1
+- kind: host
+  title: 'Guest Hour: Takeshi and Hana (Takeshi)'
+  dur: 2.9
+  clip: /cdn/value.e6750a34950b3a4189ab64c342e7838ca58f295d8259a3c1beafaf3197b62455.mp3
+  show: 1
+- kind: host
+  title: 'Guest Hour: Takeshi and Hana (Hana)'
+  dur: 3.4
+  clip: /cdn/value.87cd8aa16f3c3ddfaf92e95dcbe4370dc30bb0ac8033dfb006f1424515fe9445.mp3
+  show: 1
+- kind: host
+  title: 'Guest Hour: Takeshi and Hana (Ralph)'
+  dur: 3.62
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-What%27s%20the%20one%20thing%20you%27d%20tell%20somebody%20who%20just%20noclipped%20in%20tonight%3F.mp3
+  show: 1
+- kind: host
+  title: 'Guest Hour: Takeshi and Hana (Hana)'
+  dur: 5.5
+  clip: /cdn/value.f4c4a639980a021718e92e0c0f4d322a3e465cebf57479064354f685f1b2caa9.mp3
+  show: 1
+- kind: host
+  title: 'Guest Hour: Takeshi and Hana (Takeshi)'
+  dur: 4.5
+  clip: /cdn/value.1af65565322ffec5f1596ac392fdb1e8cd807caa7512d497eac9e47f927dde69.mp3
+  show: 1
+- kind: host
+  title: 'Guest Hour: Takeshi and Hana (Hana)'
+  dur: 2.2
+  clip: /cdn/value.d417a70cede6b31a60f3db178af570ed894096f586410298242141305dc2736f.mp3
+  show: 1
+- kind: host
+  title: 'Guest Hour: Takeshi and Hana (Takeshi)'
+  dur: 4.5
+  clip: /cdn/value.7b1207e26f0351ff15376fd57022412ec9c5bbf7c741b89749c9c92aa0afadf6.mp3
+  show: 1
+- kind: host
+  title: 'Guest Hour: Takeshi and Hana (Ralph)'
+  dur: 2.28
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-I%20heard%20it.%20Goodnight%2C%20you%20two..mp3
+  show: 1
+- kind: host
+  title: 'Guest Hour: Takeshi and Hana (sound)'
+  dur: 2.26
+  clip: /cdn/moodboard-realistic-gritty/sfx-phone-hang-up-click-and-dial-tone.mp3
+  show: 1
+- kind: host
+  title: Advice Line
+  dur: 11.78
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Advice%20line.%20Caller%20asks%3A%20Ralph%2C%20the%20walls%20keep%20moving.%20What%20do%20I%20do%3F%20Honestly%3F%20Move%20with%20them.%20Pick%20a%20wall%2C%20make%20friends.%20Walls%20are%20good%20listeners..mp3
+- kind: song
+  title: Vintage Ballad
+  dur: 193.2
+  clip: /cdn/music-radio-wave-vintage-ballad-hwjkki9k.mp3
+- kind: host
   title: Gratitude
   dur: 8.18
   clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-I%20know%20this%20place%20is%20hard.%20But%20you%20found%20a%20radio%2C%20and%20you%20found%20me%2C%20and%20that%27s%20two%20good%20things.%20Count%20those.%20I%27m%20counting%20you..mp3
@@ -492,6 +562,31 @@ segments:
   title: Electric Retro
   dur: 188.97
   clip: /cdn/music-radio-wave-electronic-retro-25lljhqv.mp3
+- kind: host
+  title: Ralph's Night Questions (Ralph)
+  dur: 6.67
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Before%20the%20next%20song%2C%20a%20question%20I%20ask%20myself%20on%20slow%20nights.%20If%20there%27s%20a%20way%20out%2C%20would%20you%20take%20it%3F.mp3
+  show: 1
+- kind: host
+  title: Ralph's Night Questions (Ralph)
+  dur: 9.62
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-I%20used%20to%20say%20yes%2C%20right%20away.%20Now%20I%27m%20not%20so%20sure.%20The%20folks%20who%20call%20this%20station%2C%20the%20songs%2C%20the%20coffee.%20That%27s%20a%20life..mp3
+  show: 1
+- kind: host
+  title: Ralph's Night Questions (Ralph)
+  dur: 5.88
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Maybe%20the%20way%20out%20isn%27t%20a%20door.%20Maybe%20it%27s%20just%20somebody%20to%20talk%20to%20when%20the%20lights%20hum%20too%20loud..mp3
+  show: 1
+- kind: host
+  title: Ralph's Night Questions (Ralph)
+  dur: 6.26
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Call%20in%20and%20tell%20me%20what%20you%27d%20do.%20The%20line%27s%20always%20open.%20Even%20when%20I%27m%20asleep.%20Especially%20then..mp3
+  show: 1
+- kind: host
+  title: Ralph's Night Questions (Ralph)
+  dur: 4.1
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Alright.%20Enough%20heavy%20stuff.%20Here%27s%20one%20you%20can%20tap%20your%20foot%20to..mp3
+  show: 1
 - kind: host
   title: Station ID 2
   dur: 8.59
@@ -512,6 +607,14 @@ segments:
   title: Romantic Ballad II
   dur: 185.29
   clip: /cdn/music-radio-wave-romantic-ballad-iwn47ckj.mp3
+- kind: host
+  title: Cashew Water PSA
+  dur: 9.55
+  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Public%20service%20announcement.%20Cashew%20water%20is%20not%20almond%20water.%20I%20don%27t%20care%20how%20thirsty%20you%20are.%20It%27s%20not%20the%20same.%20It%27s%20never%20the%20same.%20Please..mp3
+- kind: song
+  title: Vintage Vocal
+  dur: 149.19
+  clip: /cdn/radio-wave-vintage-vocal-performance-fbr77s1k.mp3
 - kind: host
   title: 'Ralph''s Story: First Broadcast (Ralph)'
   dur: 7.94
@@ -537,14 +640,6 @@ segments:
   dur: 1.56
   clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Here%27s%20a%20slow%20one..mp3
   show: 1
-- kind: host
-  title: Cashew Water PSA
-  dur: 9.55
-  clip: /cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Public%20service%20announcement.%20Cashew%20water%20is%20not%20almond%20water.%20I%20don%27t%20care%20how%20thirsty%20you%20are.%20It%27s%20not%20the%20same.%20It%27s%20never%20the%20same.%20Please..mp3
-- kind: song
-  title: Vintage Vocal
-  dur: 149.19
-  clip: /cdn/radio-wave-vintage-vocal-performance-fbr77s1k.mp3
 - kind: host
   title: Late Hours
   dur: 10.27

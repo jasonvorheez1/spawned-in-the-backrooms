@@ -49,34 +49,6 @@ segments:
   dur: 180.02
   clip: /cdn/music-2000s-kids-pop-cover-album-cheerful-kids-choir-bouncy-pop-rock-guitar.mp3?lyrics=Red%20balloon%20and%20blue%20balloon%0AFloating%20up%20around%20the%20room%0AYou%20can%20hold%20one%20if%20you%27re%20nice%0AYou%20can%20hold%20one%2C%20hold%20it%20twice%0ABalloon%20best%20friends%20forever%20and%20ever%0AWe%20stick%20together%2C%20always%20together%0APop%20pop%20pop%20goes%20the%20beat%0ABalloon%20best%20friends%2C%20sweet%20sweet%20sweet
 - kind: host
-  title: Cake
-  dur: 10.5
-  clip: /cdn/value.e077b6039725c90fb9c36c10b5bcd96731135f6c84c9ed39e0137090071501a1.mp3
-- kind: host
-  title: MEG Stinks
-  dur: 11.3
-  clip: /cdn/value.4b489bf4d5ad62604132935ad431841b1e131bbc5c11507e44acf8b427eb6994.mp3
-- kind: host
-  title: Balloon Facts
-  dur: 12.8
-  clip: /cdn/value.639d7b2c52f3fd3cf74bb913cab80e0b54b89837d0ae256a29231bec16379b28.mp3
-- kind: host
-  title: Station ID
-  dur: 11.62
-  clip: /cdn/value.5563abf19eddb1e9c77dbfa1011981babdf7d988c11980e5d43db3eac3db3233.mp3
-- kind: host
-  title: Sprinkles Says
-  dur: 10.14
-  clip: /cdn/value.e674e1d79114d08f1e9b33a63dd472e8cdf7fa54b1797f7fc36e38b42a89573a.mp3
-- kind: host
-  title: Places Sprinkles Has Been
-  dur: 11.96
-  clip: /cdn/value.b317a17d8c57f855db938e3ef41b34c31adf68c65dfc697f68e46a6bc3da261b.mp3
-- kind: song
-  title: No Exit (Dance Mix)
-  dur: 150.02
-  clip: /cdn/music-2000s-kids-pop-cover-album-energetic-kids-choir-eurodance-synth-four-on-the-floor.mp3?lyrics=There%27s%20no%20exit%2C%20no%20exit%2C%20that%27s%20okay%0AWe%27re%20gonna%20dance%20here%20every%20day%0AHands%20up%20high%2C%20now%20spin%20around%0AThe%20carpet%27s%20squishy%20on%20the%20ground%0ANo%20exit%2C%20no%20exit%2C%20la%20la%20la%0ANobody%27s%20leaving%2C%20ha%20ha%20ha%0ATurn%20it%20up%20and%20turn%20around%0AThe%20best%20party%20ever%20found
-- kind: host
   title: Sprinkles Has a Guest! (sound)
   dur: 1.68
   clip: /cdn/moodboard-realistic-gritty/sfx-party-horn-blow-and-confetti-pop.mp3
@@ -132,6 +104,34 @@ segments:
   clip: /cdn/moodboard-realistic-gritty/sfx-phone-hang-up-click-and-dial-tone.mp3
   show: 1
 - kind: host
+  title: Cake
+  dur: 10.5
+  clip: /cdn/value.e077b6039725c90fb9c36c10b5bcd96731135f6c84c9ed39e0137090071501a1.mp3
+- kind: host
+  title: MEG Stinks
+  dur: 11.3
+  clip: /cdn/value.4b489bf4d5ad62604132935ad431841b1e131bbc5c11507e44acf8b427eb6994.mp3
+- kind: host
+  title: Balloon Facts
+  dur: 12.8
+  clip: /cdn/value.639d7b2c52f3fd3cf74bb913cab80e0b54b89837d0ae256a29231bec16379b28.mp3
+- kind: host
+  title: Station ID
+  dur: 11.62
+  clip: /cdn/value.5563abf19eddb1e9c77dbfa1011981babdf7d988c11980e5d43db3eac3db3233.mp3
+- kind: host
+  title: Sprinkles Says
+  dur: 10.14
+  clip: /cdn/value.e674e1d79114d08f1e9b33a63dd472e8cdf7fa54b1797f7fc36e38b42a89573a.mp3
+- kind: host
+  title: Places Sprinkles Has Been
+  dur: 11.96
+  clip: /cdn/value.b317a17d8c57f855db938e3ef41b34c31adf68c65dfc697f68e46a6bc3da261b.mp3
+- kind: song
+  title: No Exit (Dance Mix)
+  dur: 150.02
+  clip: /cdn/music-2000s-kids-pop-cover-album-energetic-kids-choir-eurodance-synth-four-on-the-floor.mp3?lyrics=There%27s%20no%20exit%2C%20no%20exit%2C%20that%27s%20okay%0AWe%27re%20gonna%20dance%20here%20every%20day%0AHands%20up%20high%2C%20now%20spin%20around%0AThe%20carpet%27s%20squishy%20on%20the%20ground%0ANo%20exit%2C%20no%20exit%2C%20la%20la%20la%0ANobody%27s%20leaving%2C%20ha%20ha%20ha%0ATurn%20it%20up%20and%20turn%20around%0AThe%20best%20party%20ever%20found
+- kind: host
   title: Lost Again
   dur: 9.9
   clip: /cdn/value.3513ccba3a3317581f744cc24a0cbf709273e6f475ea0ceb93bbe37d1f552f8d.mp3
@@ -159,34 +159,6 @@ segments:
   title: Smile Smile Smile
   dur: 130.03
   clip: /cdn/music-2000s-kids-pop-cover-album-sunny-kids-choir-pop-handclaps-whistles.mp3?lyrics=Smile%20smile%20smile%2C%20show%20me%20your%20teeth%0ASmile%20up%20above%20and%20smile%20underneath%0AWhen%20you%27re%20feeling%20kinda%20down%0ATurn%20that%20frown%20upside%20down%0ASmile%20smile%20smile%2C%20all%20the%20while%0AEverybody%27s%20gotta%20smile%0ASmile%20smile%20smile%2C%20it%27s%20the%20rule%0ASmiling%20makes%20the%20party%20cool
-- kind: host
-  title: Shapes
-  dur: 10.1
-  clip: /cdn/value.43df70961ad74ff82c59dcc035e805b6945eaf4cf97777d43f5b2887e73a5b12.mp3
-- kind: host
-  title: Dance Break
-  dur: 9.9
-  clip: /cdn/value.2f5f0e62176cf44c5969dc33e6254b8bdae6c9275dab2830c4854a2431f3307b.mp3
-- kind: host
-  title: Smile
-  dur: 11.2
-  clip: /cdn/value.a818893b58735c061472730d948ae4aaa4dfe10192369c5026237745656d59f5.mp3
-- kind: host
-  title: Sprinkles Says
-  dur: 11.7
-  clip: /cdn/value.e3adf5848dbb68b2909d9eda65fa1770690d2e99fcca786f290c2dffd5cd69ad.mp3
-- kind: host
-  title: Places Sprinkles Has Been
-  dur: 10.84
-  clip: /cdn/value.481b4a65cb0e3664de26808679c4672cf6754b9a99d00ec61271b48aff7304f0.mp3
-- kind: host
-  title: Station ID
-  dur: 7.89
-  clip: /cdn/value.9b7dccee3f7ab179a647b3213c8eaf249c0bef44b8c5749ea0026f21d4db5f1c.mp3
-- kind: song
-  title: Cake For Everyone
-  dur: 180.02
-  clip: /cdn/music-2000s-kids-pop-cover-album-happy-kids-choir-r-and-b-pop-groove-snaps.mp3?lyrics=Who%20wants%20cake%2C%20cake%20for%20everyone%0AFrosting%20on%20the%20ceiling%2C%20oh%20what%20fun%0ACandles%20burning%20bright%20tonight%0AMake%20a%20wish%20and%20hold%20on%20tight%0ACake%2C%20cake%2C%20cake%20for%20everyone%0AThe%20party%27s%20only%20just%20begun%0AIf%20you%27re%20hungry%20come%20on%20in%0AWe%27ll%20keep%20the%20party%20going%20again
 - kind: host
   title: The M.E.G. Comes to the Party (sound)
   dur: 1.22
@@ -243,33 +215,33 @@ segments:
   clip: /cdn/value.a83f1c8564b1ff063ebc58b8b4d296bc7afc64e08230baaf4c3f2b105cee5f62.mp3
   show: 1
 - kind: host
-  title: MEG Party
-  dur: 12.6
-  clip: /cdn/value.89d714d91075d0258c07cbedf63099eb99db8c3af83dbb597f22e9fe95a80787.mp3
+  title: Shapes
+  dur: 10.1
+  clip: /cdn/value.43df70961ad74ff82c59dcc035e805b6945eaf4cf97777d43f5b2887e73a5b12.mp3
 - kind: host
-  title: Phone Call
-  dur: 10.6
-  clip: /cdn/value.b167289b620ffabe1e6e0845769706fd0ac14ded98112c26fe4b5398bf738c6c.mp3
+  title: Dance Break
+  dur: 9.9
+  clip: /cdn/value.2f5f0e62176cf44c5969dc33e6254b8bdae6c9275dab2830c4854a2431f3307b.mp3
 - kind: host
-  title: Snacks
-  dur: 10.0
-  clip: /cdn/value.a6744e573588069b154b8a1604ec77ab7bfcf53596c4d76dd99a9c6003337799.mp3
+  title: Smile
+  dur: 11.2
+  clip: /cdn/value.a818893b58735c061472730d948ae4aaa4dfe10192369c5026237745656d59f5.mp3
 - kind: host
   title: Sprinkles Says
-  dur: 9.87
-  clip: /cdn/value.0dcc6963637e66f7b0101beedf8ed42d8ac3adff544cef61555a4a496a37e626.mp3
+  dur: 11.7
+  clip: /cdn/value.e3adf5848dbb68b2909d9eda65fa1770690d2e99fcca786f290c2dffd5cd69ad.mp3
 - kind: host
   title: Places Sprinkles Has Been
-  dur: 9.53
-  clip: /cdn/value.a33fbdef163654fcbe2686e01ce863631b2ba74b9ac58e58a4ff2993886b5456.mp3
+  dur: 10.84
+  clip: /cdn/value.481b4a65cb0e3664de26808679c4672cf6754b9a99d00ec61271b48aff7304f0.mp3
 - kind: host
-  title: Sing Along
-  dur: 6.48
-  clip: /cdn/value.625457cf345513b241b922d3efd425aec4536e15555c32b1431ae2f2dceb05c0.mp3
+  title: Station ID
+  dur: 7.89
+  clip: /cdn/value.9b7dccee3f7ab179a647b3213c8eaf249c0bef44b8c5749ea0026f21d4db5f1c.mp3
 - kind: song
-  title: Hide And Seek (In The Dark)
-  dur: 170.04
-  clip: /cdn/music-2000s-kids-pop-cover-album-playful-kids-choir-electropop-synth-claps.mp3?lyrics=Ten%20nine%20eight%2C%20ready%20or%20not%0AI%20know%20every%20hiding%20spot%0ALights%20go%20out%2C%20the%20game%20is%20on%0ACount%20to%20ten%20and%20then%20you%27re%20gone%0AHide%20and%20seek%20in%20the%20dark%0AHide%20and%20seek%2C%20it%27s%20a%20lark%0AI%20can%20hear%20you%20breathing%20near%0ATag%20you%27re%20it%2C%20I%27m%20right%20here
+  title: Cake For Everyone
+  dur: 180.02
+  clip: /cdn/music-2000s-kids-pop-cover-album-happy-kids-choir-r-and-b-pop-groove-snaps.mp3?lyrics=Who%20wants%20cake%2C%20cake%20for%20everyone%0AFrosting%20on%20the%20ceiling%2C%20oh%20what%20fun%0ACandles%20burning%20bright%20tonight%0AMake%20a%20wish%20and%20hold%20on%20tight%0ACake%2C%20cake%2C%20cake%20for%20everyone%0AThe%20party%27s%20only%20just%20begun%0AIf%20you%27re%20hungry%20come%20on%20in%0AWe%27ll%20keep%20the%20party%20going%20again
 - kind: host
   title: Wren Is Lost (sound)
   dur: 6.62
@@ -311,6 +283,89 @@ segments:
   clip: /cdn/moodboard-realistic-gritty/sfx-phone-hang-up-click-and-dial-tone.mp3
   show: 1
 - kind: host
+  title: MEG Party
+  dur: 12.6
+  clip: /cdn/value.89d714d91075d0258c07cbedf63099eb99db8c3af83dbb597f22e9fe95a80787.mp3
+- kind: host
+  title: Phone Call
+  dur: 10.6
+  clip: /cdn/value.b167289b620ffabe1e6e0845769706fd0ac14ded98112c26fe4b5398bf738c6c.mp3
+- kind: host
+  title: Snacks
+  dur: 10.0
+  clip: /cdn/value.a6744e573588069b154b8a1604ec77ab7bfcf53596c4d76dd99a9c6003337799.mp3
+- kind: host
+  title: Sprinkles Says
+  dur: 9.87
+  clip: /cdn/value.0dcc6963637e66f7b0101beedf8ed42d8ac3adff544cef61555a4a496a37e626.mp3
+- kind: host
+  title: Places Sprinkles Has Been
+  dur: 9.53
+  clip: /cdn/value.a33fbdef163654fcbe2686e01ce863631b2ba74b9ac58e58a4ff2993886b5456.mp3
+- kind: host
+  title: Sing Along
+  dur: 6.48
+  clip: /cdn/value.625457cf345513b241b922d3efd425aec4536e15555c32b1431ae2f2dceb05c0.mp3
+- kind: song
+  title: Hide And Seek (In The Dark)
+  dur: 170.04
+  clip: /cdn/music-2000s-kids-pop-cover-album-playful-kids-choir-electropop-synth-claps.mp3?lyrics=Ten%20nine%20eight%2C%20ready%20or%20not%0AI%20know%20every%20hiding%20spot%0ALights%20go%20out%2C%20the%20game%20is%20on%0ACount%20to%20ten%20and%20then%20you%27re%20gone%0AHide%20and%20seek%20in%20the%20dark%0AHide%20and%20seek%2C%20it%27s%20a%20lark%0AI%20can%20hear%20you%20breathing%20near%0ATag%20you%27re%20it%2C%20I%27m%20right%20here
+- kind: host
+  title: Sprinkles Calls Kyoto (sound)
+  dur: 6.62
+  clip: /cdn/moodboard-realistic-gritty/sfx-old-studio-phone-ringing-two-rings-then-pickup.mp3
+  show: 1
+- kind: host
+  title: Sprinkles Calls Kyoto (Sprinkles)
+  dur: 6.0
+  clip: /cdn/value.733df8e0235fc1a238d899fb6c6478bc9fb067200a3e4a0c6aebeedc8088355c.mp3
+  show: 1
+- kind: host
+  title: Sprinkles Calls Kyoto (Takeshi)
+  dur: 4.4
+  clip: /cdn/value.ab31dbb99381524d7df8a34a18ce894c7a5f8f2e5c785a96212fbc5939f77be3.mp3
+  show: 1
+- kind: host
+  title: Sprinkles Calls Kyoto (Sprinkles)
+  dur: 6.6
+  clip: /cdn/value.d391dc95571200dffe851e1bf0fe20cf7606cba740fea16f5274fa3b2ac6c056.mp3
+  show: 1
+- kind: host
+  title: Sprinkles Calls Kyoto (Hana)
+  dur: 4.7
+  clip: /cdn/value.f5c7aff4c0a7fc6b4fb5a6924fbbf4439d3943b3368c4bb110a08c91cd56c0b3.mp3
+  show: 1
+- kind: host
+  title: Sprinkles Calls Kyoto (Sprinkles)
+  dur: 4.0
+  clip: /cdn/value.3710d1e79089d7c7af1b7f6105e503c8e6089f91ec54a2b9c44cefe3cbfa70fe.mp3
+  show: 1
+- kind: host
+  title: Sprinkles Calls Kyoto (Takeshi)
+  dur: 1.9
+  clip: /cdn/value.e6b8f1dc97fd344c2f33dbb8298dd94168c204c83f4d601ea4c9e5527af47b91.mp3
+  show: 1
+- kind: host
+  title: Sprinkles Calls Kyoto (Hana)
+  dur: 1.6
+  clip: /cdn/value.5e2b82467ff590f273874ae91dbbdbb2530540808aa89f848440088074128b8b.mp3
+  show: 1
+- kind: host
+  title: Sprinkles Calls Kyoto (Sprinkles)
+  dur: 5.3
+  clip: /cdn/value.f6e7de26707e26996932ccd2a905706763c2258dedec68d89a8b250a54665b1c.mp3
+  show: 1
+- kind: host
+  title: Sprinkles Calls Kyoto (sound)
+  dur: 2.26
+  clip: /cdn/moodboard-realistic-gritty/sfx-phone-hang-up-click-and-dial-tone.mp3
+  show: 1
+- kind: host
+  title: Sprinkles Calls Kyoto (Sprinkles)
+  dur: 4.1
+  clip: /cdn/value.bb7cdfa0dfcfbef26fedb7b9b0bc5dcbfecc290c183ecf24435dd023fad23ecc.mp3
+  show: 1
+- kind: host
   title: Big Words
   dur: 9.7
   clip: /cdn/value.9b64638e680ecdcb93282d035750d30de4b59df6dfb955434473da5bf3f7d6db.mp3
@@ -338,6 +393,31 @@ segments:
   title: Streamers In My Heart
   dur: 210.02
   clip: /cdn/music-2000s-kids-pop-cover-album-sweet-kids-choir-power-ballad-piano-pop.mp3?lyrics=Streamers%20in%20my%20heart%0AConfetti%20in%20my%20eyes%0AEvery%20time%20you%27re%20near%20me%0AIt%27s%20a%20big%20surprise%0AStay%20with%20me%20forever%0ANever%20say%20goodbye%0AStreamers%20in%20my%20heart%0AUnder%20the%20yellow%20sky
+- kind: host
+  title: Sprinkles Reads the Mail (Sprinkles)
+  dur: 9.4
+  clip: /cdn/value.34cefa113f4eba1e91d400db722af6ac617e7ce6b9d8abc45dd61880ee2d728c.mp3
+  show: 1
+- kind: host
+  title: Sprinkles Reads the Mail (Sprinkles)
+  dur: 8.1
+  clip: /cdn/value.7084e5be345b8be45c5ac5c882dce7fa0c2da6ae58e0b61866deba8719d11091.mp3
+  show: 1
+- kind: host
+  title: Sprinkles Reads the Mail (Sprinkles)
+  dur: 7.9
+  clip: /cdn/value.75281a58692c29d215f410ffb8a3f020b7b3b5edada88ec09c0fa5aede411abf.mp3
+  show: 1
+- kind: host
+  title: Sprinkles Reads the Mail (Sprinkles)
+  dur: 7.9
+  clip: /cdn/value.86e91e2a977174b730af132dc3399bd9fa8aa4181b059cf155ec37d8792c01d3.mp3
+  show: 1
+- kind: host
+  title: Sprinkles Reads the Mail (Sprinkles)
+  dur: 5.7
+  clip: /cdn/value.10a98640ae0988aac395decd63b2994a415733291c943baf5aa4e072786cbe14.mp3
+  show: 1
 - kind: host
   title: MEG Agent
   dur: 9.6
@@ -367,6 +447,18 @@ segments:
   dur: 150.02
   clip: /cdn/music-2000s-kids-pop-cover-album-funky-kids-choir-dance-pop-brass-stabs.mp3?lyrics=Put%20your%20hat%20on%2C%20put%20it%20on%0AShuffle%20left%20and%20shuffle%20right%0AWe%27ve%20been%20dancing%20way%20too%20long%0AGonna%20dance%20all%20through%20the%20night%0AParty%20hat%20shuffle%2C%20party%20hat%20slide%0ANo%20one%27s%20gonna%20leave%20tonight%0AParty%20hat%20shuffle%2C%20hop%20and%20spin%0AOpen%20the%20door%20and%20let%20us%20in
 - kind: host
+  title: Goodnight
+  dur: 12.2
+  clip: /cdn/value.b2958fdc2dd2fdd913a9b53d0beb5c08dcb618af925206fdb5243cb410f51e67.mp3
+- kind: host
+  title: Sprinkles Sleeps (Not Really)
+  dur: 11.26
+  clip: /cdn/value.63645c79515cae4e2612f789b499426a387623036fa139b230f689c929cd1512.mp3
+- kind: song
+  title: Join Us (Party Remix)
+  dur: 180.02
+  clip: /cdn/music-2000s-kids-pop-cover-album-bright-kids-choir-upbeat-bubblegum-dance-pop-claps-synth.mp3?lyrics=Come%20on%20come%20on%20and%20join%20us%20now%0AThe%20party%20never%20ends%20somehow%0AThe%20walls%20are%20yellow%2C%20cake%20is%20pink%0AJust%20stay%20a%20little%20longer%2C%20don%27t%20you%20think%0AJoin%20us%2C%20join%20us%2C%20everybody%0AJoin%20us%2C%20join%20us%2C%20it%27s%20a%20party%0ADon%27t%20be%20scared%2C%20it%27s%20only%20fun%0AWe%27ll%20dance%20until%20the%20lights%20are%20done
+- kind: host
   title: Party Planning with Sprinkles (Sprinkles)
   dur: 8.4
   clip: /cdn/value.c845b7866e1c32a9c8e7200c758fccba4f9eb61e1f7fd2b42f20798af23f7dde.mp3
@@ -391,15 +483,3 @@ segments:
   dur: 6.0
   clip: /cdn/value.335d245de002a76b8aab2856029def6796611dc92d0f666646dd7994402ab107.mp3
   show: 1
-- kind: host
-  title: Goodnight
-  dur: 12.2
-  clip: /cdn/value.b2958fdc2dd2fdd913a9b53d0beb5c08dcb618af925206fdb5243cb410f51e67.mp3
-- kind: host
-  title: Sprinkles Sleeps (Not Really)
-  dur: 11.26
-  clip: /cdn/value.63645c79515cae4e2612f789b499426a387623036fa139b230f689c929cd1512.mp3
-- kind: song
-  title: Join Us (Party Remix)
-  dur: 180.02
-  clip: /cdn/music-2000s-kids-pop-cover-album-bright-kids-choir-upbeat-bubblegum-dance-pop-claps-synth.mp3?lyrics=Come%20on%20come%20on%20and%20join%20us%20now%0AThe%20party%20never%20ends%20somehow%0AThe%20walls%20are%20yellow%2C%20cake%20is%20pink%0AJust%20stay%20a%20little%20longer%2C%20don%27t%20you%20think%0AJoin%20us%2C%20join%20us%2C%20everybody%0AJoin%20us%2C%20join%20us%2C%20it%27s%20a%20party%0ADon%27t%20be%20scared%2C%20it%27s%20only%20fun%0AWe%27ll%20dance%20until%20the%20lights%20are%20done
