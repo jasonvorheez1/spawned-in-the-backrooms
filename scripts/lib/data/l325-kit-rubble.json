@@ -1,0 +1,161 @@
+{
+ "chunk_slab": {
+  "glb": "/cdn/value.61f05398358ae61b2d351cd5bd4b85b24e35e6c2421ec692920caf5fd2699127.glb",
+  "tris": 1042,
+  "size": [
+   4.0,
+   0.42,
+   3.4
+  ],
+  "slots": [
+   "concrete",
+   "rebar"
+  ],
+  "offset": [
+   0.138,
+   -0.222,
+   0.119
+  ]
+ },
+ "chunk_column": {
+  "glb": "/cdn/value.04c82d9a0e2faa1894410a1a4cace35173249141333396241b6d1062edd5e1e1.glb",
+  "tris": 1150,
+  "size": [
+   3.3,
+   0.85,
+   0.95
+  ],
+  "slots": [
+   "concrete",
+   "rebar"
+  ],
+  "offset": [
+   0.009,
+   -0.398,
+   0.027
+  ]
+ },
+ "chunk_beam": {
+  "glb": "/cdn/value.0c6553051b7dbb1b281db64274b3ff8fb42762c7edcf99fed2be11dd1cf4c9b5.glb",
+  "tris": 1150,
+  "size": [
+   4.2,
+   2.0,
+   1.45
+  ],
+  "slots": [
+   "concrete",
+   "steel"
+  ],
+  "offset": [
+   -0.068,
+   -1.196,
+   0.14
+  ]
+ },
+ "chunk_corner": {
+  "glb": "/cdn/value.9d225bd8181371e0ca75ac7847e31b7fba2346311683652dfad728cd12e55cf3.glb",
+  "tris": 1149,
+  "size": [
+   1.05,
+   2.15,
+   2.4
+  ],
+  "slots": [
+   "concrete",
+   "rebar"
+  ],
+  "offset": [
+   0.134,
+   -1.028,
+   -0.178
+  ]
+ },
+ "chunk_stair": {
+  "glb": "/cdn/value.a16017c78357fb270b7d4d85d6d6a4b0d7b0f68b6aae54cca09d50446485f7e8.glb",
+  "tris": 1149,
+  "size": [
+   2.1,
+   2.1,
+   2.6
+  ],
+  "slots": [
+   "concrete",
+   "rebar"
+  ],
+  "offset": [
+   0.123,
+   -1.04,
+   0.021
+  ]
+ },
+ "chunk_bamboo": {
+  "glb": "/cdn/value.3e2cf1f662ffe46d78f8d5dda92737ce65fbb7178c233134e9b4dc1e0a044df6.glb",
+  "tris": 1036,
+  "size": [
+   1.9,
+   3.6,
+   2.95
+  ],
+  "slots": [
+   "concrete",
+   "rebar",
+   "bamboo",
+   "net",
+   "lashing"
+  ],
+  "offset": [
+   -0.088,
+   -1.657,
+   -0.02
+  ]
+ },
+ "mound": {
+  "glb": "/cdn/value.1e059aea4fa96f4b965268b5e8dc344ea48d153f3cd278b0e1e134abe7418ce1.glb",
+  "tris": 12828,
+  "size": [
+   26.0,
+   7.0,
+   26.0
+  ],
+  "slots": [
+   "concrete",
+   "rebar",
+   "steel",
+   "bamboo",
+   "net",
+   "lashing"
+  ]
+ },
+ "pile": {
+  "glb": "/cdn/value.ad7125f717a9144ce9918439f2ea0d70976324a96d20d429b97c6b9e19987ded.glb",
+  "tris": 3732,
+  "size": [
+   10.0,
+   3.0,
+   10.0
+  ],
+  "slots": [
+   "concrete",
+   "rebar",
+   "steel",
+   "bamboo",
+   "net",
+   "lashing"
+  ]
+ },
+ "scatter": {
+  "glb": "/cdn/value.c392b3b4d5249e9e888e7636af012db164ef75c9174c6a18dee9ad62642873bb.glb",
+  "tris": 1652,
+  "size": [
+   14.0,
+   0.6,
+   14.0
+  ],
+  "slots": [
+   "concrete",
+   "rebar",
+   "dust"
+  ]
+ }
+}
