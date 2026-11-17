@@ -8,9 +8,9 @@ export const ears = {
   press: (ctx, { by }) => {
     const s = ctx.self.state, who = ctx.getObject(by), w = who?.state;
     if (!w) return;
-    const taken = s.taken ?? [];
+    const taken = s.by ?? []; // not "taken": interact skips anything whose state.taken is truthy, and [] is
     if (taken.includes(by)) { w.notice = { text: "You've already stripped this heap.", at: ctx.now() }; return; }
-    s.taken = [...taken, by];
+    s.by = [...taken, by];
     const got = { ...(s.yield ?? { bamboo_pole: 2, steel_cable: 1 }) };
     const sc = { ...(w.scrap ?? {}) }, names = [];
     const N = { bamboo_pole: "Scaffold bamboo", steel_cable: "Steel cable", rebar_rod: "Rebar rod", rubble: "Concrete rubble", channel_glass: "Channel glass" };

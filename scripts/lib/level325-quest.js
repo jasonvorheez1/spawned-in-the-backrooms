@@ -65,12 +65,13 @@ export function tick(ctx) {
   for (const id of [...tick.have]) if (!want.has(id)) { if (ctx.place.objects[id]) ctx.destroy(id); tick.have.delete(id); }
   for (const [id, w] of want) {
     const o = ctx.place.objects[id];
-    if (o) { if (Math.abs(o.feetPosition.y - w.feetPosition.y) > 0.05) o.feetPosition = w.feetPosition; continue; }
+    const c = { x: w.feetPosition.x, y: Math.max(GROUND, w.feetPosition.y + 1.4) + 0.35, z: w.feetPosition.z }; // E aims here: above ground while the heap sinks
+    if (o) { if (Math.abs(o.feetPosition.y - w.feetPosition.y) > 0.05) { o.feetPosition = w.feetPosition; o.state.c = c; } continue; }
     const yld = w.crown ? { bamboo_pole: 1, steel_cable: 1, channel_glass: 1 } : w.h ? { bamboo_pole: 2, steel_cable: 1, rebar_rod: 1 } : { bamboo_pole: 2, rubble: 2 };
     ctx.spawn(id, { tags: ["l325salv", "usable"], feetPosition: w.feetPosition, rotation: { yaw: (w.h * 97 + id.length * 31) % 360 }, scale: 0.34,
       model: heapGlb, physics: "none", behavior: "scripts/l325-salvage.js",
       ...(w.crown ? { children: [{ id: "glint", feetPosition: { x: 0, y: 2, z: 0 }, light: { kind: "point", color: "#5fb8ff", intensity: 2.2, distance: 7 } }] } : {}),
-      state: { name: w.crown ? "Crown wreckage" : "Scaffold wreckage", verb: "Salvage", info: w.crown ? "bamboo, cable, something blue" : "bamboo, cable, rebar", yield: yld, taken: [] } });
+      state: { name: w.crown ? "Crown wreckage" : "Scaffold wreckage", verb: "Salvage", info: w.crown ? "bamboo, cable, something blue" : "bamboo, cable, rebar", yield: yld, by: [], c } });
     tick.have.add(id);
   }
 }
