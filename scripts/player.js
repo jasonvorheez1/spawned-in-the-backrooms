@@ -2166,6 +2166,7 @@ export const ears = {
   },
   shockLaunch(ctx, b) { // a Shock Pad went off near you: up and away, and no fall damage on the landing that follows
     const s = ctx.self.state, w = walkOf(ctx), S = THROW.shock_pad
+    s.dbgShock = { at: now0(ctx), dead: !!s.dead, down: !!s.downAt, ctl: !!ctx.self.controlling, from: b?.from ?? null }
     if (s.dead || s.downAt || ctx.self.controlling || !b?.from) return
     const f = ctx.self.feetPosition, dx = f.x - b.from.x, dz = f.z - b.from.z, d = Math.hypot(dx, dz)
     const k = Math.max(S.edgeLaunch, 1 - d / S.radius), g = Math.abs(ctx.place.gravity?.y ?? -9.8)

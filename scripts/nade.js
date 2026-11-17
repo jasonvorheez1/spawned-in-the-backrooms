@@ -92,6 +92,7 @@ function shock(ctx) {
   // foes: S.damage at the centre, down to S.edge of it at the rim (Savi's pick: 35, a smiler's ~60 hp takes two), and thrown up and away
   const hits = reached(ctx, c, R, 0.3).map((h) => { const k = 1 - h.flat / R; return { id: h.id, d: Math.round(S.damage * (S.edge + (1 - S.edge) * k)), dir: h.dir, heavy: 0, shock: { up: S.foeUp * (0.6 + 0.4 * k), out: S.foeOut * (0.5 + 0.5 * k) } }; });
   if (s.ownerId) ctx.emit("blast", { hits, self: 0, from: c, shock: true }, { to: s.ownerId });
+  ctx.log('shock', JSON.stringify(c), ctx.place.players.map((p) => p.id + ' ' + JSON.stringify(p.feetPosition)).join(';'));
   for (const p of ctx.place.players) { // every player in the ring, the thrower too, is launched on their own machine (player.js ears.shockLaunch)
     const f = p.feetPosition; if (!f || Math.hypot(f.x - c.x, f.z - c.z) > R || Math.abs(f.y - c.y) > 2.5) continue;
     ctx.emit("shockLaunch", { from: c }, { to: p.id });
