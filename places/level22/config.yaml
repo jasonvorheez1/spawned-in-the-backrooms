@@ -12,12 +12,12 @@ worldBounds: { bottom: -120 }
 atmosphere:
   look: { script: scripts/look-photo.js }
   clouds: { enabled: false }
-  fog: { kind: linear, near: 8, far: 62, color: "#1c1a17" }
+  fog: { kind: linear, near: 8, far: 62, color: "#151a17" }
   moon: { enabled: false }
   sky: { kind: color, color: "#0b0a09" }
   stars: { enabled: false }
   timeOfDay: 0
   wind: { direction: 0, speed: 0.5 }
-  ambient: { light: { color: "#4f4a42", intensity: 1.5 } }
+  ambient: { light: { color: "#46504a", intensity: 1.5 } }
   hemisphere: { skyColor: "#35322c", groundColor: "#1b1a17", intensity: 1.1 }
 acoustics: { reverb: 0.55 }

@@ -18,7 +18,7 @@ const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const SEDAN = "/cdn/value.75b49ca4395a7da77d80c0fe5589224c21034b5a646d18f6577609e76845c706.glb";
 const CAR_BOX = { min: { x: -1.0, y: 0, z: -2.6 }, max: { x: 1.0, y: 1.6, z: 2.6 } };
 const WARN = 1500, DEBRIS_WARN = 1700; // ms between the first creak and the drop
-const TIER = { top: { grime: 0.05, light: "#e9f0d8", li: 5.5 }, mid: { grime: 0.5, light: "#f0d9a6", li: 7 }, low: { grime: 1, light: "#f0b878", li: 11 } };
+const TIER = { top: { grime: 0.3, light: "#d6ecdc", li: 6 }, mid: { grime: 0.6, light: "#cfe6d4", li: 7 }, low: { grime: 1, light: "#c8dccb", li: 11 } };
 const hash = (a, b) => { const v = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return v - Math.floor(v); };
 const sfx = (ctx, p, clip, vol = 0.7, at) => ctx.emit("playSound", { clip, volume: vol, ...(at ? { position: at, maxDistance: 45 } : {}) }, { audience: { player: p.id } });
 const DUST = `fx
