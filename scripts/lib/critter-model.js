@@ -1036,7 +1036,7 @@ const hashPick = (str, arr) => arr[[...String(str)].reduce((h, c) => (h * 31 + c
 export const isNewCat = (l) => !HUMAN && MESH && l?.species !== 'human' // Nov 12 (Shelly: 'facelings are just regular looking npcs without faces'): a faceling wears the regular body, its face left blank (catLook etype 'faceling')
 export function catLook(l) {
   const sex = l?.sex === 'f' ? 'f' : 'm', o = {}
-  for (const k of ['fur', 'topw', 'botw', 'shoes', 'hat', 'neck', 'eyew', 'top', 'bottom', 'shoec', 'hatc', 'neckc', 'eyewc', 'topp', 'hairc', 'fluffc', 'inner']) if (l?.[k] != null && l[k] !== '') o[k] = l[k]
+  for (const k of ['fur', 'topw', 'botw', 'shoes', 'hat', 'neck', 'eyew', 'top', 'bottom', 'shoec', 'hatc', 'neckc', 'eyewc', 'topp', 'hairc', 'fluffc', 'inner', 'fpat', 'fpatc']) if (l?.[k] != null && l[k] !== '') o[k] = l[k]
   o.fur = o.fur || M.species[l?.species]?.fur || '#f2a65a'   // an old species look keeps its fur colour on the new body   // orange cat by default (Shelly: cat back orange, not cream)
   o.expression = CAT_FACE[l?.expression ?? l?.expr] ?? 'neutral'
   { const ff = faceFill(l) || {}; if (ff.nose) o.nose = ff.nose; if (ff.nshape) o.nshape = ff.nshape }   // Nov 14, Shelly 'new nose types (including a pink nose)': the drawn nose takes its shape and colour

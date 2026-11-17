@@ -79,7 +79,15 @@ export function material(ctx) {
     const grey = max(pic.r, pic.g), irisAmt = saturate(pic.b.sub(grey));
     const eye = vec3(P("eyeR", 0.85), P("eyeG", 0.6), P("eyeB", 0.15));
     const art = min(pic.rgb, vec3(grey, grey, grey)).add(eye.mul(irisAmt.mul(1.3)));
-    let col = mix(materialColor, art, pic.a.mul(inside).mul(front).mul(facing));
+    let headBase = materialColor;
+    const hpat = String(ctx.params.fpat ?? "none");
+    if (hpat === "tuxedo" || hpat === "points" || hpat === "belly") {   // Nov 17: the pattern's face: a pale muzzle and chin (tuxedo, belly) or a dark mask (points)
+      const lowFaceZone = step(u, 1).mul(step(0, u)).mul(smoothstep(0.43, 0.38, v)).mul(smoothstep(0.30, 0.22, abs(u.sub(0.5)).add(mx_noise_float(q.mul(30)).mul(0.02))));
+      const chin = smoothstep(0.05, 0.3, normalLocal.z).mul(smoothstep(0.3, 0.18, abs(u.sub(0.5))));
+      const zone = max(lowFaceZone, chin.mul(step(v, 0.30))).mul(smoothstep(-0.02, 0.01, q.z.sub(P("faceNear"))));
+      headBase = mix(materialColor, C("pat"), zone.mul(hpat === "points" ? 0.85 : 1));
+    }
+    let col = mix(headBase, art, pic.a.mul(inside).mul(front).mul(facing));
     // Nov 12 (Shelly 'the mouth doesnt actually move'): a drawn talking mouth, a dark opening under the nose that opens and closes per syllable
     // (an "a" wide oval or a round "o"), with a pink tongue at its floor. Drawn last so no face picture or mouth layer can cover it.
     if (ctx.params.talkFace) {
@@ -139,7 +147,8 @@ export function material(ctx) {
   const fStr = mx_noise_float(q.mul(vec3(700, 90, 700))).mul(0.5).add(0.5), fStr2 = mx_noise_float(q.mul(vec3(210, 30, 210))).mul(0.5).add(0.5);
   const fClump = mx_fractal_noise_float(q.mul(vec3(26, 12, 26))).mul(0.5).add(0.5);
   const furP = float(0.86).add(fStr.mul(0.08)).add(fStr2.mul(0.07)).mul(float(0.94).add(fClump.mul(0.1)));
-  const fur = mix(vec3(1, 1, 1), furT, P("furMix", 0.25)).mul(furP).mul(materialColor);
+  const furL = dot(furT, vec3(0.2126, 0.7152, 0.0722)).div(0.8).min(1.1);   // Nov 17 (Shelly 'fix the coloring'): the fur picture's own orange cast tinted every colour brown; only its light and dark strands stay
+  const fur = mix(vec3(1, 1, 1), vec3(furL, furL, furL), P("furMix", 0.25)).mul(furP).mul(materialColor);
   // --- tail: a capsule line the garments leave a hole for
   const tl = [0, 1, 2, 3].map((i) => vec3(P("t" + i + "x"), P("t" + i + "y"), P("t" + i + "z")));
   const seg = (a, b) => { const pa = q.sub(a), ba = b.sub(a), h = clamp(dot(pa, ba).div(dot(ba, ba)), 0, 1); return pa.sub(ba.mul(h)).length(); };
@@ -180,7 +189,27 @@ export function material(ctx) {
     return c.mul(float(0.95).add(fine.mul(0.06))).mul(float(0.86).add(smoothstep(0.25, 0.75, folds).mul(0.17)));
   };
   // one layer: fabric inside, a stitched darker hem just inside the edge, a soft contact shadow on whatever lies just outside it
-  let col = fur, cloth = float(0);
+  // Nov 17 (Shelly 'add fur patterns so i can make a tuxedo'): a second fur colour laid in bind space, under the clothes
+  let furPat = fur;
+  const fpat = String(ctx.params.fpat ?? "none");
+  if (fpat !== "none") {
+    const pc = C("pat").mul(furP), wob = mx_noise_float(q.mul(vec3(38, 22, 38))).mul(0.012);
+    const frontN = smoothstep(0.05, 0.35, normalLocal.z);
+    const wrist = P("pWr", 0.33), elbow = P("pEl", 0.23), ankle = P("pAn", 0.065), knee = P("pKn", 0.2), crotch = P("pCr", 0.37), neckY = P("pNk", 0.64);
+    const mitts = smoothstep(wrist.sub(0.035), wrist.sub(0.02), ax.add(wob));
+    const boots = smoothstep(ankle.add(0.045), ankle.add(0.03), q.y.add(wob));
+    const halfW = mix(float(0.035), float(0.075), smoothstep(crotch, neckY, q.y));   // the bib widens up the chest
+    const bib = frontN.mul(smoothstep(halfW.add(0.008), halfW, ax.add(wob))).mul(smoothstep(crotch.sub(0.01), crotch.add(0.02), q.y)).mul(smoothstep(neckY.add(0.06), neckY.add(0.03), q.y)).mul(step(ax, 0.2));
+    let mk = float(0);
+    if (fpat === "tuxedo") mk = max(bib, max(mitts, boots));
+    else if (fpat === "socks") mk = max(smoothstep(elbow.add(0.03), elbow.add(0.05), ax.add(wob)), smoothstep(knee.sub(0.02), knee.sub(0.04), q.y.add(wob)));
+    else if (fpat === "belly") mk = max(bib, frontN.mul(smoothstep(knee, knee.sub(0.03), q.y)).mul(0)).max(boots.mul(0.0)).max(bib);
+    else if (fpat === "points") mk = max(max(smoothstep(elbow, wrist, ax), smoothstep(knee, ankle, q.y)), smoothstep(tailR.add(0.01), tailR, tailD));
+    else if (fpat === "tabby") { const s = smoothstep(0.55, 0.75, sin(q.y.mul(70).add(mx_noise_float(q.mul(9)).mul(3.5)).add(ax.mul(18))).mul(0.5).add(0.5)); mk = s.mul(frontN.oneMinus().mul(0.9).add(0.1)).mul(0.85); }
+    else if (fpat === "patches") mk = smoothstep(0.18, 0.24, mx_fractal_noise_float(q.mul(vec3(7, 6, 7)).add(P("pSeed", 0))));
+    furPat = mix(fur, pc, mk);
+  }
+  let col = furPat, cloth = float(0);
   const layer = (d, on, pat, name, s) => {
     const mk = inside(d, 0).mul(on), hem = mk.mul(inside(d, -0.006).oneMinus()), sh = inside(d, 0.007).mul(on).mul(mk.oneMinus());
     const f = fab(pat, C(name), s);

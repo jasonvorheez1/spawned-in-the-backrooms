@@ -57,6 +57,8 @@ export function skinParams(sex, look) {
   B.tail.forEach((t, i) => { o['t' + i + 'x'] = t[0]; o['t' + i + 'y'] = t[1]; o['t' + i + 'z'] = t[2] })
   o.tLo = B.top[0]; o.tHi = B.top[1]; o.tSl = armAt(B, 0.42); o.nW = B.neck[0]; o.nF = B.neck[1]; o.nB = B.neck[2]; o.bLo = B.leg[1]; o.bHi = B.waist; o.sHi = 0
   o.tpat = 'weave'; o.bpat = 'weave'
+  // Nov 17 fur patterns (look.fpat, look.fpatc): the second colour and where this body's wrist, elbow, ankle, knee, crotch and neck sit in bind space
+  if (look?.fpat && look.fpat !== 'none') { o.fpat = look.fpat; put(o, 'pat', look.fpatc || '#f6f4f0'); o.pWr = B.arm[2]; o.pEl = B.arm[1]; o.pAn = B.leg[2]; o.pKn = B.leg[1]; o.pCr = B.leg[0]; o.pNk = B.top[1]; o.pSeed = (look.fseed ?? 0) % 50 }
   for (const n of ['top', 'bot', 'sock', 'trim']) put(o, n, '#ffffff')
   if (p.top) { const t = p.top; o.top = 1; o.tLo = lerp(B.top[0], B.top[1], t.hem); o.tSl = armAt(B, t.sleeve); o.nF = B.neck[1] * t.scoop; o.nB = B.neck[2] * Math.min(t.scoop, 1.1); o.tpat = t.pat; put(o, 'top', t.c); if (t.sleeve >= 0.15) { o.tShoulder = 1; o.tShIn = 0.02; o.tShTop = 0.05 } if (t.band) { o.tband = 1; put(o, 'trim', t.trim || '#d98a9a') } }
   if (p.bot) { const b = p.bot; o.bot = 1; o.bLo = legAt(B, b.leg); o.bHi = B.waist + b.rise; o.bpat = b.pat; put(o, 'bot', b.c) }
@@ -104,14 +106,14 @@ export function faceLife(sk, look, face, faces) {
   return out
 }
 // Shelly Nov 12 "fix her face": near-black fur swallowed the face under warm light. fur darker than DARK_FLOOR is mixed up toward its own hue until it reaches it
-const DARK_FLOOR = 0.11
+const DARK_FLOOR = 0.03
 function liftFur(hex) {
   const m = /^#?([0-9a-f]{6})$/i.exec(hex || ''); if (!m) return hex
   const n = parseInt(m[1], 16), c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => v / 255)
   const lin = (v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)
   const Y = 0.2126 * lin(c[0]) + 0.7152 * lin(c[1]) + 0.0722 * lin(c[2])
   if (Y >= DARK_FLOOR) return hex
-  const k = Math.min(1, (DARK_FLOOR - Y) / DARK_FLOOR) * 0.55, tint = [0.55, 0.46, 0.4] // toward a warm mid brown, keeping the fur's own cast
+  const k = Math.min(1, (DARK_FLOOR - Y) / DARK_FLOOR) * 0.35, tint = c.map((v) => Math.max(v, 0.16)) // Nov 17 (Shelly 'fix the coloring'): a dark fur lifts toward its own hue, never toward brown, so black reads charcoal-black and greys stay grey
   return '#' + c.map((v, i) => Math.round(255 * (v + (tint[i] - v) * k)).toString(16).padStart(2, '0')).join('')
 }
 // Nov 14 (Shelly 'add new nose types (including a pink nose)'): the drawn nose's shape and colour
@@ -147,7 +149,7 @@ export function catModel(sex, look) {
       fur: skin(fur), fur2: skin('#ffffff'),
       headFur: {
         kind: 'scripted', script: 'scripts/mat-catskin.js', color: fur,
-        params: { ...noseParams(look), ...(blank ? { faceless: 1 } : { face }), ...(mouth && !blank ? { mouth } : {}), ...faceLife(sk, look, face, faces), ...(crew ? { faceless: 1 } : {}), faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2], ...(sex === 'm' ? { noseCutV: 0.40, noseY: 0.855, noseZ: 0.315, noseS: 1.2 } : { noseCutV: 0.39, noseY: 0.797, noseZ: 0.249, noseS: 1 }), ...eyeRGB(look?.eyes), ...shadowRGB(look?.shadow), ...(look?.hair && W.hair?.[look.hair] ? (() => { const o = { scalp: 1 }; put(o, 'scalp', look?.hairc || '#6b4a35'); return o })() : {}), ...(look?.glowEye ? { eyeGlow: look.glowEye } : {}) }
+        params: { ...noseParams(look), ...(look?.fpat && look.fpat !== 'none' ? (() => { const h = { fpat: look.fpat }; put(h, 'pat', look.fpatc || '#f6f4f0'); return h })() : {}), ...(blank ? { faceless: 1 } : { face }), ...(mouth && !blank ? { mouth } : {}), ...faceLife(sk, look, face, faces), ...(crew ? { faceless: 1 } : {}), faceVScale: projection[0], faceVBias: projection[1], faceNear: projection[2], ...(sex === 'm' ? { noseCutV: 0.40, noseY: 0.855, noseZ: 0.315, noseS: 1.2 } : { noseCutV: 0.39, noseY: 0.797, noseZ: 0.249, noseS: 1 }), ...eyeRGB(look?.eyes), ...shadowRGB(look?.shadow), ...(look?.hair && W.hair?.[look.hair] ? (() => { const o = { scalp: 1 }; put(o, 'scalp', look?.hairc || '#6b4a35'); return o })() : {}), ...(look?.glowEye ? { eyeGlow: look.glowEye } : {}) }
       },
       innerEar: { color: look?.inner || '#d58e8a', roughness: 0.74 }
     }

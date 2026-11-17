@@ -88,6 +88,7 @@ export function salon(ctx, player) {
     body = row('Body', nice(l.sex)) + chips('sex', C.sex)
       + row('Stature', `${Math.round(170 * (Number(l.heightS) || 1))} cm`) + `<div class="card">${sliders((k) => k === 'heightS' || k === 'buildS')}${l.sex === 'f' ? bust : ''}</div>`
       + row('Fur', '') + dots('fur', C.fur)
+      + row('Fur pattern', nice(l.fpat || 'none')) + chips('fpat', C.fpat) + ((l.fpat && l.fpat !== 'none') ? row('Pattern colour', '') + dots('fpatc', C.fpatc) : '')
       + row('Tail', CN[l.tail] || nice(l.tail)) + pk('tail', ['classic', 'fluffy', 'bob', 'puff', 'whip', 'curl'], l.tail)
   } else if (!human && tab === 'wear') {
     const under = (grp) => Object.keys(CW.models || {}).filter((k) => CW.models[k].under && Object.keys(CW[grp] || {}).includes(CW.models[k].under))
