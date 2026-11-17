@@ -3,7 +3,7 @@
  "roadsign": {"glb": "/cdn/value.8ea4365d61bc60cb832e7b7b42f6f0494339c990011b8721faf6278e67afd817.glb", "tris": 5442, "size": [2.27, 3.0, 0.59], "slots": ["paint"]},
  "sedan": {"glb": "/cdn/value.d62c297a0f9c8fe8915c6160e41414b5081919f35c31baecc9d7968e63726752.glb", "tris": 11680, "size": [2.05, 1.75, 4.6], "slots": ["paint"], "parts": ["door_fl"], "hinges": {"door_fl": [0.993, 0.35, 0.782]}},
  "hatch": {"glb": "/cdn/value.0eca3b48851b06995d34977e4e16bcae63d1ec009e3eeecb03d473ada52729dd.glb", "tris": 11638, "size": [1.87, 1.58, 3.9], "slots": ["paint"], "parts": ["door_fl"], "hinges": {"door_fl": [0.905, 0.316, 0.78]}},
- "icecream_van": {"glb": "/cdn/value.aea46d724eef88354bde072456109ed6732630d47aef36c9f0c84fadaaac692a.glb", "tris": 12039, "size": [3.27, 3.92, 5.09], "slots": ["paint"], "parts": ["door_rear"], "hinges": {"door_rear": [-1.12, 0.66, -1.97]}},
+ "icecream_van": {"glb": "/cdn/value.218f0204461e549018e70c4ffda91ad37196b327e9b1512dda96b01e50de3f35.glb", "tris": 11920, "size": [3.27, 3.92, 5.09], "slots": ["paint"], "parts": ["door_rear"], "hinges": {"door_rear": [-1.12, 0.66, -1.97]}},
  "barrier": {"glb": "/cdn/value.88d8dc9d4a3d2ce24cbfc7b4f3ddc4c1f45f26423a5bf5bfcb3ef301931dcc53.glb", "tris": 5909, "size": [2.0, 0.95, 0.66], "slots": ["paint"]},
  "hoarding": {"glb": "/cdn/value.22aa423875c5ede95188a0cb671afd07e66a852a4c6fe5a866db13a80aa1b566.glb", "tris": 5712, "size": [2.4, 2.4, 0.7], "slots": ["steel"]},
  "container": {"glb": "/cdn/value.572bf4dcf5c9bc023fbc502a56cab3458c29c6d5563ed5709dca4b7f27dd698d.glb", "tris": 5186, "size": [6.0, 2.6, 2.4], "slots": ["steel"], "parts": ["door"], "hinges": {"door": [1.75, 0.25, 1.2]}},
