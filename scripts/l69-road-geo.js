@@ -78,6 +78,13 @@ export function geometry(ctx) {
     ctx.color("#a7a29a");
     box(ctx, Math.min(xi, xo) - 0.15, WALL_H, 0, Math.max(xi, xo) + 0.15, WALL_H + 0.35, -L, "tsides");
   }
+  if (P.roof) { // the exit tunnel's interior: a low concrete ceiling, a strip of sodium lamps down the middle
+    ctx.albedo(T.concrete); ctx.color("#8d8880");
+    box(ctx, -WALL_IN - WALL_T, 7.2, 0, WALL_IN + WALL_T, 7.8, -L, "sides"); ctx.quad(-WALL_IN, 7.2, 0, -WALL_IN, 7.2, -L, WALL_IN, 7.2, -L, WALL_IN, 7.2, 0);
+    ctx.albedo(null); ctx.color("#ffd9a0"); ctx.emissive("#ffb050");
+    for (let z = -4; z > -L; z -= 8) box(ctx, -0.25, 7.05, z, 0.25, 7.2, z - 2.2);
+    ctx.emissive(null);
+  }
   if (tun) { // the mouth: a heavy lintel and two cheeks so it reads as a cut tunnel, not a gap
     const s = tun === "left" ? -1 : 1, xi = s * WALL_IN, xo = s * (WALL_IN + 3);
     ctx.color("#8c877e");
