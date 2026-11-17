@@ -1907,7 +1907,7 @@ const L11_VOICES = {
 // Master tick simulation loop
 const mem = { ringAt: 0, adAt: 0, lightAt: 0, lightPhase: 0 };
 export function tick(ctx) {
-  if (ctx.place.state.radioV !== 1) { ctx.place.state.radioV = 1; // Wikidot: the Radio Station in Level 11 leads to Radio Backrooms
+  if (ctx.place.state.radioV !== 2 || !ctx.place.objects["l11-to-radio"]) { ctx.place.state.radioV = 2; // Wikidot: the Radio Station in Level 11 leads to Radio Backrooms
     ctx.spawn("l11-radio-door-mesh", { feetPosition: { x: -6.5, y: 0, z: 13.5 }, rotation: { yaw: 90 }, physics: { body: "static", collider: "mesh" }, primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "metal", w: 1.0, h: 2.15, part: "set", vision: true, seed: 11 } }, material: { pbr: true } });
     ctx.spawn("l11-to-radio", { tags: ["door"], feetPosition: { x: -6.85, y: 0, z: 13.5 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.5, height: 2.3, depth: 1.1 }, visible: false, behavior: "scripts/level-door.js", state: { to: "radio" } });
     ctx.spawn("l11-radio-sign", { feetPosition: { x: -6.62, y: 2.35, z: 13.5 }, rotation: { yaw: 90 }, castShadow: false, vector: "<svg viewBox='0 0 300 60' width='1.3m'><rect x='2' y='2' width='296' height='56' rx='4' fill='#14110d' stroke='#d8452e' stroke-width='3'/><circle cx='26' cy='30' r='8' fill='#ff4a2e' filter='drop-shadow(0 0 6 #ff4a2e)'/><text x='160' y='41' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='30' fill='#f3ead8'>RADIO STATION</text></svg>" });
