@@ -122,6 +122,9 @@ rows:
   - 0.803
   - 0.681
   solid: true
+  items: scrap_metal
+  verb: Search
+  name: Wheelbarrow
 - id: f20-lamp
   floor: 20
   x: -18.6
@@ -276,6 +279,9 @@ rows:
   glb: /cdn/value.4ff0e7079a215edf97e3b89faf5e0d6a78b8943b307eb36cff954fbafc755c8d.glb
   size: *id005
   solid: true
+  items: rebar_rod,rust_flakes
+  verb: Search
+  name: Wheelbarrow
 - id: paper-column-4
   floor: 21
   x: -4.0
@@ -342,6 +348,9 @@ rows:
   - 0.45
   - 2.4
   solid: false
+  items: rebar_rod
+  verb: Dig through
+  name: Collapsed tent
 - id: f20-rub
   floor: 20
   x: -9.5
@@ -353,6 +362,9 @@ rows:
   - 1.89
   - 2.95
   solid: true
+  items: rebar_rod,rubble
+  verb: Dig through
+  name: Rubble pile
 - id: f20-gird
   floor: 20
   x: 2
@@ -412,6 +424,9 @@ rows:
   glb: /cdn/value.343045cd5c9502011e70fa9f4075f4b929b3001e2cd8d66a1721a9832e95aff3.glb
   size: *id009
   solid: false
+  items: rust_flakes,steel_pipe
+  verb: Dig through
+  name: Collapsed tent
 - id: f21-tentc2
   floor: 21
   x: -10
@@ -420,6 +435,9 @@ rows:
   glb: /cdn/value.343045cd5c9502011e70fa9f4075f4b929b3001e2cd8d66a1721a9832e95aff3.glb
   size: *id009
   solid: false
+  items: ration,rebar_rod
+  verb: Dig through
+  name: Collapsed tent
 - id: f21-rub
   floor: 21
   x: -12
@@ -428,6 +446,9 @@ rows:
   glb: /cdn/value.23fda33d2442a8df7535ed77458d8110902f4db1c4e8c3787e9478c9ecd03631.glb
   size: *id010
   solid: true
+  items: steel_pipe,scrap_metal
+  verb: Dig through
+  name: Rubble pile
 - id: f21-rub2
   floor: 21
   x: -2
@@ -1104,6 +1125,9 @@ rows:
   - 1.783
   - 2.784
   solid: true
+  items: scrap_metal
+  verb: Dig through
+  name: Rubble pile
 - id: deb21-2
   floor: 21
   x: -14.09
@@ -1269,6 +1293,9 @@ rows:
   - 1.241
   - 1.938
   solid: true
+  items: rust_flakes
+  verb: Dig through
+  name: Rubble pile
 - id: deb21-17
   floor: 21
   x: -5.49
@@ -1280,6 +1307,9 @@ rows:
   - 1.649
   - 2.574
   solid: true
+  items: rust_flakes,scrap_metal,steel_pipe
+  verb: Dig through
+  name: Rubble pile
 - id: deb21-18
   floor: 21
   x: -1.72
@@ -1302,6 +1332,9 @@ rows:
   - 1.784
   - 2.785
   solid: true
+  items: rust_flakes
+  verb: Dig through
+  name: Rubble pile
 - id: deb21-20
   floor: 21
   x: 6.27
@@ -1379,6 +1412,9 @@ rows:
   - 2.144
   - 3.346
   solid: true
+  items: rubble,scrap_metal,scrap_metal
+  verb: Dig through
+  name: Rubble pile
 - id: deb21-27
   floor: 21
   x: 19.71
@@ -1577,6 +1613,9 @@ rows:
   - 1.319
   - 2.058
   solid: true
+  items: rebar_rod,rust_flakes,scrap_metal
+  verb: Dig through
+  name: Rubble pile
 - id: deb21-45
   floor: 21
   x: -5.24
@@ -1676,6 +1715,9 @@ rows:
   - 2.066
   - 3.225
   solid: true
+  items: steel_pipe
+  verb: Dig through
+  name: Rubble pile
 - id: deb21-54
   floor: 21
   x: 8.73
@@ -1687,6 +1729,9 @@ rows:
   - 1.572
   - 2.453
   solid: true
+  items: rubble,rust_flakes
+  verb: Dig through
+  name: Rubble pile
 - id: deb21-55
   floor: 21
   x: -19.22
@@ -1698,6 +1743,9 @@ rows:
   - 1.584
   - 2.472
   solid: true
+  items: rebar_rod
+  verb: Dig through
+  name: Rubble pile
 - id: deb21-56
   floor: 21
   x: -20.96

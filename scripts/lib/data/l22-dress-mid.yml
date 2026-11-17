@@ -53,6 +53,9 @@ rows:
   - 0.95
   - 0.57
   solid: true
+  items: stuffing,bolts
+  verb: Search
+  name: Workbench
 - id: f13-bench2
   floor: 13
   x: 8
@@ -61,6 +64,9 @@ rows:
   glb: /cdn/value.c7d87cb566742a0ed40c3e9dad60f958feffa556edb49a1ec34a5fb3e973830e.glb
   size: *id002
   solid: true
+  items: scrap_metal,stuffing,bolts
+  verb: Search
+  name: Workbench
 - id: paper-parts-tally
   floor: 13
   x: 9.6
@@ -98,6 +104,9 @@ rows:
   - 0.624
   - 0.6
   solid: true
+  items: ration
+  verb: Dig through
+  name: Planter
 - id: f13-plant1
   floor: 13
   x: -8
@@ -106,6 +115,9 @@ rows:
   glb: /cdn/value.feb797846f5245e3f1d0ddf418f7b1041dd18e45830d8bd8faa1911182480792.glb
   size: *id004
   solid: true
+  items: stillwater
+  verb: Dig through
+  name: Planter
 - id: f13-plant2
   floor: 13
   x: -8
@@ -114,6 +126,9 @@ rows:
   glb: /cdn/value.feb797846f5245e3f1d0ddf418f7b1041dd18e45830d8bd8faa1911182480792.glb
   size: *id004
   solid: true
+  items: beans
+  verb: Dig through
+  name: Planter
 - id: f13-plant3
   floor: 13
   x: -8
@@ -122,6 +137,9 @@ rows:
   glb: /cdn/value.feb797846f5245e3f1d0ddf418f7b1041dd18e45830d8bd8faa1911182480792.glb
   size: *id004
   solid: true
+  items: almond
+  verb: Dig through
+  name: Planter
 - id: f13-shelf
   floor: 13
   x: 23.4
@@ -133,7 +151,7 @@ rows:
   - 1.9
   - 0.482
   solid: true
-  items: ''
+  items: almond
   name: Shelf, bare
   verb: Search
 - id: f13-barrow
@@ -147,6 +165,9 @@ rows:
   - 0.803
   - 0.681
   solid: true
+  items: stuffing
+  verb: Search
+  name: Wheelbarrow
 - id: f13-bag
   floor: 13
   x: -7.5
@@ -205,6 +226,9 @@ rows:
   glb: /cdn/value.4ff0e7079a215edf97e3b89faf5e0d6a78b8943b307eb36cff954fbafc755c8d.glb
   size: *id005
   solid: true
+  items: bolts
+  verb: Search
+  name: Wheelbarrow
 - id: f14-plant
   floor: 14
   x: -6
@@ -213,6 +237,9 @@ rows:
   glb: /cdn/value.feb797846f5245e3f1d0ddf418f7b1041dd18e45830d8bd8faa1911182480792.glb
   size: *id004
   solid: true
+  items: beans
+  verb: Dig through
+  name: Planter
 - id: f14-plant2
   floor: 14
   x: -6
@@ -221,6 +248,9 @@ rows:
   glb: /cdn/value.feb797846f5245e3f1d0ddf418f7b1041dd18e45830d8bd8faa1911182480792.glb
   size: *id004
   solid: true
+  items: stillwater,cash:10
+  verb: Dig through
+  name: Planter
 - id: f14-bench
   floor: 14
   x: -2
@@ -229,6 +259,9 @@ rows:
   glb: /cdn/value.c7d87cb566742a0ed40c3e9dad60f958feffa556edb49a1ec34a5fb3e973830e.glb
   size: *id002
   solid: true
+  items: scrap_wood,nails,bolts
+  verb: Search
+  name: Workbench
 - id: paper-bntg-stub
   floor: 14
   x: -1.6
@@ -290,6 +323,9 @@ rows:
   glb: /cdn/value.38df66c39278a35809c4d01d481dd80b751f058cfa313fee1ba4b946c9b80a18.glb
   size: *id007
   solid: true
+  items: stillwater,ration,scrap_wood,cash:12
+  verb: Search
+  name: Tent
 - id: f13-tent2
   floor: 13
   x: 14
@@ -309,6 +345,9 @@ rows:
   glb: /cdn/value.38df66c39278a35809c4d01d481dd80b751f058cfa313fee1ba4b946c9b80a18.glb
   size: *id007
   solid: true
+  items: stillwater,scrap_metal
+  verb: Search
+  name: Tent
 - id: f13-shack
   floor: 13
   x: 20
@@ -378,6 +417,9 @@ rows:
   glb: /cdn/value.38df66c39278a35809c4d01d481dd80b751f058cfa313fee1ba4b946c9b80a18.glb
   size: *id007
   solid: true
+  items: almond,cash:10
+  verb: Search
+  name: Tent
 - id: f14-tent1
   floor: 14
   x: 16
@@ -400,6 +442,9 @@ rows:
   - 0.45
   - 2.4
   solid: false
+  items: ration,bolts,wire
+  verb: Dig through
+  name: Collapsed tent
 - id: f14-shack
   floor: 14
   x: -21
@@ -433,6 +478,9 @@ rows:
   - 1.0
   - 0.85
   solid: true
+  items: ration,scrap_metal
+  verb: Search
+  name: Shopping trolley
 - id: f14-rub
   floor: 14
   x: -16
@@ -444,6 +492,9 @@ rows:
   - 1.89
   - 2.95
   solid: true
+  items: nails,bolts,scrap_wood,cash:11
+  verb: Dig through
+  name: Rubble pile
 - id: deb13-0
   floor: 13
   x: -3.04
@@ -598,6 +649,9 @@ rows:
   - 1.519
   - 2.372
   solid: true
+  items: stuffing,stuffing,stuffing
+  verb: Dig through
+  name: Rubble pile
 - id: deb13-14
   floor: 13
   x: 8.97
@@ -741,6 +795,9 @@ rows:
   - 1.573
   - 2.455
   solid: true
+  items: stuffing
+  verb: Dig through
+  name: Rubble pile
 - id: deb13-27
   floor: 13
   x: -19.56
@@ -774,6 +831,9 @@ rows:
   - 1.457
   - 2.274
   solid: true
+  items: scrap_metal
+  verb: Dig through
+  name: Rubble pile
 - id: deb13-30
   floor: 13
   x: 15.16
@@ -862,6 +922,9 @@ rows:
   - 1.23
   - 1.92
   solid: true
+  items: stuffing
+  verb: Dig through
+  name: Rubble pile
 - id: deb13-38
   floor: 13
   x: 11.11
@@ -1137,6 +1200,9 @@ rows:
   - 1.695
   - 2.645
   solid: true
+  items: scrap_wood,wire,nails
+  verb: Dig through
+  name: Rubble pile
 - id: deb14-23
   floor: 14
   x: 16.71
@@ -1159,6 +1225,9 @@ rows:
   - 1.67
   - 2.607
   solid: true
+  items: stuffing
+  verb: Dig through
+  name: Rubble pile
 - id: deb14-25
   floor: 14
   x: 0.01
@@ -1269,6 +1338,9 @@ rows:
   - 1.894
   - 2.957
   solid: true
+  items: nails,scrap_wood,cash:12
+  verb: Dig through
+  name: Rubble pile
 - id: deb14-35
   floor: 14
   x: 6.03

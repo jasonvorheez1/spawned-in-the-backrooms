@@ -273,6 +273,9 @@ rows:
   - 1.3
   - 1.84
   solid: true
+  items: peach_jar,circuit
+  verb: Search
+  name: Car husk
 - id: f1-trolley
   floor: 1
   x: -1.5
@@ -284,6 +287,9 @@ rows:
   - 1.0
   - 0.85
   solid: true
+  items: peach_jar,circuit
+  verb: Search
+  name: Shopping trolley
 - id: f2-car1
   floor: 2
   x: 21
@@ -306,6 +312,9 @@ rows:
   glb: /cdn/value.682706788ce608e6f1cfe3ed8ce639db82af9853e1aead5777c6c08bc2f27383.glb
   size: *id007
   solid: true
+  items: peach_jar,almond,stuffing
+  verb: Search
+  name: Car husk
 - id: f2-shore
   floor: 2
   x: -4
@@ -372,6 +381,9 @@ rows:
   - 1.686
   - 2.631
   solid: true
+  items: springs,scrap_wood
+  verb: Dig through
+  name: Rubble pile
 - id: deb1-5
   floor: 1
   x: -20.19
@@ -449,6 +461,9 @@ rows:
   - 1.946
   - 3.038
   solid: true
+  items: circuit
+  verb: Dig through
+  name: Rubble pile
 - id: deb1-12
   floor: 1
   x: 0.55
@@ -713,6 +728,9 @@ rows:
   - 1.679
   - 2.621
   solid: true
+  items: circuit,scrap_wood,circuit
+  verb: Dig through
+  name: Rubble pile
 - id: deb2-14
   floor: 2
   x: -13.94
@@ -746,6 +764,9 @@ rows:
   - 1.319
   - 2.059
   solid: true
+  items: springs,copper_wire
+  verb: Dig through
+  name: Rubble pile
 - id: deb2-17
   floor: 2
   x: -9.06
