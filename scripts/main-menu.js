@@ -31,7 +31,7 @@ function music(ctx, want) {
 export function update(ctx) {
   { const ss = ctx.session; if (ss.hushed && !ss.tabAway && ctx.now() - (ss.backAt ?? 0) > 1500) { ss.hushed = false; ctx.self.gains = null } } // tab-out hush lifts on its own
   if (!ctx.self.isLocal && ctx.self.isLocal !== undefined) return ctx.sleep()
-  const st = ctx.self.state, ses = ctx.session, place = ctx.self.place?.startsWith("tutorial0") ? "tutorial0" : ctx.self.place // a solo copy is named tutorial0-<id>
+  const st = ctx.self.state, ses = ctx.session, place = ctx.self.place?.startsWith("tutorial0") ? "tutorial0" : ctx.self.place?.startsWith("laundromat") ? "laundromat" : ctx.self.place // a solo copy is named tutorial0-<id>
   if (!ses.menuMark) {
     ses.menuMark = true
     const fresh = !st.madeChar && !st.t0Done && !st.savePlace && !(st.xp > 0) // a brand-new player, before any default stats count as play
@@ -41,10 +41,16 @@ export function update(ctx) {
     if (fresh && place !== "intake" && place !== "tutorial0" && !st.roomHop && !(ctx.self.tags ?? []).includes("helper")) { // Shelly Nov 17: no custom character at the start: you walk in as your Spawn avatar; a cat is made at the salon later
       if (!st.run) st.run = cleanPick(null)
       st.madeChar = true; if (ctx.self.avatarUrl) st.look = { ...(st.look ?? {}), spawnAv: true, model: "", modelUrl: "" }
-      st.arrivePending = true; ctx.cross(ctx.self, "tutorial0"); return ctx.sleep(0.75) }
+      st.lmDone = false; ctx.cross(ctx.self, "laundromat"); return ctx.sleep(0.75) } // the laundromat opening first (scripts/lib/laundromat-cut.js), then the tutorial
   }
   // Shelly Nov 13 "still endlessly falling": a cut that ends with a crossing (the intro's fall into Level 0) left anim.cut on the body; every new place starts with no cut pose and no air pose
   if (ses.animPlace !== place) { ses.animPlace = place; if (ctx.self.anim) { ctx.self.anim.cut = null; ctx.self.anim.air = null } }
+  if (place?.startsWith("laundromat")) { // the opening (Shelly Nov 17)
+    if (st.lmDone) { st.arrivePending = true; ctx.cross(ctx.self, "tutorial0"); return ctx.sleep(0.75) }
+    st.menuOpen = false
+    lazy("lm", () => import("./lib/laundromat-cut.js"))?.lmTick?.(ctx, ses, st)
+    return ctx.sleep(0)
+  }
   // the intake room: the creator opens on arrival; once it closes, back out to where you came from
   if (place === "intake") {
     if (!ses.inIntake) { ses.inIntake = true; ses.leftIntake = false; if (st.cut) { st.cut = null; ses.cut = null; ctx.view.camera = null }; st.menuOpen = false; st.wardrobeOpen = true; st.wrMenu = true; st.wrTab = "body" }
@@ -133,6 +139,7 @@ export function onInput(ctx, input) {
   else if (ss.tabAway && ctx.now() - (ss.awayAt ?? 0) > 1000 && Object.keys(input.pressed ?? {}).some((k) => input.pressed[k])) { ss.tabAway = false; ss.backAt = ctx.now() }
   // while away the voices and effects are muted for you alone, so nothing that slipped through piles up and plays at once on return; they come back 1.5 s after you do
   if (ss.tabAway && !ss.hushed) { ss.hushed = true; ctx.self.gains = { Voice: 0, SFX: 0, Ambience: 0 } }
+  if (String(ctx.self.place).startsWith("laundromat") && (input.pressed?.jump || input.pressed?.mainmenu)) ctx.session.lmSkip = true // skip the opening
   const d = input.actionData?.mmenu
   if (input.pressed?.mmenu && d) {
     ctx.emit("playSound", { clip: CLICK, volume: 0.5 }, { audience: { player: ctx.self.id } })
