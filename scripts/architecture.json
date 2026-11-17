@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 10065,
-  "updatedAt": "2026-11-17T02:32:28.337Z",
+  "basedOnSpecVersion": 10071,
+  "updatedAt": "2026-11-17T02:41:56.146Z",
   "summary": "Spawned in the Backrooms is a multiplayer survival RPG across Level 0, The Hub, the Bonus mall and authored destinations. Character progression, inventory and appearance persist in player.state while Solo and Multiplayer keep separate mode/run state; a fresh player enters through intake, the solo laundromat opening and tutorial. Level ! is a solo ephemeral chase finale built from a place sim and shared chase, dressing and cutscene helpers.",
   "scriptPaths": [],
   "places": [
@@ -10,9 +10,9 @@
     "places/thehub (3D) - tunnel crossroads and Camp Amber; sim/helpers compose doors, destinations, crews and local interactions.",
     "places/intake (3D) - character creator/salon; fresh-player route visits here before its intro and tutorial.",
     "places/laundromat (3D; solo, ephemeral) - at-2-am opening room staged by scripts/lib/laundromat-cut.js before crossing to tutorial0.",
-    "places/tutorial0 (3D; solo, ephemeral) - staged office/corridor tutorial; sim dresses supplies and drawings and places physical-looking placards, stencils, maker plate and hand-scratched warning.",
+    "places/tutorial0 (3D; solo, ephemeral) - staged office/corridor tutorial; sim dresses supplies and drawings and places physical-looking placards, stencils, maker plate and hand-scratched warning; local cut scenes include an entity encounter.",
     "places/levelrun (3D; solo, ephemeral) - Level !, Run for Your Life!: 416 m hospital chase, mid-run blackout, hazards, pursuers, intro/retry/rescue cuts and Safe Alcove.",
-    "places/level1, level1c, level2, level21, level26, level4, level5, level9, level10, level11, level12, level61, level70, level132, level169, level178 and other places/* - authored and procedural destinations; Level 11 connects into Level ! and its Safe Alcove route continues to Level 109."
+    "places/level1, level1c, level2, level21, level26, level4, level5, level9, level10, level11, level12, level61, level70, level132, level169, level178 and other places/* - authored and procedural destinations; Level 11 connects into Level ! and later levels have their own sims/quest systems."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera and ordered player behavior/actions; locomotion, interaction, combat, inventory, social, quests and other systems attach here.",
@@ -22,10 +22,10 @@
     "scripts/lib/levelrun-mechanics.js + scripts/lib/levelrun-dress.js + scripts/lib/levelrun-cut.js - shared Level ! dimensions/obstacles and pursuit rules, room dressing, and player-side cutscene lifecycle.",
     "places/level169, level132, level178 configs/sims + terrain scripts and local helpers - seeded terrain and authored setpieces, town schedules/barter, Kyoto residents and house quest.",
     "places/laundromat/config.yaml + cells/x0z0.scene; scripts/lib/laundromat-cut.js - local opening/cutscene behavior and handoff to tutorial0.",
-    "places/tutorial0/sim.js + scripts/lib/tutorial.js + scripts/tutorial-ui.js - tutorial room dressing, position/state-based prompts, and reusable Field Guide rendering."
+    "places/tutorial0/sim.js + scripts/lib/tutorial.js + scripts/tutorial-ui.js - tutorial room dressing, position/state-based prompts, and reusable Field Guide rendering; scripts/lib/tut0-cut.js owns the local cutscene beats."
   ],
   "shared": [
-    "scripts/lib/levelrun-mechanics.js - Level ! corridor, obstacle table, Agility profile, obstacle contact and horde pursuit; reused by its sim, scripts/player.js and tests.",
+    "scripts/lib/levelrun-mechanics.js - Level ! corridor, obstacle table, Agility profile, obstacle contact and horde pursuit; reused by its sim, scripts/player.js and tests; med_stim boosts runner movement and slows the pack.",
     "scripts/lib/levelrun-dress.js - common modular hospital room dressing and model table reused by places/levelrun/sim.js and Level 109 setpieces.",
     "scripts/lib/levelrun-cut.js - intro, retry, blackout-midpoint and rescue cut lifecycle/UI shared between main-menu, cutscene-ui and Level ! sim.",
     "scripts/lib/survival.js - needs-aware stamina recovery multiplier and status label; player.js uses the multiplier and craft-ui.js displays the status.",
@@ -42,7 +42,7 @@
     "scripts/lib/survival.js - staminaFromNeeds, needsStatus.",
     "scripts/bonus-l0-geo.js - geometry; scripts/bonus-l0-exit.js - onTriggerEnter; scripts/lrun-adrenaline.js - onTriggerEnter.",
     "scripts/lib/grid-path.js - DIRS, createGridPather; places/level10/sim.js and places/level21/sim.js - cadence, tick.",
-    "scripts/lib/tutorial.js - inOrientation, GUIDE_CHAPTERS, orientation, GUIDE_LESSONS, tipsMuted, currentTip, guideTick, guideInput; scripts/tutorial-ui.js - tutUi, fieldGuideUi."
+    "scripts/lib/tutorial.js - inOrientation, GUIDE_CHAPTERS, orientation, GUIDE_LESSONS, tipsMuted, currentTip, guideTick, guideInput; scripts/tutorial-ui.js - tutUi, fieldGuideUi; scripts/lib/tut0-cut.js - LEN, t0Tick."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable character player.state: progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, currency and gear shared across Solo/Multiplayer.",
@@ -52,7 +52,7 @@
     "scripts/main-menu.js writes solo run.needs/run.sanity survival switches; scripts/player.js applies sanity and need drains and scales stamina recovery through scripts/lib/survival.js.",
     "scripts/lib/hub.js noteAtlas, called by scripts/player.js on arrival - player.state.atlas first-seen dates/visit counts; place sims own local texV/signTexV completion stamps.",
     "scripts/quest-prop-use.js and level quest layers own player.state clue/quest flags; Level 325 owns l325 salvage/scrap progress; page IDs and current reading are player.state.pages/reading.",
-    "scripts/main-menu.js + scripts/lib/laundromat-cut.js + scripts/lib/tutorial.js - opening/tutorial progress in player.state; cut timing and camera/light/sound staging are session/cutscene state."
+    "scripts/main-menu.js + scripts/lib/laundromat-cut.js + scripts/lib/tutorial.js - opening/tutorial progress in player.state; cut timing and camera/light/sound staging are session/cutscene state; scripts/player.js sets adrenAt for the 25-second stim screen pulse."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered player behavior stack for locomotion, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone; scripts/interact.js dispatches focused interactions.",
@@ -60,23 +60,23 @@
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; player.js builds viewmodel/avatar through critter-model appearance builders.",
     "Fresh player detected in scripts/main-menu.js → intake/creator then solo laundromat; scripts/lib/laundromat-cut.js plays the opening and crosses to tutorial0.",
     "places/tutorial0/sim.js tick → dresses the room, supplies and in-world signs; scripts/lib/tutorial.js orientation and guideTick read place/position/player state → tutorial-ui.js and Field Guide prompts.",
+    "scripts/main-menu.js calls scripts/lib/tut0-cut.js t0Tick locally → tutorial encounter stages a walkie radio warning/static and a slumped Smiler lifting its head before the encounter score/action; cutscene-ui.js renders tutorial cut UI.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
     "scripts/main-menu-ui.js title/pause actions → scripts/main-menu.js, which routes starts/mode picks and applies solo needs/sanity switches.",
     "scripts/lib/run-opts.js mpRoom/toSolo → party room mp-<party> or personal room; scripts/bonus-door.js → hub.toHub; the Bonus glass hall's scripts/bonus-l0-exit.js sets bonusBack and routes toSolo(main), then main-menu places the player outside the Bonus door.",
     "Level 11 door handler scripts/l11-ch2-drop.js → levelrun#lrun-start or #lrun-alcove; places/levelrun/sim.js dresses the run, advances horde and hazards and handles rescue/exit; Level ! exit returns to Level 11.",
-    "places/levelrun/sim.js proximity trigger → scripts/lrun-adrenaline.js adds stim_shot to player.state.snacks; player uses the item to apply med_stim → scripts/lib/levelrun-mechanics.js agilityProfile boosts speed and sprint efficiency during the chase.",
+    "places/levelrun/sim.js cart trigger → scripts/lrun-adrenaline.js adds three stim_shot items to player.state.snacks; player consumes one for med_stim and jab events/adrenAt → scripts/ui.js pulse for 25 s; mechanics.js boosts sprint and slows horde pursuit while the effect lasts.",
     "scripts/main-menu.js loads scripts/lib/levelrun-cut.js lrunCutTick → Level ! intro/retry/midpoint/rescue cuts and Safe Alcove handoff; cutscene-ui.js renders lrunUi.",
-    "scripts/lib/survival.js staminaFromNeeds(player.state) → scripts/player.js stamina regeneration; needsStatus(player.state) → scripts/craft-ui.js status display.",
-    "scripts/lib/mp-guard.js multiRoom/soloPlace → scripts/player.js damage and scripts/meg-agent.js death handling: multiplayer friendly NPCs are downed and recover; solo NPC deaths persist and quest deadCheck may fail tied quests."
+    "scripts/lib/survival.js staminaFromNeeds(player.state) → scripts/player.js stamina regeneration; needsStatus(player.state) → scripts/craft-ui.js status display."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs with paired orientations.",
-    "scripts/lib/data/weapons.yml + scripts/player.js + ballistics.js + knock.js + loot.js - weapon variants share combat and rarity/level gates; weights and upgrade rolls vary by level; two-handed models/grips vary through weapon tuning and viewmodel pose.",
+    "scripts/lib/data/weapons.yml + scripts/player.js + ballistics.js + knock.js + loot.js - weapon variants share combat and rarity/level gates; weights and upgrade rolls vary by level; two-handed models/grips vary through weapon tuning and viewmodel builders.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "scripts/lib/sleep.js + scripts/interact.js + scripts/rest.js + scripts/l178-prop.js - common bed detection/entry, with ordinary rest and Kyoto futon crossing as distinct outcomes.",
     "scripts/lib/l169-road.js + l169-road-geo.js + l169-travel.js + l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
-    "places/levelrun/sim.js + scripts/lib/levelrun-mechanics.js - one obstacle/hazard corridor family varies by position, hazard period and obstacle kind; pursuers join at depth marks and lights change at the midpoint.",
+    "places/levelrun/sim.js + scripts/lib/levelrun-mechanics.js - one obstacle/hazard corridor family varies by position, hazard period and obstacle kind; Agility/stim alter sprint, stamina drain and horde speed; pursuers join at depth marks and lights change at the midpoint.",
     "places/level132/sim.js + l132-{stalls,shops,land,people,duke,quests,barter}.js + barter-deal.js - staged town and keeper trades use eight goods categories; first gift then balanced currency-free barter."
   ],
   "probableOrphans": [
@@ -91,8 +91,8 @@
     "Solo and Multiplayer share one character but not run/story state: scripts/lib/run-opts.js isStoryKey defines the swapped key family; MODE_SLOT 91/92 are separate SQL snapshots and hidden from ordinary Save Manager slots.",
     "scripts/lib/run-opts.js noStory() currently returns true in every mode; main-menu sweeps inherited main quest rows from quests/qtrack, and quests.setQuest refuses main rows. Side quests remain separate.",
     "Fresh-player opening chain is main-menu → intake → laundromat → tutorial0; lmDone/arrivePending are player.state flags, while lmSkip and cut timing are session state. These opening places are solo/ephemeral.",
-    "Level ! uses places/levelrun/config.yaml solo/ephemeral; CORRIDOR and its 26 m chunk/door generation come from scripts/lib/levelrun-mechanics.js. Keep sim geometry, hazard/pursuit depth marks, midZ blackout, collapseZ and exitZ aligned when changing run length.",
-    "The Level ! cart grants one stim_shot in the player's snacks; it is used from the bag and its med_stim effect is what mechanics.js checks. The level is intentionally excluded from atlas tracking.",
+    "Level ! uses places/levelrun/config.yaml solo/ephemeral; CORRIDOR and its 26 m chunk/door generation come from scripts/lib/levelrun-mechanics.js. Keep sim geometry, hazard/pursuit depth marks, midZ blackout, collapseZ and exitZ aligned when changing the run.",
+    "The Level ! cart grants three stim_shot items to the player's snacks; each is chosen and used from the bag. med_stim drives the 25-second enhanced movement, stamina economy and horde slowdown; use timing also drives the screen pulse from adrenAt.",
     "Level 0 Bonus glass return sets player.state.bonusBack before toSolo(main); main-menu consumes it to position the player outside the Bonus door at (6.3, -5.2), facing the Lobby. Keep the hall trigger and this return placement coordinated."
   ]
 }
