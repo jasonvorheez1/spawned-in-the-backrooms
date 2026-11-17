@@ -52,6 +52,7 @@ import { quickItems } from './lib/quick-items.js'
 import { tracked, MAX_TRACK, PLACE_NAMES } from './lib/quests.js'
 import { LEVEL_TITLES as LEVEL_NAMES } from './lib/places.js'
 import { mainMenu } from './main-menu-ui.js'
+import { emoteWheel } from './emote-ui.js'
 import { fieldGuideUi, tutUi } from './tutorial-ui.js'
 import { derived, carried as _kg } from './lib/stats.js'
 import { cndOf, band, bandColor, isBroken } from './lib/condition.js'
@@ -507,7 +508,7 @@ function dozeBar(ctx, player) {
 export default function render(ctx, player) {
   const cs = player?.state
   const hasCinemaOv = cs && (cs.cinemaOpen || cs.cinemaPlaying || cs.cinemaPlayback?.playing || (cs._cinemaFadeOpacity ?? 0) > 0.001 || (cs._cinemaWashOpacity ?? 0) > 0.001 || (cs._cinemaTextOpacity ?? 0) > 0.001)
-  return `<div class="ui-root" ${uiPrefsAttrs(cs)}>${tarVeil(ctx, player) + dozeBar(ctx, player) + renderHud(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + (player?.isEditor && ctx?.session?.lsOpen ? (lazy('lagscope', () => import('../mods/lagscope/panel.js'))?.overlay?.(ctx, player) ?? '') : '') + (hasCinemaOv ? (lazy('cinemaOv', () => import('../mods/absolute-cinema/lib/ui-cinema-overlays.js'))?.renderCinemaOverlays?.(player) ?? '') : '') + (cs?.cinemaOpen ? (lazy('cinema', () => import('../mods/absolute-cinema/lib/ui-cinema.js'))?.default?.(player) ?? '') : '') + UI_THEME}</div>`  // Shelly Nov 15: Game Rules button off the HUD; the god-mode tab keeps it
+  return `<div class="ui-root" ${uiPrefsAttrs(cs)}>${tarVeil(ctx, player) + dozeBar(ctx, player) + renderHud(ctx, player) + emoteWheel(ctx, player) + unlock12(ctx, player) + ritual12(ctx, player) + (player?.isEditor && ctx?.session?.lsOpen ? (lazy('lagscope', () => import('../mods/lagscope/panel.js'))?.overlay?.(ctx, player) ?? '') : '') + (hasCinemaOv ? (lazy('cinemaOv', () => import('../mods/absolute-cinema/lib/ui-cinema-overlays.js'))?.renderCinemaOverlays?.(player) ?? '') : '') + (cs?.cinemaOpen ? (lazy('cinema', () => import('../mods/absolute-cinema/lib/ui-cinema.js'))?.default?.(player) ?? '') : '') + UI_THEME}</div>`  // Shelly Nov 15: Game Rules button off the HUD; the god-mode tab keeps it
 } // the 3D studio button is off the HUD (Shelly, Nov 9: bothersome)
 function renderHud(ctx, player) {
   const s = player.state ?? {}

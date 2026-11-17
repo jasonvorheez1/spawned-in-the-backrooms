@@ -141,7 +141,8 @@ export function onInput(ctx, input) {
   const st = ctx.self.state
   // the O key stays off; the main menu's CHARACTER opens it
   if (WARDROBE_OFF) { if (st.wardrobeOpen && !st.wrMenu && !st.salonOpen) st.wardrobeOpen = false; } else if (input.pressed?.wardrobe) st.wardrobeOpen = !st.wardrobeOpen
-  if (input.pressed?.emote) {
+  const faceTap = ctx.self.isEditor ? (st.emoteFaceNext && st.emoteFaceNext !== ctx.self.session.faceTap ? (ctx.self.session.faceTap = st.emoteFaceNext) : false) : input.pressed?.emote // builders: N opens the emote wheel (emote.js); its Next face slice lands here
+  if (faceTap) {
     const l = lookOf(ctx), cur = ctx.self.session.face || l.expr
     const next = C.expr[(C.expr.indexOf(cur) + 1) % C.expr.length]
     st.face = { expr: next, until: ctx.now() + C.holdFace * 1000 }

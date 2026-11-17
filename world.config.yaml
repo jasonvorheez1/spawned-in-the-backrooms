@@ -160,6 +160,7 @@ inputs:
         - n
       touch:
         button: false
+    emotePick: {}
     dress: {}
     mmenu: {}
     tabaway: {}
