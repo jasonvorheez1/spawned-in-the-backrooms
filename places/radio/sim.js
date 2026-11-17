@@ -5,7 +5,7 @@ import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 export const cadence = "1s";
-const V = 3;
+const V = 4;
 const RALPH = "radio-ralph", HOME = { x: 0, z: -3.6 };
 const FOES = ["hound", "stealer", "smiler", "lurker", "l5rat", "l3rat", "l5staff", "hostile", "moth", "moths", "l8spider", "l8-hostile", "zdrone", "l11foe", "l7beast", "l10worm"];
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
@@ -59,7 +59,7 @@ function lay(ctx) {
   const bx = (id, x, y, z, w, h, d, material, extra = {}) => sp(id, { feetPosition: { x, y, z }, primitive: { kind: "box", width: w, height: h, depth: d }, material, physics: "static", ...extra });
   const face = (id, x, y, z, w, h, d, material) => bx(id, x, y, z, w, h, d, material, { physics: "none" });
   const box = (s) => ({ box: { min: { x: -s[0] / 2, y: 0, z: -s[2] / 2 }, max: { x: s[0] / 2, y: s[1], z: s[2] / 2 } } });
-  const fit = (id, model, x, y, z, yaw, size, extra = {}) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: { id: model }, layout: box(size), physics: { body: "static", collider: "box" }, ...extra });
+  const fit = (id, model, x, y, z, yaw, size, extra = {}) => sp(id, { feetPosition: { x, y, z }, rotation: { yaw }, model: { id: model, forward: "+x" }, layout: box(size), physics: { body: "static", collider: "box" }, ...extra });
   const use = (kind, name, verb, extra = {}) => ({ tags: ["usable", "radioprop"], behavior: "scripts/radio-use.js", state: { kind, name, verb, ...extra } });
   // shell: the floor stands under the blueprint's id
   bx("radio-room", 0, 0, 1, 8, 0.1, 12, BROWN);
