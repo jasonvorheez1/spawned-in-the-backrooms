@@ -17,3 +17,12 @@ export function needsStatus(s) {
   if (food < 25 || water < 25) return 'Low supplies · stamina recovery reduced'
   return 'Steady'
 }
+
+// Nov 17 rebalance (Savi's pick): the hurting stage. Stamina recovery pays first (above); only an EMPTY bar costs hp, slowly, and it never kills.
+// hp per second to take off; 0 while fed, off-needs, or already at the floor. Numbers: data/craft.yml needs.emptyHpPerSec / emptyHpFloor.
+export function needsHpDrain(s, maxHp, N = {}) {
+  if (!needsMul(s)) return 0
+  const empty = ((s.hunger ?? 100) <= 0 ? 1 : 0) + ((s.thirst ?? 100) <= 0 ? 1 : 0)
+  if (!empty || (s.hp ?? maxHp) <= maxHp * (N.emptyHpFloor ?? 0.25)) return 0
+  return empty * (N.emptyHpPerSec ?? 0.02)
+}

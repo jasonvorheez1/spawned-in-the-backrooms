@@ -1,11 +1,13 @@
 # Crafting and survival: every tuned number. (7 Days to Die: scrap into tools, a workbench, hunger and thirst. Fallout: skills gate recipes.)
 # needs: food and water run 0..100; recovery slows as either becomes depleted.
 needs:
-  thirstPerSec: 0.028      # about 60 minutes before the low warning, walking
-  hungerPerSec: 0.018      # about 93 minutes before the low warning, walking
+  thirstPerSec: 0.0152     # Nov 17 rebalance (Savi's pick): 0.028 → 0.0152, full to the low warning in ~82 min walking (was ~45), a planning pressure not a clock
+  hungerPerSec: 0.0104     # Nov 17 rebalance (Savi's pick): 0.018 → 0.0104, full to the low warning in ~120 min walking (was ~69)
   sprintMul: 1.25
   sprintThirstMul: 1.5
   low: 25
+  emptyHpPerSec: 0.02      # Nov 17 rebalance (Savi's pick): none → 0.02, an EMPTY bar costs 1.2 hp a minute each, never below emptyHpFloor (scripts/lib/survival.js needsHpDrain)
+  emptyHpFloor: 0.25       # Nov 17 rebalance (Savi's pick): none → 0.25, starving never kills: it stops at a quarter of max hp
   almondThirst: 40         # one almond water drunk
 # food: what each eaten token gives back to hunger (it is eaten where you pick it up)
 food:

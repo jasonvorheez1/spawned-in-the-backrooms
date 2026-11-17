@@ -3,6 +3,7 @@ import { interactiveSpec } from './prop-interactions.js'
 // floor spawner (places/main/sim.js) or from a smiler that just died (scripts/player.js).
 import L from "./data/level0.yml";
 import L3 from "./data/loot3.yml";
+import DIFF from "./data/difficulty.yml";
 import W, { rollVariant, rarityIdx, rarityCap, authoredVariant } from "./weapons.js";
 import { SKILL_KEYS } from "./stats.js";
 import { rollManual } from "./manuals.js";
@@ -38,6 +39,7 @@ export const POOL = {
   level10: "l10", level11: "l11", level13: "l13", level26: "l26",
   level31: "l31", level34: "l2", level70: "l70", level109: "l109",
   level114: "l114", level169: "l169", level178: "l178",
+  doors21: "l21d", level22: "l22", // Nov 17 rebalance (Savi's pick): l0 → their own pools, so the two hardest places stop rolling lobby loot
 };
 export const poolOf = (place) => POOL[place] ?? "l0";
 export const PLACE_CATEGORY = {
@@ -130,7 +132,7 @@ export const LOOT_CATEGORIES = {
     ["mag:guns", 3], ["mag:medicine", 3], ["mag:science", 2.5], ["mag:lockpick", 2.5],
   ],
 };
-const POOL_TIER = { l0: 1, l01: 6, l02: 7, l1: 4, l2: 8, l21: 9, l3: 12, l4: 10, l5: 14, l6: 15, l7: 16, l8: 17, l9: 13, l10: 11, l11: 12, l12: 14, l13: 15, l26: 9, l27: 13, l31: 7, l34: 11, l61: 14, l70: 15, l109: 11, l114: 15, l169: 14, l184: 16, gamma: 12 };
+const POOL_TIER = { l21d: 18, l22: 19, /* Nov 17 rebalance (Savi's pick): 1 → 18 / 19, Level 21/22 are the top of the danger curve */ l0: 1, l01: 6, l02: 7, l1: 4, l2: 8, l21: 9, l3: 12, l4: 10, l5: 14, l6: 15, l7: 16, l8: 17, l9: 13, l10: 11, l11: 12, l12: 14, l13: 15, l26: 9, l27: 13, l31: 7, l34: 11, l61: 14, l70: 15, l109: 11, l114: 15, l169: 14, l184: 16, gamma: 12 };
 export function leveledWeaponScale(k, lv) {
   const unlocked = Math.max(W[k]?.minLevel ?? 1, [1, 3, 6, 10][rarityIdx(k)] ?? 1);
   const age = Math.max(0, lv - unlocked);
@@ -170,12 +172,23 @@ export function rollWeapon(ctx, pool = "l0", cap, level, minLevel = 1) {
   const nearby = local && ctx.random() < chance ? pickWeapon(ctx, local, lv, ceiling, minLevel) : null;
   return nearby ?? pickWeapon(ctx, COMMON_WEAPONS, lv, ceiling, minLevel, pool) ?? (minLevel === 1 ? "table_leg" : null);
 }
+const LQ = DIFF.loot;
+// 0..1: half from how dangerous the place is, half from how far along the player is
+export const lootQuality = (pool, lv) => (Math.min(1, (POOL_TIER[pool] ?? 1) / LQ.dangerTop) + Math.min(1, (Math.max(1, lv) - 1) / (LQ.levelTop - 1))) / 2;
+// rare or better: a rare/epic weapon, or the top medical and hazard finds (the balance sheet's measure, design/balance-nov17.md)
+const RARE_ITEMS = ["medkit", "stim_shot", "royal_ration", "fs_ingot", "repellent"];
+export const isRarePlus = (t) => t.startsWith("weapon:") ? rarityIdx(t.slice(7)) >= 2 : RARE_ITEMS.includes(t);
 // A found thing too good for this player's level steps down; at higher levels, starter junk has a chance to roll up into fitting gear.
 export function gateItems(ctx, items, level, pool = "l0") {
-  const lv = Math.max(1, Number(level) || 1), cap = rarityCap(lv);
+  const lv = Math.max(1, Number(level) || 1), cap = rarityCap(lv), q = lootQuality(pool, lv);
   return String(items ?? "").split(",").filter(Boolean).map((t) => {
     if (t === "stim_shot" && lv < 4 && ctx.random() < (4 - lv) * 0.25) return "bandage"; // leveled: early runs mostly find a bandage instead
-    if (!t.startsWith("weapon:")) return t;
+    if (!t.startsWith("weapon:")) { // Nov 17 rebalance (Savi's pick): ammo amounts and medical scale with the place's danger AND your level (data/difficulty.yml loot)
+      if (t === "ammo" || t === "shells") return ctx.random() < LQ.ammoExtra * q ? t + "," + t : t;
+      if (t === "bandage" && ctx.random() < LQ.bandageUp * q) return "firstaid";
+      if (t === "firstaid" && lv >= LQ.medkitLevel && ctx.random() < LQ.firstaidUp * q) return "medkit";
+      return t;
+    }
     const k = t.slice(7);
     if (!W[k] || W[k].unique || W[k].weight === 0 || authoredVariant(k)) return t; // keep authored discoveries
     if (rarityIdx(k) > cap || (W[k].minLevel ?? 1) > lv) return "weapon:" + rollWeapon(ctx, pool, cap, lv);
@@ -352,4 +365,24 @@ export function rollItemL5(ctx) {
   let r = ctx.random() * total;
   for (const [k, w] of L5_WEIGHTS) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeaponL5(ctx) : k === "meat" ? rollMeat(ctx) : k === "manual" ? rollManual(ctx, "l5") : k === "mag" ? magOf(ctx, "l5") : k === "cloth" ? rollCloth(ctx) : k; }
   return "almond";
+}
+
+// ---- Level 21 "Numbered Doors" (place doors21): a hall closet, or a dark-wing closet (rich). Natural finds only: what a tenant or a lost survey team left behind.
+// rich leans to firesalt, the level's keys, ammo and medical, with a small chance of a weapon gated to the finder's level. Weights: Savi's pick, Nov 17.
+export const L21_KEY = "level_key";
+const L21_HALL = [["almond", 6], ["stillwater", 3], ["ration", 4], ["bandage", 4], ["firstaid", 2], ["ammo", 4], ["shells", 2], ["firesalt", 3], ["key", 1.5], ["battery", 2], ["bobbypin", 2], ["mag", 1]];
+const L21_RICH = [["firesalt", 6], ["fs_ingot", 1], ["key", 4], ["ammo", 7], ["shells", 4], ["cells", 2], ["firstaid", 4], ["medkit", 3], ["stim_shot", 2], ["almond", 3], ["royal_ration", 1], ["kit", 2], ["weapon", 2.5]];
+export function rollItemL21(ctx, rich = false, level) {
+  if (ctx.random() < (rich ? 0.2 : 0.12)) return rollCash(ctx);
+  const table = rich ? L21_RICH : L21_HALL, total = table.reduce((a, [, w]) => a + w, 0);
+  const lv = level ?? ctx?.self?.state?.level;
+  let r = ctx.random() * total;
+  for (const [k, w] of table) { r -= w; if (r <= 0) return k === "weapon" ? "weapon:" + rollWeapon(ctx, "l21d", undefined, lv == null ? undefined : Math.max(1, Number(lv) || 1)) : k === "key" ? L21_KEY : k === "mag" ? magOf(ctx, "l21d") : k; }
+  return "almond";
+}
+// one find as a player of this level takes it out of a container in this place (per-place roll, then the level and danger gate)
+export function rollItemFor(ctx, place, level) {
+  const pool = poolOf(place);
+  const raw = place === "doors21" ? rollItemL21(ctx, false, level) : place === "level1" ? rollItemL1(ctx) : rollItem(ctx, pool);
+  return gateItems(ctx, raw, level, pool);
 }

@@ -13,3 +13,46 @@ wearMul: 1.4        # weapon condition lost per use (scripts/lib/condition.js)
 # Carrying
 carryBase: 26       # kg: carryBase + hardiness * carryPerH (it was 30 + 5 each)
 carryPerH: 4.5
+
+# ---- Nov 17 rebalance (Savi's pick): the place curve. A place listed here uses its own hp multiplier IN PLACE OF enemyHp, and its dmg rides on top of enemyDmg
+# (scripts/lib/stats.js npcState / npcMul). A place not listed keeps enemyHp and dmg 1, exactly as before.
+# Reads: Levels 0-2 for player level 1-5, Levels 3-6 for 5-10, Levels 7-13 for 8-15, Level 21/22 for 12+.
+tiers:
+  t1: { hp: 1.0,  dmg: 1.0 }   # Nov 17 rebalance (Savi's pick): hp 1.3 → 1.0, a new player's table leg drops the first smiler/lurker/hound in 4 to 6 hits (was 5 to 8)
+  t2: { hp: 1.3,  dmg: 1.1 }   # Nov 17 rebalance (Savi's pick): dmg 1.0 → 1.1, hp unchanged
+  t3: { hp: 1.55, dmg: 1.2 }   # Nov 17 rebalance (Savi's pick): hp 1.3 → 1.55, dmg 1.0 → 1.2
+  t4: { hp: 1.9,  dmg: 1.3 }   # Nov 17 rebalance (Savi's pick): new places, the top of the curve
+places:
+  tutorial0: t1
+  main: t1
+  level1: t1
+  level1c: t1
+  level2: t1
+  level21: t1
+  level3: t2
+  gamma: t2
+  level4: t2
+  level5: t2
+  level6: t2
+  level61: t2
+  level7: t3
+  level8: t3
+  level9: t3
+  level10: t3
+  level11: t3
+  level12: t3
+  level13: t3
+  doors21: t4
+  level22: t4
+# ---- Nov 17 rebalance (Savi's pick): what a container gives scales with BOTH the place's danger (loot.js POOL_TIER / dangerTop) and the opener's level (/ levelTop).
+# q = (danger + level) / 2, 0..1. Each chance below is multiplied by q when the container is first opened (scripts/lib/loot.js gateItems).
+loot:
+  dangerTop: 18        # the pool tier that counts as full danger (Level 21)
+  levelTop: 15         # the player level that counts as full
+  ammoExtra: 0.7       # none → 0.7: a box of rounds or shells comes with a second one
+  bandageUp: 0.45      # none → 0.45: a bandage is a first aid kit instead
+  firstaidUp: 0.4      # none → 0.4: a first aid kit is a trauma medkit instead (player level 6+)
+  medkitLevel: 6
+# ---- Nov 17 rebalance (Savi's pick): sanity in an ordinary lit zone. NOT WIRED YET: scripts/player.js tickStats still reads each level's zone drain.
+sanity:
+  lit: -0.01           # per second in a lit, ordinary zone: 0.06 to 0.12 → -0.01 (recovers 0.6 a minute); dark, red and named hazards keep their own numbers
