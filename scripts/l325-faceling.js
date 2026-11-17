@@ -59,7 +59,16 @@ function die(ctx) {
   ctx.emit("playSound", { clip: SFX("body-falls-onto-bamboo-and-concrete"), position: me.feetPosition, volume: 0.8, maxDistance: 40 });
   const f = me.feetPosition;
   animate(ctx, me, { "feetPosition.y": [f.y, 0.15] }, { duration: Math.max(0.5, Math.sqrt(f.y / 4.9)), easing: "easeInQuad" });
-  me.anim = { die: { clip: "death", loop: false } };
-  me.lifetime = 60;
+  me.anim = { die: { clip: "death", loop: false } }; // knocked flat, never killed: NPCs can't die (Shelly's rule)
+  s.down = true; ctx.emit("damageNumber", { position: { x: f.x, y: 1.6, z: f.z }, text: "DOWN", color: "#ffd9a0" });
+  ctx.after(9, "slink", {});
   ctx.place.state.l325dead = { ...(ctx.place.state.l325dead ?? {}), [s.slot]: true };
+}
+
+// up again after the knockdown, it limps into the dust and is gone for this tower's cycle
+export function slink(ctx) {
+  const me = ctx.self, f = me.feetPosition, a = ctx.random() * 6.283;
+  me.anim = { die: null };
+  animate(ctx, me, { feetPosition: { x: f.x + Math.cos(a) * 14, y: f.y, z: f.z + Math.sin(a) * 14 }, "material.dissolve": [0, 1] }, { duration: 6, easing: "linear" });
+  me.lifetime = 7;
 }
