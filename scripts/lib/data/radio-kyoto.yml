@@ -190,30 +190,6 @@ segments:
   dur: 199.03
   clip: /cdn/music-smile-dk-japanese-boy-ag96kxmb.mp3
 - kind: host
-  title: Traveler's Advice (Hana)
-  dur: 11.74
-  clip: /cdn/value.fd4d5b041b1532b25850737fd9d2a05d13abaf849f7f5879d1fbd7f607373590.mp3
-- kind: host
-  title: Traveler's Advice (Takeshi)
-  dur: 6.62
-  clip: /cdn/value.85aeca5c5f23d40944f8ea1ae8e37e2404ec746833526ba1a78a77a6a2dbb7af.mp3
-- kind: host
-  title: Traveler's Advice (Hana)
-  dur: 4.78
-  clip: /cdn/value.a5608472152f88b5760e153f973e44ea8aca2ce6cc5ed49a9eb9011671d7f381.mp3
-- kind: host
-  title: Traveler's Advice (Takeshi)
-  dur: 2.69
-  clip: /cdn/value.e7ffbd153163e702eba6b4fdfaa51283104da9a7ba6ea0866a6a0746405cffd2.mp3
-- kind: host
-  title: Traveler's Advice (Hana)
-  dur: 7.66
-  clip: /cdn/value.cc6a2951b7dc3f2246b93a332341f8665dcdc3832cad18ca62da2e4144358d44.mp3
-- kind: song
-  title: Nadeshiko Rock
-  dur: 187.12
-  clip: /cdn/music-nadeshiko-rock-popn-cafe-j5adxd18.mp3
-- kind: host
   title: The Concierge Takes Tea (sound)
   dur: 1.22
   clip: /cdn/moodboard-realistic-gritty/sfx-three-knocks-on-a-heavy-studio-door.mp3
@@ -273,6 +249,30 @@ segments:
   dur: 1.8
   clip: /cdn/value.caca366da0678abeb3fcd12d9d4018a1d89aff0cf9166f165e192824e2f87afa.mp3
   show: 1
+- kind: host
+  title: Traveler's Advice (Hana)
+  dur: 11.74
+  clip: /cdn/value.fd4d5b041b1532b25850737fd9d2a05d13abaf849f7f5879d1fbd7f607373590.mp3
+- kind: host
+  title: Traveler's Advice (Takeshi)
+  dur: 6.62
+  clip: /cdn/value.85aeca5c5f23d40944f8ea1ae8e37e2404ec746833526ba1a78a77a6a2dbb7af.mp3
+- kind: host
+  title: Traveler's Advice (Hana)
+  dur: 4.78
+  clip: /cdn/value.a5608472152f88b5760e153f973e44ea8aca2ce6cc5ed49a9eb9011671d7f381.mp3
+- kind: host
+  title: Traveler's Advice (Takeshi)
+  dur: 2.69
+  clip: /cdn/value.e7ffbd153163e702eba6b4fdfaa51283104da9a7ba6ea0866a6a0746405cffd2.mp3
+- kind: host
+  title: Traveler's Advice (Hana)
+  dur: 7.66
+  clip: /cdn/value.cc6a2951b7dc3f2246b93a332341f8665dcdc3832cad18ca62da2e4144358d44.mp3
+- kind: song
+  title: Nadeshiko Rock
+  dur: 187.12
+  clip: /cdn/music-nadeshiko-rock-popn-cafe-j5adxd18.mp3
 - kind: host
   title: The Eastern Banner (Takeshi)
   dur: 8.86
@@ -379,34 +379,6 @@ segments:
   dur: 182.88
   clip: /cdn/live-a-live-opening-theme-5wx2x2tv.mp3
 - kind: host
-  title: The Dark Wall (Takeshi)
-  dur: 7.01
-  clip: /cdn/value.33a08fd98eeea0116359a1c1e3d7b8d67bd1ea8996c72e3ac24af61ad24a1de7.mp3
-- kind: host
-  title: The Dark Wall (Hana)
-  dur: 1.9
-  clip: /cdn/value.04ed35dae114f0f277910d5f27c24e943f4552d2dcb5d2a5129e2ec1c34e8e7e.mp3
-- kind: host
-  title: The Dark Wall (Takeshi)
-  dur: 6.22
-  clip: /cdn/value.22aad1d8867bc389a7bc4536c585bfd5ede87a290c402ea86ac7a724dd0be24b.mp3
-- kind: host
-  title: The Dark Wall (Hana)
-  dur: 6.14
-  clip: /cdn/value.44feff46efed53c1450a04fe5aed0bc26e27c307441b9cc28b2dddcc3511b21c.mp3
-- kind: host
-  title: The Dark Wall (Takeshi)
-  dur: 1.58
-  clip: /cdn/value.90422856bf528988a1f405fbe73ef75e0a41827cc3a767e643e8f50869eaf1a9.mp3
-- kind: host
-  title: The Dark Wall (Hana)
-  dur: 5.81
-  clip: /cdn/value.3b48126d703d49198b034fe4782f97d3a9b599eb9927630d5a141bf59f591961.mp3
-- kind: song
-  title: Archon's Roost
-  dur: 226.09
-  clip: /cdn/music-archons-roost-orchestral-theme-xhamppti.mp3
-- kind: host
   title: Moon Viewing (Takeshi)
   dur: 6.6
   clip: /cdn/value.9e8a3c749c745b74df847a493f279bfcac182bf0b119c630aa44e3fe4c21b7ad.mp3
@@ -452,37 +424,33 @@ segments:
   clip: /cdn/value.63801034509baebea65a64770f6607b89795e9cae94d09ba6442b2a2554ccef6.mp3
   show: 1
 - kind: host
-  title: Dawn Duel (Takeshi)
-  dur: 7.66
-  clip: /cdn/value.184504f1ef46feb669eeec29da586ff03a93293edce084a6897e6eaa643ece2f.mp3
+  title: The Dark Wall (Takeshi)
+  dur: 7.01
+  clip: /cdn/value.33a08fd98eeea0116359a1c1e3d7b8d67bd1ea8996c72e3ac24af61ad24a1de7.mp3
 - kind: host
-  title: Dawn Duel (Hana)
-  dur: 4.78
-  clip: /cdn/value.eeda098022a2b013189777dc985a96d7a97b0defdce37a89be5e0738197d876d.mp3
+  title: The Dark Wall (Hana)
+  dur: 1.9
+  clip: /cdn/value.04ed35dae114f0f277910d5f27c24e943f4552d2dcb5d2a5129e2ec1c34e8e7e.mp3
 - kind: host
-  title: Dawn Duel (Takeshi)
-  dur: 2.45
-  clip: /cdn/value.70b1a4f440076e4c9ae54068611d44ab29dcf36f907c2317fd35e5d15e725eaa.mp3
+  title: The Dark Wall (Takeshi)
+  dur: 6.22
+  clip: /cdn/value.22aad1d8867bc389a7bc4536c585bfd5ede87a290c402ea86ac7a724dd0be24b.mp3
 - kind: host
-  title: Dawn Duel (Hana)
-  dur: 2.14
-  clip: /cdn/value.087371f3ed5686a78095ddc2ab0d4d7fa8e0ce79e4e929b938f077afeebcb472.mp3
+  title: The Dark Wall (Hana)
+  dur: 6.14
+  clip: /cdn/value.44feff46efed53c1450a04fe5aed0bc26e27c307441b9cc28b2dddcc3511b21c.mp3
 - kind: host
-  title: Dawn Duel (Takeshi)
-  dur: 1.49
-  clip: /cdn/value.9cce36aa4f7ae649ae16c0141849298e265a50d4659740c764b4870a2129f54f.mp3
+  title: The Dark Wall (Takeshi)
+  dur: 1.58
+  clip: /cdn/value.90422856bf528988a1f405fbe73ef75e0a41827cc3a767e643e8f50869eaf1a9.mp3
 - kind: host
-  title: Dawn Duel (Hana)
-  dur: 5.66
-  clip: /cdn/value.b7d18ab60905976eeaa89d4c84a3397992a774bac4d3142d8bd0aa7c322f058f.mp3
-- kind: host
-  title: Dawn Duel (Takeshi)
-  dur: 2.45
-  clip: /cdn/value.7f7d8ecb1665ce376e9abcf2982819609a666502974e3fdf5820578edcf6cfc4.mp3
+  title: The Dark Wall (Hana)
+  dur: 5.81
+  clip: /cdn/value.3b48126d703d49198b034fe4782f97d3a9b599eb9927630d5a141bf59f591961.mp3
 - kind: song
-  title: Musashi Project
-  dur: 266.97
-  clip: /cdn/music-musashi-project-naruto-theme-1oi9ccto.mp3
+  title: Archon's Roost
+  dur: 226.09
+  clip: /cdn/music-archons-roost-orchestral-theme-xhamppti.mp3
 - kind: host
   title: Okafor Inspects the House (sound)
   dur: 1.22
@@ -549,33 +517,37 @@ segments:
   clip: /cdn/value.04c76f4380ec8af8bc9b3002f2ff40700d66cb4923c3a4a0e5636b06d031be08.mp3
   show: 1
 - kind: host
-  title: The Duel (Hana)
-  dur: 6.29
-  clip: /cdn/value.7cc5370146b1bcf4e442558f4d2880d7369f9270283a59570954cf958bb97558.mp3
+  title: Dawn Duel (Takeshi)
+  dur: 7.66
+  clip: /cdn/value.184504f1ef46feb669eeec29da586ff03a93293edce084a6897e6eaa643ece2f.mp3
 - kind: host
-  title: The Duel (Takeshi)
-  dur: 3.58
-  clip: /cdn/value.ba18d95ba475eb16f76cdd43d27a4d7ff4aaccd4b6b91fcbb088203ac0f4acc2.mp3
+  title: Dawn Duel (Hana)
+  dur: 4.78
+  clip: /cdn/value.eeda098022a2b013189777dc985a96d7a97b0defdce37a89be5e0738197d876d.mp3
 - kind: host
-  title: The Duel (Hana)
-  dur: 4.85
-  clip: /cdn/value.3ff89c9df1ee4802be9b61fe2ea2a072d14d49341633d801b0fe21e9dc511faa.mp3
+  title: Dawn Duel (Takeshi)
+  dur: 2.45
+  clip: /cdn/value.70b1a4f440076e4c9ae54068611d44ab29dcf36f907c2317fd35e5d15e725eaa.mp3
 - kind: host
-  title: The Duel (Takeshi)
-  dur: 3.58
-  clip: /cdn/value.d31513e94cbfb0f4449d9764228a1a2e497b64a0e8602bb422842de804362ed8.mp3
+  title: Dawn Duel (Hana)
+  dur: 2.14
+  clip: /cdn/value.087371f3ed5686a78095ddc2ab0d4d7fa8e0ce79e4e929b938f077afeebcb472.mp3
 - kind: host
-  title: The Duel (Hana)
-  dur: 5.81
-  clip: /cdn/value.0e9ecc8070e5ebceab704a3b241fae676708be898d42ab1c6510da47399e5876.mp3
+  title: Dawn Duel (Takeshi)
+  dur: 1.49
+  clip: /cdn/value.9cce36aa4f7ae649ae16c0141849298e265a50d4659740c764b4870a2129f54f.mp3
 - kind: host
-  title: The Duel (Takeshi)
-  dur: 5.42
-  clip: /cdn/value.a622ecc09b9832bc542eb8007b409a4997e38a56c2d1df1575e08c0bbc29cb47.mp3
+  title: Dawn Duel (Hana)
+  dur: 5.66
+  clip: /cdn/value.b7d18ab60905976eeaa89d4c84a3397992a774bac4d3142d8bd0aa7c322f058f.mp3
+- kind: host
+  title: Dawn Duel (Takeshi)
+  dur: 2.45
+  clip: /cdn/value.7f7d8ecb1665ce376e9abcf2982819609a666502974e3fdf5820578edcf6cfc4.mp3
 - kind: song
-  title: Illusion
-  dur: 232.65
-  clip: /cdn/music-illusion-live-a-live-remastered-8rttqzfq.mp3
+  title: Musashi Project
+  dur: 266.97
+  clip: /cdn/music-musashi-project-naruto-theme-1oi9ccto.mp3
 - kind: host
   title: Sword and Tea (sound)
   dur: 1.1
@@ -627,6 +599,34 @@ segments:
   clip: /cdn/value.5d78627927291afdc25be1e6fdf1114659636746d8486e76666eb2cb2be3b582.mp3
   show: 1
 - kind: host
+  title: The Duel (Hana)
+  dur: 6.29
+  clip: /cdn/value.7cc5370146b1bcf4e442558f4d2880d7369f9270283a59570954cf958bb97558.mp3
+- kind: host
+  title: The Duel (Takeshi)
+  dur: 3.58
+  clip: /cdn/value.ba18d95ba475eb16f76cdd43d27a4d7ff4aaccd4b6b91fcbb088203ac0f4acc2.mp3
+- kind: host
+  title: The Duel (Hana)
+  dur: 4.85
+  clip: /cdn/value.3ff89c9df1ee4802be9b61fe2ea2a072d14d49341633d801b0fe21e9dc511faa.mp3
+- kind: host
+  title: The Duel (Takeshi)
+  dur: 3.58
+  clip: /cdn/value.d31513e94cbfb0f4449d9764228a1a2e497b64a0e8602bb422842de804362ed8.mp3
+- kind: host
+  title: The Duel (Hana)
+  dur: 5.81
+  clip: /cdn/value.0e9ecc8070e5ebceab704a3b241fae676708be898d42ab1c6510da47399e5876.mp3
+- kind: host
+  title: The Duel (Takeshi)
+  dur: 5.42
+  clip: /cdn/value.a622ecc09b9832bc542eb8007b409a4997e38a56c2d1df1575e08c0bbc29cb47.mp3
+- kind: song
+  title: Illusion
+  dur: 232.65
+  clip: /cdn/music-illusion-live-a-live-remastered-8rttqzfq.mp3
+- kind: host
   title: Swords Down (Takeshi)
   dur: 7.25
   clip: /cdn/value.2ddd855df2765fc1d1823148104945f5a929489c376afca68b01cff67e59f794.mp3
@@ -654,6 +654,51 @@ segments:
   title: Tokyo Roman
   dur: 379.45
   clip: /cdn/music-tokyo-roman-jpop-song-wtwijajp.mp3
+- kind: host
+  title: Hana's Night Watch (Hana)
+  dur: 8.2
+  clip: /cdn/value.565913c0e8cc118d7a68350875c3f211dc97652aca0ef898051842991eda4b01.mp3
+  show: 1
+- kind: host
+  title: Hana's Night Watch (Hana)
+  dur: 6.9
+  clip: /cdn/value.8e36e626974d2ba49967b218019f336a63532473e721c9341db52d14ac40b65c.mp3
+  show: 1
+- kind: host
+  title: Hana's Night Watch (Hana)
+  dur: 7.3
+  clip: /cdn/value.b005ff5e82e081a301bcd02edf51091ea38b7ffc4e8985db64cd2c7e83e47de0.mp3
+  show: 1
+- kind: host
+  title: Hana's Night Watch (Hana)
+  dur: 8.4
+  clip: /cdn/value.28252f36ca73313ce5db949329496146e6a0302039ce9e078f2895610be9d84d.mp3
+  show: 1
+- kind: host
+  title: Hana's Night Watch (Hana)
+  dur: 6.0
+  clip: /cdn/value.4da939e9b9af591e6ece6eff7804431f310db2b58c8950e41740489f1b49fe61.mp3
+  show: 1
+- kind: host
+  title: Hana's Night Watch (Takeshi)
+  dur: 2.6
+  clip: /cdn/value.e72bb2e2ab91ec9ed0adf7b093132e9f0b7bd9baebe7abe63bd2542e639471e8.mp3
+  show: 1
+- kind: host
+  title: Hana's Night Watch (Hana)
+  dur: 4.1
+  clip: /cdn/value.a249134cfd89d60000ddb7688f34efb97740bef355dc6d70961d71f2fe1cf726.mp3
+  show: 1
+- kind: host
+  title: Hana's Night Watch (Takeshi)
+  dur: 2.3
+  clip: /cdn/value.496284bed92f2ffdb6e2ef344cde6012b4c4db343bb86b397b0d2bdf433af1e6.mp3
+  show: 1
+- kind: host
+  title: Hana's Night Watch (Hana)
+  dur: 2.2
+  clip: /cdn/value.3ddbc792513ba3ba65bb07a2467f8403a5775b8e64351658a838c54ce3df095c.mp3
+  show: 1
 - kind: host
   title: Sign-Off (Takeshi)
   dur: 6.7

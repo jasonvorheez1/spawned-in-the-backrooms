@@ -968,5 +968,90 @@
   "clip": "/cdn/value.86e91e2a977174b730af132dc3399bd9fa8aa4181b059cf155ec37d8792c01d3.mp3",
   "dur": 7.9,
   "who": "sprinkles"
+ },
+ "radio-a8c13192a09e": {
+  "clip": "/cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Keep%20writing%2C%20folks.%20I%20read%20every%20one%2C%20out%20loud%2C%20to%20an%20empty%20room.%20It%27s%20less%20empty%20when%20I%20do..mp3",
+  "dur": 6.91,
+  "who": "ralph"
+ },
+ "radio-55f08d534727": {
+  "clip": "/cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-A%20note%20from%20Level%20Eleven%2C%20written%20on%20a%20receipt.%20Ralph%2C%20the%20city%20has%20a%20radio%20station%20now%20and%20it%27s%20you.%20Thanks%20for%20the%20company..mp3",
+  "dur": 8.04,
+  "who": "ralph"
+ },
+ "radio-kyoto-085945ea55cb": {
+  "clip": "/cdn/value.8e36e626974d2ba49967b218019f336a63532473e721c9341db52d14ac40b65c.mp3",
+  "dur": 6.9,
+  "who": "hana"
+ },
+ "radio-c1586ed2cbc4": {
+  "clip": "/cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-And%20one%20in%20crayon%20from%20Level%20Fun.%20It%20says%2C%20come%20to%20my%20party.%20I%27m%20going%20to%20put%20that%20one%20in%20the%20fireplace.%20We%20don%27t%20have%20a%20fireplace.%20I%27ll%20make%20one..mp3",
+  "dur": 9.55,
+  "who": "ralph"
+ },
+ "radio-kyoto-9d19a709bb6c": {
+  "clip": "/cdn/value.565913c0e8cc118d7a68350875c3f211dc97652aca0ef898051842991eda4b01.mp3",
+  "dur": 8.2,
+  "who": "hana"
+ },
+ "radio-a8efb5790ebf": {
+  "clip": "/cdn/voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-Mail%20bag.%20A%20postcard%20from%20Level%20Thirty-Seven.%20It%20says%2C%20the%20water%27s%20lovely%2C%20wish%20you%20were%20here.%20No%20signature.%20Water%20stains%20on%20the%20corners..mp3",
+  "dur": 9.96,
+  "who": "ralph"
+ },
+ "radio-kyoto-28805bb5f932": {
+  "clip": "/cdn/value.e72bb2e2ab91ec9ed0adf7b093132e9f0b7bd9baebe7abe63bd2542e639471e8.mp3",
+  "dur": 2.6,
+  "who": "takeshi"
+ },
+ "radio-kyoto-3954327e108d": {
+  "clip": "/cdn/value.a249134cfd89d60000ddb7688f34efb97740bef355dc6d70961d71f2fe1cf726.mp3",
+  "dur": 4.1,
+  "who": "hana"
+ },
+ "radio-kyoto-607af4ffac35": {
+  "clip": "/cdn/value.b005ff5e82e081a301bcd02edf51091ea38b7ffc4e8985db64cd2c7e83e47de0.mp3",
+  "dur": 7.3,
+  "who": "hana"
+ },
+ "radio-kyoto-e2712d3480d6": {
+  "clip": "/cdn/value.4da939e9b9af591e6ece6eff7804431f310db2b58c8950e41740489f1b49fe61.mp3",
+  "dur": 6.0,
+  "who": "hana"
+ },
+ "radio-kyoto-fbbcaba54ee2": {
+  "clip": "/cdn/value.28252f36ca73313ce5db949329496146e6a0302039ce9e078f2895610be9d84d.mp3",
+  "dur": 8.4,
+  "who": "hana"
+ },
+ "radio-kyoto-e814d736ec80": {
+  "clip": "/cdn/value.496284bed92f2ffdb6e2ef344cde6012b4c4db343bb86b397b0d2bdf433af1e6.mp3",
+  "dur": 2.3,
+  "who": "takeshi"
+ },
+ "radio-kyoto-ef36d1825a26": {
+  "clip": "/cdn/value.3ddbc792513ba3ba65bb07a2467f8403a5775b8e64351658a838c54ce3df095c.mp3",
+  "dur": 2.2,
+  "who": "hana"
+ },
+ "radio-party-928078ce2f07": {
+  "clip": "/cdn/value.eb7264cad0e61998a1a2928b7352d95faf8983111b97d163d950361033b99a80.mp3",
+  "dur": 5.3,
+  "who": "sprinkles"
+ },
+ "radio-party-f69fea2de640": {
+  "clip": "/cdn/value.4cdfb50dfcb78b8285679ef45e091628ad652caecbf8115a5ee0e9e0c8a2a611.mp3",
+  "dur": 5.7,
+  "who": "sprinkles"
+ },
+ "radio-party-abeb8cd8b5d2": {
+  "clip": "/cdn/value.6119a94882843f1353ba2d1e4b7b7cee89f4024bd3f41e0f9e2771f05d894fe1.mp3",
+  "dur": 8.6,
+  "who": "sprinkles"
+ },
+ "radio-party-59e3160b1664": {
+  "clip": "/cdn/value.b04351ee2bf1c9c660d1504104c293c10461054b831e96b4020d3decc685495e.mp3",
+  "dur": 6.9,
+  "who": "sprinkles"
  }
 }
