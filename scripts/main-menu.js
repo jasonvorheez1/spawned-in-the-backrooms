@@ -34,10 +34,11 @@ export function update(ctx) {
   const st = ctx.self.state, ses = ctx.session, place = ctx.self.place?.startsWith("tutorial0") ? "tutorial0" : ctx.self.place // a solo copy is named tutorial0-<id>
   if (!ses.menuMark) {
     ses.menuMark = true
+    const fresh = !st.madeChar && !st.t0Done && !st.savePlace && !(st.xp > 0) // a brand-new player, before any default stats count as play
     if (!st.madeChar && (st.xp || st.lvl || st.level || st.visits)) st.madeChar = true // a save that already played keeps its critter
     // Shelly Nov 17 "ditch the title screen": no title. A new player goes straight to the critter room, the intro, then the tutorial
     if (st.menuKind === "title") { st.menuOpen = false; st.menuKind = "" }
-    if (!st.madeChar && place !== "intake" && place !== "tutorial0" && !st.roomHop && !(ctx.self.tags ?? []).includes("helper")) { // Shelly Nov 17: no custom character at the start: you walk in as your Spawn avatar; a cat is made at the salon later
+    if (fresh && place !== "intake" && place !== "tutorial0" && !st.roomHop && !(ctx.self.tags ?? []).includes("helper")) { // Shelly Nov 17: no custom character at the start: you walk in as your Spawn avatar; a cat is made at the salon later
       if (!st.run) st.run = cleanPick(null)
       st.madeChar = true; if (ctx.self.avatarUrl) st.look = { ...(st.look ?? {}), spawnAv: true, model: "", modelUrl: "" }
       st.arrivePending = true; ctx.cross(ctx.self, "tutorial0"); return ctx.sleep(0.75) }
