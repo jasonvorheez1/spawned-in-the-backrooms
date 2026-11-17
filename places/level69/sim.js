@@ -158,7 +158,7 @@ export function tick(ctx) {
     for (const r of ctx.query({ anyTags: ["l69road", "l69post", "l69stalled"], radius: 1e6, center: { x: 0, y: 0, z: 0 } })) if (!want.has(r.id) && Math.abs(r.feetPosition.z - pos.z) > 200) ctx.destroy(r.id);
   }
   // stepping out starts the clock above; climbing back in stops it
-  if (now - (l.introAt ?? 0) > 9000 && !l.tunnelAt) {
+  if (now - (l.introAt ?? 0) > 13000 && !l.tunnelAt) {
     if (!inCar && !l.outAt) { l.outAt = now; l.creak = false; l.downAt = null; dirty = true; sfx(ctx, p, G("car-door-open-cold-wind-rushes-in"), 0.6); }
     if (inCar && l.outAt) { l.outAt = null; dirty = true; }
   }

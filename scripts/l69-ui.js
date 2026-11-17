@@ -4,14 +4,20 @@ export function l69Ui(ctx, player) {
   if (!String(player?.place ?? "").startsWith("level69")) return "";
   const s = player.state ?? {}, l = s.l69 ?? {}, now = ctx.now(), out = [];
   const t = l.introAt ? (now - l.introAt) / 1000 : 99;
-  if (t < 11) { // 0-3 black, the engine already idling; two lines; 7-11 the black lifts
-    const a = t < 7 ? 1 : Math.max(0, 1 - (t - 7) / 4);
-    const line = (from, to, txt) => { const o = t < from ? 0 : t < from + 0.8 ? (t - from) / 0.8 : t < to - 0.8 ? 1 : Math.max(0, (to - t) / 0.8); return o > 0 ? `<div style="opacity:${o.toFixed(2)};margin:10px 0">${txt}</div>` : ""; };
-    out.push(`<div style="position:fixed;inset:0;background:#000;opacity:${a.toFixed(2)};pointer-events:none;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;font:16px Georgia,serif;letter-spacing:.06em;color:#cfc8b6;text-shadow:0 1px 3px #000">
-      ${line(1.2, 4.6, "An engine, idling. Your hands are on a wheel.")}${line(4.2, 7.6, "You don't remember getting in.")}</div>`);
+  if (t < 13.2) { // the opening: black, then letterbox bars over the shots (scripts/lib/l69-cut.js), the bars draw back at the end
+    const bars = t < 12.2 ? 1 : Math.max(0, 1 - (t - 12.2)), black = t < 1.4 ? 1 : t < 2.4 ? 1 - (t - 1.4) : 0;
+    const line = (from, to, txt, css = "") => { const o = t < from ? 0 : t < from + 0.9 ? (t - from) / 0.9 : t < to - 0.9 ? 1 : Math.max(0, (to - t) / 0.9); return o > 0 ? `<div style="opacity:${o.toFixed(2)};${css}">${txt}</div>` : ""; };
+    out.push(`<div style="position:fixed;inset:0;pointer-events:none;z-index:60">
+      <div style="position:absolute;inset:0;background:#000;opacity:${black.toFixed(2)}"></div>
+      <div style="position:absolute;left:0;right:0;top:0;height:${(11 * bars).toFixed(1)}vh;background:#000"></div>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:${(11 * bars).toFixed(1)}vh;background:#000"></div>
+      <div style="position:absolute;left:0;right:0;top:40%;text-align:center;color:#e6dcc6;text-shadow:0 2px 12px #000">
+        ${line(2.2, 5.6, "LEVEL 69", "font:600 13px Georgia,serif;letter-spacing:.6em;opacity:.85")}${line(2.7, 5.6, "The Road Trip of Affliction", "font:italic 30px Georgia,serif;letter-spacing:.06em;margin-top:8px")}</div>
+      <div style="position:absolute;left:0;right:0;bottom:calc(11vh + 22px);text-align:center;font:16px Georgia,serif;letter-spacing:.06em;color:#d8d0bd;text-shadow:0 1px 6px #000">
+        ${line(6.0, 9.3, "An engine, idling. Your hands are on a wheel.")}${line(9.6, 12.4, "You don't remember getting in.")}</div></div>`);
   }
   const car = player.controlling?.state;
-  if (car && t > 8) {
+  if (car && t > 12.4) {
     const kmh = car.kmh ?? 0, hp = car.hp ?? 100, km = ((car.odo ?? 0) / 1000).toFixed(1);
     const cond = hp > 70 ? "#a9d18e" : hp > 25 ? "#e3b04b" : "#e05a3c";
     const faults = (car.faults ?? []).map((f) => ({ headL: "L HEADLIGHT", pull: "ALIGNMENT", dash: "DASH", window: "GLASS" }[f] ?? f)).join(" · ");
