@@ -10,7 +10,7 @@ pop glint rate=20 on=sphere(.52) life=.25..0.5 v=sdir()*.2 size=.04..0.09 col=hd
 const DUST = `fx
 pop mote rate=18 on=box(9,5,26) life=6..11 v=sdir()*.06 size=.014..0.03 acc=curl(.4)*.07 col=<1,.9,1> a=0>.5:.25>.5:.75>0 r=sprite(mote,alpha)`;
 const SPRAY = `fx
-pop drop rate=22 on=disc(.25) life=.8..1.4 v=up(1.1)+sdir()*.25 size=.03..0.06 acc=vec(0,-2.2,0) col=<.8,.95,1> a=.8>0 sz=$size r=sprite(soft-disc,add)`;
+pop drop rate=22 on=disc(.25) life=.8..1.4 v=up(1.1)+sdir()*.25 size=.03..0.06 acc=<0,-2.2,0> col=<.8,.95,1> a=.8>0 sz=$size r=sprite(soft-disc,add)`;
 
 export function layBonusExtra(ctx) {
   const sp = (id, spec) => { if (!ctx.place.objects?.[id]) ctx.spawn(id, spec); };
