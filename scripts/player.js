@@ -2137,7 +2137,7 @@ function letFly(ctx) {
   }
   // a longer wind-up throws harder: a flick at 60%, full strength after 0.6 s held
   const power = (0.6 + 0.4 * Math.min(1, (now - n.at) / 600)) * hd.throwPower
-  const pc = Math.max(n.kind === 'shock_pad' ? -1.45 : -0.6, Math.min(1.1, s.aimPitch ?? 0)) // a Shock Pad looked straight down drops at your feet, cp = Math.cos(pc), sp = T.speed * power
+  const pc = Math.max(n.kind === 'shock_pad' ? -1.45 : -0.6, Math.min(1.1, s.aimPitch ?? 0)), cp = Math.cos(pc), sp = T.speed * power // a Shock Pad looked straight down drops at your feet
   const vel = { x: f.x * cp * sp, y: Math.sin(pc) * sp + T.lift * power, z: f.z * cp * sp }
   const half = T.size / 2
   ctx.spawn({ tags: ['thrown'], lifetime: 12, feetPosition: eye, ...(T.model ? { model: T.model, layout: { box: { min: { x: -half, y: 0, z: -half }, max: { x: half, y: T.size, z: half } } } } : FRESH_BODY),
