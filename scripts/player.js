@@ -641,6 +641,13 @@ export function onInput(ctx, input) {
   if (input.pressed.inventory) { const sv = ctx.self.state; if (sv.invOpen) sv.invOpen = false; else if (canOpen(sv, ctx.self.place, 'inventory')) openWrist(sv, 'inventory'); sound(ctx, 'flashlight-switch-click', 0.35, true) }
   if (input.pressed.inv && input.actionData?.inv) invAction(ctx, input.actionData.inv)
   if (input.pressed.drink && canOpen(ctx.self.state, ctx.self.place, 'inventory')) { openWrist(ctx.self.state, 'inventory'); ctx.self.state.invTab = 'aid' }
+  if (input.pressed.aim && ctx.self.state.invOpen) { // Shelly Nov 17: right click drops the highlighted item, one at a time
+    const sv = ctx.self.state, sel = String(sv.invSel || '')
+    if (sel && sel !== 'fists' && !sel.startsWith('cloth:') || (sel.startsWith('cloth:') && !(sv.wearing ?? '').includes(sel))) {
+      if (W[sel]?.damage != null && owned(sv).includes(sel)) invAction(ctx, { k: 'drop', w: sel })
+      else if (sel !== 'fresh') invAction(ctx, { k: 'dropItem', t: sel })
+    }
+  }
   for (let slot=0; slot<10; slot++) if (input.pressed['quick'+slot]) { if (ctx.self.state.invOpen) invAction(ctx, { k: 'quickSlot', slot }); else quickUse(ctx, slot) } // in HALOGEN a number key files the picked item there
   if (input.pressed.quickUse) quickUse(ctx, input.actionData?.quickUse?.slot)
   if (input.pressed.compass && canOpen(ctx.self.state, ctx.self.place, 'inventory')) { openWrist(ctx.self.state, 'inventory'); ctx.self.state.invTab = 'misc' }
