@@ -1,5 +1,7 @@
 import{test,expect}from'bun:test'
 import C from'../scripts/lib/data/craft.yml'
+import{staminaFromNeeds,needsStatus}from'../scripts/lib/survival.js'
+import{needsMul}from'../scripts/lib/run-opts.js'
 import{recipeStatus,maxMakes,craftOne,benchAvailable,scrapCount,inputName,CRAFT_LIMIT}from'../scripts/lib/craft.js'
 import{canCarry,inventoryWeight,derived,pickupWeight,carried}from'../scripts/lib/stats.js'
 const player=(scrap={})=>({level:1,xp:0,skl:Array(13).fill(100).join(','),attr:'5,5,5,5,5,5,5',scrap,manuals:'weapons,ammo,aid,tools,armor,food',craftOpen:'bench',ammo:0,shells:0,weapons:''})
@@ -51,7 +53,7 @@ import {craftUi} from '../scripts/craft-ui.js'
 import {canOpen} from '../scripts/lib/screen.js'
 import {CATS} from '../scripts/lib/craft.js'
 const source=readFileSync(new URL('../scripts/craft.js',import.meta.url),'utf8')
-const actionSource=source.slice(source.indexOf('function act('),source.indexOf('export function update('))
+const actionSource=source.slice(source.indexOf('function act('),source.indexOf('export const updateSchedule'))
 function action(grant,reachable=true){
  return Function('C','CATS','recipeStatus','maxMakes','craftOne','CRAFT_LIMIT','canOpen','liveBench','note','heard','SND','SKN','B','takeToken','gain','scrapCount','inputName',actionSource+';return act')(
  C,CATS,recipeStatus,maxMakes,craftOne,CRAFT_LIMIT,canOpen,()=>reachable,(s,ctx,text)=>s.notice={text},()=>{},n=>n,{}, {scrap:{}},grant,ctx=>ctx.self.state.craftXp=true,scrapCount,inputName)
@@ -109,6 +111,19 @@ test('leaving a bench closes crafting even where hunger drain is disabled',()=>{
  for(const place of ['level6','bonus']){const s={...player(),craftBench:'old-bench',hunger:60,thirst:70},ctx=context(s);ctx.self.session={};ctx.self.place=place;run(ctx,.5);expect(s.craftOpen).toBe('');expect(s.craftBench).toBe('');expect(s.hunger).toBe(60);expect(s.thirst).toBe(70)}
 })
 
+test('needs drain gently, heat affects water, and food restores even a single point',()=>{
+ const run=Function('C','liveBench','L21H','gain','takeToken','needsMul',source.slice(source.indexOf('export function update('),source.indexOf('function liveBench(')).replace('export function','function')+';return update')(C,()=>true,{heat:1.35},()=>{},()=>{},needsMul)
+ const make=(place,runOpts)=>{const s={...player(),craftOpen:'',hunger:100,thirst:100,hp:80,sanity:70,run:runOpts},ctx=context(s);ctx.self.session={};ctx.self.place=place;return {s,ctx}}
+ const a=make('main');run(a.ctx,1800);expect(a.s.hunger).toBe(68);expect(a.s.thirst).toBe(50)
+ const hot=make('level21');run(hot.ctx,1800);expect(hot.s.hunger).toBe(a.s.hunger);expect(hot.s.thirst).toBeLessThan(a.s.thirst)
+ a.s.hunger+=1;run(a.ctx,.5);expect(a.s.hunger).toBe(69)
+ const empty=make('main');empty.s.hunger=0;empty.s.thirst=0;run(empty.ctx,60);expect(empty.s.hp).toBe(80);expect(empty.s.sanity).toBe(70)
+ const off=make('main',{needs:'off'});off.s.hunger=0;off.s.thirst=0;run(off.ctx,60);expect(off.s.hp).toBe(80);expect(staminaFromNeeds(off.s)).toBe(1);expect(needsStatus(off.s)).toBe('Needs off')
+ expect(staminaFromNeeds({hunger:100,thirst:100})).toBe(1.08)
+ expect(staminaFromNeeds({hunger:20,thirst:100})).toBe(.9)
+ expect(staminaFromNeeds({hunger:0,thirst:0})).toBeCloseTo(.64)
+})
+
 test('recipes stay locked until a manual teaches them, one random recipe per manual',async()=>{
  const{learnFromManual,unknownOfKind}=await import('../scripts/lib/manuals.js')
  const s=player({wire:1,nails:1});s.manuals=''
@@ -141,7 +156,7 @@ test('locked recipes are refused by the action and marked in the menu',()=>{
  action(()=>{calls++;return{ok:true}})(ctx,s,{k:'make',id:'bobbypin',n:1})
  expect(calls).toBe(0);expect(s.scrap.wire).toBe(1);expect(s.notice.text).toContain('Tinkerer')
  const html=craftUi({},{state:{...s,craftOpen:'hand',hunger:100,thirst:100}})
- expect(html).toContain('LOCKED');expect(html).toContain('Recipes known 0/')
+ expect(html).toContain('LOCKED');expect(html).toContain('recipes ready')
 })
 test('cooked meals take raw meat and carried food as ingredients',()=>{
  const s=player();s.craftStation='cook';s.meat={spam:1,rat:1};s.snacks={beans:2}
