@@ -22,7 +22,7 @@ export function tick(ctx) {
     } }
   tick.have ??= new Set(ctx.query({ tags: ["l325f"], radius: 1e6, center: { x: 0, y: 0, z: 0 } }).map((o) => o.id));
   for (const id of [...tick.have]) if (!want.has(id) && !ctx.place.objects[id]?.state?.dead) { if (ctx.place.objects[id] && !ctx.place.objects[id].state?.fled) ctx.destroy(id); tick.have.delete(id); }
-  for (const [id, w] of want) { if (tick.have.has(id) || ctx.place.objects[id]) continue;
+  for (const [id, w] of want) { if (ctx.place.objects[id]) continue;
     const look = npcLook(id, { species: "faceling", sex: w.k ? "m" : "f", botw: "pants", shoes: "boots", ...WEAR[w.k] }, "wanderer", 3);
     ctx.spawn(id, { ...critterSpec(look), tags: ["npc", "faceling", "l325f", "l325foe", "enemy"], feetPosition: w.pos, physics: { body: "kinematic", collider: "capsule" },
       behavior: ["scripts/humanoid-locomotion.js", "scripts/l325-faceling.js"],
