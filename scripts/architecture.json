@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 10276,
-  "updatedAt": "2026-11-17T12:05:49.144Z",
-  "summary": "Spawned in the Backrooms is a persistent survival RPG spanning Level 0, the Hub and authored Backrooms destinations. Character progression and gear live in player.state while Solo/Multiplayer story state is switched separately; shared player behaviors and quest systems connect the places. Level 21 Numbered Doors is a shifting hotel-like danger maze linking Level 13 and Level 22, alongside Level 22 Emstable and the Level 69 highway route.",
+  "basedOnSpecVersion": 10321,
+  "updatedAt": "2026-11-17T12:39:48.080Z",
+  "summary": "Spawned in the Backrooms is a persistent survival RPG spanning Level 0, the Hub and authored Backrooms destinations. Character progression and gear live in player.state while Solo/Multiplayer story state is switched separately; shared player behaviors, quests and local place sims connect the world. The HALOGEN and environmental radios share a station clock, and Level 21 now routes to Radio Backrooms as well as its existing destinations.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes and anomalies; Bonus Rooms door is north of the waking point in x0z0.",
@@ -12,10 +12,10 @@
     "places/levelrun (solo ephemeral) - Level ! hospital chase, hazards, pursuers, intro/retry/rescue cuts and Safe Alcove.",
     "places/level325 (3D) - Boom Town; sim lays Wren Adeyemi's M.E.G. survey camp and Level 69 sedan beside her.",
     "places/level69 (solo ephemeral) and places/level22 (solo ephemeral) - highway slices and car route to Level 11/22, then Emstable decks, hazards, quest and return route.",
-    "places/doors21 (3D) - Level 21 · Numbered Doors: hotel square, four shifting numbered-door halls, dead-end bays, closets, nests and dark EXIT wing; Concierge and Hall Wardens live here."
+    "places/doors21 (3D) - Level 21 · Numbered Doors: hotel square, four shifting numbered-door halls, dead-end bays, closets, nests and dark EXIT wing; Concierge and Hall Wardens live here, and a RADIO door targets radio."
   ],
   "roots": [
-    "world.config.yaml + templates/player.js - multiplayer/player entry, camera and ordered player behavior/actions; shared locomotion, interaction, combat, inventory, social and quest stack.",
+    "world.config.yaml + templates/player.js - multiplayer/player entry, camera and ordered player behavior/actions; scripts/ui.js and lib/screen.js compose the HUD and mutually exclusive panels.",
     "templates/player.js inserts scripts/god-kit.js before scripts/player.js - builder-only god-mode toggle and refill precede core player update/death handling.",
     "scripts/main-menu.js + scripts/lib/run-opts.js - per-player arrival, fresh-character and mode/run routing; main-menu-ui.js renders title/pause and expedition settings.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, static placements and generation/tick behavior; sims also run environmental and sign/surface passes.",
@@ -25,21 +25,21 @@
     "scripts/l21d-hall-geo.js + scripts/lib/l21d-layout.js + scripts/lib/data/l21d.yml + scripts/lib/data/l21d-kit.json - procedural geometry/layout, authored door/foe numbers and uploaded prop/model catalog used by doors21 sim."
   ],
   "shared": [
-    "scripts/lib/level69-quest.js - Wren dialogue choices/handler and beacon planting; used by talk/dialogue wiring and scripts/l69-post.js.",
-    "scripts/lib/level22-quest.js - Level 22 exploration/record quest state, journal synchronization and Wren turn-in; used by sim, l22-record.js, npc-starters.js and talk.js.",
+    "scripts/lib/level69-quest.js + scripts/lib/level22-quest.js - Wren dialogue/progression, beacon planting and Emstable exploration/record goals; consumed by talk, place sims and level-specific props.",
     "scripts/lib/doors21-quest.js - Level 21 Concierge quest definitions/progression, local NPC upkeep, dialogue choices and per-player objective stepping; used by doors21 sim, npc-starters.js, talk.js and Hub Okafor dialogue.",
-    "scripts/lib/places.js - canonical place names/labels/HUD titles and valid atlas destinations; consumed by feed, quests and scripts/ui.js; includes doors21, Levels 22 and 69.",
+    "scripts/lib/radio-quest.js + scripts/lib/data/dlg-radio.yml - Ralph's song requests, Milk for Ralph trade/secrets and guest spot; wired through npc-starters.js, talk.js and dialogue.js.",
+    "scripts/lib/screen.js + scripts/lib/wrist-nav.js + scripts/lib/ui-theme.js - shared panel-state decisions, wrist tabs and journal-style panel styling; player behaviors and UI panels reuse them.",
+    "scripts/lib/places.js - canonical place names/labels/HUD titles and valid atlas destinations; consumed by feed, quests and scripts/ui.js; now includes radio / Radio Backrooms.",
     "scripts/lib/levelrun-mechanics.js + levelrun-dress.js + levelrun-cut.js - Level ! corridor/hazard rules, hospital dressing and intro/retry/blackout/rescue cuts shared by run components.",
-    "scripts/lib/l69-cut.js - L69_INTRO_LEN and player-local opening-camera sequence; lazily loaded and driven by scripts/main-menu.js.",
     "scripts/lib/survival.js + scripts/lib/afk.js - needs-aware stamina recovery/status and AFK tracking; player.js, craft.js and craft-ui.js consume them.",
     "scripts/lib/grid-path.js - configurable 4-neighbor grid BFS/cache/cell selection shared by Level 0, 1, 2, 2.1, 3, Boiler and 6 adapters."
   ],
   "notableExports": [
     "places/doors21/sim.js - cadence, tick; scripts/l21d-door.js - ears.press; scripts/l21d-foes.js - ears.noise, update; scripts/l21d-hole.js - onTriggerEnter.",
-    "scripts/lib/l21d-layout.js - PLACE, dimensions/timing, hall/door/shift/warp/wing/arrival layout helpers; scripts/lib/l21d-body.js - CLIPS, foeBody; scripts/lib/l21d-hall-geo.js - geometry.",
+    "scripts/lib/l21d-layout.js - PLACE, dimensions/timing, hall/door/shift/warp/wing/arrival helpers incl. closestWanderer and RADIO target; scripts/lib/l21d-body.js - CLIPS, foeBody; scripts/lib/l21d-hall-geo.js - geometry.",
     "scripts/lib/doors21-quest.js - CONCIERGE, OKAFOR, TRAY_DOOR, QA/QB/QC, keepPeople21, l21dChoices, handleDialogueQuestD21, questTick21, stepPlayer21.",
     "scripts/l22-use.js - ears.press; scripts/l22-exit.js - onTriggerEnter; places/level22/sim.js - cadence, tick.",
-    "scripts/lib/level69-quest.js - WREN, Q69, plantBeacon, l69Choices, handleDialogueQuest69; scripts/lib/l69-road-geo.js - geometry, collider.",
+    "scripts/lib/level69-quest.js - WREN, Q69, plantBeacon, l69Choices, handleDialogueQuest69; scripts/lib/radio-quest.js - RALPH, SONGS, QM, keepRadio, radioChoices, handleDialogueQuestRadio.",
     "scripts/lib/level22-quest.js - Q22, startL22, noteFloor, noteRecord, l22Choices, handleDialogueQuest22; scripts/lib/l22-layout.js - deck, cut, panel and zone geometry constants/helpers.",
     "scripts/god-kit.js - onInput, update; templates/player.js - player; scripts/lib/places.js - PLACES, PLACE_NAMES, PLACE_LABELS, LEVEL_TITLES.",
     "scripts/lib/stats.js - derived, carried, inventoryWeight, canCarry/canCarryAll, burden and stat/weight helpers; scripts/lib/loot.js - rollItemL21, rollWeaponL1 and shared loot helpers."
@@ -51,32 +51,33 @@
     "scripts/db.js + scripts/main-menu.js - named save-slot snapshots and hidden Solo/Multiplayer mode snapshots; live character state remains player.state.",
     "scripts/main-menu.js writes solo run.needs/run.sanity switches; scripts/player.js applies needs/sanity drains and scales stamina recovery through scripts/lib/survival.js.",
     "scripts/lib/hub.js noteAtlas, called by scripts/player.js on arrival - player.state.atlas first-seen dates/visit counts; place sims own local texV/signTexV completion stamps.",
-    "scripts/lib/doors21-quest.js owns player.state.l21d quest/objective counters and quest completion/payouts; doors21 sim owns local layout epoch/objects/dead foe tracking, while player.state.l21d evidence feeds quest progression.",
-    "scripts/lib/level69-quest.js owns player.state.l69q and l69planted; Level 69 sim owns player.state.l69 intro/seat/tunnel/encounter timing and local stream/ghost schedule state; Level 22 quest state is separately l22q."
+    "scripts/lib/doors21-quest.js owns player.state.l21d quest/objective counters and payouts; doors21 sim owns local layout epoch/objects/dead-foe tracking, while player.state.l21d evidence feeds quest progression.",
+    "scripts/lib/level69-quest.js, scripts/lib/level22-quest.js and scripts/lib/radio-quest.js own player quest fields l69q/l69planted, l22q and radiomq/radioq/radioSecrets/radioReq/radioGuest respectively; each place sim owns its local encounter/layout state."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered player behavior stack for locomotion, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter, phone, emote and god mode.",
+    "world.config.yaml actions → templates/player.js ordered player behavior stack for locomotion, interaction, combat, inventory, social, hub, camera, quests, CCTV, radio, barter, phone, emote and god mode.",
     "templates/player.js god-kit.js onInput handles configured U/godMode → editor player.state.god and gear grant; update refills survival values before scripts/player.js core update.",
     "scripts/fall-guard.js holds velocity across place changes for ground streaming; grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; camera uses worldFeetPosition for parented/seated bodies.",
     "Fresh player detected in scripts/main-menu.js → intake/creator then solo laundromat; scripts/lib/laundromat-cut.js plays opening and crosses to tutorial0; tutorial sim/lib/tutorial drive room and guidance.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
     "scripts/lib/run-opts.js mpRoom/toSolo → party or personal room; scripts/bonus-door.js → hub.toHub; Bonus glass hall scripts/bonus-l0-exit.js sets bonusBack and routes toSolo(main), then main-menu places player outside return door.",
-    "Level 3 door or Boom Town sedan → Level 69 solo instance; Level 69 sim seats player/starts car, streams road and beacon posts; l69-car controls driving, l69-ui reads player.state.l69, and l69-post → level69-quest plants beacon.",
-    "Level 69 sim repeats the left tunnel to Level 11 and right ramp to Level 22; right ramp transfers the dead car as l22car, Level 22 lays it in Emstable and the rubble exit returns to Level 21 only after floor 21 is visited.",
+    "Level 3 door or Boom Town sedan → Level 69 solo instance; Level 69 sim seats player/starts car, streams road and beacon posts, and repeats the Level 11/22 ramps; l69-car controls driving and l69-post → level69-quest plants beacon; right ramp transfers l22car to Emstable.",
     "Level 13 sim's whining tear → doors21; Level 21 numbered exit door 13 → level13; west hall floor hole and scripts/l21d-hole.js → Level 22 rubble arrival; Level 22 bottom-floor rubble exit → Level 21 ARRIVE22.",
-    "Level 21 door ears.press opens/dispatches exit, dark-wing, back and warp doors; l21d-layout determines targets and four-minute epoch; doors21 sim ticks layout/shifts/quests, and l21d-foes uses l21d-body.foeBody meshes (including the -Z-facing clicker) and code motion while reacting to noise events.",
-    "Level 21 Concierge dialogue via npc-starters/talk → l21dChoices/handleDialogueQuestD21; doors21 sim keepPeople21/questTick21 and door visit/foe counters advance quests; Okafor or Concierge handles turn-in/dialogue outcomes."
+    "Level 21 door ears.press opens/dispatches exit, dark-wing, back, warp and RADIO doors; l21d-layout determines targets and four-minute epoch; doors21 sim ticks layout/shifts/quests, and l21d-foes uses l21d-body foe meshes.",
+    "Level 21 Concierge dialogue via npc-starters/talk → l21dChoices/handleDialogueQuestD21; doors21 sim keepPeople21/questTick21 and door visit/foe counters advance objectives; Okafor or Concierge handles turn-in/dialogue outcomes.",
+    "HALOGEN radio action → scripts/radio.js toggles saved player.state.radioOn/station and radioOpen; lib/screen.js arbitrates the wrist tab, scripts/ui.js lazy-renders radio-ui.js, and lib/radio.js supplies synchronized station segments to the player-local audio child.",
+    "scripts/world-radio.js reads the same lib/radio.js station clock for placed radios, adding local static/dropouts; radio-quest choices from npc-starters and handleDialogueQuestRadio in talk consume snacks.milk, while dialogue.js loads dlg-radio.yml."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
-    "scripts/lib/data/weapons.yml + scripts/player.js + ballistics.js + knock.js + loot.js - weapon variants share combat, rarity/level gates and loot; the Nov 17 batch adds six level-gated rollable weapons and three placed uniques, with meshes/holds in weapon-look.js and first-person swing styles in vmpose.js.",
-    "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry; Level 21 composes generated leaves with its own door rules.",
+    "scripts/lib/data/weapons.yml + scripts/player.js + ballistics.js + knock.js + loot.js - weapon variants share combat, rarity/level gates and loot; weapon-look.js maps appearance, including recent level-gated weapons, placed uniques and the craftable Shock Pad.",
+    "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry; Level 21 composes generated leaves with its own layout.",
     "scripts/crawl.js + scripts/player.js + humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "scripts/lib/sleep.js + scripts/interact.js + scripts/rest.js + scripts/l178-prop.js - common bed detection/entry, with ordinary rest and Kyoto futon crossing as distinct outcomes.",
     "scripts/lib/l169-road.js + l169-road-geo.js + l169-travel.js + l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
-    "places/levelrun/sim.js + scripts/lib/levelrun-mechanics.js - obstacle/hazard corridor varies by position, period and obstacle kind; Agility/stim alter movement/stamina and horde speed.",
-    "places/doors21/sim.js + scripts/lib/l21d-layout.js + l21d-hall-geo.js + scripts/lib/l21d-body.js + scripts/l21d-door.js - four numbered halls and static dark wing share generated geometry/foe rules; layout/data vary bays and dress, while foeBody selects sculpt/forward axis and l21d-foes animates clipless bodies in code."
+    "scripts/lib/radio.js + scripts/radio.js + scripts/world-radio.js - stations share a room-clock timeline; HALOGEN playback is player-local, while world receivers vary by station, reach and reception noise.",
+    "places/doors21/sim.js + scripts/lib/l21d-layout.js + l21d-hall-geo.js + scripts/lib/l21d-body.js + scripts/l21d-door.js - four numbered halls and static dark wing share generated geometry/foe rules; layout/data vary bays and dress, including the RADIO destination."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists; Level 26 placements/barrage use uploaded models.",
@@ -92,6 +93,6 @@
     "Level ! uses places/levelrun/config.yaml solo/ephemeral; CORRIDOR and its 26 m chunk/door generation come from scripts/lib/levelrun-mechanics.js; keep sim geometry and hazard/pursuit/midpoint/collapse/exit depths aligned.",
     "Level 69 slices are 40 m along -Z; the left Level 11 tunnel and right Level 22 ramp repeat every 60 slices (2.4 km), with exits at slice offsets 55 and 28. Preserve the modulo-based sign, tunnel/ramp geometry and streamed slice positions.",
     "Level 22 layout uses FF=3.2 m floor spacing; scripts/lib/l22-layout.js defines six tiered decks, Cuts, mine/pit and exit, while per-player fallen state in l22 changes panel generation; quest progress is separately in l22q.",
-    "Level 21 layout dimensions/timing live in scripts/lib/l21d-layout.js: 8 m door bays, 40 bays per 320 m hall, shifts every 240000 ms; foyer/dark wing is at z=2000 and static. In scripts/lib/l21d-body.js the replacement clicker mesh faces -Z while other bodies default to +X; foeBody carries that per-mesh forward axis into its model spec."
+    "Level 21 uses 8 m door bays, 40 bays per 320 m hall, shifts every 240000 ms; foyer/dark wing is at z=2000 and static. HALOGEN screen flags are mutually exclusive via lib/screen.js; radioOn/station are saved player settings, but its player-local audio and world-radio reception use the shared station clock."
   ]
 }
