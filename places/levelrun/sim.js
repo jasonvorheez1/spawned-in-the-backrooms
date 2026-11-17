@@ -362,6 +362,11 @@ export function tick(ctx) {
   // Trigger intro once for fresh runners arriving in intake
   for (const p of players) {
     const ps = p.state ?? {};
+    st.seen ??= {};
+    if (!st.seen[p.id]) { // a fresh solo copy: whatever an earlier run left on you starts over (intro, blackout, scares, the shot)
+      st.seen[p.id] = 1;
+      Object.assign(ps, { lrunIntroDone: 0, lrunRescued: 0, lrunMid: 0, lrunScare: 0, lrunAdrenOn: 0, lrunAdren: 0, lrunRetry: 0, lrunCut: null });
+    }
     if (ps.dead || (ps.hp ?? 1) <= 0) { // Shelly Nov 17: dying restarts the run, the music from the top
       if (!ps.lrunRescued && (chase.active || ps.lrunIntroDone)) {
         chase.active = false; chase.gateOpen = false; chase.hordeZ = 4.5;
