@@ -20,12 +20,14 @@ function stop(ctx) {
   if (s.emoteTp === false) st.tp = false
   s.emoteTp = null
   if (s.emoteSheath) { st.sheathed = false; s.emoteSheath = false }
+  if (s.emoteEq) { st.equipped = s.emoteEq; s.emoteEq = null }
 }
 function play(ctx, row) {
   stop(ctx)
   const me = ctx.self, st = me.state, s = me.session
   st.emote = row.id; s.emoteRow = row; s.emoteUpper = false
   me.anim.emote = SPIN(row)
+  if (st.equipped && st.equipped !== 'fists') { s.emoteEq = st.equipped; st.equipped = 'fists' } // the gun leaves your hands for the dance
   if (!st.sheathed) { st.sheathed = true; st.sheathAt = ctx.now() - 1000; s.emoteSheath = true } // both hands free to dance
   s.emoteTp = !!st.tp; st.tp = true // third person while it plays, put back after
   if (row.face) st.face = { expr: row.face, until: ctx.now() + 600000, emote: true }
