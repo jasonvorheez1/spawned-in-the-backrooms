@@ -1,5 +1,5 @@
 // Builders' god mode (Shelly, Nov 17: "builders should have access to god mode with every single weapon and armor").
-// J toggles it, builders only. On: every weapon in weapons.yml, one of every armor garment (dr > 0) into the bag, ammo and
+// U toggles it, builders only. On: every weapon in weapons.yml, one of every armor garment (dr > 0) into the bag, ammo and
 // throwables stocked, and hp/sanity/needs held full each tick so nothing hurts. Off: the gear stays, damage counts again.
 // Sits before scripts/player.js in the player stack, so its refill lands before the death check reads hp.
 import W from './lib/data/weapons.yml'
@@ -24,7 +24,7 @@ export function onInput(ctx, input) {
   if (!me.isEditor) return
   s.god = !s.god
   if (s.god) grant(s)
-  s.notice = { text: s.god ? 'God mode on · every weapon and armor in your bag (I) · nothing can hurt you · J to turn off' : 'God mode off', at: ctx.now() }
+  s.notice = { text: s.god ? 'God mode on · every weapon and armor in your bag (I) · nothing can hurt you · U to turn off' : 'God mode off', at: ctx.now() }
   ctx.emit('playSound', { clip: s.god ? '/cdn/moodboard-toon-vibrant/sfx-power-up-shimmer-rise.mp3' : '/cdn/moodboard-toon-vibrant/sfx-power-down-soft-fall.mp3', volume: 0.5 }, { audience: { player: me.id } })
 }
 export function update(ctx) {

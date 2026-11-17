@@ -163,7 +163,7 @@ inputs:
     emotePick: {}
     godMode:
       keys:
-        - j
+        - u
       touch:
         button: false
     dress: {}
