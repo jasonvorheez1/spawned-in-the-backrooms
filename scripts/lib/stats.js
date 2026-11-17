@@ -143,7 +143,7 @@ export function derived(s, nowMs) {
     staMax: Math.max(40, 100 + (a.a - 5) * 8),
     staRegen: Math.max(0.25, (1 + (a.a - 5) * 0.05) * (1 + (dv.stamRegen ?? 0))),
     hpRegen: Math.max(0, (a.e - 4) * 0.12), // hp per second out of a fight
-    carry: s?.god ? Infinity : D.carryBase + a.h * D.carryPerH + (s?.carryBonus ?? 0) + (s?.carryExtra ?? 0) + (dv.carryMax ?? 0), // carryExtra: a fixed per-player grant (Shelly asked 999999)
+    carry: s?.god ? Infinity : D.carryBase + a.h * D.carryPerH + Math.max(0, (s?.level ?? 1) - 1) * (D.carryPerLevel ?? 2) + (s?.carryBonus ?? 0) + (s?.carryExtra ?? 0) + (dv.carryMax ?? 0), // carryExtra: a fixed per-player grant (Shelly asked 999999)
     speed: Math.max(0.55, (1 + (a.a - 5) * 0.025) * (1 + (dv.moveSpeed ?? 0))),
     swing: 1 - (a.a - 5) * 0.03 - (k.unarmed - 15) * 0.0015,
     reload: Math.max(0.5, 1 - (a.a - 5) * 0.03 - (k.guns - 15) * 0.002),

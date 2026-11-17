@@ -13,6 +13,7 @@ wearMul: 1.4        # weapon condition lost per use (scripts/lib/condition.js)
 # Carrying
 carryBase: 26       # kg: carryBase + hardiness * carryPerH (it was 30 + 5 each)
 carryPerH: 4.5
+carryPerLevel: 2  # Nov 17, Shelly: "through leveling up you should increase carry weight too". kg per level past 1 (Savi's pick: level 20 carries +38 kg)
 
 # ---- Nov 17 rebalance (Savi's pick): the place curve. A place listed here uses its own hp multiplier IN PLACE OF enemyHp, and its dmg rides on top of enemyDmg
 # (scripts/lib/stats.js npcState / npcMul). A place not listed keeps enemyHp and dmg 1, exactly as before.
