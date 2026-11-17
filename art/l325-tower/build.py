@@ -30,10 +30,12 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 subprocess.run(["python3", HERE + "/tex.py", TMP], check=True)
 
 def template(faces, is_rebar, wx, wz, y0, y1, body_top):
+    allv = [v for co, c in faces for v in co]
     cls = [("rebar" if is_rebar(c, co) else "concrete") for co, c in faces]
     cv = [v for (co, c), s in zip(faces, cls) if s == "concrete" for v in co]
     zmin = min(v.z for v in cv); ztop = max(v.z for v in cv) if body_top else max(v.z for co, c in faces for v in co)
-    mid = [v for v in cv if v.z > zmin + 0.08 * (ztop - zmin)] or cv
+    mid = ([v for v in cv if v.z > zmin + 0.08 * (ztop - zmin)] or cv) if body_top else allv
+    if not body_top: zmin = min(v.z for v in allv)
     ax, bx = min(v.x for v in mid), max(v.x for v in mid); ay, by = min(v.y for v in mid), max(v.y for v in mid)
     out = []
     for (co, c), s in zip(faces, cls):
@@ -41,7 +43,7 @@ def template(faces, is_rebar, wx, wz, y0, y1, body_top):
     print("TEMPLATE", len(out), "rebar", cls.count("rebar"), "concrete", cls.count("concrete"))
     return out
 COL = template(T["col"], lambda c, co: float(c.mean()) < 0.42, 0.6, 0.6, 0.25, ST, True)
-CAP = template(T["pilecap"], lambda c, co: float(c[0] - c[2]) > 0.10, 1.5, 1.5, -0.2, 0.4, False)
+CAP = template(T["pilecap"], lambda c, co: float(c[0] - c[2]) > 0.10, 1.2, 1.2, -0.2, 0.4, False)
 
 class K:
     def __init__(s):
@@ -188,7 +190,7 @@ def foundation(k):
         for x, z in ((t, -2.87), (t, 2.87), (-2.87, t), (2.87, t)): k.bar("rebar", (x, 0.1, z), (x, 0.4, z), 0.014)
     for x in P:
         for z in P:
-            if (x, z) != (0.0, 0.0): k.stamp(CAP, x, z)
+            if (x, z) != (0.0, 0.0): k.stamp(CAP, max(-11.4, min(11.4, x)), max(-11.4, min(11.4, z)))
 
 MATS = []
 for sl in SLOTS:
@@ -213,6 +215,9 @@ def finish(k, name, proof=True):
     bpy.ops.export_scene.gltf(filepath=f"{OUT}/{name}.glb", use_selection=True, export_apply=True, export_yup=True, export_image_format="JPEG")
     if proof: render(o, name, mn, mx)
     if name == "floor": walk(me)
+    if name == "columns":
+        cam.location = (-11.68 + 2.2, 11.68 - 3.2, 2.6); cam.rotation_euler = (Vector((-11.68, 11.68, 2.2)) - cam.location).to_track_quat('-Z', 'Y').to_euler()
+        sc.render.filepath = f"{TMP}/proof_columns_d.png"; bpy.ops.render.render(write_still=True)
     o.select_set(False); bpy.data.objects.remove(o)
 
 sc = bpy.context.scene; sc.render.engine = "CYCLES"; sc.cycles.samples = 12; sc.render.resolution_x = sc.render.resolution_y = 640
