@@ -490,6 +490,15 @@ export function useSnack(ctx, token) { // consume one from the bag
     if (v.warm) s.chill = Math.max(0, (s.chill ?? 0) - v.warm) // Level 70 cold (scripts/lib/level70-quest.js)
     if (v.drunk) { s.drunk = Math.min(100, (s.drunk ?? 0) + v.drunk); s.drunkAt = now }
     if (v.stamina) { const w = walkOf(ctx); w.stamina = Math.min(L.stamina * 2, (w.stamina ?? s.stamina ?? 0) + v.stamina) }
+    if (token === 'stim_shot') { // Shelly Nov 17: "massively improve adrenaline": the jab is an event (ui.js draws the pulse from s.adrenAt)
+      s.adrenAt = now; s.invOpen = false
+      const me = { audience: { player: ctx.self.id } }
+      ctx.emit('slowMo', { scale: 0.35, duration: 0.7 }, me); ctx.emit('screenFlash', { color: '#fff4e0', duration: 0.5, intensity: 0.7 }, me)
+      ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: 0 }, intensity: 1.2 }, me); ctx.emit('screenShake', { intensity: 0.35, duration: 0.6 }, me)
+      ctx.emit('playSound', { clip: '/cdn/moodboard-realistic-gritty/sfx-auto-injector-pen-click-and-hiss-into-thigh.mp3', volume: 1 }, me)
+      ctx.emit('playSound', { clip: '/cdn/moodboard-gothic-horror/sfx-sharp-gasp-then-heartbeat-pounding-fast-in-ears-25-seconds.mp3', volume: 0.9 }, me)
+      const w = walkOf(ctx); w.stamina = L.stamina * 2
+    }
     if (v.stopBleed) s.bleedStopAt = now
     if (v.clearDebuffs) clearEffects(s, (e) => e.positive === false)
     if (v.mods && v.durationGameMin) {

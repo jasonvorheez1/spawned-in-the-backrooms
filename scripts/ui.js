@@ -218,6 +218,15 @@ function sniperScope(s, wp) {
 
 // camp chatter: the line an npc is saying floats over its head while it lasts (chatter.js writes state.line)
 // the doorway transition: black that fades off the new level, its name in the middle
+// the adrenaline jab (scripts/player.js stim_shot): 25 s of a pulse at the screen's edge, beating fast then slowing, the world tunnelled
+function adrenFx(s, now) {
+  const e = (now - (s.adrenAt ?? -1e12)) / 1000; if (e < 0 || e > 25) return ''
+  const fade = e > 21 ? (25 - e) / 4 : 1, bpm = 170 - e * 2.4, beat = (60 / bpm).toFixed(3)
+  return `<style>@keyframes adrB{0%,100%{opacity:.25}12%{opacity:1}24%{opacity:.45}36%{opacity:.85}}@keyframes adrIn{from{opacity:0;transform:scale(1.15)}to{opacity:1;transform:scale(1)}}</style>
+  <div style="position:absolute;inset:0;pointer-events:none;opacity:${fade.toFixed(2)}"><div style="position:absolute;inset:-4%;animation:adrIn .5s ease-out both;animation-delay:-${e.toFixed(2)}s">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 42%,rgba(255,236,200,.10) 62%,rgba(150,0,10,.55) 100%);animation:adrB ${beat}s ease-out infinite"></div>
+  <div style="position:absolute;inset:0;box-shadow:inset 0 0 90px 30px rgba(255,40,40,.35);mix-blend-mode:screen;animation:adrB ${beat}s ease-out infinite;animation-delay:.05s"></div></div></div>`
+}
 function xferCard(s, now) {
   const x = s.xfer; if (!x) return ''
   const age = (now - x.at) / 1000; if (age < 0 || age > 5.4) return ''
@@ -530,7 +539,7 @@ function renderHud(ctx, player) {
 ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','journal'].includes(screen(s,player.place))}" style="position:fixed;inset:0;pointer-events:none;overflow:hidden">
   ${halogen ? questTracker(s, player, ctx) : ''}
   ${halogen && !s.building && screen(s,player.place)==='play' ? quickBar(s,quick) : ''}
-  ${s.nvgOn ? `<div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(0.75 0.2 145 / .10) 35%,oklch(0.08 0.05 145 / .92) 78%);mix-blend-mode:normal"></div><div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,oklch(0.6 0.2 145 / .08) 0 1px,transparent 1px 3px)"></div><div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);color:#7cf08a;font-size:12px;letter-spacing:.3em;opacity:.8">NV · ${Math.round(s.battery)}%</div>` : ''}${xferCard(s, now)}${tutUi(s, now, player)}${s.t0fade && ((now - s.t0fade <= 3000 && now - s.t0fade >= -100) || String(ctx.place?.id ?? '').startsWith('tutorial0')) ? (lazy('cut', () => import('./cutscene-ui.js'))?.t0Fade?.(ctx, player) ?? '') : ''}${restUi(ctx, s)}${s.mj?.seats ? (lazy('mahjong', () => import('./mahjong-ui.js'))?.mahjongPanel?.(s, now) ?? '') : ''}
+  ${s.nvgOn ? `<div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(0.75 0.2 145 / .10) 35%,oklch(0.08 0.05 145 / .92) 78%);mix-blend-mode:normal"></div><div style="position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,oklch(0.6 0.2 145 / .08) 0 1px,transparent 1px 3px)"></div><div style="position:absolute;top:18px;left:50%;transform:translateX(-50%);color:#7cf08a;font-size:12px;letter-spacing:.3em;opacity:.8">NV · ${Math.round(s.battery)}%</div>` : ''}${adrenFx(s, now)}${xferCard(s, now)}${tutUi(s, now, player)}${s.t0fade && ((now - s.t0fade <= 3000 && now - s.t0fade >= -100) || String(ctx.place?.id ?? '').startsWith('tutorial0')) ? (lazy('cut', () => import('./cutscene-ui.js'))?.t0Fade?.(ctx, player) ?? '') : ''}${restUi(ctx, s)}${s.mj?.seats ? (lazy('mahjong', () => import('./mahjong-ui.js'))?.mahjongPanel?.(s, now) ?? '') : ''}
   ${chatBubbles(ctx, now, player)}
   ${sniperScope(s, wp)}
   <!-- Center Point (hidden during ADS for true ironsights aiming) -->

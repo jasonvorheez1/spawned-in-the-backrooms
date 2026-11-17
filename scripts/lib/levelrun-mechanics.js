@@ -54,8 +54,8 @@ export function agilityProfile(state) {
   const adr = (state?.effects ?? []).some((e) => e?.stackingGroup === "med_stim") ? 1 : 0; // an Epinephrine auto-injector in your blood (scripts/lrun-adrenaline.js gives one at the start)
   return {
     agi,
-    sprintDrainMul: Math.max(0.3, (1 - delta * 0.07) * (prep ? 0.88 : 1) * (adr ? 0.5 : 1)),
-    speedMul: (1 + delta * 0.035) * (adr ? 1.14 : 1),
+    sprintDrainMul: Math.max(0.3, (1 - delta * 0.07) * (prep ? 0.88 : 1) * (adr ? 0.15 : 1)),
+    speedMul: (1 + delta * 0.035) * (adr ? 1.3 : 1),
     jumpMul: 1 + Math.max(-0.08, delta * 0.045),
     stumbleMs: Math.max(180, Math.round((680 - delta * 75) * (prep ? 0.85 : 1))),
     stumbleSpeedKeep: Math.min(0.84, Math.max(0.36, 0.44 + delta * 0.06)),
