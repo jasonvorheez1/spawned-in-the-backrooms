@@ -14,15 +14,15 @@ defaultSpawnPoint: { x: 0, y: 0.45, z: 13 }
 defaultSpawnRotation: { yaw: 0 }
 worldBounds: { bottom: -20 }
 atmosphere:
-  look: { script: mods/awakening/look.js, params: { mistBase: 0, mistDensity: 0.012, mistReach: 60, bloomThreshold: 1, bloomStrength: 0.3, vignette: 0.16, aoStrength: 0.8, sharpen: 0.25 } }
+  look: { script: mods/awakening/look.js, params: { mistBase: 0, mistDensity: 0.014, mistReach: 55, bloomThreshold: 0.92, bloomStrength: 0.34, vignette: 0.14, aoStrength: 0.78, sharpen: 0.28 } }
   sky: { kind: realistic, model: hosek }
-  timeOfDay: 6.4
-  cycle: { frozen: 6.4 }
-  clouds: { enabled: true, density: 0.25, opacity: 0.5, altitude: 1200, thickness: 300, speed: 0.4 }
-  fog: { kind: linear, near: 18, far: 140, color: oklch(0.86 0.04 85) }
-  sun: { orbit: { noonYaw: 190, maxElevation: 65 }, light: { intensity: 1.5, color: oklch(0.88 0.1 78), shadow: { enabled: true, softness: 1 } } }
-  ambient: { light: { color: oklch(0.86 0.04 85), intensity: 0.75 } }
-  hemisphere: { skyColor: oklch(0.86 0.04 230), groundColor: oklch(0.6 0.05 110), intensity: 0.55 }
+  timeOfDay: 6.45
+  cycle: { frozen: 6.45 }
+  clouds: { enabled: true, density: 0.28, opacity: 0.55, altitude: 1200, thickness: 300, speed: 0.4 }
+  fog: { kind: linear, near: 16, far: 115, color: oklch(0.85 0.05 78) }
+  sun: { orbit: { noonYaw: 190, maxElevation: 65 }, light: { intensity: 1.65, color: oklch(0.90 0.11 72), shadow: { enabled: true, softness: 1 } } }
+  ambient: { light: { color: oklch(0.87 0.05 80), intensity: 0.85 } }
+  hemisphere: { skyColor: oklch(0.86 0.04 85), groundColor: oklch(0.64 0.06 82), intensity: 0.65 }
   wind: { direction: 200, speed: 0.6 }
   stars: { enabled: false }
 lighting: mods/awakening/lighting.js
