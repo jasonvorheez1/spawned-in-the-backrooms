@@ -176,6 +176,23 @@ function newGameView(ctx, player) {
   </div>`
 }
 
+// Go Solo (Shelly Nov 17): from the online run's pause, set up a solo expedition like a new one, but your character, level and gear come with you
+function soloView(ctx, player) {
+  const s = player.state ?? {}, pick = cleanPick(s.newRun)
+  const btn = (label, on, act) => `<button class="${on ? 'on' : ''}" onclick="sendAction('mmenu',${act})">${esc(label)}</button>`
+  const presetOn = (v) => OPTS.filter((o) => o.key !== 'tutorial').every((o) => v[o.key] === pick[o.key])
+  return `<div class="mm-sub" role="region" aria-label="Go Solo">
+    <h2>Go Solo</h2>
+    <p class="mm-meta">Your own run. Your critter, level, gear and cash come with you.</p>
+    <div class="mm-row"><div><strong>Preset</strong><small>Start from one, then change anything below</small></div>
+      <div class="mm-seg">${Object.entries(PRESETS).map(([k, p]) => btn(p.label, presetOn(p.v), `{k:'preset',v:'${k}'}`)).join('')}</div></div>
+    ${OPTS.filter((o) => o.key !== 'tutorial').map((o) => `<div class="mm-row"><div><strong>${esc(o.label)}</strong><small>${esc(o.hint)}</small></div>
+      <div class="mm-seg">${o.vals.map(([v, lbl]) => btn(lbl, pick[o.key] === v, `{k:'opt',key:'${o.key}',v:'${v}'}`)).join('')}</div></div>`).join('')}
+    <button class="mm-primary" onclick="sendAction('mmenu',{k:'gosolo'},{relockPointer:true})">Go solo<span aria-hidden="true">→</span></button>
+    <button class="mm-back" onclick="sendAction('mmenu',{k:'view',v:''})">← Back</button>
+  </div>`
+}
+
 // Save Manager: five slots in the game's database
 function savesView(ctx, player) {
   const s = player.state ?? {}, list = s.saveList ?? [], by = Object.fromEntries(list.map((r) => [r.slot, r]))
@@ -218,6 +235,8 @@ export function mainMenu(ctx, player, launch = false) {
     content = `<div class="col">${settingsView(ctx, player, prefs)}</div>`
   } else if (view === 'newgame') {
     content = `<div class="col">${newGameView(ctx, player)}</div>`
+  } else if (view === 'gosolo') {
+    content = `<div class="col">${soloView(ctx, player)}</div>`
   } else if (view === 'saves') {
     content = `<div class="col">${savesView(ctx, player)}</div>`
   } else if (view === 'controls') {
@@ -250,7 +269,9 @@ export function mainMenu(ctx, player, launch = false) {
         <button onclick="sendAction('mmenu',{k:'view',v:'settings'})"><span class="mm-number">${pause ? '03' : '04'}</span>Settings<span class="mm-arrow" aria-hidden="true">›</span></button>
         <button onclick="sendAction('mmenu',{k:'view',v:'controls'})"><span class="mm-number">${pause ? '04' : '05'}</span>Controls &amp; Guide<span class="mm-arrow" aria-hidden="true">›</span></button>
         ${pause && s.t0Done ? `<button onclick="sendAction('mmenu',{k:'tobonus'},{relockPointer:true})"><span class="mm-number">05</span>Return to Bonus Rooms<span class="mm-arrow" aria-hidden="true">›</span></button>` : ''}
-        ${pause ? `<button onclick="sendAction('mmenu',{k:'title'})"><span class="mm-number">${s.t0Done ? '06' : '05'}</span>Return to Title<span class="mm-arrow" aria-hidden="true">›</span></button>` : ''}
+        ${pause && s.t0Done ? (s.run?.mode === 'multi'
+          ? `<button onclick="sendAction('mmenu',{k:'view',v:'gosolo'})"><span class="mm-number">06</span>Go Solo<small style="display:block;opacity:.6;font-size:.7em">your own run, your settings, same character</small><span class="mm-arrow" aria-hidden="true">›</span></button>`
+          : `<button onclick="sendAction('mmenu',{k:'mode',v:'multi'},{relockPointer:true})"><span class="mm-number">06</span>Go Online<small style="display:block;opacity:.6;font-size:.7em">play with friends, no story</small><span class="mm-arrow" aria-hidden="true">›</span></button>`) : ''}
       </nav>
     </div>`
   }
