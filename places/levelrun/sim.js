@@ -119,10 +119,17 @@ function layWorld(ctx) {
   bx("lrun-ward-gate", 0, 0, -5.45, 5.8, 3.2, 0.2, MAT.steel);
 
   // Red "!" warning sign above corridor mouth facing player (+Z)
+  // the ward plate over the corridor mouth: enamel, chipped to the steel, the old ward name painted out and LEVEL ! scratched over it
   ctx.spawn("lrun-bang-sign", {
     feetPosition: { x: 0, y: 2.75, z: -5.22 },
     castShadow: false,
-    vector: "<svg viewBox='0 0 380 140' width='1.75m'><rect x='3' y='3' width='374' height='134' rx='8' fill='#140204' stroke='#ff2222' stroke-width='5'/><text x='56' y='105' text-anchor='middle' font-family='sans-serif' font-size='104' font-weight='900' fill='#ff2626'>!</text><text x='228' y='62' text-anchor='middle' font-family='sans-serif' font-size='32' font-weight='bold' fill='#ffdddd'>LEVEL !</text><text x='228' y='106' text-anchor='middle' font-family='sans-serif' font-size='24' font-weight='bold' fill='#ff4f4f'>RUN FOR YOUR LIFE</text></svg>",
+    vector: `<svg viewBox='0 0 300 90' width='1.5m'><rect x='3' y='3' width='294' height='84' rx='4' fill='#d9d2bd' stroke='#5a5446' stroke-width='3'/>
+      <path d='M3 60 L40 66 L22 87 L3 87 Z M250 3 L297 3 L297 30 L276 22 Z M120 87 L150 80 L170 87 Z' fill='#4a4c50'/>
+      <circle cx='14' cy='14' r='3' fill='#6b6a64'/><circle cx='286' cy='76' r='3' fill='#6b6a64'/>
+      <text x='150' y='38' font-size='22' font-family='sans-serif' font-weight='700' fill='#2b4a6a' text-anchor='middle' letter-spacing='5'>WARD 7 · ISOLATION</text>
+      <rect x='36' y='18' width='228' height='26' fill='#c94a3a' opacity='0.85' transform='rotate(-1.5 150 31)'/>
+      <path d='M60 70 l8 -22 l8 22 M66 62 h6 M84 48 v22 h12 M104 48 v22 h12 M104 59 h9 M104 48 h12 M122 48 l7 22 l7 -22 M142 48 v22 h12 M142 59 h9 M142 48 h12 M160 48 v22 h12 M190 46 v17 M190 69 v2' stroke='#2a1410' stroke-width='3' fill='none' stroke-linecap='round'/>
+      <text x='220' y='72' font-size='11' font-family='sans-serif' fill='#3a2a22' font-style='italic' transform='rotate(-4 220 72)'>don't stop</text></svg>`,
   });
 
   // Intake crimson point lamp + klaxon loop
@@ -339,6 +346,7 @@ export function tick(ctx) {
   if (!players.length) return;
   if (!ctx.place.objects?.["lrun-adrenaline-zone"]) ctx.spawn("lrun-adrenaline-zone", { feetPosition: { x: 1.5, y: 0, z: -3.6 }, primitive: { kind: "box", width: 2.6, height: 2.2, depth: 2.4 }, visible: false,
     physics: { body: "static", trigger: true }, behavior: "scripts/lrun-adrenaline.js" }) // the grab zone: the cart's own mesh was too thin to walk into (Shelly: "i cant get adrenaline")
+  if (!ctx.place.objects?.["lrun-adrenaline-zone"]) ctx.spawn("lrun-adrenaline-zone", { feetPosition: { x: 1.6, y: 0, z: -3.6 }, primitive: { kind: "box", width: 2.4, height: 2.2, depth: 2.4 }, visible: false, physics: { body: "static", trigger: true }, behavior: "scripts/lrun-adrenaline.js" }) // walk near the cart and you take it
   if (!ctx.place.objects?.["lrun-adrenaline"]) ctx.spawn("lrun-adrenaline", { feetPosition: { x: 2.0, y: 0, z: -3.6 }, rotation: { yaw: -90 }, model: "/cdn/value.fc6f9622c8597af8969820692ee18f20f1f054fb44eac9ec771668dd197f7e2e.glb",
     layout: { box: { min: { x: -0.45, y: 0, z: -0.3 }, max: { x: 0.45, y: 1.0, z: 0.3 } } }, physics: "static",
     children: [{ id: "vial", feetPosition: { x: 0, y: 1.06, z: 0 }, rotation: { roll: 90 }, pivot: "center", primitive: { kind: "capsule", radius: 0.025, halfHeight: 0.07 }, material: { color: "#ffd25a", emissive: "#ffb020", emissiveIntensity: 2.2, roughness: 0.2 },
