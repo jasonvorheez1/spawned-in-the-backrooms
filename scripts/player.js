@@ -1555,7 +1555,7 @@ function viewmodel(ctx, moving, sprinting) {
   const cs = !hb && !l.modelUrl && !HUMAN && isNewCat(l) ? critterSpec(l) : null // cats (Shelly Nov 12: 'you didnt have to make an entirely new model'): the first-person arm IS her own cat body, its sleeve on it
   const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '') || (cs ? 'cat2:' + JSON.stringify([l.sex, l.fur, l.topw, l.top, l.skin, l.pattern, l.heightS, l.buildS]) : '')
   // cats (Shelly Nov 12 "make the first person arms match the cat charcters"): her fur colour, a round paw with pink beans, her sleeve
-  const arm = hb || ply ? { hidden: true } : { species: l.species ?? 'cat', fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v42' + JSON.stringify(tune ?? null)
+  const arm = hb || ply ? { hidden: true } : { species: l.species ?? 'cat', fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v43' + JSON.stringify(tune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     if (w.plyObj) { ctx.destroy(w.plyObj); w.plyObj = null }
@@ -1574,7 +1574,7 @@ function viewmodel(ctx, moving, sprinting) {
       if (gun) child.push({ id: 'fphold-l', feetPosition: support, rotation: tune?.lq ?? (fp?.vertical ? FP_VERTICAL_Q : FP_TWO_Q), audience: 'local', children: [{ ...arm, feetPosition: { x: -bc.x, y: bc.y, z: bc.z } }] })
       else child.push({ ...arm, feetPosition: { x: support.x - bc.x, y: support.y + bc.y, z: support.z + bc.z } })
     } else if (support && !ply) child.push({ feetPosition: support, castShadow: false, audience: 'local', primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: { ...arm, support: { axis: gun && !fp?.vertical ? 'z' : 'y', r: wp.two?.[2] ?? .023 } } } })
-    const supportWrist = support && (fp ? support : { x: -.035, y: support.y - .04, z: support.z + .04 })
+    const supportWrist = support && (fp ? support : { x: .025, y: support.y - .03, z: support.z + .02 })
     w.plyGrip = fp ? { x: .01, y: .055, z: .085 } : { x: -.015, y: -.015, z: .03 }
     w.plySupport = supportWrist
     w.catGun = !!cs && gun
@@ -1600,14 +1600,15 @@ function viewmodel(ctx, moving, sprinting) {
       const mats = Object.fromEntries(Object.entries(cs.model.materials ?? {}).map(([k, m]) => [k, m?.params ? { ...m, params: { ...m.params, tuckT: 0, tuckB: 0, tuckS: 0 } } : m]))
       const arms = { model: { ...cs.model, id: cat.glb, materials: mats }, /* no body morph: its shape keys are the whole body's and thin the cut arm to sticks (Shelly: 'why do my arms look like sticks') */ ...(cs.scale ? { scale: cs.scale } : {}),
         castShadow: false, visibleInFirstPerson: true, audience: 'local' }
-      child.push({ ...arms, id: 'plyarm', bones: { 'mixamorig:LeftArm': { scale: 0 } }, feetPosition: tune?.cat ?? cat.at })
-      // Seat the left shoulder off-screen bottom-left so the forearm enters naturally without a visible stump.
+      const g = w.plyGrip, rAt = tune?.cat ?? { x: cat.at.x, y: Math.max(cat.at.y, g.y - .16), z: Math.min(cat.at.z, g.z + .21) }
+      child.push({ ...arms, id: 'plyarm', bones: { 'mixamorig:LeftArm': { scale: 0 } }, feetPosition: rAt })
+      // Seat LeftArm shoulder off-screen bottom-left within the 0.32 m reach radius so the forearm enters naturally and always reaches the fore-end.
       if (support) {
-        const f = supportWrist
+        const f = w.plySupport ?? supportWrist
         const scale = cs.scale ?? { x: 1, y: 1, z: 1 }
         child.push({ ...arms, id: 'plyarm-left', bones: { 'mixamorig:RightArm': { scale: 0 } },
           scale: { x: scale.x * 1.22, y: scale.y * 1.22, z: scale.z * 1.22 },
-          feetPosition: { x: Math.min(f.x - .22, -.26), y: Math.min(f.y - .36, -.26), z: gun ? Math.max(f.z + .22, .12) : Math.max(f.z + .28, .28) } })
+          feetPosition: { x: f.x - .22, y: f.y - .26, z: f.z + .14 } })
       }
     }
     else if (ply) child.push({ id: 'plyarm', model: ply, rotation: { yaw: 180, pitch: 0, roll: 0 }, feetPosition: { x: 0.12, y: -1.3, z: 0.68 }, /* a plymodel's rest arm runs along its own +Z: turned 180 it points ahead, the hand at the grip, the shoulder just below-right of the eye (Shelly Nov 15: first person showed no arm) */ castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
