@@ -235,8 +235,8 @@ export { SLOTS }
 function goOnline(ctx) {
   const ses = ctx.session; if (ses.goingOnline && ctx.now() - ses.goingOnline < 8000) return
   ses.goingOnline = ctx.now()
-  if (isMulti(ctx.self.state)) import("./lib/hub.js").then((m) => m.toSolo(ctx, "level1", ctx.self))
-  else switchMode(ctx, "multi", { where: "level1" })
+  if (isMulti(ctx.self.state)) import("./lib/hub.js").then((m) => m.toSolo(ctx, "main", ctx.self))
+  else switchMode(ctx, "multi", { where: "main" })
 }
 
 // ---- Solo / Multiplayer (Shelly Nov 15): one character, two runs. Level, gear, cash and look ride along;
