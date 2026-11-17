@@ -2,16 +2,16 @@
 # Wren Adeyemi: M.E.G. field surveyor camped beside the Level 69 sedan in Boom Town, tired, dry, precise. Doesn't oversell the dark.
 l69-npc-wren:
   hi: ["Oh. Someone who isn't running from a tower. Hi. Can you drive?"]
-  back: ["You came back up. People don't, usually. They just keep driving."]
+  back: ["You're back. Did the car make it as far as the tunnel?"]
   warm: ["There's my driver. Engine still sound?"]
   cold: ["Keep your distance, please. I've had a long few days."]
-  bye: ["Keep the doors shut.", "Drive in the middle lane. The edges whisper."]
+  bye: ["Keep moving out there.", "The tunnel's on the left. Watch for the signs."]
   ask:
     - q: "Where is this?"
-      a: ["Boom Town, up here. Down there, through that sedan, is Level 69 on our charts. A highway. Four lanes, two walls, no exits we've ever mapped, and fog that won't come near a running car."]
+      a: ["This is Boom Town. The sedan takes you to Level 69: four lanes, high walls and a lot of fog. There's a tunnel in the left wall a little over two kilometres in. Our notes say it leads to Level 11."]
       then:
-        - q: "Why won't the fog come near cars?"
-          a: ["Nobody knows. I've got a thermometer on the dash and a theory I'm not proud of. The car is the only thing here that belongs to us. Maybe the fog knows that."]
+        - q: "What should I watch for?"
+          a: ["The road loops if you miss the tunnel. The signs count down to it, so get into the left lane when you see them. Keep an eye on your car, too."]
     - q: "What's out there?"
       a: ["Above, mostly. Legs. Long ones, jointed like a crab's, coming down out of the black when somebody stands on the road too long. I've never seen the rest of it. I don't want to."]
     - q: "How do I get out?"
@@ -21,13 +21,13 @@ l69-npc-wren:
     - q: "Do you need food or water?"
       a: ["I've got rations for a week and almond water for four days. If you find a stalled car, check the boot. People pack for road trips. They just don't finish them."]
     - q: "Who were you talking to before I pulled up?"
-      a: ["Nobody. That's the problem. You'll hear it too, after a while. A voice that knows your name and gets everything else slightly wrong. Turn the radio up. It doesn't like competition."]
+      a: ["I thought I heard someone on the receiver. It wasn't transmitting. You may hear voices on the road too; I wouldn't follow them."]
   barks:
-    idle: ["Six hundred metres. Six-forty. Seven hundred.", "Come on, come on.", "Don't look up. Don't look up."]
+    idle: ["I need a second set of readings.", "Come on, pick up.", "Where did I put that pencil?"]
     hi: ["Hi.", "Lights on, please."]
     drawn: ["Whoa. I'm a surveyor. I carry a tripod.", "Please don't."]
     hurt: ["You're bleeding. There's gauze in my pack."]
     close: ["Oh! You walk quiet."]
-    spot: ["Something's above us. Get in the car."]
-    hostile: ["I mapped worse than you!"]
+    spot: ["Careful! Something's moving!"]
+    hostile: ["Back away!"]
     hit: ["Ow!", "That's my writing arm!"]

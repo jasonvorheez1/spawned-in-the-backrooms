@@ -8,11 +8,11 @@ import { setQuest, tellQuest, finishLevelQuest } from "./quests.js";
 import CAMP from "./data/l0-kit-camp.yml";
 export const V = 3;
 export const Q325 = { key: "q325", id: "fifteen-seconds", name: "Fifteen Seconds", tips: {
-  1: "Find a tower that's still building and watch it.",
-  2: "Learn the warning. Feel the street shake, look up for the blue.",
-  3: "Live through a collapse. Distance and cover both count.",
-  4: "Strip three salvage heaps before the rubble sinks. One at the tower's top end holds blue glass.",
-  5: "Wait for the lot to start again.",
+  1: "Find a tower under construction and observe the work.",
+  2: "Stay near a tower as it nears collapse. Notice the tremor and the blue flash.",
+  3: "Survive a tower collapse. Move away from its fall or take cover beneath another standing tower.",
+  4: "Salvage three heaps before the wreckage sinks. The heap near the fallen top contains blue glass.",
+  5: "After the wreckage sinks, watch the cleared lot as construction begins again.",
 } };
 const at = (w) => { const l = w.l325 ?? {}, saw = l.saw ?? {};
   if (!saw.grow) return 1; if (!(saw.tremor && saw.flash)) return 2; if (!(l.survived > 0)) return 3; if ((l.salvaged ?? 0) < 3) return 4; if (!saw.rebuild) return 5; return 6; };
