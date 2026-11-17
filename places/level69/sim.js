@@ -91,6 +91,7 @@ function ghost(ctx, p, pos, now, inCar) {
   const st = ctx.place.state, id = "l69-ghost";
   if (!st.nextGhost) st.nextGhost = now + 50000;
   const g = ctx.place.objects[id];
+  if (st.ghostPassAt && now > st.ghostPassAt) { st.ghostPassAt = null; ghostPass(ctx, { pid: p.id }); }
   if (g && now > (st.ghostEnd ?? 0)) { ctx.destroy(id); return; }
   if (g || now < st.nextGhost || !inCar) return;
   st.nextGhost = now + (60 + ctx.random() * 70) * 1000;
@@ -104,7 +105,7 @@ function ghost(ctx, p, pos, now, inCar) {
     ] }));
   if (h) animate(ctx, h, { "feetPosition.z": z1 }, { duration: dur, easing: "linear" });
   sfx(ctx, p, G("distant-car-approaching-at-speed-then-roaring-past-doppler"), 0.9);
-  ctx.after?.(3.3, "ghostPass", { pid: p.id });
+  st.ghostPassAt = now + 3300;
 }
 export function ghostPass(ctx, { pid } = {}) {
   ctx.emit("screenShake", { intensity: 0.25, duration: 0.5 }, { audience: { player: pid } });
