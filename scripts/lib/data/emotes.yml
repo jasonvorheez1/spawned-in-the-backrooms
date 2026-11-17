@@ -2,7 +2,7 @@
 - id: timeless
   label: Timeless
   clip: cdn/clip-timeless-dance-both-arms-stretched-straight-out-wide-to-the-sides-knees-bent-low-squat-kicking-one-leg-out-sideways-then-the-other-leg-swaying-side-to-side-loop.glb
-  song: /cdn/moodboard-toon-vibrant/music-timeless-ticking-clock-synth-pop-dance-loop.mp3
+  song: /cdn/music-instru-theme-playful-2r4xg00n.mp3  # Shelly's own track, Nov 17
   clock: true
   face: joy
 - id: dance
