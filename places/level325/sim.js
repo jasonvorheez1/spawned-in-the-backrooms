@@ -117,7 +117,7 @@ function collapse(ctx, t, near) {
   let st = ev.st;
   if (t.stage === "warn") {
     if (st < 1) { st = 1; ctx.emit("l325:warn", pay); ctx.spawn(k + "-shed", { tags: ["l325t"], feetPosition: { x: t.x, y: 20, z: t.z }, lifetime: 16, fx: { script: SHED, params: { h: 40 } } }); have?.set(k + "-shed", "x");
-      for (let i = 0; i < full; i++) ctx.emit("shake", { target: k + "-s" + i, intensity: 0.25, duration: 9 }); }
+      for (let i = 0; i < full; i++) ctx.emit("shake", { target: k + "-s" + i, intensity: 0.25, duration: Math.max(1, FALL_S - 1.5) }); } // the tremor ends before the fall: a shake still running held each section where it stood, so the collapse tween never showed and the rubble swap made the tower vanish
     if (st < 2 && t.wt >= FLASH_S) { st = 2; ctx.emit("l325:flash", pay); ctx.emit("fx", { position: top, script: FLASH });
       ctx.emit("screenFlash", { color: "oklch(0.8 0.14 240)", duration: 0.25, intensity: 0.35 }, { audience: { nearby: { x: t.x, y: 0, z: t.z }, radius: 260 } });
       const id = k + "-s" + (full - 1); if (ctx.place.objects[id]) animate(ctx, id, { scale: { x: 0.55, y: 0.35, z: 0.55 } }, { duration: 1.6, easing: "easeInCubic" });
