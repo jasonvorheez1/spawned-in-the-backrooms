@@ -48,12 +48,24 @@ function carSpec(id, at, extra = {}) {
   };
 }
 
+// sodium wall lamps (Nov 17, "why is it dark"): one per 20 m, alternating walls, every 6th dead, so the road reads as night, not void
+function lamps(k) {
+  const out = [];
+  for (const j of [0, 1]) {
+    const n = k * 2 + j, side = n % 2 ? 1 : -1, dead = n % 6 === 4, x = side * 9.0, z = -10 - j * 20;
+    out.push({ feetPosition: { x, y: 7.2, z }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.05, radiusBottom: 0.05, height: 0.9 }, rotation: { roll: 90 }, material: { color: "#2a2b2d", metalness: 0.7, roughness: 0.5 } });
+    out.push({ feetPosition: { x: x - side * 0.45, y: 6.95, z }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.12, radiusBottom: 0.32, height: 0.22 }, material: dead ? { color: "#1d1e20", metalness: 0.6, roughness: 0.6 } : { color: "#3a3226", emissive: "#ffae4a", emissiveIntensity: 3 } });
+    if (!dead) out.push({ feetPosition: { x: x - side * 0.6, y: 6.6, z }, light: { kind: "point", color: "#ffa64a", intensity: 9, distance: 22, shadow: { enabled: false } }, visibleRange: { max: 70 } });
+  }
+  return out;
+}
 function slice(ctx, k, want) {
   const id = `l69-road-${k}`; want.add(id);
   if (ctx.place.objects[id]) return;
   const z0 = -k * L, tunnel = k === TUN_K ? "left" : undefined;
   ctx.spawn(id, { tags: ["l69road"], feetPosition: { x: 0, y: 0, z: z0 }, physics: "static", receiveShadow: true,
-    primitive: { kind: "scripted", script: "scripts/l69-road-geo.js", params: { seed: k, ...(tunnel ? { tunnel } : {}) } }, material: { pbr: true } });
+    primitive: { kind: "scripted", script: "scripts/l69-road-geo.js", params: { seed: k, ...(tunnel ? { tunnel } : {}) } }, material: { pbr: true },
+    children: lamps(k) });
   // what this slice carries: a survey post, a rare stalled car with something in the boot, the tunnel's glow
   for (const P of POSTS) if (P.z <= z0 && P.z > z0 - L) {
     const pid = `l69-post-${P.km}`; want.add(pid);
