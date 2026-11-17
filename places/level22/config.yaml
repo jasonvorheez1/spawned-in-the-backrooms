@@ -1,0 +1,23 @@
+# Level 22 "Ruins Left Behind" (Wikidot): the car park that was the micronation of Emstable, mined hollow and abandoned.
+# Shelly Nov 17: the class divide must be walkable, top to bottom. Solo; what you broke and read lives in your save (player.state.l22).
+mode: 3d
+instance: solo
+persistence: ephemeral
+terrain:
+  kind: "off"
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: 2.6, y: 0.3, z: 29 }
+defaultSpawnRotation: { yaw: 0 }
+worldBounds: { bottom: -120 }
+atmosphere:
+  look: { script: scripts/look-photo.js }
+  clouds: { enabled: false }
+  fog: { kind: linear, near: 8, far: 62, color: "#1c1a17" }
+  moon: { enabled: false }
+  sky: { kind: color, color: "#0b0a09" }
+  stars: { enabled: false }
+  timeOfDay: 0
+  wind: { direction: 0, speed: 0.5 }
+  ambient: { light: { color: "#4a463e", intensity: 0.9 } }
+  hemisphere: { skyColor: "#35322c", groundColor: "#161513", intensity: 0.7 }
+acoustics: { reverb: 0.55 }

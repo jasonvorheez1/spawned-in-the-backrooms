@@ -179,7 +179,10 @@ export function geometry(ctx) {
   for (let z = -HZ + 2; z < HZ - 3; z += 0.8) paint(-0.05, z, 0.05, z + 0.8);
   // strip-light housings on the ceiling (the sim hangs the light on the ones that still work)
   ctx.color("#8f9092"); ctx.metalness(0.4);
-  for (const x of [-16, -8, 0, 8, 16]) for (let z = -28; z <= 28; z += 8) { if (ceilH.some((h) => inR(x, z, [h[0] - 1, h[1] - 1, h[2] + 1, h[3] + 1]))) continue; box(ctx, x - 0.09, H - 0.5, z - 0.62, x + 0.09, H - 0.43, z + 0.62); }
+  const litSet = new Set(P.lit ?? []); let n = 0;
+  for (const x of [-16, -8, 0, 8, 16]) for (let z = -28; z <= 28; z += 8) { const me = n++; if (ceilH.some((h) => inR(x, z, [h[0] - 1, h[1] - 1, h[2] + 1, h[3] + 1]))) continue;
+    ctx.color("#8f9092"); ctx.emissive(null); box(ctx, x - 0.09, H - 0.5, z - 0.62, x + 0.09, H - 0.43, z + 0.62);
+    ctx.color(litSet.has(me) ? "#f4f7ea" : "#55564f"); if (litSet.has(me)) ctx.emissive("#e8f0d0"); ctx.smooth(); bar(ctx, [x, H - 0.53, z - 0.58], [x, H - 0.53, z + 0.58], 0.02); ctx.flat(); ctx.emissive(null); }
   ctx.metalness(null);
 }
 export function collider(ctx) {
