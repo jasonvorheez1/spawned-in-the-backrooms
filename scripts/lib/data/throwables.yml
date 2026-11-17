@@ -5,3 +5,8 @@ molotov: { name: Molotov cocktail, key: molotovs, model: /cdn/model-molotov-cock
 fresh:   { name: Reality Freshener, key: fresh, size: 0.22, speed: 12, lift: 3, radius: 6, kg: 0.3 }   # lands and locks reality: no collapse, no sanity drain within radius (scripts/lib/remodel-quest.js)
 cooldown: 0.9   # s between throws
 bauble:  { name: Glass Bauble, key: baubles, model: /cdn/model-red-glass-christmas-bauble-ornament-small.glb, size: 0.1, speed: 13, lift: 3, radius: 2.5, damage: 12, daze: 3, kg: 0.15, throwable: true, req: { h: 2, explosives: 15 } }   # Christmas Area only: shatters on contact, dazes foes in radius for daze s
+# Shock Pad (Shelly: "like the fortnite shockwave grenade ... a great speedy movement tool ... a good offensive tool too"). Sticks where it lands
+# and goes off after fuse ms, or at once on a body. Savi's picks: radius 4 m; a foe takes damage at the centre falling to edge x damage at the rim
+# and is thrown foeUp m/s up, foeOut m/s away; a player is launched to launchH m at the centre (solved from the place's gravity), out m/s away,
+# never less than edgeLaunch of it inside the radius; airControl scales your steering until you land; the landing never hurts; cap: carried at most.
+shock_pad: { name: Shock Pad, key: shockpads, model: /cdn/value.fec5bbf82aa80511861800128e335ffc223520b99c91c4d596a20e7c0fc06980.glb, size: 0.18, fuse: 600, speed: 12, lift: 2.5, radius: 4, damage: 35, edge: 0.35, launchH: 6.5, out: 9, edgeLaunch: 0.55, airControl: 0.12, foeUp: 7, foeOut: 7, cap: 15, kg: 0.3, throwable: true, req: { h: 2, explosives: 10 } }
