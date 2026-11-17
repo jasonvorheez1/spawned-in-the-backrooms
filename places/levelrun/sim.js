@@ -375,7 +375,8 @@ export function tick(ctx) {
       st.seen[p.id] = 1;
       Object.assign(ps, { lrunIntroDone: 0, lrunRescued: 0, lrunMid: 0, lrunScare: 0, lrunGotShot: 0, lrunRetry: 0, lrunCut: null });
     }
-    if (ps.dead || (ps.hp ?? 1) <= 0) { // Shelly Nov 17: dying restarts the run, the music from the top
+    const respawned = chase.active && !ps.lrunCut && !ps.lrunRescued && (p.feetPosition?.z ?? -99) > CORRIDOR.corridorStartZ + 1; // player.js respawns you at the line faster than this tick sees hp 0
+    if (ps.dead || (ps.hp ?? 1) <= 0 || respawned) { // Shelly Nov 17: dying restarts the run, the music from the top
       if (!ps.lrunRescued && (chase.active || ps.lrunIntroDone)) {
         chase.active = false; chase.gateOpen = false; chase.hordeZ = 4.5;
         ctx.music.stop({ fade: 0.2 });
