@@ -89,8 +89,8 @@ export function update(ctx, dt) {
 
   // The presented facing (radians) as the one rotation grammar (degrees): undefined before the first frame.
   const view = ctx.self.view
-  if (view && ps && W[ps.equipped]?.ranged) {
-    const pitch = Math.round(view.pitch * 1000) / 1000
+  if (view && ps) { // ranged aim reads it finely; a throw (G) reads it coarsely with any weapon out, so a Shock Pad looked down lands at your feet
+    const q = W[ps.equipped]?.ranged ? 1000 : 20, pitch = Math.round(view.pitch * q) / q
     if (ps.aimPitch !== pitch) ps.aimPitch = pitch
   }
   let rot = view ? { yaw: view.yaw * RAD_TO_DEG, pitch: view.pitch * RAD_TO_DEG } : null
