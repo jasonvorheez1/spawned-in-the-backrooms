@@ -419,6 +419,31 @@ segments:
   clip: /cdn/value.4b1efbefa7a36f7eb3d9d587688739bf3b9714340a541a1ae91b55d858ce3411.mp3
   show: 1
 - kind: host
+  title: Moon Viewing (Hana)
+  dur: 8.0
+  clip: /cdn/value.37ba84271966d340f4f79ef710e84eebb5e5da79d1523cdcf2f0f1d23f482a62.mp3
+  show: 1
+- kind: host
+  title: Moon Viewing (Takeshi)
+  dur: 3.2
+  clip: /cdn/value.d7fcef3b4894cce1fd2c669d8402cbf2d8c62ba6ee3934dca1b958db229c17d9.mp3
+  show: 1
+- kind: host
+  title: Moon Viewing (Hana)
+  dur: 7.3
+  clip: /cdn/value.9e37bf0b138b807407115312088a4d74cab3fa9b1938a36195554a69ad9ee988.mp3
+  show: 1
+- kind: host
+  title: Moon Viewing (Takeshi)
+  dur: 2.4
+  clip: /cdn/value.a24f5d4e1299ceae8fb8fdf63e6a892ef0de7e08bda71d32d9747c9fa8cccb12.mp3
+  show: 1
+- kind: host
+  title: Moon Viewing (Hana)
+  dur: 3.9
+  clip: /cdn/value.704d4a9ab2c9ed46b781b9be9941326fd4921353cc9d1ab8a9bbc5d3aea5b259.mp3
+  show: 1
+- kind: host
   title: Moon Viewing (Takeshi)
   dur: 2.4
   clip: /cdn/value.63801034509baebea65a64770f6607b89795e9cae94d09ba6442b2a2554ccef6.mp3

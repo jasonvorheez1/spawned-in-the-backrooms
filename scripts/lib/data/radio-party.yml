@@ -467,6 +467,11 @@ segments:
   clip: /cdn/value.b04351ee2bf1c9c660d1504104c293c10461054b831e96b4020d3decc685495e.mp3
   show: 1
 - kind: host
+  title: Sprinkles' Bedtime Story (Sprinkles)
+  dur: 6.2
+  clip: /cdn/value.49d1bd91b15cac2ee0edbdf713d2d046f91ad1afbc89e43fa78811999d3c83ae.mp3
+  show: 1
+- kind: host
   title: Goodnight
   dur: 12.2
   clip: /cdn/value.b2958fdc2dd2fdd913a9b53d0beb5c08dcb618af925206fdb5243cb410f51e67.mp3
