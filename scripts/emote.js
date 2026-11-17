@@ -12,16 +12,18 @@ pop glow n=1 at=point() r=light(<1,.78,.42>,1.2,3)`
 // mixamo bones on the critter rig: UpLeg yaw + swings a leg out to its own side (measured on test dummies); arms at rest are the wide T
 const K = (a) => a.map((v) => +v.toFixed(1))
 const L = [25, 55, 55, 20, 0, 0, 0, 0, 25], R = [0, 0, 0, 0, 25, 55, 55, 20, 0]
+const B = [1, 0.4, 0.4, 1, 1, 0.4, 0.4, 1, 1] // the low bounce: squat on the standing beats, rise into each kick
+const bend = (k, side) => K(B.map((b, i) => k * b * (side[i] > 30 ? 0.3 : 1)))
+// axes measured on Shelly's avatar (Nov 17): UpLeg roll = sideways swing, UpLeg pitch − / Leg pitch + = a bent knee
 const TIMELESS = { duration: 2, tracks: {
-  "mixamorig:LeftUpLeg": { roll: K(L.map((v) => -v)) }, // roll is the sideways swing on the avatar rig (measured on Shelly's body, Nov 17); yaw only twisted the leg
-  "mixamorig:RightUpLeg": { roll: K(R) },
+  "mixamorig:LeftUpLeg": { roll: K(L.map((v) => -v)), pitch: bend(-28, L) },
+  "mixamorig:RightUpLeg": { roll: K(R), pitch: bend(-28, R) },
+  "mixamorig:LeftLeg": { pitch: bend(48, L) },
+  "mixamorig:RightLeg": { pitch: bend(48, R) },
   "mixamorig:Spine": { yaw: K(L.map((v, i) => (R[i] - v) * 0.22)) },
-  "mixamorig:Spine2": { pitch: K([4, 0, 4, 0, 4, 0, 4, 0, 4]) },
-  "mixamorig:Head": { yaw: K(L.map((v, i) => (v - R[i]) * 0.2)), pitch: K([0, -6, 0, 0, 0, -6, 0, 0, 0]) },
-  "mixamorig:LeftArm": { roll: K([0, 6, 0, -4, 0, 6, 0, -4, 0]), pitch: K([0, -8, 0, 4, 0, -8, 0, 4, 0]) },
-  "mixamorig:RightArm": { roll: K([0, -6, 0, 4, 0, -6, 0, 4, 0]), pitch: K([0, 4, 0, -8, 0, 4, 0, -8, 0]) },
-  "mixamorig:LeftForeArm": { yaw: K([10, 18, 10, 6, 10, 18, 10, 6, 10]) },
-  "mixamorig:RightForeArm": { yaw: K([-10, -6, -10, -18, -10, -6, -10, -18, -10]) },
+  "mixamorig:Head": { yaw: K(L.map((v, i) => (v - R[i]) * 0.2)) },
+  "mixamorig:LeftArm": { roll: K([0, 8, 8, 0, -6, -6, -6, 0, 0]) },
+  "mixamorig:RightArm": { roll: K([0, 6, 6, 0, -8, -8, -8, 0, 0]) },
 } }
 const CLIPS = { timeless: TIMELESS }
 const SPIN = (r) => ({ clip: CLIPS[r.id] ?? r.clip, weight: 10, loop: "loop" }) // Shelly Nov 17: no other animation's legs under the emote
