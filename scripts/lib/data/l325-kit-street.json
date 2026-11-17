@@ -1,0 +1,22 @@
+{
+ "streetlight": {"glb": "/cdn/value.58209604c2dc6cf750d8025663f11c0b1aa15cb81593472a4cf98990572a3d17.glb", "tris": 5841, "size": [5.19, 8.0, 0.43], "slots": ["lamp", "steel"]},
+ "roadsign": {"glb": "/cdn/value.8ea4365d61bc60cb832e7b7b42f6f0494339c990011b8721faf6278e67afd817.glb", "tris": 5442, "size": [2.27, 3.0, 0.59], "slots": ["paint"]},
+ "sedan": {"glb": "/cdn/value.d62c297a0f9c8fe8915c6160e41414b5081919f35c31baecc9d7968e63726752.glb", "tris": 11680, "size": [2.05, 1.75, 4.6], "slots": ["paint"], "parts": ["door_fl"], "hinges": {"door_fl": [0.993, 0.35, 0.782]}},
+ "hatch": {"glb": "/cdn/value.0eca3b48851b06995d34977e4e16bcae63d1ec009e3eeecb03d473ada52729dd.glb", "tris": 11638, "size": [1.87, 1.58, 3.9], "slots": ["paint"], "parts": ["door_fl"], "hinges": {"door_fl": [0.905, 0.316, 0.78]}},
+ "icecream_van": {"glb": "/cdn/value.aea46d724eef88354bde072456109ed6732630d47aef36c9f0c84fadaaac692a.glb", "tris": 12039, "size": [3.27, 3.92, 5.09], "slots": ["paint"], "parts": ["door_rear"], "hinges": {"door_rear": [-1.12, 0.66, -1.97]}},
+ "barrier": {"glb": "/cdn/value.88d8dc9d4a3d2ce24cbfc7b4f3ddc4c1f45f26423a5bf5bfcb3ef301931dcc53.glb", "tris": 5909, "size": [2.0, 0.95, 0.66], "slots": ["paint"]},
+ "hoarding": {"glb": "/cdn/value.22aa423875c5ede95188a0cb671afd07e66a852a4c6fe5a866db13a80aa1b566.glb", "tris": 5712, "size": [2.4, 2.4, 0.7], "slots": ["steel"]},
+ "container": {"glb": "/cdn/value.572bf4dcf5c9bc023fbc502a56cab3458c29c6d5563ed5709dca4b7f27dd698d.glb", "tris": 5186, "size": [6.0, 2.6, 2.4], "slots": ["steel"], "parts": ["door"], "hinges": {"door": [1.75, 0.25, 1.2]}},
+ "gangbox": {"glb": "/cdn/value.2c02dedbeaf640665151c99c09562a6a679078976bc57fa28a62268d478cbd2e.glb", "tris": 5894, "size": [1.2, 0.69, 0.6], "slots": ["steel"], "parts": ["lid"], "hinges": {"lid": [0.0, 0.535, -0.285]}},
+ "skip": {"glb": "/cdn/value.9427108bc6bfc95ff08535e6f314c6efd45fa29d34b5a87f0c2fa1fd00ffeba0.glb", "tris": 5909, "size": [3.6, 1.5, 1.9], "slots": ["steel"]},
+ "polestack": {"glb": "/cdn/value.711ee4789449e500dcc64aae825f43a63950e7c9b1df65267f555cb39e601a3a.glb", "tris": 5912, "size": [6.0, 0.75, 1.1], "slots": ["bamboo"]},
+ "cementpallet": {"glb": "/cdn/value.dca160be7f4b1d2fd20259692b9becfe6c48d5214a062f73e086c112a2339437.glb", "tris": 5780, "size": [1.2, 0.77, 1.21], "slots": ["plank"]},
+ "ladder": {"glb": "/cdn/value.2f971cfe7bba2c88d23c8ef0121201d8c48a6a9a9d0a8a93e71357f614765ad7.glb", "tris": 5311, "size": [0.9, 2.4, 1.7], "slots": ["steel"]},
+ "busstop": {"glb": "/cdn/value.375720d858b0d33f5aa308df93a9d0685386e83f1521e161c2ce65f48be2a74b.glb", "tris": 5611, "size": [3.6, 2.71, 1.51], "slots": ["glass", "steel"]},
+ "cone": {"glb": "/cdn/value.f8be9916c689114fb28e64e6d6be4c0dd72c421e4c503bb2970b854860ff918d.glb", "tris": 5910, "size": [0.52, 0.7, 0.52], "slots": ["rubber"]},
+ "sitelamp": {"glb": "/cdn/value.e092e974c71f6be02c0dc9701749dffd7cb737df9adb1ee87851cecb29fde8a3.glb", "tris": 5407, "size": [1.14, 1.8, 1.35], "slots": ["lamp", "steel"]},
+ "theodolite": {"glb": "/cdn/value.d097d51e7b11e8a902776d55603b3ac0c0ce1f8d4a1f52d730d06ce1e876872f.glb", "tris": 5788, "size": [0.83, 1.5, 0.88], "slots": ["plank"]},
+ "helmet": {"glb": "/cdn/value.88763dd9b56bdb7d8eba9770076ab2fd32d702af9685f3c7cddc04c2333108db.glb", "tris": 5910, "size": [0.2, 0.17, 0.28], "slots": ["paint"]},
+ "dustmask": {"glb": "/cdn/value.a209d96e4167f26b4683814bd24abcc99c0c916bb59dd7f10e09fdb7c276b483.glb", "tris": 5871, "size": [0.25, 0.2, 0.24], "slots": ["rubber"]},
+ "workboots": {"glb": "/cdn/value.db064a03d850dea5cda810678567c90e107d68bae80541fd3e8dc8995bfd9523.glb", "tris": 5910, "size": [0.29, 0.24, 0.3], "slots": ["rubber"]}
+}
