@@ -580,7 +580,7 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
     <div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px">
       <span>LIGHT</span><span style="${s.light ? '' : 'opacity:.45'}">${s.light ? Math.round(s.battery) + '%' : 'OFF'}${s.batteries ? ` · ${s.batteries} spare` : ''}</span>
     </div>
-    ${(() => { const T = [['frag', 'grenades', 'FRAG'], ['molotov', 'molotovs', 'MOLOTOV'], ['bauble', 'baubles', 'BAUBLE'], ['shock_pad', 'shockpads', 'SHOCK']].filter(([, k]) => (s[k] ?? 0) > 0); if (!T.length) return ''; const pick = T.some(([t]) => t === s.nadePick) ? s.nadePick : T[0][0]; return `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px"><span>G</span><span style="white-space:nowrap">${T.map(([t, k, n]) => t === pick ? `<b style="color:#ffd9a0">${n} ${s[k]}</b>` : `<span style="opacity:.5">${n} ${s[k]}</span>`).join(' · ')}</span>${T.length > 1 ? '<span style="opacity:.6;white-space:nowrap">B swap</span>' : ''}</div>` })()}
+    ${(() => { const T = [['frag', 'grenades', 'FRAG'], ['molotov', 'molotovs', 'MOLOTOV'], ['bauble', 'baubles', 'BAUBLE'], ['shock_pad', 'shockpads', 'SHOCK']].filter(([, k]) => (s[k] ?? 0) > 0); if (!T.length) return ''; const pick = T.some(([t]) => t === s.nadePick) ? s.nadePick : T[0][0]; return `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px"><span>G</span><span style="white-space:nowrap"><b style="color:#ffd9a0">${T.find(([t]) => t === pick)[2]} ${s[T.find(([t]) => t === pick)[1]]}</b></span>${T.length > 1 ? `<span style="opacity:.6;white-space:nowrap">B swap · ${T.length} kinds</span>` : ''}</div>` })()}
   </div>
 
   <!-- CENTER: Minimal Zone Header -->
