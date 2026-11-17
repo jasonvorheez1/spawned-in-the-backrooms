@@ -1,0 +1,56 @@
+{
+ "ring": {
+  "glb": "/cdn/value.361b5ba223e6e3e9976dd6cc07fb1397f0638df9e187032ab782e9651f08b470.glb",
+  "tris": 4226,
+  "size": [
+   26.63,
+   3.7,
+   26.67
+  ]
+ },
+ "ring_net": {
+  "glb": "/cdn/value.f22306d4e5b96918e101bdf8b91c599f947bc0a44092b77f6b8f915f2a627511.glb",
+  "tris": 402,
+  "size": [
+   26.33,
+   3.44,
+   26.32
+  ]
+ },
+ "ring10": {
+  "glb": "/cdn/value.036c480c7392f016b3018e795cfc27b6cbc6d2b1612b3bbd7fe63a25bb6267b3.glb",
+  "tris": 26934,
+  "size": [
+   31.1,
+   32.7,
+   31.1
+  ]
+ },
+ "ring_far": {
+  "glb": "/cdn/value.1a963f6505d2abf6a7efc8a0c1d45b87dfbc0157b7bfd2e84596087502d18831.glb",
+  "tris": 688,
+  "size": [
+   30.9,
+   32.5,
+   30.9
+  ]
+ },
+ "poles": {
+  "glb": "/cdn/value.e1e8e1e646680be7d90476dde746ff99e6a05c2407d028ec20222a218ca28d85.glb",
+  "tris": 6240,
+  "size": [
+   25.82,
+   3.19,
+   25.75
+  ]
+ },
+ "wreck": {
+  "glb": "/cdn/value.a7aaccd64a1efaaf4bdb21e7e21c9002e0afd25269df9421b00164c7112ef4cc.glb",
+  "tris": 2516,
+  "size": [
+   8.29,
+   3.05,
+   8.21
+  ]
+ }
+}
