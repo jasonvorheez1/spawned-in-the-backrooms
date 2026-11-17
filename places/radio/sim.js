@@ -5,7 +5,7 @@ import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 export const cadence = "1s";
-const V = 5;
+const V = 6;
 const RALPH = "radio-ralph", HOME = { x: 0, z: -3.6 };
 const FOES = ["hound", "stealer", "smiler", "lurker", "l5rat", "l3rat", "l5staff", "hostile", "moth", "moths", "l8spider", "l8-hostile", "zdrone", "l11foe", "l7beast", "l10worm"];
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
@@ -39,7 +39,7 @@ const M = {
 // each model's true width:height:depth as it faces (forward +x), so a layout box is the mesh's own box and bounds sit where written
 const R = { armchair: [1.12, 1, 1.07], cdrack: [1.14, 1, 0.27], chair: [0.63, 1, 0.65], clock: [1, 1, 0.39], coffee: [0.83, 1, 0.99], console: [1.32, 1, 0.67], ctable: [1.42, 1, 2.43], decks: [1.16, 1, 1.02], floorlamp: [0.71, 1, 0.42], lamp: [1.1, 1, 0.46], mic: [1.24, 1, 0.48], mirror: [0.79, 1, 0.3], pcdesk: [1.03, 1, 1.07], poster: [0.71, 1, 0.5], side: [1.96, 1, 1.54], tv: [0.97, 1, 0.54], vending: [0.6, 1, 0.48], plant: [0.46, 1, 0.44] };
 // surfaces the gear stands on (measured by raycast on the laid meshes)
-const TOP = { console: 0.86, side: 0.62 };
+const TOP = { console: 0.585, side: 0.66, ctable: 0.522 };
 const RUG = T("worn-persian-rug-deep-red-and-navy-pattern", 1, "oklch(0.92 0.02 40)");
 const MAG = (n) => ({ texture: `cdn/texture-${n}.png`, roughness: 0.4 });
 const CAMS = ["CAM 3 · LEVEL 0", "CAM 7 · LEVEL 1", "CAM 12 · LEVEL 4", "CAM 2 · THE HUB", "CAM 9 · LEVEL 11", "CAM 21 · LEVEL 21", "CAM 5 · LEVEL 2", "CAM 1 · LEVEL 6"];
@@ -89,15 +89,15 @@ function lay(ctx) {
   const put = (id, k, x, y, z, yaw, h, extra = {}) => fit(id, M[k], x, y, z, yaw, [R[k][0] * h, h, R[k][2] * h], extra);
   // studio: Ralph's console faces him (north), the wall of CDs behind him faces the room
   put("radio-console", "console", 0, 0.1, -2.8, 0, 0.95, { tags: ["radioprop"], state: { name: "Ralph's console" } });
-  put("radio-mic", "mic", 0.35, TOP.console, -2.95, 0, 0.42, { physics: "none", state: { name: "Condenser mic" } });
-  put("radio-lamp", "lamp", -0.45, TOP.console, -2.65, 20, 0.36, { physics: "none" });
-  sp("radio-lamp-light", { feetPosition: { x: -0.45, y: TOP.console + 0.42, z: -2.85 }, light: { kind: "point", color: "oklch(0.85 0.12 70)", intensity: 2.2, distance: 4.5 } });
+  put("radio-mic", "mic", -0.15, TOP.console, -3.0, 0, 0.4, { physics: "none", state: { name: "Condenser mic" } });
+  put("radio-lamp", "lamp", -0.5, TOP.console, -2.95, 200, 0.36, { physics: "none" });
+  sp("radio-lamp-light", { feetPosition: { x: -0.5, y: TOP.console + 0.45, z: -3.0 }, light: { kind: "point", color: "oklch(0.85 0.12 70)", intensity: 2.2, distance: 4.5 } });
   sp("radio-monitor-glow", { feetPosition: { x: 0, y: 1.35, z: -3.1 }, light: { kind: "point", color: "oklch(0.8 0.08 230)", intensity: 0.7, distance: 2.6 } });
-  put("radio-decks", "decks", 0.1, TOP.console, -2.6, 0, 0.26, { tags: ["radioprop"], state: { name: "CD decks" } });
+  put("radio-decks", "decks", 0.35, TOP.console, -2.95, 0, 0.22, { tags: ["radioprop"], state: { name: "CD decks" } });
   for (const [i, x] of [[0, -2.6], [1, 0], [2, 2.6]]) put(`radio-cds-${i}`, "cdrack", x, 0.1, -4.68, 180, 2.3, { state: { name: "CD shelves" } });
   // the small TV on its cart by the console, screen to the room: static, and now and then a camera somewhere else
   put("radio-tv", "tv", -1.45, 0.1, -2.8, 180, 0.95, use("tv", "Small TV", "Watch", { line: "" }));
-  sp("radio-tv-screen", { feetPosition: { x: -1.45, y: 0.72, z: -2.5 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 0.3, height: 0.22, depth: 0.005 }, material: { color: "oklch(0.2 0 0)" },
+  sp("radio-tv-screen", { feetPosition: { x: -1.52, y: 0.7, z: -2.565 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 0.34, height: 0.26, depth: 0.005 }, material: { color: "oklch(0.2 0 0)" },
     ui: `<div face="front" emissive style="width:300px;height:220px;background:repeating-linear-gradient(0deg,#9a9a9a 0px,#3c3c3c 2px,#d8d8d8 3px,#555 5px),repeating-linear-gradient(90deg,#666 0px,#bbb 1px,#444 3px);display:flex;align-items:flex-end;justify-content:center;font-family:monospace;font-size:26px;color:#e8ffe8;text-shadow:0 0 6px #000"><span style="background:#000a;padding:2px 6px">{{ state.line }}</span></div>`, state: { line: "" } });
   sp("radio-tv-glow", { feetPosition: { x: -1.45, y: 0.9, z: -2.2 }, light: { kind: "point", color: "oklch(0.85 0.03 230)", intensity: 0.5, distance: 2.2 } });
   // computer desk against the east wall, the chair pulled up to it: sitting here you never tire
@@ -119,7 +119,7 @@ function lay(ctx) {
   sp("radio-rug", { feetPosition: { x: -2.05, y: 0.114, z: 4.0 }, primitive: { kind: "box", width: 2.3, height: 0.006, depth: 3.1 }, material: { ...RUG, repeat: [1, 1], wrap: undefined } });
   put("radio-ctable", "ctable", -2.0, 0.1, 4.0, 0, 0.45, { state: { name: "Coffee table" } });
   for (const [i, x, z, yaw, tex] of [[0, -2.08, 3.85, 14, "glossy-2006-music-magazine-cover"], [1, -1.95, 4.2, -22, "glossy-2006-tv-guide-magazine-cover"], [2, -2.05, 3.92, 41, "glossy-2006-celebrity-gossip-magazine-cover"]])
-    sp(`radio-mag-${i}`, { feetPosition: { x, y: 0.553 + i * 0.007, z }, rotation: { yaw }, primitive: { kind: "box", width: 0.21, height: 0.006, depth: 0.28 }, material: MAG(tex) });
+    sp(`radio-mag-${i}`, { feetPosition: { x, y: TOP.ctable + 0.001 + i * 0.007, z }, rotation: { yaw }, primitive: { kind: "box", width: 0.21, height: 0.006, depth: 0.28 }, material: MAG(tex) });
   const arm = (id, x, z, yaw) => put(id, "armchair", x, 0.1, z, yaw, 0.95, { tags: ["seat", "radioprop"], state: { name: "Armchair", seat: { w: 1 }, rest: 0.5 } });
   arm("radio-armchair-1", -3.4, 4.0, 90); arm("radio-armchair-2", -2.0, 2.6, 180); arm("radio-armchair-3", -2.0, 5.45, 0);
   put("radio-side", "side", 3.53, 0.1, 2.4, 270, 0.6, { state: { name: "Side table" } });
