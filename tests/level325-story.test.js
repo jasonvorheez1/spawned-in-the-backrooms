@@ -30,3 +30,18 @@ test("Boom Town's trail stays on empty lots and its notes can be reread", () => 
   }
   expect(player.state.pages).toBe("3251,3252,3253");
 });
+
+test("story supplies upgrade existing props without refilling them on a relayout", () => {
+  const objects = { "l325-story-3251-backpack": { id: "l325-story-3251-backpack", state: {} } };
+  const ctx = { place: { objects }, spawn: (id, spec) => { objects[id] = { id, ...spec }; } };
+  lay(ctx);
+  for (const id of ["l325-story-3251-backpack", "l325-story-3252-almond-crate", "l325-story-3253-backpack"]) {
+    expect(objects[id].tags).toContain("container");
+    expect(objects[id].state.items).toBeTruthy();
+    objects[id].state.items = "";
+  }
+  lay(ctx);
+  expect(objects["l325-story-3251-backpack"].state.items).toBe("");
+  expect(objects["l325-story-3252-almond-crate"].state.items).toBe("");
+  expect(objects["l325-story-3253-backpack"].state.items).toBe("");
+});

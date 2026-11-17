@@ -6,7 +6,7 @@
 import { towerAt, cellOf, lobe, keyOf, GROUND } from "./level325.js";
 import { setQuest, tellQuest, finishLevelQuest } from "./quests.js";
 import CAMP from "./data/l0-kit-camp.yml";
-export const V = 2;
+export const V = 3;
 export const Q325 = { key: "q325", id: "fifteen-seconds", name: "Fifteen Seconds", tips: {
   1: "Find a tower that's still building and watch it.",
   2: "Learn the warning. Feel the street shake, look up for the blue.",
@@ -28,16 +28,20 @@ export function step325(ctx, p) {
 export function lay(ctx) {
   // Abandoned stops on permanent empty lots, clear of roads and tower footprints.
   const stops = [
-    { x: -9, z: -8, page: 3251, props: [["backpack", 0, 0, 55], ["note-clipboard", 0.55, 0.1, 20], ["lantern", -0.5, 0.3, 0]] },
-    { x: -55, z: 43, page: 3252, props: [["almond-crate", 0, 0, 15], ["note-clipboard", 0.5, 0.15, 75], ["tape-marks", -0.45, 0.15, 20]] },
-    { x: -150, z: 90, page: 3253, props: [["backpack", 0, 0, 150], ["note-clipboard", 0.55, 0.1, 45], ["shoes", -0.5, 0.2, 30]] },
+    { x: -9, z: -8, page: 3251, loot: ["backpack", "Eli's field bag", "bandage,battery"], props: [["backpack", 0, 0, 55], ["note-clipboard", 0.55, 0.1, 20], ["lantern", -0.5, 0.3, 0]] },
+    { x: -55, z: 43, page: 3252, loot: ["almond-crate", "Supply crate", "ration"], props: [["almond-crate", 0, 0, 15], ["note-clipboard", 0.5, 0.15, 75], ["tape-marks", -0.45, 0.15, 20]] },
+    { x: -150, z: 90, page: 3253, loot: ["backpack", "Mara's bag", "bandage,almond"], props: [["backpack", 0, 0, 150], ["note-clipboard", 0.55, 0.1, 45], ["shoes", -0.5, 0.2, 30]] },
   ];
   for (const stop of stops) for (const [model, dx, dz, yaw] of stop.props) {
     const id = `l325-story-${stop.page}-${model}`;
-    if (ctx.place.objects[id]) continue;
     const note = model === "note-clipboard";
-    ctx.spawn(id, { feetPosition: { x: stop.x + dx, y: GROUND, z: stop.z + dz }, rotation: { yaw }, model: CAMP.models[model], physics: "none",
+    if (!ctx.place.objects[id]) ctx.spawn(id, { feetPosition: { x: stop.x + dx, y: GROUND, z: stop.z + dz }, rotation: { yaw }, model: CAMP.models[model], physics: "none",
       ...(note ? { tags: ["usable"], behavior: "scripts/quest-prop-use.js", state: { kind: "l325-note", page: stop.page, name: "Wanderer's field note", verb: "Read" } } : {}) });
+    const obj = ctx.place.objects[id];
+    if (model === stop.loot[0] && obj && !obj.state?.l325Loot) {
+      obj.tags = [...new Set([...(obj.tags ?? []), "container"])];
+      obj.state = { ...(obj.state ?? {}), name: stop.loot[1], items: stop.loot[2], l325Loot: true };
+    }
   }
 }
 let n = 0;
