@@ -80,7 +80,11 @@ def load(name):
     bm = bmesh.new(); bm.from_mesh(me)
     bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5)
     if name == "heap":  # Tripo stood it on a display plate: cut the plate away
-        zs = [v.co.z for v in bm.verts]; z0 = min(zs) + 0.07 * (max(zs) - min(zs))
+        zs = [v.co.z for v in bm.verts]; zl, zh = min(zs), max(zs); hist = {}
+        for f in bm.faces:  # the plate top is the widest level sheet in the lower third
+            c = f.calc_center_median().z
+            if f.normal.z > .95 and c < zl + .33 * (zh - zl): k = round((c - zl) / (zh - zl) * 100); hist[k] = hist.get(k, 0) + f.calc_area()
+        z0 = zl + (max(hist, key=hist.get) + 2.5) / 100 * (zh - zl) if hist else zl; print("PLATE", sorted(hist.items(), key=lambda kv: -kv[1])[:4])
         bmesh.ops.bisect_plane(bm, geom=bm.verts[:] + bm.edges[:] + bm.faces[:], plane_co=(0, 0, z0), plane_no=(0, 0, 1), clear_inner=True)
     bm.to_mesh(me); bm.free()
     lo, hi = bbox(o); ctr = (lo + hi) / 2; d = hi - lo
@@ -215,6 +219,7 @@ def scatter():
 
 PIECES["mound"] = mound(); PIECES["pile"] = pile(); PIECES["scatter"] = scatter()
 for o in PIECES.values(): finish(o); o.hide_render = True
+for o in SRCS.values(): o.hide_render = True
 
 # proofs: front 3/4, back, top, each lit from its camera; a 1.2 m post stands in for the player
 scene.render.engine = "CYCLES"; scene.cycles.samples = 12; scene.cycles.use_denoising = True
