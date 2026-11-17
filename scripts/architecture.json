@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 10141,
-  "updatedAt": "2026-11-17T04:26:43.948Z",
-  "summary": "Spawned in the Backrooms is a survival RPG across Level 0, the Hub, and authored Backrooms destinations. Player character state holds persistent progression, gear, and quests while run/mode state is switched separately; shared player behaviors serve the multiplayer and solo places. Level 69 adds a solo, ephemeral highway adventure driven by a streaming place sim, a controllable car, and a local survey quest.",
+  "basedOnSpecVersion": 10154,
+  "updatedAt": "2026-11-17T04:47:19.562Z",
+  "summary": "Spawned in the Backrooms is a survival RPG across Level 0, the Hub, and authored Backrooms destinations. Character progression and gear live in player.state while run/story state is switched separately; shared player behaviors serve solo and multiplayer places. Level 69 is a solo ephemeral highway adventure composed by a streaming sim, a controllable car, player-local cinematic, and survey quest.",
   "scriptPaths": [],
   "places": [
-    "places/main (3D) - Level 0 yellow maze, routes and anomalies; the Bonus Rooms door is north of the waking point in x0z0.",
-    "places/bonus + places/testlab (3D) - vaporwave mall, homes, atlas Teleport Station, interactive props and creator/body fixtures; the glass-side Level 0 hall returns to the Lobby.",
+    "places/main (3D) - Level 0 yellow maze, routes and anomalies; Bonus Rooms door is north of the waking point in x0z0.",
+    "places/bonus + places/testlab (3D) - vaporwave mall, homes, atlas Teleport Station, interactive props and creator/body fixtures; glass-side Level 0 hall returns to the Lobby.",
     "places/thehub (3D) - tunnel crossroads and Camp Amber; sim/helpers compose doors, destinations, crews and local interactions.",
     "places/intake (3D), places/laundromat (solo ephemeral) and places/tutorial0 (solo ephemeral) - fresh-player creator/opening chain, laundromat cut and tutorial room/guidance.",
     "places/levelrun (solo ephemeral) - Level ! hospital chase, hazards, pursuers, intro/retry/rescue cuts and Safe Alcove.",
-    "places/level69 (3D, solo ephemeral) - The Road Trip of Affliction; Level 3 steel door or Level 325 sedan entry, streamed highway, Wren's pull-off, supplies, car and tunnel exit to Level 11.",
-    "places/level1, level1c, level2, level21, level26, level4, level5, level9, level10, level11, level12, level61, level70, level132, level169, level178 and other places/* - authored and procedural destinations; Level 11 also connects into Level !.",
+    "places/level69 (solo ephemeral) - The Road Trip of Affliction; Level 3 steel door or Level 325 sedan entry, night highway, car, Wren's pull-off and tunnel exit to Level 11.",
+    "places/level1, level1c, level2, level21, level26, level4, level5, level9, level10, level11, level12, level61, level70, level132, level169, level178 and other places/* - authored and procedural Backrooms destinations.",
     "places/level132, level169, level178 and other configured terrain/sim destinations - seeded terrain and authored setpieces, town schedules/barter, Kyoto residents and local quests."
   ],
   "roots": [
@@ -19,9 +19,9 @@
     "templates/player.js inserts scripts/god-kit.js before scripts/player.js - builder-only god-mode toggle and refill precede core player update/death handling.",
     "scripts/main-menu.js + scripts/lib/run-opts.js - per-player arrival, fresh-character and mode/run routing; main-menu-ui.js renders title/pause and expedition settings.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, static placements and generation/tick behavior; sims also run environmental and sign/surface passes.",
-    "places/level69/config.yaml + places/level69/sim.js - solo ephemeral road-trip instance, player wake-up/car seat, highway streaming, supplies, horrors and tunnel transition.",
+    "places/level69/config.yaml + places/level69/sim.js - solo ephemeral road-trip instance, player wake/car seat, streamed highway, supplies, hazards, ghost traffic and tunnel transition.",
     "scripts/l69-car.js + scripts/l69-road-geo.js - Level 69 vehicle controller/physics and procedural road slice geometry/collision.",
-    "scripts/lib/level69-quest.js + scripts/l69-post.js + scripts/lib/data/dlg-level69.yml - Wren's beacon quest state/dialogue and reflector-post interactions.",
+    "scripts/lib/l69-cut.js + scripts/main-menu.js - player-local cinematic camera sequence, triggered by Level 69 seat time.",
     "places/levelrun/config.yaml + sim.js + scripts/lib/levelrun-mechanics.js, levelrun-dress.js and levelrun-cut.js - Level ! staging, pursuit/hazards, room dressing and player-side cut lifecycle."
   ],
   "shared": [
@@ -29,20 +29,20 @@
     "scripts/lib/places.js - canonical place names/labels/HUD titles and valid atlas destinations; consumed by feed, quests and scripts/ui.js; includes Level 69.",
     "scripts/lib/levelrun-mechanics.js - Level ! corridor, obstacle table, Agility profile, obstacle contact and horde pursuit; reused by its sim, scripts/player.js and tests.",
     "scripts/lib/levelrun-dress.js + scripts/lib/levelrun-cut.js - modular hospital dressing and Level ! intro/retry/blackout/rescue cuts shared by run components.",
+    "scripts/lib/l69-cut.js - L69_INTRO_LEN and player-local opening-camera sequence; lazily loaded and driven by scripts/main-menu.js.",
     "scripts/lib/survival.js + scripts/lib/afk.js - needs-aware stamina recovery/status and AFK tracking; player.js, craft.js and craft-ui.js consume them.",
     "scripts/lib/grid-path.js - configurable 4-neighbor grid BFS/cache/cell selection shared by Level 0, 1, 2, 2.1, 3, Boiler and 6 adapters.",
-    "scripts/lib/critter-model.js + scripts/lib/cat-wardrobe.js + wardrobe/face data - shared player/NPC cat bodies, fur/face materials, outfit paint and fitted garment/hair/ear attachments.",
-    "scripts/mat-catskin.js - scripted cat-skin shader shared by body and head/appearance parts; receives fur, garment and fur-pattern parameters from appearance builders."
+    "scripts/lib/critter-model.js + scripts/lib/cat-wardrobe.js + wardrobe/face data - shared player/NPC cat bodies, fur/face materials, outfit paint and fitted garment/hair/ear attachments."
   ],
   "notableExports": [
-    "places/level69/sim.js - cadence, tick, noop.",
+    "places/level69/sim.js - cadence, ghostPass, tick, noop.",
     "scripts/l69-car.js - lights, ears, ignite, onSpawn, onControlBegin, onControlEnd, onInput, onCollide, update, onOutOfBounds.",
     "scripts/l69-road-geo.js - geometry, collider.",
     "scripts/l69-post.js - ears; scripts/l69-portal-car.js - ears, go; scripts/l69-exit.js - onTriggerEnter.",
     "scripts/l69-ui.js - l69Ui.",
+    "scripts/lib/l69-cut.js - L69_INTRO_LEN, l69CutTick.",
     "scripts/lib/level69-quest.js - WREN, Q69, plantBeacon, l69Choices, handleDialogueQuest69.",
-    "scripts/god-kit.js - onInput, update; templates/player.js - player.",
-    "scripts/lib/places.js - PLACES, PLACE_NAMES, PLACE_LABELS, LEVEL_TITLES; scripts/lib/levelrun-mechanics.js - CORRIDOR, OBSTACLES, agilityProfile, hitObstacle, stepHordeZ."
+    "scripts/god-kit.js - onInput, update; templates/player.js - player; scripts/lib/places.js - PLACES, PLACE_NAMES, PLACE_LABELS, LEVEL_TITLES."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable character player.state: progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, currency and gear shared across Solo/Multiplayer.",
@@ -51,23 +51,22 @@
     "scripts/db.js + scripts/main-menu.js - named save-slot snapshots and hidden Solo/Multiplayer mode snapshots; live character state remains player.state.",
     "scripts/main-menu.js writes solo run.needs/run.sanity switches; scripts/player.js applies needs/sanity drains and scales stamina recovery through scripts/lib/survival.js.",
     "scripts/lib/hub.js noteAtlas, called by scripts/player.js on arrival - player.state.atlas first-seen dates/visit counts; place sims own local texV/signTexV completion stamps.",
-    "scripts/lib/level69-quest.js owns player.state.l69q and l69planted for Mile Markers; Level 69 sim owns player.state.l69 encounter/intro/tunnel/whisper data and place/session streaming/seat timing.",
+    "scripts/lib/level69-quest.js owns player.state.l69q and l69planted; Level 69 sim owns player.state.l69 intro/seat, tunnel, encounter and out-of-car timing, plus place/session streaming and ghost schedule state.",
     "scripts/god-kit.js toggles builder-only player.state.god and grants weapons, armor, ammo and throwables; while active it refills hp, sanity, hunger, thirst and equipped-item condition."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered player behavior stack for locomotion, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter, phone, emote and god mode.",
     "templates/player.js god-kit.js onInput handles configured U/godMode → editor player.state.god and gear grant; update refills survival values before scripts/player.js core update.",
     "scripts/fall-guard.js holds velocity across place changes for ground streaming; grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
-    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; player.js builds viewmodel/avatar through critter-model appearance builders.",
+    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; camera uses worldFeetPosition for parented/seated bodies; player.js builds viewmodel/avatar through critter-model builders.",
     "Fresh player detected in scripts/main-menu.js → intake/creator then solo laundromat; scripts/lib/laundromat-cut.js plays opening and crosses to tutorial0.",
     "places/tutorial0/sim.js tick dresses room/supplies/signs; scripts/lib/tutorial.js reads place/position/player state → tutorial-ui.js and Field Guide prompts; tut0-cut.js drives encounter beats.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
-    "scripts/lib/run-opts.js mpRoom/toSolo → party or personal room; scripts/bonus-door.js → hub.toHub; Bonus glass hall scripts/bonus-l0-exit.js sets bonusBack and routes toSolo(main), then main-menu places player outside the return door.",
-    "Level 3 sim's l3-to-l69 door or Level 325 sim's l325-to-l69 sedan → Level 69 solo instance; scripts/l69-portal-car.js handles Boom Town sit/cross and places/level69/sim.js seats the arriving player in its car and starts intro.",
-    "places/level69/sim.js tick streams road slices, stalled supply cars, Wren/post props and threat state; scripts/l69-car.js controls driving/exiting; scripts/l69-ui.js reads player.state.l69 and controlled car, rendered by scripts/ui.js for level69 places.",
-    "scripts/l69-post.js interaction → scripts/lib/level69-quest.js plantBeacon writes l69planted/l69q; scripts/talk.js dispatches Wren dialogue to handleDialogueQuest69, with choices from scripts/lib/npc-starters.js and lines loaded by scripts/lib/dialogue.js.",
-    "Level 11 door scripts/l11-ch2-drop.js → levelrun start/alcove; places/levelrun/sim.js dresses run, advances horde/hazards and handles rescue/exit; Level ! exit returns to Level 11.",
-    "Level 69 road tunnel trigger → sim lays tunnel after the long-trip beat; scripts/l69-exit.js trigger crosses the local player to Level 11."
+    "scripts/lib/run-opts.js mpRoom/toSolo → party or personal room; scripts/bonus-door.js → hub.toHub; Bonus glass hall scripts/bonus-l0-exit.js sets bonusBack and routes toSolo(main), then main-menu places player outside return door.",
+    "Level 3 sim's l3-to-l69 door or Level 325 sim's l325-to-l69 sedan → Level 69 solo instance; sim seats the arriving player, sets player.state.l69.introAt and starts car; scripts/lib/l69-cut.js is driven from main-menu.js and writes ctx.view.camera, then releases it.",
+    "places/level69/sim.js streams road slices and attachments, stalls, Wren/post props, Being and ghost traffic; scripts/l69-car.js controls driving/exiting; scripts/l69-ui.js reads player.state.l69 and controlled car for intro, gauges and on-foot countdown.",
+    "scripts/l69-post.js interaction → scripts/lib/level69-quest.js plantBeacon writes l69planted/l69q; scripts/talk.js dispatches Wren dialogue to handleDialogueQuest69, with choices from scripts/lib/npc-starters.js and lines loaded by scripts/lib/data/dlg-level69.yml.",
+    "Level 11 door scripts/l11-ch2-drop.js → levelrun start/alcove; places/levelrun/sim.js dresses run, advances horde/hazards and handles rescue/exit; Level ! exit returns to Level 11."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
@@ -77,7 +76,7 @@
     "scripts/lib/sleep.js + scripts/interact.js + scripts/rest.js + scripts/l178-prop.js - common bed detection/entry, with ordinary rest and Kyoto futon crossing as distinct outcomes.",
     "scripts/lib/l169-road.js + l169-road-geo.js + l169-travel.js + l169-door.js - checkpoint structures vary by site and geometry kind; streamed props include route boards and animated doors.",
     "places/levelrun/sim.js + scripts/lib/levelrun-mechanics.js - obstacle/hazard corridor varies by position, period and obstacle kind; Agility/stim alter movement/stamina and horde speed.",
-    "places/level69/sim.js + scripts/l69-road-geo.js - seeded 40 m road segments vary by slice index; reflector posts, supply cars and tunnel mouth are attached to streamed slices while the threat reacts to being on foot."
+    "places/level69/sim.js + scripts/l69-road-geo.js - seeded 40 m slices vary by index; lamps and gantries attach per slice, with tunnel signs, wrong-way foldback and a scheduled opposing ghost-car pass."
   ],
   "probableOrphans": [
     "scripts/balloon26-geo.js - procedural balloon geometry exists; Level 26 placements/barrage use uploaded models.",
@@ -91,8 +90,8 @@
     "Solo and Multiplayer share one character but not run/story state: scripts/lib/run-opts.js isStoryKey defines the swapped key family; MODE_SLOT 91/92 are separate SQL snapshots hidden from ordinary Save Manager slots.",
     "Fresh-player opening chain is main-menu → intake → laundromat → tutorial0; lmDone/arrivePending are player.state flags, while lmSkip and cut timing are session state. These opening places are solo/ephemeral.",
     "Level ! uses places/levelrun/config.yaml solo/ephemeral; CORRIDOR and its 26 m chunk/door generation come from scripts/lib/levelrun-mechanics.js; keep sim geometry and hazard/pursuit/midpoint/collapse/exit depths aligned.",
-    "Level 69 road slices are 40 m along -Z; sim streams three slices behind/four ahead, places reflector posts at 0.6/1.2/1.8 km and the tunnel at about 2.2 km. The car is the shelter: leaving starts the Being timer; Wren/beacon progress is player.state.",
-    "Level 69 solo places may have UUID-suffixed IDs: scripts/player.js and feed/UI normalize or prefix-match level69 for zone/title/overlay; keep those checks working for instance IDs. Level 3 door and Level 325 car are separate entries; tunnel trigger returns through Level 11.",
-    "God mode is editor-only, uses configured godMode input (U), and sits before scripts/player.js so its refill occurs before core death handling; turning it off leaves granted gear in inventory."
+    "Level 69 road slices are 40 m along -Z; sim streams three slices behind/four ahead, with posts at 0.6/1.2/1.8 km and tunnel about 2.2 km. Reversing beyond z=300 folds the player/car 600 m forward; preserve this with stream position handling.",
+    "Level 69 seat uses local player feet under the car: scripts/camera.js must compare/use worldFeetPosition when available or the body and camera appear hundreds of metres from the vehicle. The opening cut is 12.6 s; sim delays on-foot timer until 13 s and UI keeps the opening overlay to 13.2 s.",
+    "Level 69 solo places may have UUID-suffixed IDs; player/feed/UI normalize or prefix-match level69 for zone/title/overlay. Separate Level 3 door and Level 325 car entries converge on the same seat/introduction; death recovery resets downed state and seats/graces the player again."
   ]
 }
