@@ -30,7 +30,7 @@ export function questTick(ctx, L) {
         if (met.length < Q.meet) setQuest(s, W.id, { name: W.name, step: `Meet the people who live here (${met.length}/${Q.meet})`, mark: mk(L.house.center, "Ferry's house") });
       }
       if (metCount(s) >= Q.meet || noNpcs(s)) { // no people in this run: the house stands empty, reaching it is the whole errand
-        finishLevelQuest(ctx, p, W.key, { key: W.key, name: W.name, id: W.id }, { xp: 150, cents: 0, items: [], by: "ferry", text: "Quest Completed: Welcome to the Desert" });
+        finishLevelQuest(ctx, p, W.key, { key: W.key, name: W.name, id: W.id }, { xp: 150, cents: 4500, items: [], by: "ferry", text: "Quest Completed: Welcome to the Desert" });
         s.l169q = 99;
       }
       continue;
@@ -47,7 +47,7 @@ export function questTick(ctx, L) {
     }
     if (r === 2 && near(f, siteOf("edge", L), Q.reach.edge)) {
       if (!hasKey(s, "level169")) giveKey(ctx, p, "level169");
-      finishLevelQuest(ctx, p, R.key, { key: R.key, name: R.name, id: R.id }, { xp: 300, cents: 0, items: [], by: "ferry", text: "Quest Completed: The Road North. A Hub key for Level 169 is yours" });
+      finishLevelQuest(ctx, p, R.key, { key: R.key, name: R.name, id: R.id }, { xp: 300, cents: 9000, items: [], by: "ferry", text: "Quest Completed: The Road North. A Hub key for Level 169 is yours" });
       s.l169r = 99;
     }
   }

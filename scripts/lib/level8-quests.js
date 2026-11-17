@@ -107,7 +107,7 @@ function after(p, key, lines) {
   return lines[n % lines.length];
 }
 
-const CARLA_PAY = { xp: 90, cents: 0, items: ["almond", "bandage"], rep: [["survivors", 8], ["karma", 4]] };
+const CARLA_PAY = { xp: 120, cents: 4000, items: ["almond", "bandage"], rep: [["survivors", 8], ["karma", 4]] };
 // Carla gets her music: the stone kazoo, or her own whistle mended. Paid once (carlaQ 99, kazooGiven).
 export function deliverKazoo(ctx, p, how = "kazoo") {
   const s = p?.state;
@@ -209,12 +209,12 @@ export function handleDialogueQuest8(ctx, p, npc, text) {
         return { reply: "Your numbers are twelve degrees off. It is not your fault, the rock lies. You cannot do this one on paper. You have to crawl it.", mood: "annoyed" };
       }
       s.l8Loops = Math.max(1, s.l8Loops ?? 0);
-      finishQuest8(ctx, p, "karst", { ...KARST_PAY, xp: 125, text: "Quest Completed: The Karst Survey · worked the loop out on paper · +125 XP, +$50.00, 2 Caver Batteries, Repair Kit" });
+      finishQuest8(ctx, p, "karst", { ...KARST_PAY, xp: 235, text: "Quest Completed: The Karst Survey · worked the loop out on paper · +235 XP, +$50.00, 2 Caver Batteries, Repair Kit" });
       return { reply: "You got the fold from the compass drift. Hang on. Dell wrote the same number in the margin. The same number. Here: batteries, the toolkit, the stipend. I am going to write her name on this map.", mood: "happy" };
     }
     if (t === C.ivoGive && s.karstQ && s.karstQ < 99) {
       if ((s.l8Loops ?? 0) < 1) return { reply: "You haven't hit the loop yet. The tight tube past Marker 78. You'll know it when you see the Face Rock twice.", mood: "calm" };
-      finishQuest8(ctx, p, "karst", { ...KARST_PAY, xp: 110, text: "Quest Completed: The Karst Survey · +110 XP, +$50.00, 2 Caver Batteries, Repair Kit" });
+      finishQuest8(ctx, p, "karst", { ...KARST_PAY, xp: 220, text: "Quest Completed: The Karst Survey · +220 XP, +$50.00, 2 Caver Batteries, Repair Kit" });
       return { reply: "That's it. That's the second fold, exactly where Dell said it would be. Take the batteries and the toolkit from the trunk. I'm going to write her name on this map.", mood: "happy" };
     }
     if (t === C.ivoAfter && s.karstQ === 99) {

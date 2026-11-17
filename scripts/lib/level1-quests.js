@@ -186,7 +186,7 @@ export function handleDialogueQuest1(ctx, p, it, text) {
   }
   if (id === "meg-callum" && r === 3 && k === "rResolve" && s.rAleTalked === "rAid" && !s.rAleDead) {
     aleFeels(ctx, p, 45);
-    finish(ctx, p, "rations", { xp: 130, cents: 500, items: ["bandage", "weapon:" + UNIQUE], text: "Quest completed: Short Rations · found help for Ale's family · Callum's Lucky Thirteen", rep: [["meg", 3], ["survivors", 8], ["karma", 5]] });
+    finish(ctx, p, "rations", { xp: 130, cents: 2000, items: ["bandage", "weapon:" + UNIQUE], text: "Quest completed: Short Rations · found help for Ale's family · Callum's Lucky Thirteen", rep: [["meg", 3], ["survivors", 8], ["karma", 5]] });
     if (s.rationsQ === 99) s.rationsOutcome = "helped";
     return { reply: "She should have asked. But the kids need to eat. I'll set aside a share, and Ale can run it out there. You paid in already. Take this too. Thirteen years it's kept me breathing. Your turn.", mood: "calm" };
   }
@@ -197,13 +197,13 @@ export function handleDialogueQuest1(ctx, p, it, text) {
     }
     const kind = s.rAleTalked !== "rAleBarter"; // she told you why
     aleFeels(ctx, p, -60);
-    finish(ctx, p, "rations", { xp: 150, cents: 1500, items: ["ration", "bandage"], text: "Quest completed: Short Rations · supplies and $15", rep: [["meg", 10], ["survivors", kind ? -3 : 0]] });
+    finish(ctx, p, "rations", { xp: 150, cents: 4000, items: ["ration", "bandage"], text: "Quest completed: Short Rations · supplies and $40", rep: [["meg", 10], ["survivors", kind ? -3 : 0]] });
     return { reply: "Ale. Figures. I'll handle it. Here's fifteen, a ration and a clean bandage. You did what I asked.", mood: "happy" };
   }
   if (k === "rCover" && id === "meg-callum" && (r === 3 || r === 4)) {
     if (!roll(ctx, p, it, k)) { setStep1(ctx, p, "rations", 4); addRep(s, "meg", -3); return { reply: "Rats don't open tins with a knife. Try again, and this time don't lie to me.", mood: "angry" }; }
     aleFeels(ctx, p, 45);
-    finish(ctx, p, "rations", { xp: 120, cents: 1000, items: ["almond", "almond", "ration"], text: "Quest completed: Short Rations · you covered for Ale", rep: [["survivors", 8], ["karma", 5]] });
+    finish(ctx, p, "rations", { xp: 120, cents: 3000, items: ["almond", "almond", "ration"], text: "Quest completed: Short Rations · you covered for Ale", rep: [["survivors", 8], ["karma", 5]] });
     return { reply: "Rats. Great. I'll set traps. Here, for your time. Don't tell anyone how many cans we have left.", mood: "calm" };
   }
 
@@ -267,7 +267,7 @@ export function handleDialogueQuest1(ctx, p, it, text) {
     return { reply: "Good. I'll start treating him. Ask me how he's doing once I've had a look.", mood: "happy" };
   }
   if (k === "wDone" && id === "meg-ortiz" && w === 3) {
-    finish(ctx, p, "water", { xp: 110, cents: 0, items: ["firstaid", "bandage", "bandage"], text: "Quest completed: Bad Water", rep: [["meg", 8], ["karma", 3]] });
+    finish(ctx, p, "water", { xp: 150, cents: 4500, items: ["firstaid", "bandage", "bandage"], text: "Quest completed: Bad Water", rep: [["meg", 8], ["karma", 3]] });
     return { reply: "Fever broke. He'll live, and he'll stop drinking puddles. Take these. A runner with a kit lives twice as long.", mood: "happy" };
   }
   return null;

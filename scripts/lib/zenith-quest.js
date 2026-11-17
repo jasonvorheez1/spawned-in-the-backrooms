@@ -80,7 +80,7 @@ export function handleDialogueQuestZ(ctx, p, npc, text) {
     if (extra) parts.push(`B.N.T.G. bonus +$${(extra / 100).toFixed(2)}`);
     parts.push(tier || "B.N.T.G. +12");
     const summary = parts.join(" · ");
-    queuePayout(s, { xp: 150, items: ["almond"], text: summary });
+    queuePayout(s, { xp: 190, items: ["almond"], text: summary });
     s.notice = { text: summary, at: ctx.now() }; pushFeed(s, summary, ctx.now(), "good");
     return { reply: `It's warm through the case. Set it down here. Here's your ${s.zenHaggle > 0 ? "hundred" : "sixty"}. Keep the card. I've got more work in there if you want it.`, mood: "happy" };
   }

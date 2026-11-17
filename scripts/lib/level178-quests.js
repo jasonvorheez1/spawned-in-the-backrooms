@@ -104,7 +104,7 @@ export function l178Choices(id, s) {
     if (s?.l178u === 2) T("The cook found this jar behind the rice cooker. Know what it is?", "Quest");
     if (s?.l178a === 2) T("The Order wants to share a meal with the Sector.", "Quest");
     if (done(s, "l178u") && done(s, "l178a") && done(s, "l178l") && done(s, "l178b") && !s?.l178t) T("Everyone keeps talking about leaving. How do people actually travel from here?", "Quest Start");
-    if (s?.l178t === 4) T("I sat in the spring. Woke up right where I was. The Hub door's the way out.", "Quest Turn-In");
+    if (s?.l178t === 4) { T("I sat in the spring. Woke up right where I was. The Hub door's the way out.", "Quest Turn-In"); T("I sat in the spring. I went somewhere. The Order has it right.", "Quest Turn-In"); }
     if (done(s, "l178t")) T("Still no other way out?", "Talk");
   } else if (id === "l178-order-1") {
     if (done(s, "l178k") && !s?.l178a) T("Is the Order in need of anything?", "Quest Start");
@@ -163,6 +163,11 @@ export function handleDialogueQuest178(ctx, p, npc, text) {
     if (t.includes("how do people actually travel from here") && !s.l178t) {
       step(ctx, p, "station", 1);
       return { reply: "Ugh, the spring story again. Okay. Go ask the Order lady by the north rooms, she's got the whole theory. Then sit in the spring yourself. Then come tell me where you woke up.", mood: "calm" };
+    }
+    if (t.includes("the order has it right") && s.l178t === 4) { // Nov 17 choice: back the Order's spring story: no naginata, the Order pays instead and the Sector hears it from Irawan
+      finishLevelQuest(ctx, p, Q.station.key, Q.station, { xp: 300, cents: 9000, items: ["l178_miso"], by: "survivors", rep: [["survivors", -3]], text: "Quest Completed: The Travel Station · +300 XP, +$90.00 from the Order, Miso soup" });
+      s.l178spring = true;
+      return { reply: "No you didn't. You were asleep, I watched. Fine. Go tell the Sister, she'll pay you for it. I'm keeping the naginata.", mood: "annoyed" };
     }
     if (t.includes("the hub door's the way out") && s.l178t === 4) {
       finish(ctx, p, "station");

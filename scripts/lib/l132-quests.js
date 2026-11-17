@@ -82,7 +82,7 @@ export function l132Choices(id, s) {
     if (m > 0 && m < 2) T("How does trading work around here?", "Quest");
     if (m === 2 && !holds(s, "fruit")) (s?.almonds ?? 0) > 0 ? T("Trade you an Almond Water for an apple.", "Barter") : T("I don't have anything to trade.", "Quest");
     if (owe === 7) T("Sorry about the crate. How do I make it right?", "Quest");
-    if (m > 0 && m < 99 && holds(s, "records")) T("Here's a record for your shelf.", "Quest Turn-In");
+    if (m > 0 && m < 99 && holds(s, "records")) { T("Here's a record for your shelf.", "Quest Turn-In"); T("I'm keeping the record. It's my shelf it's missing from.", "Quest Turn-In"); }
     if (m === 99) T("How's the shelf looking?", "Talk");
   } else if (id === "l132-rosalind") {
     if (m >= 2 && m < 4 && !holds(s, "hats") && holds(s, "fruit")) T("Trade you this apple for a hat.", "Barter");
@@ -92,7 +92,7 @@ export function l132Choices(id, s) {
     if (owe === 3) T("Sorry about the record. How do I make it right?", "Quest");
   } else if (id === "l132-odalys") {
     if (!g) T("Something wrong with the laptop?", "Quest Start");
-    if (g === 5) T("Try your upload now.", "Quest Turn-In");
+    if (g === 5) { T("Try your upload now.", "Quest Turn-In"); T("It's fixed. That was a day's work: sixty dollars.", "Quest Turn-In"); }
     if (g === 99) T("How's the report doing?", "Talk");
   } else if (id === "l132-wendell") {
     if (g === 1) T("The square's Wi-Fi keeps dropping. Can it be fixed?", "Quest");
@@ -120,9 +120,14 @@ export function handleDialogueQuest132(ctx, p, npc, text) {
       const r = Q.record;
       if (!ctx.place.objects[r.id]) ctx.spawn(r.id, { feetPosition: { x: r.at[0], y: r.at[1], z: r.at[2] }, rotation: { lookAt: { x: 0, y: 1, z: 0 } }, model: r.model, layout: { box: { min: { x: -0.15, y: 0, z: -0.15 }, max: { x: 0.15, y: r.h, z: 0.15 } } }, physics: "static", tags: ["l132"] });
       ctx.emit("playSound", { clip: "cdn/sfx-vinyl-record-sleeve-set-on-wooden-shelf.mp3", position: { x: r.at[0], y: r.at[1], z: r.at[2] }, volume: 0.6 });
-      finishLevelQuest(ctx, p, QM.key, QM, { xp: Q.missing.xp, cents: 0, items: [], rep: [["lumiria", Q.missing.rep]], by: "lumiria", text: `Quest Completed: The Missing Piece · +${Q.missing.xp} XP, your first collection piece` });
+      finishLevelQuest(ctx, p, QM.key, QM, { xp: Q.missing.xp, cents: 4500, items: [], rep: [["lumiria", Q.missing.rep]], by: "lumiria", text: `Quest Completed: The Missing Piece · +${Q.missing.xp} XP, your first collection piece` });
       return R("done");
     }
+    if (t.includes("keeping the record") && holds(s, "records") && m < 99) { // Nov 17 choice: keep the record: cash-poor, no fruit, Gus's shelf stays short and Lumiria thinks less of you
+      finishLevelQuest(ctx, p, QM.key, QM, { xp: Q.missing.xp, cents: 0, items: [], rep: [["lumiria", -3]], by: "lumiria", text: `Quest Completed: The Missing Piece · +${Q.missing.xp} XP, you kept the record` });
+      s.l132kept = true; return R("kept", "calm");
+    }
+    if (t.includes("shelf looking")) return R(s.l132kept ? "afterkept" : "after", s.l132kept ? "calm" : "happy");
     if (t.includes("shelf looking")) return R("after");
   }
   if (id === "l132-rosalind") {
@@ -148,9 +153,14 @@ export function handleDialogueQuest132(ctx, p, npc, text) {
       }
       s.keyItems = [...new Set([...(s.keyItems ?? []), Q.signal.pass])];
       s.l132friend = true;
-      finishLevelQuest(ctx, p, QS.key, QS, { xp: Q.signal.xp, cents: 0, items: [], rep: [["lumiria", Q.signal.rep]], by: "lumiria", text: `Quest Completed: Signal Strength · +${Q.signal.xp} XP, Lumiria day pass` });
+      finishLevelQuest(ctx, p, QS.key, QS, { xp: Q.signal.xp, cents: 6000, items: [], rep: [["lumiria", Q.signal.rep]], by: "lumiria", text: `Quest Completed: Signal Strength · +${Q.signal.xp} XP, Lumiria day pass` });
       return R("report");
     }
+    if (t.includes("sixty dollars") && g === 5) { // Nov 17 choice: bill her: cash now, no day pass, no friend of the town
+      finishLevelQuest(ctx, p, QS.key, QS, { xp: Q.signal.xp, cents: 6000, items: [], rep: [["lumiria", -2]], by: "lumiria", text: `Quest Completed: Signal Strength · +${Q.signal.xp} XP, +$60.00, no pass` });
+      s.l132billed = true; return R("billed", "calm");
+    }
+    if (t.includes("report doing")) return R(s.l132billed ? "afterbilled" : "after", s.l132billed ? "calm" : "happy");
     if (t.includes("report doing")) return R("after");
   }
   if (id === "l132-wendell") {

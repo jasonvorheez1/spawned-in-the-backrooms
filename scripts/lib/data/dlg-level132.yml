@@ -148,6 +148,8 @@ l132-rosalind:   # hat stall: elegant, arch, theatrical in her own way
 l132-gus:   # fruit stall: big, gentle, slow and happy
   quest:   # quest replies (scripts/lib/l132-quests.js)
     intro: "Hey there, new face. Nobody here pays for anything. You trade for what your shelf is missing. Mine's got every fruit there is, but no music. I'd sure love a record."
+    kept: "Huh. Well. It's your record. Shelf's been short this long."
+    afterkept: "Same as it was. No music."
     apple: "An Almond Water? Sure thing. One apple, nice and crisp. Now go find somebody who wants an apple more than I do."
     applegive: "That'll do fine. One apple. Now go find somebody who wants an apple more than I do."
     applefree: "Empty pockets, huh? Take one anyway. Just pass it on to somebody who needs it."
@@ -223,6 +225,8 @@ l132-mateo:   # Dial-Up Cafe owner: easygoing, dry, Spanish accent
 l132-odalys:   # wanderer, newly arrived: earnest, bookish, frazzled, writing for the M.E.G. database
   quest:   # quest replies (scripts/lib/l132-quests.js)
     start: "It keeps dropping. I've been trying to upload this report for three hours. The guy at the RadioShed would know, but I didn't want to bother him."
+    billed: "Oh. Right. Yes, of course. Sixty. I thought... no, that's fair. It sent, anyway."
+    afterbilled: "It's up. I left the part about the dish out."
     report: "Entry, Lumiria. Nobody here has ever paid for anything, and nobody here has ever been poor. Okay. It sent. It actually sent! Take this pass, the whole town owes you one."
     after: "Three people already read my report. Three! One of them was the Duke."
   hi: "Oh, hi, sorry, one second, I'm in the middle of a sentence. Okay. Hi! Odalys. I just got here three days ago. I'm writing all of it up for the M.E.G. database. If the Wi-Fi would just stay on."

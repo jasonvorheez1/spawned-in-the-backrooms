@@ -127,8 +127,8 @@ export function handleDialogueQuest10(ctx, p, npc, text) {
     if (t.includes("worm's boring in under your pantry") && s.cellarQ === 2) {
       const sealed = !!s.cellarSealed;
       finishQuest(ctx, p, "cellar", sealed
-        ? { xp: 95, cents: 3500, items: ["kit", "almond"], rep: [["meg", 6], ["survivors", 4]], text: "Quest Completed: Cellar in the Shadows · Burrow shored · +95 XP, +$35.00, Repair Kit, Almond Water" }
-        : { xp: 70, cents: 2000, items: ["almond"], rep: [["meg", 4], ["survivors", 2]], text: "Quest Completed: Cellar in the Shadows · Burrow reported · +70 XP, +$20.00, Almond Water" });
+        ? { xp: 190, cents: 7000, items: ["kit", "almond"], rep: [["meg", 6], ["survivors", 4]], text: "Quest Completed: Cellar in the Shadows · Burrow shored · +190 XP, +$70.00, Repair Kit, Almond Water" }
+        : { xp: 150, cents: 5000, items: ["almond"], rep: [["meg", 4], ["survivors", 2]], text: "Quest Completed: Cellar in the Shadows · Burrow reported · +150 XP, +$50.00, Almond Water" });
       return sealed
         ? { reply: "A worm. Under my peaches. And you didn't shoot it, you just shut the door on it. That's sense. Thirty-five, a repair kit and a bottle. I'll have Hale pour concrete over that hole in the morning.", mood: "happy" }
         : { reply: "A worm. Under my peaches. Well, you came back with all your fingers, and that's what I asked for. Twenty and a bottle. Hale and I will brick it up before it finds the root vegetables.", mood: "calm" };

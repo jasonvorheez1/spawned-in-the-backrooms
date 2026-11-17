@@ -118,6 +118,8 @@ export function queuePayout(s, { xp = 0, items = [], text = null } = {}) {
 }
 
 // Shared quest completion payout (reputation bonus, karma/rep, cash, XP, feed, banner, fanfare, milestone)
+// Reward curve (Savi's pick, Nov 17): xp ≈ 60 × tier × (1 + danger). tier 1 = an errand (≤3 steps), 2 = 4-5 steps, 3 = a chain or 6+;
+// danger = loot.js POOL_TIER / 18 (0..1). Backdollars ≈ $0.30 a point of xp when cash is the reward; a unique item stands in for cash.
 export function finishLevelQuest(ctx, p, qKey, q, { xp = 100, cents = 5000, items = [], text = "", rep = [], by = "survivors", payKey } = {}) {
   const s = p?.state;
   if (!s || !q || s[q.key] === 99 || !payOnce(s, payKey ?? q.key)) return false;
