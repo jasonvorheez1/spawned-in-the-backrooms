@@ -65,6 +65,9 @@ function pieces(ctx, t, near) {
   if (fl >= 1) put("lobby", sg, GROUND, body(t.basement ? ["lobby_basement_clad", "lobby_basement", "lobby_clad", "lobby"] : ["lobby_clad", "lobby"], "lobby", near));
   const full = Math.max(0, Math.floor((fl - 1) / SECTION)), rem = Math.max(0, fl - 1 - full * SECTION);
   for (let s = 0; s < full; s++) put("s" + s, sg, GROUND + STOREY + s * SH, near && s < 2 ? body(["section_clad", "section10", "section_far"], "section", s === 0) : body(["section_far", "section_clad"], "far", false));
+  // bamboo sleeves (the bamboo kit): a 10-storey ring round every finished section, a one-storey ring on each loose floor; none until the model lands
+  if (pick("ring10")) for (let s = 0; s < full; s++) put("bs" + s, sg, GROUND + STOREY + s * SH, { model: K[near && s < 2 ? "ring10" : pick("ring_far", "ring10")].glb, physics: "none" });
+  if (near && pick("ring")) for (let j = 0; j < rem; j++) put("br" + j, sg + full, GROUND + STOREY * (1 + full * SECTION + j), { model: K.ring.glb, physics: "none" });
   if (near || full === 0) for (let j = 0; j < rem; j++) put("r" + j, sg + full, GROUND + STOREY * (1 + full * SECTION + j), body(["floor_clad", "floor"], "floor", near && full === 0));
   if (!near || warn || fl < 1) return out;
   // the storey being built, piece by piece: slab quadrants slide in, poles climb, columns grow, the core rises, the net drops
@@ -123,6 +126,7 @@ function collapse(ctx, t, near) {
         animate(ctx, fid, { feetPosition: { x: t.x + Math.cos(a) * 26 + t.lean.x * 14, y: 1, z: t.z + Math.sin(a) * 26 + t.lean.z * 14 }, rotation: { yaw: a * 80, pitch: 240 + f * 50, roll: 130 - f * 40 } }, { duration: 7.5 + f * 0.5, easing: "easeInQuad" }); } }
     if (st < 3 && t.wt >= FALL_S) { st = 3; const L = lobe(t), left = WARN_S - t.wt;
       for (let i = 0; i <= full; i++) { const id = i === full ? k + "-lobby" : k + "-s" + i; if (!ctx.place.objects[id] || i === full) continue; const f = (i + 1) / (full + 1), tilt = 10 + i * 7;
+        if (ctx.place.objects[k + "-bs" + i]) animate(ctx, k + "-bs" + i, { feetPosition: { x: t.x + (L.x1 - t.x) * f * 1.15, y: GROUND + i * 2.2 - 7, z: t.z + (L.z1 - t.z) * f * 1.15 }, rotation: { yaw: 0, pitch: t.lean.z * (tilt + 12), roll: -t.lean.x * (tilt + 12) } }, { duration: left * 0.92, easing: "easeInQuad" });
         animate(ctx, id, { feetPosition: { x: t.x + (L.x1 - t.x) * f, y: GROUND + i * 2.2 - 6, z: t.z + (L.z1 - t.z) * f }, rotation: { yaw: 0, pitch: t.lean.z * tilt, roll: -t.lean.x * tilt } }, { duration: left, easing: "easeInQuad" }); }
       for (let j = 0; j < 9; j++) { const id = k + "-r" + j; if (ctx.place.objects[id]) animate(ctx, id, { "feetPosition.y": GROUND }, { duration: left, easing: "easeInQuad" }); } }
     // debris rain: 16 deterministic pieces between second 5 and the impact; each is a real chunk that lands where its shadow of dust says
