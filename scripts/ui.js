@@ -13,13 +13,13 @@ export function grmType(i, v) { grmTyped(i, v); }
 const MODS = Object.create(null), MOD_WAIT = Object.create(null)
 const lazy = (k, load) => {
   if (k in MODS) return MODS[k]
-  if (!MOD_WAIT[k]) MOD_WAIT[k] = load().then((m) => (MODS[k] = m)).catch(() => (MODS[k] = {}))
+  if (!MOD_WAIT[k]) MOD_WAIT[k] = load().then((m) => (MODS[k] = m)).catch(() => { delete MOD_WAIT[k] }) // a failed load (a save mid-fetch) retries next frame, never sticks blank
   return null
 }
 const lazyFn = (k, load, fn) => (...a) => {
   const m = MODS[k]
   if (m?.[fn]) return m[fn](...a)
-  return (MOD_WAIT[k] ??= load().then((mod) => (MODS[k] = mod)).catch(() => (MODS[k] = {}))).then((mod) => mod[fn]?.(...a))
+  return (MOD_WAIT[k] ??= load().then((mod) => (MODS[k] = mod)).catch(() => { delete MOD_WAIT[k]; return {} })).then((mod) => mod[fn]?.(...a))
 }
 const loadM3d = () => import('../mods/modeling-studio/hud.js')
 export const m3dPvDown = lazyFn('m3d', loadM3d, 'm3dPvDown')
