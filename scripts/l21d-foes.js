@@ -4,13 +4,16 @@
 // leaves an investigate point: they run to where it WAS, listen, and strike only what they hear or walk into within reach.
 // Each keeps its own hall (fence()), never enters the square, stops at this shift's fallen bay, and walks home past its leash.
 // Wardens (dark wing) are a file of three: front engages, the next steps in when the front is under 40%, one horn turns all.
-// No clips: the meshes are single bodies, so lean, sway, rear-back and lunge are written as rotation here.
+// Stalkers and wardens are rigged (lib/l21d-body.js CLIPS): gait and one-shot channels; the clicker rolls in code.
 import { targetsOf } from "./lib/decoys.js";
 import { dmgAfterArmor } from "./lib/stats.js";
 import { heard } from "./lib/hear.js";
 import { C, HW, SEG, SEGS, SHIFT_MS, HALLS, at, blocks, DW } from "./lib/l21d-layout.js";
 import L from "./lib/data/l21d.yml";
 import { TUNE as T } from "./lib/l21d-foes-tune.js";
+import { CLIPS } from "./lib/l21d-body.js";
+// stalker and warden are rigged: a channel is written only when what it plays changes
+function play(f, m, ch, key, row) { if (m["c_" + ch] === key) return; m["c_" + ch] = key; f.anim[ch] = row; }
 const GOTH = (n) => `/cdn/moodboard-gothic-horror/sfx-${n}.mp3`;
 const S = {
   click: GOTH("wet-throat-clicking-echolocation-in-hallway"), alert: GOTH("eyeless-creature-alert-screech-shrill-rasp"),
@@ -119,6 +122,15 @@ export function update(ctx, dt) {
     const s = f.state, B = s.brain; if (!B) continue;
     const pos = f.feetPosition, kind = s.kind, m = (mem[f.id] ??= init(s, pos, now));
     if (kind === "clicker") { typewriter(ctx, f, s, m, pos, real, blk, now, dt); continue; }
+    const K = CLIPS[kind];
+    if (K && (s.hp ?? 1) <= 0 || K && s.dead) { // die clip, lie still, then fade
+      if (!m.diedAt) { m.diedAt = now; s.dead = s.dead || true; ctx.place.state.l21dDead = { ...(ctx.place.state.l21dDead ?? {}), [f.id]: now }; heard(ctx, { clip: S.die, position: pos, volume: 0.8, maxDistance: 26 }); f.material = { dissolve: 0 };
+        play(f, m, "act", null, null); play(f, m, "body", "die", { clip: K.die, loop: "once", clampWhenFinished: true, weight: 1 }); f.rotation = { yaw: m.yaw, pitch: 0, roll: 0 }; }
+      const k = clamp((now - m.diedAt - 2600) / 1400, 0, 1); f.material = { dissolve: k };
+      if (k >= 1) { ctx.emit("fx", { position: { x: pos.x, y: 0.5, z: pos.z }, script: SMOKE }); delete mem[f.id]; ctx.destroy(f.id); }
+      continue;
+    }
+    if (K) { const hp = s.hp ?? 1; if (m.hp0 != null && hp < m.hp0) { m.hurtUntil = now + 550; m.c_act = null; play(f, m, "act", "hit", { clip: K.hit, loop: "once", weight: 4 }); } m.hp0 = hp; }
     if ((s.hp ?? 1) <= 0 || s.dead) {
       if (!m.diedAt) { m.diedAt = now; s.dead = s.dead || true; ctx.place.state.l21dDead = { ...(ctx.place.state.l21dDead ?? {}), [f.id]: now }; heard(ctx, { clip: S.die, position: pos, volume: 0.8, maxDistance: 26 }); f.material = { dissolve: 0 }; }
       const k = Math.min(1, (now - m.diedAt) / 1500);
@@ -126,7 +138,7 @@ export function update(ctx, dt) {
       if (k >= 1) { ctx.emit("fx", { position: { x: pos.x, y: 0.5, z: pos.z }, script: SMOKE }); delete mem[f.id]; ctx.destroy(f.id); }
       continue;
     }
-    if ((s.stunUntil ?? 0) > now) continue;
+    if ((s.stunUntil ?? 0) > now) { if (K) { play(f, m, "body", "idle", { clip: K.idle, loop: "loop", weight: 1 }); if (!m.hurtUntil || now > m.hurtUntil) { m.hurtUntil = s.stunUntil; play(f, m, "act", "stun", { clip: K.hit, loop: "once", weight: 4 }); } } continue; }
     const home = s.home ?? pos, sq = s.squad != null ? sqs[s.squad] : null, rank = sq ? sq.order.indexOf(f.id) : 0, front = rank <= 0;
     let nd = 1e9; for (const p of real) nd = Math.min(nd, flat(p.feetPosition, pos));
     if (nd > T.wake && !m.pt && !m.act && !s.awake) continue; // nobody near: hold
@@ -190,8 +202,16 @@ export function update(ctx, dt) {
     m.yaw += arc(m.yawT - m.yaw) * Math.min(1, dt * 9);
     const run = Math.min(1, sp / (B.speed || 6)), beat = now / (kind === "warden" ? 260 : kind === "stalker" ? 110 : 150) + (s.n ?? 0);
     const idle = sp < 0.2 ? Math.sin(now / 900 + (s.n ?? 0) * 1.7) * 2 : 0;
+    if (K) { // the rig carries the life: gait by pace, the brain's act as a one-shot over it
+      const gait = sp < 0.2 ? "idle" : sp < (B.wander ?? 1) * 1.8 ? "walk" : "run", sc = gait === "idle" ? 1 : clamp(sp / (gait === "walk" ? K.walkAt : K.runAt), 0.6, 1.8);
+      play(f, m, "body", gait + Math.round(sc * 5), { clip: K[gait], loop: "loop", speed: Math.round(sc * 5) / 5, weight: 1 });
+      const t = a?.type, act = t === "wind" ? "wind" : t === "crouch" && K.crouch ? "crouch" : t === "leap" && K.leap ? "leap" : t === "recover" ? m.c_act : now < (m.hurtUntil ?? 0) ? m.c_act : null;
+      if (act !== m.c_act) play(f, m, "act", act, act ? { clip: K[act], loop: "once", clampWhenFinished: act === "crouch", weight: 4, speed: act === "wind" ? clamp(0.9 / (T.wind[kind] ?? 0.45), 0.8, 1.8) : 1 } : null);
+      f.feetPosition = { x: p2.x, y, z: p2.z }; f.rotation = { yaw: m.yaw, pitch: 0, roll: 0 };
+    } else {
     f.feetPosition = { x: p2.x, y: y + Math.abs(Math.sin(beat)) * 0.05 * run, z: p2.z };
     f.rotation = { yaw: m.yaw, pitch: pitch - run * (kind === "warden" ? 5 : 11) + idle, roll: Math.sin(beat) * (kind === "warden" ? 2.2 : 3.5) * (0.3 + run) * (sp > 0.2 ? 1 : 0) + (a?.type === "alert" ? 7 : 0) };
+    }
     if (kind !== "warden" && now >= m.clickAt && nd < T.clickEar) { m.clickAt = now + (m.pt ? 1400 + ctx.random() * 1400 : 3500 + ctx.random() * 4500); heard(ctx, { clip: S.click, position: pos, volume: m.pt ? 0.85 : 0.6, maxDistance: 34 }); }
   }
   for (const id in mem) if (!ctx.place.objects[id] && now - (mem[id].born ?? 0) > 5000) delete mem[id];
