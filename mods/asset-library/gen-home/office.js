@@ -30,7 +30,7 @@
 //   fixed paints (steel · white · hylla-yellow · hylla-blue), then glow LAST when `lit`.
 // Requires only builtin/geom and lib/home-mat.js (mod-scoped → asset-library/lib/home-mat.js).
 
-const G = require("builtin/geom");
+const G = require("scripts/lib/geom.js");
 const M = require("lib/home-mat.js");
 
 const PARTS = ["return", "filing", "monitor", "pinboard", "mat", "laptop"];

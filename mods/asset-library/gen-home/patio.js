@@ -22,7 +22,7 @@
 // DRAW GROUPS: ordered by albedo — finish, then finish2, then fixed soil / leaf / steel.
 // Requires only builtin/geom and lib/home-mat.js (mod-scoped → asset-library/lib/home-mat.js).
 
-const G = require("builtin/geom");
+const G = require("scripts/lib/geom.js");
 const M = require("lib/home-mat.js");
 
 const PARTS = ["table", "chair", "lounger", "parasol", "planter", "grill", "bench"];

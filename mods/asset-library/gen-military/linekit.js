@@ -27,7 +27,7 @@
 // COLLISION: mapboard and shellstack return a box — the two you'd bark a shin on.
 // Everything else emits nothing from collider(): an authored "walk under it".
 
-const G = require("builtin/geom");
+const G = require("scripts/lib/geom.js");
 
 const TAU = Math.PI * 2;
 const D2R = Math.PI / 180;

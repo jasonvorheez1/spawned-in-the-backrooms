@@ -28,7 +28,7 @@
 //  2. One winding law: every panel is gridPanel, whose P(u,v,n) must satisfy
 //     dP/du x dP/dv = +n. Get that right once and nothing lights wrong.
 
-const G = require("builtin/geom");
+const G = require("scripts/lib/geom.js");
 
 const TAU = Math.PI * 2;
 const D2R = Math.PI / 180;

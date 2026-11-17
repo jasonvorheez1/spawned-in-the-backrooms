@@ -34,7 +34,7 @@
 //   the textured groups).
 // Requires only builtin/geom and lib/home-mat.js (mod-scoped → asset-library/lib/home-mat.js).
 
-const G = require("builtin/geom");
+const G = require("scripts/lib/geom.js");
 const M = require("lib/home-mat.js");
 
 const PARTS = ["floor", "table", "desk", "pendant", "sconce", "string"];

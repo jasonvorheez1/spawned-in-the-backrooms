@@ -26,7 +26,7 @@
 //   (handles, hanging rail). No glass, no glow in this family.
 // Requires only builtin/geom and lib/home-mat.js (mod-scoped → asset-library/lib/home-mat.js).
 
-const G = require("builtin/geom");
+const G = require("scripts/lib/geom.js");
 const M = require("lib/home-mat.js");
 
 const PARTS = ["wardrobe", "dresser", "nightstand", "bookcase", "cube", "tvstand", "sideboard"];

@@ -24,7 +24,7 @@
 //   switch starts a new draw group, so emission is ordered by family and grids emit in
 //   passes, never per-cell interleave.
 
-const G = require("builtin/geom");
+const G = require("scripts/lib/geom.js");
 
 const TAU = Math.PI * 2;
 const D2R = Math.PI / 180;

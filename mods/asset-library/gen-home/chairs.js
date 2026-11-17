@@ -23,7 +23,7 @@
 //   every `finish2` face (legs, rails, hoop, base), then fixed chrome LAST.
 // Requires only builtin/geom and lib/home-mat.js (mod-scoped → asset-library/lib/home-mat.js).
 
-const G = require("builtin/geom");
+const G = require("scripts/lib/geom.js");
 const M = require("lib/home-mat.js");
 
 const PARTS = ["dining", "stool", "barstool", "office", "bench", "rocking", "kids", "highchair"];

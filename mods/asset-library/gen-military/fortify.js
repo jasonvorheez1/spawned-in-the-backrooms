@@ -27,7 +27,7 @@
  *   physics: { body: "static", collider: "mesh" }.
  */
 
-const G = require("builtin/geom");
+const G = require("scripts/lib/geom.js");
 
 // ---- the CDN surfaces this kit dresses from -------------------------------
 const TEX = {

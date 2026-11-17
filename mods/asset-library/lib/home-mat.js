@@ -18,7 +18,7 @@
 // Exports: TEX, FINISHES, ALIAS, palette(ctx), finish(ctx, name, fallback), glow(ctx, r, g, b, k),
 //          glass(ctx), mirror(ctx), group(name), names(), has(name).
 
-const G = require("builtin/geom");
+const G = require("scripts/lib/geom.js");
 
 const LC = "/cdn/moodboard-lowpoly-cozy/";
 

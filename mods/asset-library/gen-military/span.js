@@ -28,7 +28,7 @@
 // WINDING: one law — every face counter-clockwise seen from outside. All emission goes
 // through qd/bx/solidGrid, which own it.
 
-const G = require("builtin/geom");
+const G = require("scripts/lib/geom.js");
 
 const TAU = Math.PI * 2;
 

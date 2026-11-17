@@ -26,7 +26,7 @@
 // spool, pile, stretcher). The litter — helmet, spade, casings, tins — emits
 // nothing from collider(), an authored "walk through it" rather than a fallback.
 
-const G = require("builtin/geom");
+const G = require("scripts/lib/geom.js");
 
 const TAU = Math.PI * 2;
 const D2R = Math.PI / 180;

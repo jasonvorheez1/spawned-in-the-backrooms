@@ -22,7 +22,7 @@
 //   glass LAST (transparent pass ends the run).
 // Requires only builtin/geom and lib/home-mat.js (mod-scoped → asset-library/lib/home-mat.js).
 
-const G = require("builtin/geom");
+const G = require("scripts/lib/geom.js");
 const M = require("lib/home-mat.js");
 
 const PARTS = ["bathtub", "tub", "shower", "toilet", "vanity", "basin", "mirrorcab", "towelrail"];

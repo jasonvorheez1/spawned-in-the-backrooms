@@ -54,7 +54,7 @@
 //   09a §5's invisible `esc-ramp` rows — nothing hand-types 0.22 or 5.50.
 // Requires only builtin/geom and lib/home-mat.js (mod-scoped → asset-library/lib/home-mat.js).
 
-const G = require("builtin/geom");
+const G = require("scripts/lib/geom.js");
 const M = require("lib/home-mat.js");
 
 const D2R = Math.PI / 180;
