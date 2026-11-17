@@ -26,7 +26,7 @@ const TIMELESS = { duration: 2, tracks: {
   "mixamorig:RightArm": { roll: K([0, 6, 6, 0, -8, -8, -8, 0, 0]) },
 } }
 const CLIPS = { timeless: TIMELESS }
-const SPIN = (r) => ({ clip: CLIPS[r.id] ?? r.clip, weight: 10, loop: "loop" }) // Shelly Nov 17: no other animation's legs under the emote
+const SPIN = (r) => ({ clip: CLIPS[r.id] ?? r.clip, weight: 100, loop: "loop" }) // Shelly Nov 17: no other animation's legs under the emote
 const UPPER = SPIN // walking keeps the whole dance too
 function stop(ctx) {
   const me = ctx.self, st = me.state, s = me.session
