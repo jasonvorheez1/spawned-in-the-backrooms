@@ -58,7 +58,8 @@ function ralph(ctx, id = RALPH) {
   const look = { species: "human", sex: "m", age: "middle", topw: "sweater", top: "#6e4c34", botw: "pants", bottom: "#4a3b2c", shoes: "shoes", hair: "#7d7166", eyew: "glasses", expr: "calm" };
   ctx.spawn(id, { tags: ["npc", "radio-npc"], feetPosition: { x: HOME.x, y: 0.1, z: HOME.z }, rotation: { yaw: 180 }, physics: "character",
     ...critterSpec(npcLook(id, look, "wanderer", 30, "trader")), behavior: ["scripts/humanoid-locomotion.js", "scripts/meg-agent.js"],
-    state: { name: "Ralph", role: "trader", faction: "wanderer", nerve: "brave", faceYaw: 180, home: { ...HOME }, stay: true } });
+    state: { name: "Ralph", role: "trader", faction: "wanderer", nerve: "brave", arm: "fists", // a DJ, not a fighter: nothing in his hands
+      faceYaw: 180, home: { ...HOME }, stay: true } });
 }
 
 function lay(ctx) {
