@@ -196,7 +196,7 @@ function close(ctx) { const s = ctx.self.state; ctx.self.session.tkHp = null; ct
 
 export function openDialogue(ctx, it) {
   const s = ctx.self.state, ses = ctx.self.session, now = ctx.now()
-  if (!it || it.state?.dead || (it.state?.hp ?? 1) <= 0 || hostileReason(ctx, it, ctx.self)) return
+  if (!it || it.state?.dead || (it.state?.hp ?? 1) <= 0 || hostileReason(ctx, it, ctx.self)) { ctx.log('[talkopen-refused]', it?.id, it && hostileReason(ctx, it, ctx.self)); return }
   s.talkWith = it.id
   s.shopOpen = null
   ses.talkingTo = it.id
@@ -489,7 +489,7 @@ export function update(ctx, dt) {
     it.state.mem = { ...(it.state.mem ?? {}), [k]: { ...m0, notes: [...(m0.notes ?? []).filter((n) => n !== 'walked off mid-conversation'), 'walked off mid-conversation'].slice(-6) } }
     say(ctx, it, lineOf(it, ctx.self.place, 'walk', Math.floor(ctx.random() * 1e9)) ?? BYE[Math.floor(ctx.random() * BYE.length)], 'annoyed')
   }
-  if (!it || flat(it.feetPosition, ctx.self.feetPosition) > T.range || hostileReason(ctx, it, ctx.self)) close(ctx) // walk off and it closes
+  if (!it || flat(it.feetPosition, ctx.self.feetPosition) > T.range || hostileReason(ctx, it, ctx.self)) { if (ctx.self.isLocal) ctx.log('[talkclose]', s.talkWith, !!it, it && flat(it.feetPosition, ctx.self.feetPosition), it && hostileReason(ctx, it, ctx.self), JSON.stringify(it?.feetPosition)); close(ctx) } // walk off and it closes
   else if (combat(ctx, it, ses)) { close(ctx); s.notice = { text: 'Combat! The conversation ends.', at: ctx.now() } }
 
 }
