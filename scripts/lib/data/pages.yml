@@ -244,6 +244,20 @@
 
   — Eli
 titles:
+  2201: Level 22 · Kalag Institute transcript · 02/08/14
+  2202: Level 22 · Kalag Institute transcript · 06/08/14
+  2203: Level 22 · Kalag Institute transcript · 30/10/15
+  2204: Level 22 · Floor 10 census report
+  2205: Level 22 · Floor 2 · leisure rota
+  2206: Level 22 · Floor 14 · tithe slip
+  2207: Level 22 · Floor 13 · parts tally
+  2208: Level 22 · Floor 13 · clothes order
+  2209: Level 22 · Floor 20 · chalk count
+  2210: Level 22 · Floor 21 · a drawing
+  2211: Level 22 · Floor 21 · painted on a column
+  2212: Level 22 · Floor 1 · notice on a sealed door
+  2213: Level 22 · Floor 2 · M.E.G. manifest stub
+  2214: Level 22 · Floor 14 · B.N.T.G. manifest stub
   3251: Boom Town · A lamp left on
   3252: Boom Town · The crate
   3253: Boom Town · Mara's bag
@@ -258,3 +272,227 @@ titles:
   1782: Kyoto Dreams · unfinished letter
   1783: Kyoto Dreams · kitchen chalkboard
   1784: Kyoto Dreams · note under a backpack
+
+# ---- Level 22 "Ruins Left Behind" · Emstable's papers (records: scripts/lib/data/l22-records.yml, quests: scripts/lib/level22-quest.js) ----
+# 2201-2203: the three canon "Hilda" entries, VERBATIM from scripts/lib/data/lore/level-22.md. Canon: the full diary is held by
+# the Kalag Institute. The transcript sheet they are framed on (its header and footer lines) is game-original.
+2201: |
+  KALAG INSTITUTE · FIELD TRANSCRIPT, left in situ
+  Recovered diary, "Hilda" · sheet 1 of 3
+
+  02/08/14
+  "The day I score it big"
+
+  Today is gonna be a big day, Hilda. Janus, Heljan, and I have been working tirelessly to mine concrete. The guys that supply us with the pickaxes over at the other level have been superbly generous and discounted the price on this new lot of picks. Can't thank them enough for that.
+  Although that on its own is good, it doesn't exactly make today a 'big' day, does it, Hilda? The reason why this new mining is important is that it may finally get my family up in the ranks! My partner and I have been trying to get up to floor 20 for the longest time, and have been talking to those who live there. Though they occasionally talk about a "disdain for the lot on 21", they did say that if we supplied them with enough concrete to give to floor 19 and above, then they'd let my family up! Grey's been working extra hard on mining, hell, I think xe was out all night mining about a week ago. But it'll be worth it for our daughter, and I'm sure all of our hard work will pay off.
+
+  The full diary is currently under the ownership of the Kalag Institute.
+2202: |
+  KALAG INSTITUTE · FIELD TRANSCRIPT, left in situ
+  Recovered diary, "Hilda" · sheet 2 of 3
+
+  06/08/14
+  "Build-up to our celebration"
+
+  We're getting close to it now! The past 4 days have been immensely tough, Grey and I have been operating the concrete mines non-stop. We've traded away as little as possible for food, just so we can have enough for Tia to eat happily each night. I can tell Grey is excited for this, xe's been talking about it nonstop to Tia, explaining all the new stuff she'll get once we're up to the next floor and such.
+  You know, a lot of the townsfolk around here don't believe we'll get to the next floor of Emstable, but I'll be sure to prove that point wrong to them. They've even spoken to Heljan though he's thankfully still dead-set on aiding us. Aiden, Kellaby, and Raven still try to talk me out of it.
+  Is their concern appreciated? Yes. Do I need it right now? No.
+
+  The full diary is currently under the ownership of the Kalag Institute.
+2203: |
+  KALAG INSTITUTE · FIELD TRANSCRIPT, left in situ
+  Recovered diary, "Hilda" · sheet 3 of 3
+
+  30/10/15
+  [This entry has no title]
+
+  Another day, another batch of concrete to send up. Raven's taking it all up this time for me, which, thank god for that. I don't think I could even go into that province again Hilda. At least Grey's doing okay, xe and Heljan seem to be happy with Tia and whatever their newborn is called, it's not my issue to ask or care if I'm honest.
+  You know, Hilda, I worry about Tia and Grey. I get that they've got their nice new fancy accommodation up in the highs, but still. I have no idea if either of the two misses me, or if Heljan will let me over. My guess would be… no. But! Hope exists, somewhere, and if it exists somewhere I will find it! I'll meet you again Tia, mark my words on that.
+
+  The full diary is currently under the ownership of the Kalag Institute.
+# 2204: the canon Floor 10 census report, every row as the lore file gives it (the sums are canon's own). The carbon-copy framing line is game-original.
+2204: |
+  EMSTABLE · carbon copy, blue and smudged
+
+  Floor 10 census report. 01/07/10
+
+  Floor Count · Population Count · Population Difference
+     Material Designations · Employed/Unemployed ratio. Discounting children
+
+  Floor 1       18       +0
+     N/A · N/A
+  Floor 2       22       +1
+     Leisure item foraging · 22/0
+  Floor 3      440       -2
+     Appliance foraging · 400/40
+  Floor 4      321      +12
+     Food cultivation · 310/11
+  Floor 5    1,002      +24
+     Food cultivation, wood cutters · 991/11
+  Floor 6      986      -12
+     Clothes creation · 900/86
+  Floor 7    1,212      +32
+     Junk scavengers · 1,039/173
+  Floor 8      232      -22
+     Anomalous item scavengers · 231/1
+  Floor 9    2,140      +40
+     Concrete miners · 2,001/139
+  Floor 10   1,876      +38
+     Appliance foraging · 1,766/110
+  Floor 11     560      -30
+     Medical scavengers · 560/0
+  Floor 12     299      +12
+     Clothes creation · 271/28
+  Floor 13   1,456      +47
+     Mechanics, clothes creation · 1,300/156
+  Floor 14   1,231      +10
+     Exploration leaders · 1,109/212
+  Floor 15   2,000      -12
+     Concrete miners, wood cutters · 1,803/197
+  Floor 16     145      -77
+     Metal scavengers · 143/2
+  Floor 17     540      +23
+     Livestock managers, food cultivation · 532/8
+  Floor 18     675      -40
+     Food cultivation · 623/52
+  Floor 19   1,850      +14
+     Wood cutters · 1,743/107
+  Floor 20   2,100      +60
+     Junk scavengers, mechanics · 1,899/201
+  Floor 21   1,234      +32
+     Concrete miners · 1,217/17
+  Floor 22      80     -220
+     Clothes creation, appliance scavengers · 44/36
+  Floor 23     934      +34
+     Livestock managers · 930/4
+  Floor 24     561      +20
+     Concrete miners, exploration leaders · 521/40
+  Floor 25     811       -2
+     Concrete miners, wood cutters · 809/2
+  Floor 26   1,434      +40
+     Food cultivation · 1,011/423
+  Floor 27   1,999      +21
+     Concrete miners, junk scavengers · 1,345/654
+  Floor 28       0   -1,760
+     N/A · N/A
+  Floor 29     N/A      N/A
+     N/A · N/A
+
+  Current population
+  26,158
+# game-original (2205-2214): found papers Savi wrote for the game. None of this is Wikidot canon. They lean only on what canon
+# gives (floors pay a fraction upward; Floor 2 "leisure item foraging"; Floor 13 mechanics and clothes creation; Floor 21
+# concrete miners; entrances closed by 1990; M.E.G. trade 2012, B.N.T.G. 2016). No cause, no fates.
+2205: |
+  FLOOR 2 · LEISURE ROTA
+
+  Pool table       Mon Wed Fri   after supper
+  Football table   Tue Thu       first to seven
+  Cookers          ask upstairs, never after ten
+
+  Chalk goes back in the tin.
+  Whoever has the blue ball, the table is short without it.
+
+  Wi-Fi word is on the back of this sheet. Do not carry it downstairs.
+2206: |
+  CONCRETE OWED UPWARD
+
+  From:  Floor 15
+  To:    Floor 14
+  Owed this count:   one part in ~~five~~ four
+  Sent:              31 barrows, cut
+  Short by:          9
+
+  Short carried over to next count.
+  Second time carried over.
+
+  Counted at the ramp by two, one from each floor.
+2207: |
+  FLOOR 13 · MECHANICS · PARTS TALLY
+
+  Spark plugs, good        14
+  Spark plugs, maybe       30
+  Fan belts                 6
+  Batteries holding charge  2
+  Wheel nuts          one bucket
+  Seat springs        for the tailors, they ask every week
+
+  The grey saloon in bay 40 is not for parts. Somebody sleeps in it.
+2208: |
+  ORDER · clothes-makers, Floor 13
+
+  For upstairs:
+  2 coats, lined. Not seat cloth this time.
+  1 pair trousers, let out at the waist again.
+
+  For below:
+  blankets from the offcuts, as many as the offcuts make.
+
+  Pay for the coats in cooker time. Pay for the blankets is not written down.
+2209: |
+  Chalk, on the wall by the ramp. Floor 20.
+
+  TINS IN        |||| |||| |||| ||
+  TINS UP        |||| |||| |
+  TINS LEFT      |||| |
+
+  mouths         ~~41~~ 44
+
+  Underneath, in a different hand:
+  count it again
+2210: |
+  A drawing in wax crayon, flattened under a stone.
+
+  Three tall people and one small one stand on a grey line. Above them is another grey line with a square on it. The square has a yellow middle.
+
+  Along the bottom, in careful letters:
+
+  TIA
+  this is the next floor. it has a cooker. Grey says I can have my own blanket there.
+2211: |
+  Painted on the column in road-marking yellow:
+
+  COLUMN 4 IS SINGING
+  DON'T CUT IT AGAIN
+
+  Below it, scratched with a pick point:
+  cut 5 instead
+
+  Below that, smaller:
+  5 sings too
+2212: |
+  NOTICE · 1990
+
+  This entrance is closed.
+
+  By the will of the floors, the doors of this level are shut to those not of Emstable. What is ours stays in. What is not ours stays out.
+
+  Do not knock. Nobody is posted here to hear it.
+
+  The glue has gone brown. The glass behind the paper has been bricked from the inside.
+2213: |
+  M.E.G. · TRADE MANIFEST · 2012
+  stub, torn along the perforation
+
+  Handed over at the ramp. Carrier did not pass the line.
+
+  IN    tinned goods         12 cases
+  IN    almond water          6 crates
+  OUT   cut concrete block   40
+  OUT   ~~names~~
+
+  Received for Emstable by: Floor 1
+  Carrier's remark: was not let further than the first bay.
+2214: |
+  B.N.T.G. · TRADE MANIFEST · 2016
+  stub, counterfoil missing
+
+  IN    lamp oil             20 tins
+  IN    tools, mixed          3 boxes
+  OUT   cut concrete block   25
+  OUT   worked cloth          8 bolts
+
+  Agreed for next run: the same, for less block.
+
+  Written across the corner in pencil:
+  they asked could we take people instead
