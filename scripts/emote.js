@@ -13,8 +13,8 @@ pop glow n=1 at=point() r=light(<1,.78,.42>,1.2,3)`
 const K = (a) => a.map((v) => +v.toFixed(1))
 const L = [25, 55, 55, 20, 0, 0, 0, 0, 25], R = [0, 0, 0, 0, 25, 55, 55, 20, 0]
 const TIMELESS = { duration: 2, tracks: {
-  "mixamorig:LeftUpLeg": { yaw: K(L) }, // yaw alone: a second axis on this bone cancelled the swing on the dummies
-  "mixamorig:RightUpLeg": { yaw: K(R.map((v) => -v)) },
+  "mixamorig:LeftUpLeg": { roll: K(L.map((v) => -v)) }, // roll is the sideways swing on the avatar rig (measured on Shelly's body, Nov 17); yaw only twisted the leg
+  "mixamorig:RightUpLeg": { roll: K(R) },
   "mixamorig:Spine": { yaw: K(L.map((v, i) => (R[i] - v) * 0.22)) },
   "mixamorig:Spine2": { pitch: K([4, 0, 4, 0, 4, 0, 4, 0, 4]) },
   "mixamorig:Head": { yaw: K(L.map((v, i) => (v - R[i]) * 0.2)), pitch: K([0, -6, 0, 0, 0, -6, 0, 0, 0]) },
