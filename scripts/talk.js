@@ -65,7 +65,7 @@ function social(ctx, ses) {
   for (const row of near) {
     const o = ctx.getObject(row.id); if (!o || o.state?.dead) continue
     const mem = o.state.mem?.[k]
-    const dd = flat(o.feetPosition, me.feetPosition), quiet = now - (o.state.line?.at ?? 0) > 4000 && !ctx.self.state.talkWith && !o.state.hostile && !o.state.fleeing
+    const dd = flat(o.feetPosition, me.feetPosition), quiet = now - (o.state.line?.at ?? 0) > 4000 && !ctx.self.state.talkWith && !o.state.hostile && !o.state.hunting && !o.state.fleeing
     const sees = (quiet && ses.aimReaction?.id !== o.id && dd < 5) && canSee(ctx, o, me)
     if (mem && quiet && sees && dd < 3.5 && now - (hi[o.id] ?? -1e9) > 180000) {
       hi[o.id] = now; const r = o.state.rapport?.[k] ?? 0
