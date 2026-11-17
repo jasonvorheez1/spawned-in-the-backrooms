@@ -1891,7 +1891,7 @@ function tickStats(ctx, t, moving) {
     level21: L21.sanityDrain[zone.slice(4)],
     level1c: L1C.sanity[zone.slice(4)],
   }[ctx.self.place] ?? L.sanityDrain[zone]) ?? 0.12
-  if (drain > 0 && !dark && (zone === 'lit' || zone === 'yellow' || zone === 'normal' || zone === 'hall' || zone === '' || zone == null) && D.sanity?.lit != null) drain = D.sanity.lit // Nov 17 rebalance: ordinary lit halls hold steady (data/difficulty.yml sanity.lit)
+  if (drain > 0 && !dark && ['halls', 'offices', 'pillars', 'arches', 'expanse', 'lit', 'hall'].includes(zone) && D.sanity?.lit != null) drain = D.sanity.lit // Nov 17 rebalance: ordinary lit halls hold steady (data/difficulty.yml sanity.lit)
   { const hd = needsHpDrain(s, mh, CR.needs); if (hd > 0 && !isAfk(ctx)) s.hp = Math.max(mh * (CR.needs?.emptyHpFloor ?? 0.25), (s.hp ?? mh) - hd * t) } // Nov 17: an empty bar costs hp slowly, never kills
   if (w.light && (zone === 'dark' || zone === 'red' || zone === 'l3_dark')) drain *= 0.4
   if (drain > 0 && nearFresh(ctx)) drain = 0
