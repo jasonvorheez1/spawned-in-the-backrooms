@@ -1907,8 +1907,8 @@ const L11_VOICES = {
 // Master tick simulation loop
 const mem = { ringAt: 0, adAt: 0, lightAt: 0, lightPhase: 0 };
 export function tick(ctx) {
-  if (ctx.place.state.radioV !== 8 || !ctx.place.objects["l11-to-radio"]) { ctx.place.state.radioV = 8;
-    ctx.spawn("l11-from-radio", { feetPosition: { x: 23.2, z: -3.95, y: { terrain: 0.1 } }, rotation: { yaw: -90 } }); // where Radio Backrooms lets you out: just outside its door
+  if (ctx.place.state.radioV !== 9 || !ctx.place.objects["l11-to-radio"]) { ctx.place.state.radioV = 9;
+    ctx.spawn("l11-from-radio", { feetPosition: { x: 22.6, y: 0.4, z: -3.95 }, rotation: { yaw: -90 } }); // where Radio Backrooms lets you out: just outside its door
     for (const id of ["l11-radio-hut-n", "l11-radio-hut-s", "l11-radio-hut-w", "l11-radio-hut-fl", "l11-radio-hut-fr", "l11-radio-hut-lintel", "l11-radio-hut-roof", "l11-radio-aerial", "l11-radio-aerial-tip"]) if (ctx.place.objects[id]) ctx.destroy(id); // v3-4's street booth
     // the station's door sits in the blank middle bay of the brick storefront (l11-hero-brick2, west face x 24.4), facing the street
     ctx.spawn("l11-radio-door-mesh", { feetPosition: { x: 25.1, y: 0, z: -3.95 }, rotation: { yaw: -90 }, physics: { body: "static", collider: "mesh" }, primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "metal", w: 1.0, h: 2.15, part: "set", vision: true, seed: 11 } }, material: { pbr: true } });
