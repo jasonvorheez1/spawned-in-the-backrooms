@@ -344,8 +344,6 @@ export function tick(ctx) {
 
   const players = ctx.place.players ?? [];
   if (!players.length) return;
-  if (!ctx.place.objects?.["lrun-adrenaline-zone"]) ctx.spawn("lrun-adrenaline-zone", { feetPosition: { x: 1.5, y: 0, z: -3.6 }, primitive: { kind: "box", width: 2.6, height: 2.2, depth: 2.4 }, visible: false,
-    physics: { body: "static", trigger: true }, behavior: "scripts/lrun-adrenaline.js" }) // the grab zone: the cart's own mesh was too thin to walk into (Shelly: "i cant get adrenaline")
   if (!ctx.place.objects?.["lrun-adrenaline-zone"]) ctx.spawn("lrun-adrenaline-zone", { feetPosition: { x: 1.6, y: 0, z: -3.6 }, primitive: { kind: "box", width: 2.4, height: 2.2, depth: 2.4 }, visible: false, physics: { body: "static", trigger: true }, behavior: "scripts/lrun-adrenaline.js" }) // walk near the cart and you take it
   if (!ctx.place.objects?.["lrun-adrenaline"]) ctx.spawn("lrun-adrenaline", { feetPosition: { x: 2.0, y: 0, z: -3.6 }, rotation: { yaw: -90 }, model: "/cdn/value.fc6f9622c8597af8969820692ee18f20f1f054fb44eac9ec771668dd197f7e2e.glb",
     layout: { box: { min: { x: -0.45, y: 0, z: -0.3 }, max: { x: 0.45, y: 1.0, z: 0.3 } } }, physics: "static",
