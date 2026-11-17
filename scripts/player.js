@@ -3,7 +3,7 @@ import { xpNeed, migrateXp } from './lib/progression.js'
 export { xpNeed } from './lib/progression.js'
 import { migrate, wakePlace, wakeLog, canSaveHere } from "./lib/save.js"
 import { sanityMul, isMulti } from "./lib/run-opts.js"
-import { staminaFromNeeds } from "./lib/survival.js"
+import { staminaFromNeeds, needsHpDrain } from "./lib/survival.js"
 import { spared, markDead } from "./lib/mp-guard.js"
 import { CORRIDOR, agilityProfile, hitObstacle } from './lib/levelrun-mechanics.js'
 import { layout as layout9, zoneAt as zoneAt9 } from './lib/level9.js'
@@ -1891,6 +1891,8 @@ function tickStats(ctx, t, moving) {
     level21: L21.sanityDrain[zone.slice(4)],
     level1c: L1C.sanity[zone.slice(4)],
   }[ctx.self.place] ?? L.sanityDrain[zone]) ?? 0.12
+  if (drain > 0 && !dark && (zone === 'lit' || zone === 'yellow' || zone === 'normal' || zone === 'hall' || zone === '' || zone == null) && D.sanity?.lit != null) drain = D.sanity.lit // Nov 17 rebalance: ordinary lit halls hold steady (data/difficulty.yml sanity.lit)
+  { const hd = needsHpDrain(s, mh, CR.needs); if (hd > 0 && !isAfk(ctx)) s.hp = Math.max(mh * (CR.needs?.emptyHpFloor ?? 0.25), (s.hp ?? mh) - hd * t) } // Nov 17: an empty bar costs hp slowly, never kills
   if (w.light && (zone === 'dark' || zone === 'red' || zone === 'l3_dark')) drain *= 0.4
   if (drain > 0 && nearFresh(ctx)) drain = 0
   { const mb = musicNear(ctx); if (mb) drain = Math.min(drain, 0) - mb } // a playing music box steadies whoever stays near it // a set-down Reality Freshener holds the room still (scripts/lib/remodel-quest.js)

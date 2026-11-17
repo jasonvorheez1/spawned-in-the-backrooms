@@ -79,6 +79,7 @@ function describe0(token) {
   if (token === 'cashew') return { name: 'Cashew Water', info: 'Object 44. Smells strongly of cashews. Burns skin, starves the drinker, draws entities. Almond water turns it to plain water. Squirt Gun liquid', color: '#e8d2b0' }
   if (token === 'repellent') return { name: 'Smiler Repellent', info: 'Object 3. Spray it: every smiler within 20 m comes apart. Rare', color: '#cfe8c8' }
   if (token === 'fs_ingot') return { name: 'Firesalt ingot', info: 'Dark red, 100 g. Throw it: blows like half a stick of dynamite', color: '#c8261a' }
+  if (token === 'level_key') return { name: 'Level key', info: 'A brass key on a numbered fob. Found in Level 21. Some doors only open for one', color: '#d8b45a' }
   if (token === 'firesalt') return { name: 'Firesalt', info: `Orange shard. Rub on a blade (x${L3I.firesalt.damage}), throw for burning sparks, melt 5 into an ingot`, color: '#ff8a3a' }
   if (token === 'holo:matrix') return { name: 'Tape: "Expedition Log: Matrix"', info: 'Cmdr. Harris, his own voice. Play it on HALOGEN (I > Tapes)', color: '#ff9a6a' }
   if (token === 'holo:ted246') return { name: 'Tape: "Personal Entry · Ted Kowalski"', info: 'M.E.G. Watchdogs, Level 246. A dream about admirals, the Eldridge and the ship you are standing on. Play it on HALOGEN (I > Tapes)', color: '#ff9a6a' }
