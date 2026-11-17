@@ -12,7 +12,7 @@ const PAIR = {
   "l5-lift3": "level3#l3-from-l5", "l5-stairs-up": "level4#l4-from-l5",
   "l5-to-l6": "level6#l6-from-l5", "l6-back": "level5#l5-from-l6",
   "l6-to-l7": "level7#l7-from-l6", "l7-back": "level6#l6-from-l7",
-  "l2-to-l31": "level31#l31-from-l2", "l31-to-l70": "level70#l70-from-l31", "l70-back": "level31#l31-from-l70", "l31-back": "level2#l2-from-l31", "l2-to-l21": "level21#l21-from-l2", "l21-down": "level2#l2-from-l21", "l21-cave": "level8#l8-from-l21", "l8-to-l21": "level21#l21-from-l8",
+  "l2-to-l31": "level31#l31-from-l2", "l31-to-crawl": "l31crawl#crawl-from-l31", "crawl-back": "level31#l31-from-crawl", "l31-to-l70": "level70#l70-from-l31", "l70-back": "level31#l31-from-l70", "l31-back": "level2#l2-from-l31", "l2-to-l21": "level21#l21-from-l2", "l21-down": "level2#l2-from-l21", "l21-cave": "level8#l8-from-l21", "l8-to-l21": "level21#l21-from-l8",
   "l6-to-l61": "level61#l61-from-l6", "l6-wire-trip": "level61#l61-from-l6", "l61-to-l6": "level6#l6-from-l61",
   "l61-to-l11": "level11#l11-from-l61", "l11-to-l61": "level61#l61-from-l11",
   "l9-to-l8": "level8#l8-from-l9", "l8-to-l9": "level9#l9-from-l8", "l9-to-l11": "level11#lv10-arrive", "l9-to-l10": "level10#l10-from-l11",
@@ -25,11 +25,11 @@ const KIND = {
   "l1-onward": "floor", "l2-to-l3": "floor", "l6-to-l7": "floor", "l6-to-l61": "floor", "l6-wire-trip": "floor", "l21-cave": "floor",
   "l2-back": "wall", "l3-back": "wall", "l6-back": "wall", "l7-back": "wall", "l61-to-l6": "wall", "l8-to-l21": "wall", "l21-down": "wall", "l5-to-l6": "wall",
   "l61-to-l11": "wall", "l11-to-l61": "wall", "l61-vent-in": "floor", "l10-lake-deep": "water", "l10-canola-in": "glitch",
-  "l26-overboard": "water", "l34-pool-down": "water", // Level 34: dive the junction pool and come up in Level 7
+  "l26-overboard": "water", "l31-to-crawl": "floor", "l34-pool-down": "water", // Level 34: dive the junction pool and come up in Level 7
  // Level 26: jump the rail and the sea takes you to Level 7
 
 };
-const PRESS_ONLY = new Set(["l178-to-hub"]);
+const PRESS_ONLY = new Set(["l178-to-hub", "l31-to-crawl", "crawl-back"]);
 export const ears = {
   "press": (ctx, p) => {
     const id = p?.by ?? p?.player ?? p?.playerId ?? p?.id;
