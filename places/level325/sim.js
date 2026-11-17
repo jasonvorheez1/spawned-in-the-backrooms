@@ -125,10 +125,13 @@ function collapse(ctx, t, near) {
         ctx.spawn(fid, { tags: ["l325t"], lifetime: 12, feetPosition: { x: t.x + Math.cos(a) * 6, y: top.y - 18, z: t.z + Math.sin(a) * 6 }, ...b }); have?.set(fid, "x");
         animate(ctx, fid, { feetPosition: { x: t.x + Math.cos(a) * 26 + t.lean.x * 14, y: 1, z: t.z + Math.sin(a) * 26 + t.lean.z * 14 }, rotation: { yaw: a * 80, pitch: 240 + f * 50, roll: 130 - f * 40 } }, { duration: 7.5 + f * 0.5, easing: "easeInQuad" }); } }
     if (st < 3 && t.wt >= FALL_S) { st = 3; const L = lobe(t), left = WARN_S - t.wt;
-      for (let i = 0; i <= full; i++) { const id = i === full ? k + "-lobby" : k + "-s" + i; if (!ctx.place.objects[id] || i === full) continue; const f = (i + 1) / (full + 1), tilt = 10 + i * 7;
-        if (ctx.place.objects[k + "-bs" + i]) animate(ctx, k + "-bs" + i, { feetPosition: { x: t.x + (L.x1 - t.x) * f * 1.15, y: GROUND + i * 2.2 - 7, z: t.z + (L.z1 - t.z) * f * 1.15 }, rotation: { yaw: 0, pitch: t.lean.z * (tilt + 12), roll: -t.lean.x * (tilt + 12) } }, { duration: left * 0.92, easing: "easeInQuad" });
-        animate(ctx, id, { feetPosition: { x: t.x + (L.x1 - t.x) * f, y: GROUND + i * 2.2 - 6, z: t.z + (L.z1 - t.z) * f }, rotation: { yaw: 0, pitch: t.lean.z * tilt, roll: -t.lean.x * tilt } }, { duration: left, easing: "easeInQuad" }); }
-      for (let j = 0; j < 9; j++) { const id = k + "-r" + j; if (ctx.place.objects[id]) animate(ctx, id, { "feetPosition.y": GROUND }, { duration: left, easing: "easeInQuad" }); } }
+      // Shelly Nov 17 "yea": the whole height comes down. Top sections let go first and crush the ones below; each one ends up flattened
+      // in the pile along the lean, so nothing tall is left standing for the rubble swap to delete
+      for (let i = 0; i <= full; i++) { const f = (i + 1) / (full + 1), id = i === full ? k + "-lobby" : k + "-s" + i, delay = left * 0.4 * (1 - f), dur = Math.max(0.6, left - delay), tilt = 18 + f * 55, side = hash(t.ix, t.iz, 200 + i) - 0.5;
+        const goal = { feetPosition: { x: t.x + (L.x1 - t.x) * f + t.lean.z * side * 10, y: GROUND - 2 + i * 1.4, z: t.z + (L.z1 - t.z) * f - t.lean.x * side * 10 }, rotation: { yaw: side * 40, pitch: t.lean.z * tilt, roll: -t.lean.x * tilt }, scale: { x: 1.1, y: 0.22, z: 1.1 } };
+        if (ctx.place.objects[id]) animate(ctx, id, goal, { duration: dur, delay, easing: "easeInQuad" });
+        if (ctx.place.objects[k + "-bs" + i]) animate(ctx, k + "-bs" + i, { ...goal, feetPosition: { ...goal.feetPosition, y: goal.feetPosition.y - 1 } }, { duration: dur, delay, easing: "easeInQuad" }); }
+      for (let j = 0; j < 9; j++) { for (const id of [k + "-r" + j, k + "-br" + j]) if (ctx.place.objects[id]) animate(ctx, id, { "feetPosition.y": GROUND - 2, "scale.y": 0.2 }, { duration: left * 0.6, delay: left * 0.4, easing: "easeInQuad" }); } }
     // debris rain: 16 deterministic pieces between second 5 and the impact; each is a real chunk that lands where its shadow of dust says
     while (ev.deb < 16) { const i = ev.deb, land = 5.5 + i * 0.58; if (t.wt < land - 2.6) break; ev.deb++;
       const a = hash(t.ix, t.iz, 80 + i + t.cycle) * 6.283, r = 14 + hash(t.ix, t.iz, 120 + i) * 34, pos = { x: t.x + Math.cos(a) * r + t.lean.x * 10, y: 0.2, z: t.z + Math.sin(a) * r + t.lean.z * 10 };
