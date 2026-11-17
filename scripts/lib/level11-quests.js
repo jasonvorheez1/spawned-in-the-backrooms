@@ -115,12 +115,12 @@ export function handleDialogueQuest(ctx, p, npc, text) {
       if (!c.ok) return { reply: "Hazard pay. On a walk you haven't taken yet. No, citizen. Base rate, same as anyone.", mood: "calm" };
       s.boomBase = s.l325?.salvaged ?? 0;
       advanceQuest(ctx, p, BOOM, 1, "Quest Started: Ground Rent · Walk in under the scaffold deck by the shed");
-      return { reply: "Fine. Half again on delivery. Okami, survey runner, walked in under the scaffold deck by the shed. Her radio still keys up at night. Hammers, drills, something big falling. Bring me something from there I can hold.", mood: "calm" };
+      return { reply: "Half again if you bring something back. Our survey runner, Okami, went under the scaffold deck by the shed and disappeared. Her radio still keys up at night, but all we hear is construction. I need something from the other side for Beta to examine. If you learn anything about Okami, tell me that too.", mood: "calm" };
     }
     if (t.includes("runner") && !s.boomQ) {
       s.boomBase = s.l325?.salvaged ?? 0;
       advanceQuest(ctx, p, BOOM, 1, "Quest Started: Ground Rent · Walk in under the scaffold deck by the shed");
-      return { reply: "Okami. Survey runner. Walked in under the scaffold deck by the shed to log the roadworks. Nobody walked out. Her radio still keys up at night. No words. Drilling. Hammers. Something big falling a long way. If you go in, bring me something from there I can hold. Proof. And come back.", mood: "calm" };
+      return { reply: "We could use one. Okami went to log the roadworks under the scaffold deck by the shed. She didn't come back, but her radio still keys up at night: drills, hammering, then something falling. No voice. If you go in, bring back a sample so Beta has something to examine. And if you find any sign of her, I want to know.", mood: "calm" };
     }
     if (t.includes("blue glass") && s.boomQ === 4) {
       const sc = { ...(s.scrap ?? {}) };
@@ -128,7 +128,7 @@ export function handleDialogueQuest(ctx, p, npc, text) {
       sc.channel_glass -= 1; s.scrap = sc;
       s.boomEnd = "vance";
       finishLevelQuest(ctx, p, BOOM.key, BOOM, { xp: 300, cents: s.boomHaggle === 1 ? 9000 : 6000, rep: [["meg", 10]], by: "meg", text: "Ground Rent: Vance logs the glass. Okami's radio is still drilling." });
-      return { reply: "Blue. Warm. Humming? That's not possible. ...Okami's set went quiet for a minute last night, then the hammering came back. Here. Base pay, and Beta owes you. I'm logging the site as do-not-enter. Nobody will read it.", mood: "calm" };
+      return { reply: "Still warm. I'll have Beta seal it before anyone starts testing. Okami's radio went quiet for a minute last night; then the hammering started again. It's not much to go on, but now we know where to look. Here's your pay. Thank you for making it back.", mood: "calm" };
     }
     if (t.includes("dead end") && s.boomQ === 4 && !s.boomLie) { // branch: lie, keep the glass (Speech 45)
       const c = rollCheck(ctx, s, { skill: "speech", difficulty: 45 });
@@ -229,7 +229,7 @@ export function handleDialogueQuest(ctx, p, npc, text) {
     if (!(sc.channel_glass > 0)) return { reply: "Warm glass? Show me, don't tell me.", mood: "calm" };
     sc.channel_glass -= 1; s.scrap = sc; s.boomEnd = "kael";
     finishLevelQuest(ctx, p, BOOM.key, BOOM, { xp: 300, cents: 15000, rep: [["bntg", 10], ["meg", -10]], by: "bntg", text: "Ground Rent: Kael bought the glass. Vance will hear about it." });
-    return { reply: "Oh. Oh, that's warm. That hums. One fifty, no questions, and you never had it. The uniform at Beta? He gets a shrug. Pleasure.", mood: "happy" };
+      return { reply: "Still warm? I'll give you one fifty. Whatever Vance wanted it for, he can make me an offer if he finds out it's here. Deal?", mood: "happy" };
   }
   if (npcId === "l11-trader-kael") {
     if (t.includes("wrong with the canal") && !s.craneQ) {
@@ -310,8 +310,8 @@ export function l11Choices(id, s) {
     if (!s?.quests?.[WINDOW.id] && !s?.qdone?.[WINDOW.id]) out.push({ text: "You said don't look in that window. What is it?", tag: "Quest Start" });
     if (s?.quests?.[WINDOW.id] && !s?.know12 && !s?.vanceWinAsk) out.push({ text: "You've heard the tape. What did Harris say?", tag: "Speech 35" });
     if (s?.qdone?.[WINDOW.id]) out.push({ text: "I walked through that window. And back.", tag: "Talk" });
-    if (!s?.boomQ) out.push({ text: "You look like a man missing a runner.", tag: "Quest Start" });
-    if (!s?.boomQ && !s?.boomHaggle) out.push({ text: "Missing runner means a dangerous walk. I want hazard pay.", tag: "Barter 35" });
+    if (!s?.boomQ) out.push({ text: "Does Beta need a runner?", tag: "Quest Start" });
+    if (!s?.boomQ && !s?.boomHaggle) out.push({ text: "Any dangerous work? I'd want hazard pay.", tag: "Barter 35" });
     if (s?.boomQ === 4) out.push({ text: "I brought you blue glass from the falling city.", tag: "Quest Turn-In" });
     if (s?.boomQ === 4 && !s?.boomLie) out.push({ text: "The site's a dead end. Just a shed and some netting.", tag: "Speech 45" });
     if (s?.boomQ === 99 && s?.boomEnd === "kael") out.push({ text: "About Ground Rent...", tag: "Talk" });

@@ -8,7 +8,7 @@ import L from "./data/level1c.yml";
 export const INES = "l1c-meg-ines", BLADE = "l1c-gang-blade", LOGGER = "l1c-cordon-log";
 const P = "level1c";
 export const Q = { key: "l1cq", name: "Walk the Line",
-  tips: { 1: "Get past the Tunnel Gang's hut at the end of Sector 2: pay Blade, talk to him, find another way round, or fight", 2: "Read the M.E.G. logger at the cordon, at the end of Sector 3. Smilers keep to the dark there", 3: "Take the logger's reading back to Ines at Post One" },
+  tips: { 1: "Reach the far side of the Tunnel Gang's hut at the end of Sector 2. Negotiate with Blade, pay, find a way around, or fight.", 2: "Beyond the hut, find the orange M.E.G. logger on the cordon barrier at the end of Sector 3. Read its crossing count.", 3: "Return to Ines at Post One in Sector 1 and report the logger's count." },
   marks: { 1: { place: P, id: BLADE }, 2: { place: P, id: LOGGER }, 3: { place: P, id: INES } } };
 const PAY = { xp: 180, cents: 9000, rep: 8 }, QUIET_XP = 40; // my picks: a little more for getting through with nobody hurt
 const SPEECH = { skill: "speech", difficulty: 35 }, MED = { skill: "medicine", difficulty: 30 };
@@ -47,15 +47,15 @@ export function handleDialogueQuest1c(ctx, p, npc, text) {
     if (t.includes("work on this line") && !q) {
       const past = !!s.l1cPass || !!s.l1cBeyond;
       advanceQuest(ctx, p, Q, past ? 2 : 1, `Quest Started: ${Q.name} · ${Q.tips[past ? 2 : 1]}`);
-      return { reply: past ? "You've already been past the hut? Then you know the way. The logger is the orange box on the cordon barrier. Bring me the count." : "Good. Blade first, then the dark, then the orange box on the cordon barrier. Bring me the count, and bring yourself.", mood: "calm" };
+      return { reply: past ? "You've already been past the hut? Good. Our crossing logger is the orange box on the cordon barrier at the far end of the dark sector. We haven't read it in nine days. Bring me the count and I can decide whether to move this post." : "We count what comes out of Sector 4. The logger's on the cordon barrier, past the dark stretch, but Blade's people have blocked our route to it for nine days. Get past their hut, read the orange box and bring me the count. I need to know whether this post is still far enough back.", mood: "calm" };
     }
     if (t.includes("about the gang") && (q === 1 || q === 2)) {
-      return { reply: q === 1 ? `Blade takes a toll. ${money(TOLL)} last I heard. He'll also listen, which is the strange thing about him. He thinks the light past Sector 4 is a door home and he's working up the nerve to walk at it. One of his people has a bad leg. And Tobias swears there's a service gap in the south wall a few steps before their barricade, behind the pipes. Any of those. I'd rather not hear you used the fourth.` : "You're past them. Good. Sector 3 is dark and it stays dark, a torch gets you a few feet. If you smell a hospital, that's normal. If you see teeth, don't stand still. The cordon is where the hall goes wide. The logger is the orange box on the barrier.", mood: "calm" };
+      return { reply: q === 1 ? `Blade charges ${money(TOLL)} to pass. He thinks the light beyond the cordon is a way home, though none of them has reached it. Our medic says Marrow's leg is infected. Tobias also found a service gap behind the pipes in the south wall, just before their barricade. Talk, pay, or try the gap. I'd rather we didn't add more bodies to this hall.` : "Past the hut, keep your light on. The third sector is dark and there are Smilers in it. The hall widens at the cordon; the logger is the orange box fixed to the barrier. Read the number and come back the way you can.", mood: "calm" };
     }
     if (t.includes("cordon logger") && q === 3) {
       const r = s.l1cRoute, quiet = r && r !== "fight";
       finishLevelQuest(ctx, p, Q.key, Q, { xp: PAY.xp + (quiet ? QUIET_XP : 0), cents: PAY.cents, rep: [["meg", PAY.rep]], by: "meg", payKey: "l1c-walk-the-line" });
-      return { reply: (s.l1cLogBad ? "Forty-one crossings out. In nine days. It was four the time before. Something in Sector 4 is being pushed toward us. " : "") + (r === "fight" ? "And the hut is quiet, I'm told. I asked you not to, and I gave you no better way, so that one is mine to carry as well. Take your pay." : r === "gap" ? "And you went round them. Tobias will be unbearable about his gap. Take your pay, and thank you for leaving six fools alive." : "And they let you through. Then they can be talked to, which I'll remember. Take your pay."), mood: r === "fight" ? "sad" : "happy" };
+      return { reply: (s.l1cLogBad ? "Forty-one in nine days. The last count was four. I'll ask for another team and see whether we can move the post back. " : "") + (r === "fight" ? "I heard what happened at the hut. I'll send someone to check on the people there. Here's your pay." : r === "gap" ? "Tobias's gap got you through, then. I'll make sure the next runner knows about it. Here's your pay." : "Blade let you through. That's useful to know; perhaps we can arrange a regular run without another fight. Here's your pay."), mood: r === "fight" ? "sad" : "happy" };
     }
     if (t.includes("happens to the line") && q === 99) {
       s.l1cAfter = true;
@@ -74,11 +74,11 @@ export function handleDialogueQuest1c(ctx, p, npc, text) {
       const c = rollCheck(ctx, s, SPEECH);
       if (!c.ok) { s.l1cSpeechFail = true; return { reply: "And never come back, and I've given the door away for a promise. No. Money, or turn round.", mood: "annoyed" }; }
       pass(ctx, p, "speech", "Blade lets you through to scout the dark for him");
-      return { reply: "...Huh. Nobody's offered to go first before. Fine. You walk it. You come back and tell me what's between here and the light. If you don't come back, that tells me something too.", mood: "calm" };
+      return { reply: "You'd go first? All right. If you make it back, tell us what you saw between here and the light. Marrow, let them through.", mood: "calm" };
     }
     if (t.includes("favouring his leg")) {
       const c = rollCheck(ctx, s, MED);
-      if (!c.ok) { s.l1cMedFail = true; return { reply: "Marrow says you hold a bandage like a sandwich. Hands off him. Money, or turn round.", mood: "annoyed" }; }
+      if (!c.ok) { s.l1cMedFail = true; return { reply: "He says you didn't clean the cut properly. Leave him alone. Pay the toll or turn around.", mood: "annoyed" }; }
       pass(ctx, p, "medicine", "You clean and dress Marrow's leg · The Tunnel Gang lets you through");
       return { reply: "He's stopped swearing. That's the first time in a week. Go on, then. And if you find anything for a fever down there, we're buying.", mood: "happy" };
     }
