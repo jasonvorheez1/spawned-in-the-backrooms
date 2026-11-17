@@ -3,7 +3,7 @@ terrain:
   kind: "off"
 gravity: { x: 0, y: -24, z: 0 }
 defaultSpawnPoint: { x: 2.5, y: 0.1, z: 4 }
-defaultSpawnRotation: { yaw: 180 }
+defaultSpawnRotation: { yaw: 0 }
 worldBounds: { bottom: -30 }
 atmosphere:
   clouds: { enabled: false }
