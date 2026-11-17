@@ -548,7 +548,7 @@ export function update(ctx, dt) {
         if (text) { pl.state.notice = { text, at: now }; pl.state.hostilityNoticeAt = now; }
       }
     }
-    else if (m.barkT) { bark(ctx, me, prevDead || !prev ? "kill" : "clear", true); m.clearAt = now + 2600; }
+    else if (m.barkT) { bark(ctx, me, prevDead ? "kill" : "clear", true); m.clearAt = now + 2600; }
     m.barkT = tid;
   }
   if (m.clearAt && now > m.clearAt) {

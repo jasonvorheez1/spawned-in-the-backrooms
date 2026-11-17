@@ -38,12 +38,14 @@
     hurt: ["You're bleeding, you know.", "You look awful."]
     sneak: ["I can hear you."]
     close: ["Give me some room."]
-    spot: ["Something's coming!", "There! Right there!"]
-    hostile: ["Get back!", "Fine. You asked for it."]
-    hit: ["Agh!", "It got me!"]
-    kill: ["Got it.", "Stay down."]
-    clear: ["Is it gone?"]
-    flee: ["I'm gone!", "Not dying here!"]
+    spot: ["Something's coming!", "There! Right there!", "Watch the doorway!", "Behind you!"]
+    hostile: ["Get back!", "Fine. You asked for it.", "I said stay back!", "I don't want this. Move!"]
+    hit: ["Agh!", "It got me!", "I'm hit!", "Damn it!"]
+    kill: ["Got it.", "Stay down.", "It's down. Watch for more."]
+    clear: ["Is it gone?", "I lost sight of it.", "Keep looking. It might come back."]
+    flee: ["I'm gone!", "Not dying here!", "Fall back!"]
+    cover: ["I need cover!", "Getting behind something!"]
+    reload: ["Reloading!", "Give me a second!"]
     death: ["Oh.", "No..."]
   gest: { wave: "Uh. Hi.", gift: "For me? Thanks. I mean it.", dance: "Here? Sure, why not.", nodance: "No. Not today.", insult: "Nice. Real nice." }
 
@@ -67,10 +69,14 @@
   barks:
     idle: ["Shh.", "Listening.", "That moved."]
     hi: ["Shh.", "Get low."]
-    spot: ["Eyes up!", "There!"]
-    hit: ["Ngh!"]
-    kill: ["Down."]
-    flee: ["Backing off!"]
+    spot: ["Eyes up!", "There!", "Movement ahead!", "Contact!"]
+    hostile: ["Back off!", "Don't come any closer!"]
+    hit: ["Ngh!", "I'm hit!"]
+    kill: ["Down.", "Target down. Watch the hall."]
+    clear: ["Lost sight.", "Can't see it. Stay alert."]
+    flee: ["Backing off!", "Fall back!"]
+    cover: ["Taking cover!", "Cover me!"]
+    reload: ["Reloading!", "Changing mags!"]
   gest: { wave: "Shh. Hi.", gift: "Thanks. Quiet one, I hope.", dance: "Too loud.", nodance: "Too loud.", insult: "Say it quieter." }
 
 "survivor:medic":
@@ -90,9 +96,13 @@
   barks:
     idle: ["Wraps, wraps, wraps.", "Boil it first."]
     hurt: ["Sit. You're leaking."]
-    spot: ["Hurt ones behind me!"]
-    hit: ["Ah! Fine. I'm fine."]
-    flee: ["Grab the kit!"]
+    spot: ["Hurt ones behind me!", "Get back, now!", "Something's coming!"]
+    hostile: ["Put that down!", "Stay away from my patients!"]
+    hit: ["Ah! Fine. I'm fine.", "I've been hit!"]
+    clear: ["I can't see it. Anyone hurt?", "Keep watch. I'll check on you."]
+    flee: ["Grab the kit!", "Back to cover!"]
+    cover: ["I'm taking cover!", "Stay down!"]
+    reload: ["Reloading!"]
   gest: { wave: "Hi. Sit.", gift: "That'll help somebody.", dance: "Gently. I just fixed that knee.", nodance: "Busy.", insult: "I'd still patch you. Slower." }
 
 "survivor:trader":
@@ -114,10 +124,13 @@
   barks:
     idle: ["Selling!", "Fair prices. Fair-ish.", "Batteries!"]
     hi: ["Buying?", "Hey, customer!"]
-    spot: ["Watch the stock!"]
-    hostile: ["Thief!"]
-    hit: ["Not the stock!"]
-    flee: ["Grab the good stuff!"]
+    spot: ["Watch the stock!", "Someone's coming!", "Get behind the counter!"]
+    hostile: ["Back away!", "Leave me alone!"]
+    hit: ["I'm hit!", "Get off me!"]
+    clear: ["Where'd they go?", "Keep your eyes open."]
+    flee: ["Grab the good stuff!", "I'm getting out!"]
+    cover: ["Get down!", "Taking cover!"]
+    reload: ["Reloading!"]
   gest: { wave: "Hey! Waving's free.", gift: "A gift? I'll never get you people. Thanks.", dance: "Ha! Okay!", nodance: "Shop's open.", insult: "Prices just doubled." }
 
 "meg:default":
@@ -148,14 +161,15 @@
     hi: ["Walker.", "Hello."]
     drawn: ["Weapon down. Now."]
     hurt: ["Medic's inside."]
-    spot: ["Contact!", "Movement!"]
-    hostile: ["Stand down!"]
-    hit: ["Hit! Still up!"]
-    kill: ["Target down."]
-    clear: ["Area clear."]
-    flee: ["Falling back!"]
+    spot: ["Contact!", "Movement!", "Threat ahead!", "Eyes on the doorway!"]
+    hostile: ["Stand down!", "Back away, now!", "You were warned!"]
+    hit: ["Hit! Still up!", "I'm hit!", "I'm hurt!"]
+    kill: ["Target down.", "It's down. Check the corners."]
+    clear: ["Lost visual. Stay sharp.", "Can't see the target. Hold position."]
+    flee: ["Falling back!", "Back to the post!"]
     death: ["Report... it..."]
-    reload: ["Reloading!"]
+    reload: ["Reloading!", "Changing mags!"]
+    cover: ["Taking cover!", "Get behind cover!"]
   gest: { wave: "Hello.", gift: "Appreciated.", dance: "On duty.", nodance: "On duty.", insult: "That goes in the report." }
 
 "meg:scout":
@@ -178,10 +192,14 @@
       a: ["Painted stencils by the doors and chalk arrows on waist-high trim. If the paint's chipped and clean, it's M.E.G. If it looks smeared, cross the hall."]
   barks:
     idle: ["Sweep's clear.", "Next sector."]
-    spot: ["Contact! Hounds!", "Movement!"]
-    hit: ["I'm hit!"]
-    kill: ["Down."]
-    flee: ["Falling back!"]
+    spot: ["Contact!", "Movement!", "Target ahead!"]
+    hostile: ["Stand down!", "Back away!"]
+    hit: ["I'm hit!", "I'm hurt!"]
+    kill: ["Down.", "Target down. Check the hall."]
+    clear: ["Lost visual.", "Can't see it. Hold here."]
+    flee: ["Falling back!", "Back to cover!"]
+    cover: ["Taking cover!", "Cover me!"]
+    reload: ["Reloading!", "Changing mags!"]
   gest: { wave: "Hm.", gift: "Thanks.", dance: "On patrol.", nodance: "On patrol.", insult: "Heard worse from hounds." }
 
 "meg:medic":
@@ -198,7 +216,13 @@
   barks:
     idle: ["Next.", "Boil the water."]
     hurt: ["Sit. Now."]
-    spot: ["Wounded to the back!"]
+    spot: ["Wounded to the back!", "Contact! Get down!"]
+    hostile: ["Stand down!", "Stay away from the wounded!"]
+    hit: ["I'm hit!", "Still up!"]
+    clear: ["Lost visual. Anyone hurt?"]
+    flee: ["Fall back to medical!"]
+    cover: ["Get behind cover!"]
+    reload: ["Reloading!"]
   gest: { wave: "Hello.", gift: "Thank you.", dance: "Briefly.", nodance: "Patients.", insult: "I'll treat you anyway." }
 
 "meg:trader":
@@ -234,7 +258,7 @@
       fail: ["Not today."]
     - q: "Do you get along with M.E.G.?"
       a: ["We sell them rounds; they keep the gates wide enough for our crates. Good business beats a handshake."]
-  barks: { idle: ["Trade's open.", "Chits taken here."], spot: ["Protect the goods!"], hostile: ["Deal's off!"] }
+  barks: { idle: ["Trade's open.", "Chits taken here."], spot: ["Contact!", "Watch out!", "Trouble ahead!"], hostile: ["Deal's off!", "Back away!"], hit: ["I'm hit!", "Damn it!"], kill: ["They're down.", "Stay down."], clear: ["Lost sight of them.", "Watch the route."], flee: ["Fall back!", "Get out of here!"], cover: ["Taking cover!", "Get down!"], reload: ["Reloading!"] }
   gest: { wave: "Hello.", gift: "That goes on your account.", dance: "Ha.", nodance: "Working.", insult: "Already priced in." }
 "bntg:trader":
   hi: ["Goods for sale, goods for trade, honest weights. Mostly.", "Look all you like, buyer. Buy what you can."]
@@ -251,7 +275,7 @@
       fail: ["Tags don't lie."]
     - q: "What are you buying right now?"
       a: ["Clean copper wire, spare ammo, intact canisters, and salvage nobody bit into. Keep it dry and I pay fair."]
-  barks: { idle: ["Fresh stock!", "Honest weights."], spot: ["Mind the stall!"] }
+  barks: { idle: ["Fresh stock!", "Honest weights."], spot: ["Look out!", "Trouble coming!"], hostile: ["Back away!", "Leave me alone!"], hit: ["I'm hit!", "Get off me!"], clear: ["Where'd they go?", "Keep watch."], flee: ["Move! Get out!"], cover: ["Get down!"], reload: ["Reloading!"] }
   gest: { wave: "Hey!", gift: "Thanks, buyer. Now I feel bad about the prices.", dance: "Ha!", nodance: "Customers.", insult: "Prices just went up." }
 
 "tbd:default":
@@ -342,7 +366,7 @@
       a: ["Listen to the drip. Count your steps. Stone remembers a shoe better than an eye ever did."]
     - q: "What else crawls in these tunnels?"
       a: ["Big wet feet on four stones, and the singing ones down lower. Shut your torch off and let them pass."]
-  barks: { idle: ["Hush...", "Out, out..."], spot: ["Light!"], hostile: ["Put it OUT!"], death: ["Dark..."] }
+  barks: { idle: ["Hush...", "Out, out..."], spot: ["Someone's there!", "Movement!", "Keep quiet!"], hostile: ["Leave us alone!", "Get away from me!", "Back!"], hit: ["Ah!", "I'm hit!"], kill: ["It's down.", "Quiet now."], clear: ["Where did it go?", "Listen. It might be close."], flee: ["Back into the dark!", "Move!"], cover: ["Get down!", "Take cover!"], reload: ["Reloading!"], death: ["Dark..."] }
   gest: { wave: "...", gift: "Is it a light? Break it.", dance: "Sway in the dark.", nodance: "No.", insult: "Say it softer." }
 
 "city:default":
