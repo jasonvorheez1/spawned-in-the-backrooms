@@ -109,6 +109,14 @@ export function handleDialogueQuest(ctx, p, npc, text) {
 
   // ---- Ground Rent (Vance): the scaffold site noclips to Boom Town; he wants proof (scripts/lib/boom-quest.js) ----
   if (npcId === "l11-meg-agent-vance") {
+    if (t.includes("hazard pay") && !s.boomQ && !s.boomHaggle) { // branch: haggle up front (Barter 35)
+      const c = rollCheck(ctx, s, { skill: "barter", difficulty: 35 });
+      s.boomHaggle = c.ok ? 1 : -1;
+      if (!c.ok) return { reply: "Hazard pay. On a walk you haven't taken yet. No, citizen. Base rate, same as anyone.", mood: "calm" };
+      s.boomBase = s.l325?.salvaged ?? 0;
+      advanceQuest(ctx, p, BOOM, 1, "Quest Started: Ground Rent · Walk in under the scaffold deck by the shed");
+      return { reply: "Fine. Half again on delivery. Okami, survey runner, walked in under the scaffold deck by the shed. Her radio still keys up at night. Hammers, drills, something big falling. Bring me something from there I can hold.", mood: "calm" };
+    }
     if (t.includes("runner") && !s.boomQ) {
       s.boomBase = s.l325?.salvaged ?? 0;
       advanceQuest(ctx, p, BOOM, 1, "Quest Started: Ground Rent · Walk in under the scaffold deck by the shed");
@@ -118,9 +126,19 @@ export function handleDialogueQuest(ctx, p, npc, text) {
       const sc = { ...(s.scrap ?? {}) };
       if (!(sc.channel_glass > 0)) return { reply: "I don't see glass, citizen. Talk's cheap. Glass isn't.", mood: "calm" };
       sc.channel_glass -= 1; s.scrap = sc;
-      finishLevelQuest(ctx, p, BOOM.key, BOOM, { xp: 300, cents: 6000, rep: [["meg", 10]], by: "meg", text: "Ground Rent: Vance logs the glass. Okami's radio is still drilling." });
+      s.boomEnd = "vance";
+      finishLevelQuest(ctx, p, BOOM.key, BOOM, { xp: 300, cents: s.boomHaggle === 1 ? 9000 : 6000, rep: [["meg", 10]], by: "meg", text: "Ground Rent: Vance logs the glass. Okami's radio is still drilling." });
       return { reply: "Blue. Warm. Humming? That's not possible. ...Okami's set went quiet for a minute last night, then the hammering came back. Here. Base pay, and Beta owes you. I'm logging the site as do-not-enter. Nobody will read it.", mood: "calm" };
     }
+    if (t.includes("dead end") && s.boomQ === 4 && !s.boomLie) { // branch: lie, keep the glass (Speech 45)
+      const c = rollCheck(ctx, s, { skill: "speech", difficulty: 45 });
+      s.boomLie = c.ok ? 1 : -1;
+      if (!c.ok) { addRep(s, "meg", -5, "lied to Vance"); return { reply: "Your boots are grey to the knee and you smell like a cement mixer. Don't lie to me on my own street, citizen. Glass. On the table.", mood: "angry" }; }
+      s.boomEnd = "lie";
+      finishLevelQuest(ctx, p, BOOM.key, BOOM, { xp: 300, cents: 2000, by: "meg", text: "Ground Rent: you told Vance it was a dead end. The glass stays in your bag." });
+      return { reply: "Just a shed. A deck and some netting. ...Right. I'll close the file. Here's a walk fee. And the radio? Must be someone else's set bleeding over.", mood: "calm" };
+    }
+    if (s.boomQ === 99 && s.boomEnd === "kael" && t.includes("ground rent")) return { reply: "Kael's selling blue glass that hums. Wonder where he got it. Don't come to me for work, citizen.", mood: "angry" };
     if (t.includes("where is it") && s.boomQ >= 2 && s.boomQ < 99) return { reply: "It's in the job. Go under the deck by the shed. If you're past it, find a basement. Stairs go somewhere else there.", mood: "calm" };
   }
 
@@ -206,6 +224,13 @@ export function handleDialogueQuest(ctx, p, npc, text) {
   }
 
   // ---- The Paper Bird's Blessing (Kael <-> Level 6.1 Guild barge) ----
+  if (npcId === "l11-trader-kael" && t.includes("warm blue glass") && s.boomQ >= 3 && s.boomQ < 99) { // branch: sell Vance's proof to B.N.T.G.
+    const sc = { ...(s.scrap ?? {}) };
+    if (!(sc.channel_glass > 0)) return { reply: "Warm glass? Show me, don't tell me.", mood: "calm" };
+    sc.channel_glass -= 1; s.scrap = sc; s.boomEnd = "kael";
+    finishLevelQuest(ctx, p, BOOM.key, BOOM, { xp: 300, cents: 15000, rep: [["bntg", 10], ["meg", -10]], by: "bntg", text: "Ground Rent: Kael bought the glass. Vance will hear about it." });
+    return { reply: "Oh. Oh, that's warm. That hums. One fifty, no questions, and you never had it. The uniform at Beta? He gets a shrug. Pleasure.", mood: "happy" };
+  }
   if (npcId === "l11-trader-kael") {
     if (t.includes("wrong with the canal") && !s.craneQ) {
       if (repOf(s, "bntg") <= -35) return { reply: "The B.N.T.G.'s got your name on a blacklist, boss. Step away from my stall.", mood: "angry" };
@@ -286,9 +311,13 @@ export function l11Choices(id, s) {
     if (s?.quests?.[WINDOW.id] && !s?.know12 && !s?.vanceWinAsk) out.push({ text: "You've heard the tape. What did Harris say?", tag: "Speech 35" });
     if (s?.qdone?.[WINDOW.id]) out.push({ text: "I walked through that window. And back.", tag: "Talk" });
     if (!s?.boomQ) out.push({ text: "You look like a man missing a runner.", tag: "Quest Start" });
+    if (!s?.boomQ && !s?.boomHaggle) out.push({ text: "Missing runner means a dangerous walk. I want hazard pay.", tag: "Barter 35" });
     if (s?.boomQ === 4) out.push({ text: "I brought you blue glass from the falling city.", tag: "Quest Turn-In" });
+    if (s?.boomQ === 4 && !s?.boomLie) out.push({ text: "The site's a dead end. Just a shed and some netting.", tag: "Speech 45" });
+    if (s?.boomQ === 99 && s?.boomEnd === "kael") out.push({ text: "About Ground Rent...", tag: "Talk" });
     if (s?.boomQ >= 1 && s?.boomQ < 4) out.push({ text: "That scaffold site. Where is it really?", tag: "Ask" });
   } else if (id === "l11-trader-kael") {
+    if (s?.boomQ >= 3 && s?.boomQ < 99 && s?.scrap?.channel_glass > 0) out.push({ text: "What would you pay for warm blue glass?", tag: "Sell" });
     const q = s?.craneQ ?? 0;
     if (!q && repOf(s, "bntg") > -35) out.push({ text: "Docks are dead quiet. Something wrong with the canal?", tag: "Quest Start" });
     if (q === 4) {
