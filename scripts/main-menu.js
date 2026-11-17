@@ -35,7 +35,9 @@ export function update(ctx) {
   if (!ses.menuMark) {
     ses.menuMark = true
     if (!st.madeChar && (st.xp || st.lvl || st.level || st.visits)) st.madeChar = true // a save that already played keeps its critter
-    if (place !== "intake" && !st.roomHop) { st.menuOpen = true; st.menuKind = "title" } // a walk between rooms (the Bonus Room) is no launch
+    // Shelly Nov 17 "ditch the title screen": no title. A new player goes straight to the critter room, the intro, then the tutorial
+    if (st.menuKind === "title") { st.menuOpen = false; st.menuKind = "" }
+    if (!st.madeChar && place !== "intake" && place !== "tutorial0" && !st.roomHop && !(ctx.self.tags ?? []).includes("helper")) { if (!st.run) st.run = cleanPick(null); st.introFrom = place; ctx.cross(ctx.self, "intake"); return ctx.sleep(0.75) }
   }
   // Shelly Nov 13 "still endlessly falling": a cut that ends with a crossing (the intro's fall into Level 0) left anim.cut on the body; every new place starts with no cut pose and no air pose
   if (ses.animPlace !== place) { ses.animPlace = place; if (ctx.self.anim) { ctx.self.anim.cut = null; ctx.self.anim.air = null } }
@@ -63,10 +65,10 @@ export function update(ctx) {
   }
   if (story && !st.menuOpen && place === "tutorial0" && !st.t0cut) lazy("dina", () => import("./lib/dina-quest.js"))?.dinaTick?.(ctx, ses, st, place)
   if (place === "tutorial0" && !st.menuOpen) {
-    if (st.t0Done) { ctx.cross(ctx.self, "level1"); return ctx.sleep(0.75) }
+    if (st.t0Done) { goOnline(ctx); return ctx.sleep(2) }
     st.t0n ??= 0
     const r = lazy("t0", () => import("./lib/tut0-cut.js"))?.t0Tick?.(ctx, ses, st)
-    if (r === "level1") { ctx.cross(ctx.self, "level1"); return ctx.sleep(0.75) }
+    if (r === "level1") { st.t0Done = true; goOnline(ctx); return ctx.sleep(2) }
     if (r) return
   }
   // Level 26: the first time aboard, the ship in the fog and Phoebe at the rail (scripts/lib/l26-cut.js)
@@ -134,8 +136,8 @@ export function onInput(ctx, input) {
     if (d.k === "mode" && (d.v === "solo" || d.v === "multi")) switchMode(ctx, d.v)
     if (d.k === "resume") { st.menuOpen = false; st.menuView = "" }
     if (d.k === "tobonus") { st.menuOpen = false; st.menuView = ""; st.menuKind = ""; if (ctx.self.place !== "bonus") (lazy("hub", () => import("./lib/hub.js"))?.toHub?.(ctx) ?? import("./lib/hub.js").then((m) => { MODS.hub = m; m.toHub(ctx) })) } // pause > Return to Bonus Rooms (Shelly, Nov 15)
-    if (d.k === "title") { st.menuKind = "title"; st.menuView = "" }
-    if (d.k === "view") { st.menuView = ["settings", "controls", "newgame", "saves"].includes(d.v) ? d.v : ""; if (d.v === "newgame") st.newRun = { ...cleanPick(st.newRun), confirm: false }; if (d.v === "saves") listSaves(ctx) }
+    if (d.k === "gosolo" && isMulti(st)) { const pick = cleanPick(st.newRun); st.newRun = null; switchMode(ctx, "solo", { run: pick }) } // pause > Go Solo (Shelly Nov 17): expedition settings, same character
+    if (d.k === "view") { st.menuView = ["settings", "controls", "newgame", "saves", "gosolo"].includes(d.v) ? d.v : ""; if (d.v === "newgame" || d.v === "gosolo") st.newRun = { ...cleanPick(st.newRun), confirm: false }; if (d.v === "saves") listSaves(ctx) }
     if (d.k === "opt" && d.key) st.newRun = { ...cleanPick({ ...st.newRun, [d.key]: d.v }), confirm: false }
     if (d.k === "preset" && PRESETS[d.v]) st.newRun = { ...PRESETS[d.v].v, confirm: false }
     if (d.k === "surv" && (d.key === "needs" || d.key === "sanity") && !isMulti(st)) { // solo switches, mid-run (Shelly Nov 17: "in solo play let me disable food and water and sanity")
@@ -224,19 +226,30 @@ function delSlot(ctx, slot) {
   ctx.sql`DELETE FROM saves WHERE owner = ${who} AND slot = ${slot}`.then(() => { note(me, `Slot ${slot} cleared.`); listSaves(ctx) }).catch(() => note(me, "Couldn't clear that slot."))
 }
 export { SLOTS }
+// the tutorial's end (Shelly Nov 17): Level 1 in the online room, your party's or your own; friends join through Invite
+function goOnline(ctx) {
+  const ses = ctx.session; if (ses.goingOnline && ctx.now() - ses.goingOnline < 8000) return
+  ses.goingOnline = ctx.now()
+  if (isMulti(ctx.self.state)) import("./lib/hub.js").then((m) => m.toSolo(ctx, "level1", ctx.self))
+  else switchMode(ctx, "multi", { where: "level1" })
+}
 
 // ---- Solo / Multiplayer (Shelly Nov 15): one character, two runs. Level, gear, cash and look ride along;
 // story, quests and where you stood stay with their mode (SQL slots MODE_SLOT, hidden from the Save Manager).
 // Multiplayer: no story, no tutorial, straight to the Bonus Rooms; leaving the mall opens your party's shared room.
-function switchMode(ctx, to) {
+function switchMode(ctx, to, opt = {}) {
   const me = ctx.self, st = me.state, who = owner(ctx), from = isMulti(st) ? "multi" : "solo"
   st.menuOpen = false; st.menuView = ""
+  const carry = { t0Done: st.t0Done, t0fade: st.t0fade } // the tutorial stays done, and its title card keeps fading over the crossing
   const go = () => {
+    if (carry.t0Done) st.t0Done = true; if (carry.t0fade) st.t0fade = carry.t0fade
     if (to === "multi") { st.run = { ...cleanPick(st.run), story: "off", tutorial: "skip", mode: "multi" }; st.t0Done = true }
+    else if (opt.run) { st.run = { ...cleanPick(opt.run), tutorial: "skip" }; if (opt.run.god === "on") st.god = true; else delete st.god } // Go Solo: a fresh expedition's settings, the character as it is
     else if (isMulti(st)) { const r = { ...st.run }; delete r.mode; st.run = r }
+    if (opt.run && opt.run.needs === "off") { st.hunger = 100; st.thirst = 100 }
     if (!st.madeChar) { st.introFrom = me.place; ctx.cross(me, "intake"); return } // a first character is made in the bedroom, then the mall
-    if (to === "multi") { if (me.place !== "bonus") import("./lib/hub.js").then((m) => m.toHub(ctx)) }
-    else { const pl = wakePlace(ctx, st) ?? (st.t0Done ? "main" : "tutorial0"); import("./lib/hub.js").then((m) => m.toSolo(ctx, pl, me, true)) }
+    if (to === "multi") { if (opt.where) import("./lib/hub.js").then((m) => m.toSolo(ctx, opt.where, me)); else if (me.place !== "bonus") import("./lib/hub.js").then((m) => m.toHub(ctx)) }
+    else { const pl = wakePlace(ctx, st) ?? "main"; import("./lib/hub.js").then((m) => m.toSolo(ctx, pl, me, true)) }
   }
   if (from === to) return go()
   const data = snapshot(st), at = new Date().toISOString()
