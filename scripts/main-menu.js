@@ -37,7 +37,10 @@ export function update(ctx) {
     if (!st.madeChar && (st.xp || st.lvl || st.level || st.visits)) st.madeChar = true // a save that already played keeps its critter
     // Shelly Nov 17 "ditch the title screen": no title. A new player goes straight to the critter room, the intro, then the tutorial
     if (st.menuKind === "title") { st.menuOpen = false; st.menuKind = "" }
-    if (!st.madeChar && place !== "intake" && place !== "tutorial0" && !st.roomHop && !(ctx.self.tags ?? []).includes("helper")) { if (!st.run) st.run = cleanPick(null); st.introFrom = place; ctx.cross(ctx.self, "intake"); return ctx.sleep(0.75) }
+    if (!st.madeChar && place !== "intake" && place !== "tutorial0" && !st.roomHop && !(ctx.self.tags ?? []).includes("helper")) { // Shelly Nov 17: no custom character at the start: you walk in as your Spawn avatar; a cat is made at the salon later
+      if (!st.run) st.run = cleanPick(null)
+      st.madeChar = true; if (ctx.self.avatarUrl) st.look = { ...(st.look ?? {}), spawnAv: true, model: "", modelUrl: "" }
+      st.arrivePending = true; ctx.cross(ctx.self, "tutorial0"); return ctx.sleep(0.75) }
   }
   // Shelly Nov 13 "still endlessly falling": a cut that ends with a crossing (the intro's fall into Level 0) left anim.cut on the body; every new place starts with no cut pose and no air pose
   if (ses.animPlace !== place) { ses.animPlace = place; if (ctx.self.anim) { ctx.self.anim.cut = null; ctx.self.anim.air = null } }
