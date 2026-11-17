@@ -4,22 +4,29 @@
   clip: cdn/clip-timeless-dance-right-arm-points-straight-up-left-arm-out-knee-lifts-hips-sway-loop.glb
   song: /cdn/moodboard-toon-vibrant/music-timeless-ticking-clock-synth-pop-dance-loop.mp3
   clock: true
+  face: joy
 - id: dance
+  face: beam
   label: Dance
   clip: cdn/clip-dance-loop.glb
 - id: wave
+  face: smile
   label: Wave
   clip: cdn/clip-waving-single-hand-loop.glb
 - id: cheer
+  face: laugh
   label: Cheer
   clip: cdn/clip-cheer-loop.glb
 - id: hiphop
+  face: cocky
   label: Hip hop
   clip: cdn/clip-step-hip-hop-dance-loop.glb
 - id: chicken
+  face: blep
   label: Chicken
   clip: cdn/clip-chicken-dance-loop.glb
 - id: clap
+  face: grin
   label: Clap
   clip: cdn/clip-clap-loop.glb
 - id: face
