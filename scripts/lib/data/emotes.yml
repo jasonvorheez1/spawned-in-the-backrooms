@@ -2,7 +2,7 @@
 - id: timeless
   label: Timeless
   clip: cdn/clip-wave-hip-hop-dance-loop.glb
-  song: /cdn/music-instru-theme-playful-2r4xg00n.mp3  # Shelly's own track, Nov 17 (my remix of it was off-melody: removed)
+  # song: none until the instrument version of Shelly's melody is built (her voice never plays: Nov 17)
   clock: true
   face: joy
 - id: dance
