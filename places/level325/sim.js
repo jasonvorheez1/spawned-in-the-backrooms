@@ -188,6 +188,10 @@ function spine(ctx) {
   sp("l325-dustair", { feetPosition: { x: 0, y: 0, z: 0 }, fx: { script: DUSTAIR } });
 }
 export function tick(ctx) {
+  if (!ctx.place.objects["l325-to-l69"]) ctx.spawn("l325-to-l69", { tags: ["usable"], feetPosition: { x: 6, z: 3, y: { terrain: 0.02 } }, rotation: { yaw: 70 }, // Level 69's car (Shelly Nov 17: "it should be in boomtown too")
+    model: { id: "/cdn/value.75b49ca4395a7da77d80c0fe5589224c21034b5a646d18f6577609e76845c706.glb", forward: "+x" }, layout: { box: { min: { x: -1, y: 0, z: -2.6 }, max: { x: 1, y: 1.6, z: 2.6 } } }, physics: "static",
+    behavior: "scripts/l69-portal-car.js", state: { name: "An empty sedan", verb: "Sit in it", info: "Engine ticking. Keys in. Nobody around." },
+    children: [{ feetPosition: { x: 0, y: 1.0, z: -0.5 }, light: { kind: "point", color: "oklch(0.75 0.1 200)", intensity: 0.4, distance: 2 } }] });
   const s = ctx.place.state; n++;
   keepClock(ctx);
   for (let i = pending.length - 1; i >= 0; i--) if (ctx.now() >= pending[i].at) { const h = pending.splice(i, 1)[0]; ctx.emit("fx", { position: h.pos, script: THUD }); debrisHit(ctx, h.pos, h.key); }
