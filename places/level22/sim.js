@@ -101,6 +101,7 @@ export function tick(ctx) {
   if (!l.arrivedAt) { l.arrivedAt = now; l.fallen = l.fallen ?? []; dirty = true; startL22(ctx, p); }
   if (ctx.session.l22visit !== st.laidAt) { // each visit: say where you are
     ctx.session.l22visit = st.laidAt;
+    startL22(ctx, p);
     s.notice = { text: s.l22car ? "The ramp behind you is gone under a fallen ceiling. The engine ticks, cooling. It won't start again." : "Concrete dust. A car park, floors and floors of it, and nobody.", at: now };
     sfx(ctx, p, G("distant-concrete-slab-collapse-rumble-echo-in-car-park"), 0.6);
   }

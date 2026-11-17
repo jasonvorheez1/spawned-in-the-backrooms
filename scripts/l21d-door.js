@@ -16,7 +16,7 @@ export const ears = {
     const p = m?.by && ctx.getObject(m.by), ps = p?.state; if (!ps || ps.dead) return;
     const s = ctx.self.state, id = ctx.self.id, now = ctx.now();
     if (s.opened && (s.kind === "closet" || s.kind === "dead" || s.kind === "nest")) return swing(ctx, false);
-    count(ps, id, s.kind);
+    if (/^\d+$/.test(String(s.label ?? ""))) count(ps, id, s.kind);
     if (s.kind === "exit") { note(ps, ctx, s.label === "=)" ? "Music, somewhere behind it. You go through." : `Door ${s.label}. It opens on ${s.name}.`); ctx.emit("playSound", { clip: G("old-apartment-door-latch-click-and-hinge-creak-open"), volume: 0.7 }, { audience: { player: p.id } }); ps.l21dFrom = null; return void ctx.cross(p, s.to); }
     if (s.kind === "dark") { (ps.l21d ??= {}).dark = true; note(ps, ctx, "Three halls. No lights. Nothing in here moves the way the rest of it does."); ctx.emit("playSound", { clip: G("heavy-fire-door-push-bar-clunk-and-slow-close"), volume: 0.8 }, { audience: { player: p.id } }); return move(ctx, p, DW_ARRIVE, -90); }
     if (s.kind === "back") { const q = at(EXIT.h, C + EXIT.k * SEG + SEG / 2, 0); note(ps, ctx, "The hall again. The sign buzzes over your head."); return move(ctx, p, q, yawOut(EXIT.h) + 180); }

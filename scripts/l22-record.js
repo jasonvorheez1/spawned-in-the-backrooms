@@ -10,6 +10,8 @@ export const ears = {
     const rec = s.rec ?? String(ctx.self.id ?? "").split("/").pop();
     const page = s.page ?? D.records.find((r) => r.id === rec)?.page;
     if (!page) return;
+    const pages = String(ps.pages ?? "").split(",").filter(Boolean);
+    if (!pages.includes(String(page))) ps.pages = [...pages, String(page)].join(",");
     ps.reading = page;
     ctx.emit("playSound", { clip: D.sound, position: ctx.self.worldFeetPosition ?? ctx.self.feetPosition, volume: 0.35 });
     noteRecord(ctx, p, rec);

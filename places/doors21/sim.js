@@ -2,7 +2,7 @@
 // numbered door and what is behind it, the EXIT door and the dark wing, keeps the entities and the stranger at the desk,
 // and re-shapes the halls every SHIFT_MS. Plan: scripts/lib/l21d-layout.js; numbers: scripts/lib/data/l21d.yml.
 import * as LOOT from "../../scripts/lib/loot.js";
-import { C, SQ_H, HW, HH, SEG, SEGS, CHUNK, SHIFT_MS, HALLS, hash, at, yawOut, door, allDoors, blocks, EXIT, HOLE, DW, dwDoor, ARRIVE22 } from "../../scripts/lib/l21d-layout.js";
+import { C, SQ_H, HW, HH, SEG, SEGS, CHUNK, SHIFT_MS, HALLS, hash, at, yawOut, door, allDoors, blocks, EXIT, HOLE, DW, dwDoor, ARRIVE22, closestWanderer } from "../../scripts/lib/l21d-layout.js";
 import { foeBody } from "../../scripts/lib/l21d-body.js";
 import { keepPeople21, questTick21 } from "../../scripts/lib/doors21-quest.js";
 import D from "../../scripts/lib/data/l21d.yml";
@@ -133,7 +133,9 @@ export function tick(ctx) {
   const dead = st.l21dDead ?? {}, seen = (ctx.session.l21dSeen ??= {});
   for (const id in dead) { if (seen[id] === dead[id]) continue; const fresh = seen[id] !== undefined || now - dead[id] < 5000; seen[id] = dead[id]; if (!fresh) continue;
     const F = FOES.find((q) => q.id === id), kind = F ? F.kind : id.includes("dw") ? "warden" : "clicker", key = kind === "warden" ? "warden" : "clicker";
-    const pl = ctx.place.players[0]; if (pl) { const L = (pl.state.l21d ??= { doors: 0, kinds: {}, ids: [] }); L[key] = (L[key] ?? 0) + 1; } }
+    const pos = ctx.getObject(id)?.feetPosition ?? F;
+    const pl = closestWanderer(ctx.place.players, pos);
+    if (pl) { const L = (pl.state.l21d ??= { doors: 0, kinds: {}, ids: [] }); L[key] = (L[key] ?? 0) + 1; } }
   for (const p of ctx.place.players) { const ps = p.state;
     if (ps.l21dFrom === "level22") { ps.l21dFrom = null; p.velocity = { x: 0, y: 0, z: 0 }; p.feetPosition = { ...ARRIVE22 }; ps.notice = { text: "A hallway. Doors down both sides, a number on every one.", at: now }; }
     if (!ps.l21dSeen) { ps.l21dSeen = true; ps.notice = { text: "Four hallways and a front desk. Somebody is standing behind it.", at: now }; } }

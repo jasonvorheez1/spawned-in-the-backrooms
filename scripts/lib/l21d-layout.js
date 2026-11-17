@@ -54,3 +54,7 @@ export const dwDoor = (lane, k) => { const side = k % 2 ? 1 : -1, x = DW.x + k *
 export const ARRIVE = { x: 2.5, y: 0.1, z: 4 };                       // the square
 export const ARRIVE22 = { ...at(HOLE.h, C + HOLE.k * SEG + SEG / 2 + 3, 0), y: 0.1 }; // beside the hole, coming up from Level 22
 export const DW_ARRIVE = { x: DW.x - 5, y: 0.1, z: DW.z };
+export function closestWanderer(players, pos) {
+  if (!pos) return null;
+  return players.filter((p) => p.feetPosition && !p.state?.dead).reduce((best, p) => !best || Math.hypot(p.feetPosition.x - pos.x, p.feetPosition.z - pos.z) < Math.hypot(best.feetPosition.x - pos.x, best.feetPosition.z - pos.z) ? p : best, null);
+}

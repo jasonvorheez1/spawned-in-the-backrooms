@@ -32,12 +32,15 @@ export const EXITS = {
   ],
   level11: [
     { to: "level61", id: "l11-to-l61" }, { to: "level10", id: "lv10-backroad", label: "Backroad" },
+    { to: "level325", id: "l11-site-noclip", label: "Construction scaffold" },
     { to: "level34", id: "sewer11-grate", label: "11th St sewer grate" },
     { to: "level12", id: "l11-win12", label: "Lit window", needs: "know12" },
     { to: "levelrun", id: "l11-to-levelrun", label: "Red hospital door" },
   ],
   level12: [{ to: "level13", id: "l12-to-l13", label: "Blank door" }],
   level13: [{ to: "main", id: "l13-to-l0", label: "Plain door" }],
+  level22: [{ to: "doors21", id: "l22-exit", label: "Rubble climb", needs: "l22-bottom" }],
+  doors21: [{ to: "level22", id: "l21d-hole", label: "Hole in the west hall" }, { to: "level11", id: "l21d-door-e14", label: "Door 11" }],
   level26: [{ to: "level4", id: "l26-exit", label: "Ship exit" }],
   levelrun: [
     { to: "level109", id: "lrun-to-l109", label: "Unmarked cream door" },
@@ -50,11 +53,12 @@ const hasNightVision = (state) => !!state.nvg && ((state.battery ?? 0) > 1 || st
 const canUse = (exit, state) => {
   if (!exit.needs) return true;
   if (exit.needs === "l61Clearance") return hasNightVision(state);
+  if (exit.needs === "l22-bottom") return (state.l22?.floors ?? []).includes(21);
   if (exit.needs.startsWith("key:")) return hasKey(state, exit.needs.slice(4));
   return !!state[exit.needs];
 };
 function distances(here, goal, state) {
-  const key = JSON.stringify([here, goal, !!state.zenKey, !!state.know12, hasNightVision(state), hasKey(state, "level11")]);
+  const key = JSON.stringify([here, goal, !!state.zenKey, !!state.know12, hasNightVision(state), hasKey(state, "level11"), (state.l22?.floors ?? []).includes(21)]);
   if (cache.has(key)) return cache.get(key);
   const depth = new Map([[goal, 0]]);
   const queue = [goal];

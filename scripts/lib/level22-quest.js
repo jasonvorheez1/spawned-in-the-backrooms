@@ -22,12 +22,12 @@ export const Q22 = {
   quests: {
     ruins: { id: qid("Ruins Left Behind"), name: "Ruins Left Behind", xp: 260, cents: 6000, need: [2, 13, 21],
       on: (q) => !!q.started, n: (q) => count([2, 13, 21], q.floors), of: 3,
-      tip: (q, n) => `Emstable was built downward. Stand on Floor 2, Floor 13 and Floor 21. ${n} of 3.`,
+      tip: (q, n) => `Explore Emstable: visit ${[2, 13, 21].filter((f) => !q.floors.includes(f)).map((f) => "Floor " + f).join(", ")}. ${n} of 3 visited.`,
       ready: "You have stood on the top, the middle and the bottom. Find a way out of Level 22 and tell Wren Adeyemi in Boom Town.",
       done: "Ruins Left Behind: you walked Emstable from the cookers to the mines, and came back out." },
     hilda: { id: qid("Hilda"), name: "Hilda", xp: 180, cents: 4000,
       on: (q) => count(HILDA, q.read) > 0, n: (q) => count(HILDA, q.read), of: HILDA.length,
-      tip: (q, n) => `The Kalag Institute left transcript sheets where the pages of a diary called Hilda were found. Read all three. ${n} of 3.`,
+      tip: (q, n) => `Read the Kalag Institute's Hilda transcript sheets on Floors 20 and 21. ${n} of 3 read.`,
       ready: "You have read the three sheets. Tell Wren Adeyemi in Boom Town what Jacobs Opal wrote.",
       done: "Hilda: three pages, read where they were written." },
     census: { id: qid("Twenty-Six Thousand"), name: "Twenty-Six Thousand", xp: 200, cents: 4500,
@@ -45,7 +45,8 @@ function sync(s, q) {
   const fresh = [];
   for (const [k, d] of Object.entries(Q22.quests)) {
     if (q.done[k] || !d.on(q)) continue;
-    if (setQuest(s, d.id, { name: d.name, step: isReady(k, q) ? d.ready : d.tip(q, d.n(q)) })) fresh.push(k);
+    const ready = isReady(k, q);
+    if (setQuest(s, d.id, { name: d.name, step: ready ? d.ready : d.tip(q, d.n(q)), mark: ready ? { place: "level325", id: WREN } : null })) fresh.push(k);
   }
   return fresh;
 }
@@ -66,7 +67,7 @@ function change(ctx, p, fn) {
   return true;
 }
 export function startL22(ctx, player) {
-  if (player?.state?.l22q?.started) return false;
+  if (player?.state?.l22q?.started) { sync(player.state, stateOf(player.state)); return false; }
   return change(ctx, player, (q) => { q.started = true; });
 }
 export function noteFloor(ctx, player, floorNumber) {
