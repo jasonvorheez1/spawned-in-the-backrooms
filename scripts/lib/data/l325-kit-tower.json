@@ -1,0 +1,83 @@
+{
+ "floor": {
+  "glb": "/cdn/value.5089f51c1897be382c13de8cc6ac848bc57852fa345b775bbfb06015b73bca5c.glb",
+  "tris": 3652,
+  "size": [
+   24.13,
+   3.89,
+   24.09
+  ]
+ },
+ "section10": {
+  "glb": "/cdn/value.47d6e38abb9f2a1ca790ad72999ec58c270be9bbdccd0fbc49018c045340b2fa.glb",
+  "tris": 17602,
+  "size": [
+   24.13,
+   32.69,
+   24.09
+  ]
+ },
+ "section_far": {
+  "glb": "/cdn/value.6402e43c83f38386d9fd18a888102ec81cde1af632b7b1009d3643840ee765fc.glb",
+  "tris": 2250,
+  "size": [
+   24,
+   32,
+   24
+  ]
+ },
+ "lobby": {
+  "glb": "/cdn/value.27977eae9346b560ef91294b8c9a098e61068c0015fd84c71ba5008896962053.glb",
+  "tris": 3100,
+  "size": [
+   24.13,
+   3.89,
+   24.09
+  ]
+ },
+ "lobby_basement": {
+  "glb": "/cdn/value.ba2de183d502d71cb26d51b81b2ca325097fdf9f1dc61f73fda6168c592823d2.glb",
+  "tris": 3402,
+  "size": [
+   24.13,
+   7.09,
+   24.09
+  ]
+ },
+ "columns": {
+  "glb": "/cdn/value.776b1fa7b525117f34ca16a6f516822d2ef04cf77c1288ed1064453cf8b31bbb.glb",
+  "tris": 2800,
+  "size": [
+   24.13,
+   3.64,
+   24.09
+  ]
+ },
+ "core": {
+  "glb": "/cdn/value.32ab8666edabd16ae8a4047819e7fbef35e35e81975da4c9e6fe69780e740e37.glb",
+  "tris": 404,
+  "size": [
+   6,
+   3.45,
+   6
+  ]
+ },
+ "slab_q": {
+  "glb": "/cdn/value.c822f396064fb8a72e8b18b9b147ec3e19d9756c718f59e718e0b16a3f721a5e.glb",
+  "tris": 204,
+  "size": [
+   12,
+   0.62,
+   12
+  ]
+ },
+ "foundation": {
+  "glb": "/cdn/value.d5638b6f9916d82b495017cb2b7fed08a29d9471a781830ba39d3a5452f1d001.glb",
+  "tris": 6894,
+  "size": [
+   24,
+   0.7,
+   24
+  ]
+ }
+}
