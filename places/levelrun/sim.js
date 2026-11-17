@@ -337,6 +337,10 @@ export function tick(ctx) {
 
   const players = ctx.place.players ?? [];
   if (!players.length) return;
+  if (!ctx.place.objects?.["lrun-adrenaline"]) ctx.spawn("lrun-adrenaline", { feetPosition: { x: 2.0, y: 0, z: -3.6 }, rotation: { yaw: -90 }, model: "/cdn/value.fc6f9622c8597af8969820692ee18f20f1f054fb44eac9ec771668dd197f7e2e.glb",
+    layout: { box: { min: { x: -0.45, y: 0, z: -0.3 }, max: { x: 0.45, y: 1.0, z: 0.3 } } }, physics: { body: "static", trigger: true }, behavior: "scripts/lrun-adrenaline.js",
+    children: [{ id: "vial", feetPosition: { x: 0, y: 1.06, z: 0 }, rotation: { roll: 90 }, pivot: "center", primitive: { kind: "capsule", radius: 0.025, halfHeight: 0.07 }, material: { color: "#ffd25a", emissive: "#ffb020", emissiveIntensity: 2.2, roughness: 0.2 },
+      light: { kind: "point", color: "#ffbe55", intensity: 1.4, distance: 3, shadow: { enabled: false } } }] })
 
   syncAlcovePhoebe(ctx, players);
 
@@ -367,6 +371,7 @@ export function tick(ctx) {
         const beam = ctx.place.objects?.["lrun-collapse-beam"]; if (beam) beam.feetPosition = { x: 0, y: 2.9, z: CORRIDOR.collapseZ - 0.6 };
         const cd = ctx.place.objects?.["lrun-chain-door"]; if (cd) cd.rotation = { yaw: 0 };
         ps.lrunIntroDone = 0; ps.lrunRetry = 1; ps.lrunMid = 0; ps.lrunScare = 0; ps.lrunCut = null;
+        ps.lrunAdrenOn = 0; ps.lrunAdren = 0; const v = ctx.getObject("lrun-adrenaline/vial"); if (v) v.visible = true;
       }
       continue;
     }
@@ -374,6 +379,7 @@ export function tick(ctx) {
       finishRescueToAlcove(ctx, p, null);
       continue;
     }
+    if (ps.lrunAdrenOn && now - (ps.lrunAdren ?? 0) > 30000) ps.lrunAdrenOn = 0; // the shot wears off
     if (ps.menuOpen) continue;
     // the intro cut is played by the player's own main-menu tick; when it never runs (story off, a stalled load), let them go after its length
     if (ps.lrunCut?.phase === "mid" && now - (ps.lrunCut.at ?? 0) > (LRUN_MID_LEN + 3) * 1000) { ps.lrunCut = null; continue; }

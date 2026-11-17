@@ -129,7 +129,7 @@ export function onInput(ctx, input) {
   }
   if (st.dcut) { const ss = ctx.session; if (input.held?.jump) ss.dskip ??= ctx.now(); else ss.dskip = null } // hold jump 1.2 s skips the diary cutscene
   if (st.l26cut) { const ss = ctx.session; if (input.held?.jump) ss.l26skip ??= ctx.now(); else ss.l26skip = null }
-  if (st.lrunCut?.phase === "intro") { const ss = ctx.session; if (input.held?.jump) ss.lrunskip ??= ctx.now(); else ss.lrunskip = null } // hold jump 1.2 s skips Level 26's cutscene
+  if (st.lrunCut?.phase === "intro" || st.lrunCut?.phase === "again") { const ss = ctx.session; if (input.held?.jump) ss.lrunskip ??= ctx.now(); else ss.lrunskip = null } // hold jump 1.2 s skips Level 26's cutscene
   if (input.pressed?.mainmenu && ctx.self.place !== "intake" && (st.menuOpen || !['talk', 'mahjong', 'cutscene'].includes(screen(st, ctx.self.place)))) { // pause never stacks on a talk, the mahjong table or a cutscene it couldn't draw over
     st.menuOpen = !st.menuOpen
     if (st.menuOpen) { st.menuKind = "pause"; st.wardrobeOpen = false; st.wrMenu = false }

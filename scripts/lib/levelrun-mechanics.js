@@ -51,10 +51,11 @@ export function agilityProfile(state) {
   const agi = Math.max(1, Math.min(10, rawAgi));
   const delta = agi - 5;
   const prep = state?.ch2Prep ? 1 : 0;
+  const adr = state?.lrunAdrenOn ? 1 : 0; // the crash-cart adrenaline shot (scripts/lrun-adrenaline.js)
   return {
     agi,
-    sprintDrainMul: Math.max(0.48, (1 - delta * 0.07) * (prep ? 0.88 : 1)),
-    speedMul: 1 + delta * 0.035,
+    sprintDrainMul: Math.max(0.3, (1 - delta * 0.07) * (prep ? 0.88 : 1) * (adr ? 0.5 : 1)),
+    speedMul: (1 + delta * 0.035) * (adr ? 1.14 : 1),
     jumpMul: 1 + Math.max(-0.08, delta * 0.045),
     stumbleMs: Math.max(180, Math.round((680 - delta * 75) * (prep ? 0.85 : 1))),
     stumbleSpeedKeep: Math.min(0.84, Math.max(0.36, 0.44 + delta * 0.06)),
@@ -88,10 +89,10 @@ export function stepHordeZ(playerZ, hordeZ, dt, state) {
   const gap = hordeZ - playerZ; // positive means horde is behind the player (along +Z)
   // Pressure, not a wall: far back it closes fast; right behind you it breathes down your neck
   // just under walking pace, so a winded low-Agility runner still crawls ahead. Sprinters gain ground.
-  let chaseSpeed = 7.0;
-  if (gap > 20) chaseSpeed = 8.95;
-  else if (gap > 13) chaseSpeed = 8.0;
-  else if (gap < 4) chaseSpeed = 4.2 + Math.max(0, p.agi - 5) * 0.08;
+  let chaseSpeed = 7.6; // Shelly Nov 17: harder; the adrenaline shot is what buys the margin back
+  if (gap > 20) chaseSpeed = 9.6;
+  else if (gap > 13) chaseSpeed = 8.6;
+  else if (gap < 4) chaseSpeed = 4.8 + Math.max(0, p.agi - 5) * 0.08;
   // never past the runner: the pack piles up 1.2 m behind whoever stops, biting
   return Math.max(CORRIDOR.collapseZ + 3, playerZ + 1.2, hordeZ - chaseSpeed * dt);
 }
