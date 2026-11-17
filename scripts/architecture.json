@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 10154,
-  "updatedAt": "2026-11-17T04:47:19.562Z",
-  "summary": "Spawned in the Backrooms is a survival RPG across Level 0, the Hub, and authored Backrooms destinations. Character progression and gear live in player.state while run/story state is switched separately; shared player behaviors serve solo and multiplayer places. Level 69 is a solo ephemeral highway adventure composed by a streaming sim, a controllable car, player-local cinematic, and survey quest.",
+  "basedOnSpecVersion": 10160,
+  "updatedAt": "2026-11-17T04:58:51.729Z",
+  "summary": "Spawned in the Backrooms is a survival RPG across Level 0, the Hub, and authored Backrooms destinations. Character progression and gear live in player.state while run/story state is switched separately; shared player behaviors serve solo and multiplayer places. Level 69 is a solo ephemeral highway adventure reached from Level 3 or Boom Town, with a streamed road, controllable sedan and Wren's survey quest; Level 178's Kyoto machiya is an expanded authored residence.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes and anomalies; Bonus Rooms door is north of the waking point in x0z0.",
@@ -10,9 +10,9 @@
     "places/thehub (3D) - tunnel crossroads and Camp Amber; sim/helpers compose doors, destinations, crews and local interactions.",
     "places/intake (3D), places/laundromat (solo ephemeral) and places/tutorial0 (solo ephemeral) - fresh-player creator/opening chain, laundromat cut and tutorial room/guidance.",
     "places/levelrun (solo ephemeral) - Level ! hospital chase, hazards, pursuers, intro/retry/rescue cuts and Safe Alcove.",
-    "places/level69 (solo ephemeral) - The Road Trip of Affliction; Level 3 steel door or Level 325 sedan entry, night highway, car, Wren's pull-off and tunnel exit to Level 11.",
-    "places/level1, level1c, level2, level21, level26, level4, level5, level9, level10, level11, level12, level61, level70, level132, level169, level178 and other places/* - authored and procedural Backrooms destinations.",
-    "places/level132, level169, level178 and other configured terrain/sim destinations - seeded terrain and authored setpieces, town schedules/barter, Kyoto residents and local quests."
+    "places/level325 (3D) - Boom Town; sim lays Wren Adeyemi's M.E.G. survey camp and empty Level 69 sedan beside her.",
+    "places/level69 (solo ephemeral) - The Road Trip of Affliction; Level 3 steel door or Boom Town sedan entry, night highway, car, reflector-post survey and tunnel exit to Level 11.",
+    "places/level1, level1c, level2, level21, level26, level4, level5, level9, level10, level11, level12, level61, level70, level132, level169, level178 and other places/* - authored and procedural Backrooms destinations; Level 178's Kyoto machiya now has a maple grove, courtyard openings, and furnished bath, dining and bedroom wings."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera and ordered player behavior/actions; shared locomotion, interaction, combat, inventory, social, camera and quest stack.",
@@ -20,8 +20,8 @@
     "scripts/main-menu.js + scripts/lib/run-opts.js - per-player arrival, fresh-character and mode/run routing; main-menu-ui.js renders title/pause and expedition settings.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, static placements and generation/tick behavior; sims also run environmental and sign/surface passes.",
     "places/level69/config.yaml + places/level69/sim.js - solo ephemeral road-trip instance, player wake/car seat, streamed highway, supplies, hazards, ghost traffic and tunnel transition.",
-    "scripts/l69-car.js + scripts/l69-road-geo.js - Level 69 vehicle controller/physics and procedural road slice geometry/collision.",
-    "scripts/lib/l69-cut.js + scripts/main-menu.js - player-local cinematic camera sequence, triggered by Level 69 seat time.",
+    "places/level325/sim.js - Boom Town's Wren, survey camp and Level 69 sedan entry; shares Wren's NPC identity/dialogue with Level 69 quest wiring.",
+    "scripts/l69-car.js + scripts/l69-road-geo.js - Level 69 vehicle controller/physics and procedural road slice geometry/collision; scripts/lib/l69-cut.js + scripts/main-menu.js drive the player-local seat-triggered cinematic.",
     "places/levelrun/config.yaml + sim.js + scripts/lib/levelrun-mechanics.js, levelrun-dress.js and levelrun-cut.js - Level ! staging, pursuit/hazards, room dressing and player-side cut lifecycle."
   ],
   "shared": [
@@ -32,7 +32,7 @@
     "scripts/lib/l69-cut.js - L69_INTRO_LEN and player-local opening-camera sequence; lazily loaded and driven by scripts/main-menu.js.",
     "scripts/lib/survival.js + scripts/lib/afk.js - needs-aware stamina recovery/status and AFK tracking; player.js, craft.js and craft-ui.js consume them.",
     "scripts/lib/grid-path.js - configurable 4-neighbor grid BFS/cache/cell selection shared by Level 0, 1, 2, 2.1, 3, Boiler and 6 adapters.",
-    "scripts/lib/critter-model.js + scripts/lib/cat-wardrobe.js + wardrobe/face data - shared player/NPC cat bodies, fur/face materials, outfit paint and fitted garment/hair/ear attachments."
+    "scripts/lib/critter-model.js + scripts/lib/clothes.js + cat-wardrobe/face data - shared cat NPC/player bodies and outfit/look construction; places/level325/sim.js uses this for Wren."
   ],
   "notableExports": [
     "places/level69/sim.js - cadence, ghostPass, tick, noop.",
@@ -58,14 +58,14 @@
     "world.config.yaml actions → templates/player.js ordered player behavior stack for locomotion, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter, phone, emote and god mode.",
     "templates/player.js god-kit.js onInput handles configured U/godMode → editor player.state.god and gear grant; update refills survival values before scripts/player.js core update.",
     "scripts/fall-guard.js holds velocity across place changes for ground streaming; grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
-    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; camera uses worldFeetPosition for parented/seated bodies; player.js builds viewmodel/avatar through critter-model builders.",
+    "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; camera uses worldFeetPosition for parented/seated bodies and keeps the driven car visible while locally hiding its driver body.",
     "Fresh player detected in scripts/main-menu.js → intake/creator then solo laundromat; scripts/lib/laundromat-cut.js plays opening and crosses to tutorial0.",
     "places/tutorial0/sim.js tick dresses room/supplies/signs; scripts/lib/tutorial.js reads place/position/player state → tutorial-ui.js and Field Guide prompts; tut0-cut.js drives encounter beats.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
     "scripts/lib/run-opts.js mpRoom/toSolo → party or personal room; scripts/bonus-door.js → hub.toHub; Bonus glass hall scripts/bonus-l0-exit.js sets bonusBack and routes toSolo(main), then main-menu places player outside return door.",
-    "Level 3 sim's l3-to-l69 door or Level 325 sim's l325-to-l69 sedan → Level 69 solo instance; sim seats the arriving player, sets player.state.l69.introAt and starts car; scripts/lib/l69-cut.js is driven from main-menu.js and writes ctx.view.camera, then releases it.",
-    "places/level69/sim.js streams road slices and attachments, stalls, Wren/post props, Being and ghost traffic; scripts/l69-car.js controls driving/exiting; scripts/l69-ui.js reads player.state.l69 and controlled car for intro, gauges and on-foot countdown.",
-    "scripts/l69-post.js interaction → scripts/lib/level69-quest.js plantBeacon writes l69planted/l69q; scripts/talk.js dispatches Wren dialogue to handleDialogueQuest69, with choices from scripts/lib/npc-starters.js and lines loaded by scripts/lib/data/dlg-level69.yml.",
+    "Level 3 sim's l3-to-l69 door or places/level325/sim.js sedan → Level 69 solo instance; Level 325 sim lays Wren and her survey camp, while Level 69 sim seats the arriving player, sets player.state.l69.introAt and starts the car; scripts/lib/l69-cut.js is driven by main-menu.js.",
+    "places/level69/sim.js streams road slices and attachments, stalls, reflector posts, Being and ghost traffic, and removes Wren's camp props; scripts/l69-car.js controls driving/exiting; scripts/l69-ui.js reads player.state.l69 and controlled car for intro, gauges and on-road status.",
+    "scripts/l69-post.js interaction → scripts/lib/level69-quest.js plantBeacon writes l69planted/l69q; scripts/talk.js dispatches Wren dialogue to handleDialogueQuest69, with choices from scripts/lib/npc-starters.js and lines from scripts/lib/data/dlg-level69.yml; quest return/dialogue is now at Wren in Boom Town.",
     "Level 11 door scripts/l11-ch2-drop.js → levelrun start/alcove; places/levelrun/sim.js dresses run, advances horde/hazards and handles rescue/exit; Level ! exit returns to Level 11."
   ],
   "behaviorFamilies": [
@@ -91,7 +91,7 @@
     "Fresh-player opening chain is main-menu → intake → laundromat → tutorial0; lmDone/arrivePending are player.state flags, while lmSkip and cut timing are session state. These opening places are solo/ephemeral.",
     "Level ! uses places/levelrun/config.yaml solo/ephemeral; CORRIDOR and its 26 m chunk/door generation come from scripts/lib/levelrun-mechanics.js; keep sim geometry and hazard/pursuit/midpoint/collapse/exit depths aligned.",
     "Level 69 road slices are 40 m along -Z; sim streams three slices behind/four ahead, with posts at 0.6/1.2/1.8 km and tunnel about 2.2 km. Reversing beyond z=300 folds the player/car 600 m forward; preserve this with stream position handling.",
-    "Level 69 seat uses local player feet under the car: scripts/camera.js must compare/use worldFeetPosition when available or the body and camera appear hundreds of metres from the vehicle. The opening cut is 12.6 s; sim delays on-foot timer until 13 s and UI keeps the opening overlay to 13.2 s.",
-    "Level 69 solo places may have UUID-suffixed IDs; player/feed/UI normalize or prefix-match level69 for zone/title/overlay. Separate Level 3 door and Level 325 car entries converge on the same seat/introduction; death recovery resets downed state and seats/graces the player again."
+    "Level 69 seat uses local player feet under the car: scripts/camera.js must use worldFeetPosition when available. While driving, camera.js disables hideLocalPlayer but adds the local player's own id to me.hidden, restoring that entry on leaving control so the car stays visible without rendering the driver body.",
+    "Level 69 solo places may have UUID-suffixed IDs; player/feed/UI normalize or prefix-match level69 for zone/title/overlay. Level 3 and Boom Town entries converge on the same seat/introduction; Wren's beacon quest is planted on the road and dialogue/return are handled back in Boom Town."
   ]
 }
