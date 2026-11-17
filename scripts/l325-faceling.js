@@ -13,7 +13,7 @@ export function update(ctx) {
   if ((s.hp ?? 70) <= 0) return die(ctx);
   const t = towerAt(ctx, s.ix, s.iz);
   if (!s.fled && t && (t.stage === "warn" || t.stage === "rubble" || t.cycle !== s.cycle)) { // its own tower is going: down and gone
-    s.fled = true; me.anim = { idle: null };
+    s.fled = true; me.anim.idle = null;
     ctx.emit("playSound", { clip: SFX("bamboo-scaffold-rattle-hurried-climb"), position: f, volume: 0.6, maxDistance: 40 });
     me.lifetime = 4; return ctx.sleep(5);
   }
