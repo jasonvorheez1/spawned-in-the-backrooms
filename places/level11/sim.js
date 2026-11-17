@@ -1898,6 +1898,7 @@ export function tick(ctx) {
   if (ctx.place.players?.length) kitPass(ctx, "level11"); // every usable answers with its own part, sound and light (scripts/lib/data/usable-kit.json)
   texSigns(ctx, SIGN_TEX);
   retextureOnce(ctx); // graphics pass: bare props get real surfaces
+  if (!ctx.place.objects["l11-site-noclip"]) ctx.spawn("l11-site-noclip", { feetPosition: { x: 22, y: 0.1, z: 31 }, primitive: { kind: "box", width: 5, height: 2.1, depth: 5 }, visible: false, physics: { body: "static", collider: "box", trigger: true }, behavior: "scripts/l11-site-noclip.js" }); // the scaffold site under the shed deck noclips to Boom Town (#463086)
   if (!ctx.place.objects["sewer11-grate"]) { // Level 34's grate in the street (wiki: "a sewer grate in Level 11")
     ctx.spawn("sewer11-grate", { tags: ["usable"], feetPosition: { x: 3, y: 0.01, z: 66 }, primitive: { kind: "box", width: 0.9, height: 0.06, depth: 0.6 }, physics: "static", material: { texture: "cdn/texture-rusty-cast-iron-storm-drain-grate-slots.png", color: "oklch(0.35 0.03 50)", roughness: 0.7, metalness: 0.5 }, behavior: "scripts/sewer-grate.js", state: { name: "Sewer grate", verb: "Climb down", to: "level34#l34-from-l11" } });
     ctx.spawn("l11-from-l34", { feetPosition: { x: 3, y: 0.25, z: 64.5 }, rotation: { yaw: 0 } });
