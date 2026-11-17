@@ -5,7 +5,7 @@ import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 export const cadence = "1s";
-const V = 6;
+const V = 7;
 const RALPH = "radio-ralph", HOME = { x: 0, z: -3.6 };
 const FOES = ["hound", "stealer", "smiler", "lurker", "l5rat", "l3rat", "l5staff", "hostile", "moth", "moths", "l8spider", "l8-hostile", "zdrone", "l11foe", "l7beast", "l10worm"];
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
@@ -97,7 +97,7 @@ function lay(ctx) {
   for (const [i, x] of [[0, -2.6], [1, 0], [2, 2.6]]) put(`radio-cds-${i}`, "cdrack", x, 0.1, -4.68, 180, 2.3, { state: { name: "CD shelves" } });
   // the small TV on its cart by the console, screen to the room: static, and now and then a camera somewhere else
   put("radio-tv", "tv", -1.45, 0.1, -2.8, 180, 0.95, use("tv", "Small TV", "Watch", { line: "" }));
-  sp("radio-tv-screen", { feetPosition: { x: -1.52, y: 0.7, z: -2.565 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 0.34, height: 0.26, depth: 0.005 }, material: { color: "oklch(0.2 0 0)" },
+  sp("radio-tv-screen", { feetPosition: { x: -1.43, y: 0.69, z: -2.565 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 0.31, height: 0.24, depth: 0.005 }, material: { color: "oklch(0.2 0 0)" },
     ui: `<div face="front" emissive style="width:300px;height:220px;background:repeating-linear-gradient(0deg,#9a9a9a 0px,#3c3c3c 2px,#d8d8d8 3px,#555 5px),repeating-linear-gradient(90deg,#666 0px,#bbb 1px,#444 3px);display:flex;align-items:flex-end;justify-content:center;font-family:monospace;font-size:26px;color:#e8ffe8;text-shadow:0 0 6px #000"><span style="background:#000a;padding:2px 6px">{{ state.line }}</span></div>`, state: { line: "" } });
   sp("radio-tv-glow", { feetPosition: { x: -1.45, y: 0.9, z: -2.2 }, light: { kind: "point", color: "oklch(0.85 0.03 230)", intensity: 0.5, distance: 2.2 } });
   // computer desk against the east wall, the chair pulled up to it: sitting here you never tire
@@ -130,8 +130,8 @@ function lay(ctx) {
   ctx.place.objects["radio-vending"].audio = { clip: "cdn/sfx-vending-machine-compressor-hum-loop.mp3", gain: 0.06, loop: true, spatial: true, maxDistance: 6 };
   sp("radio-vending-glow", { feetPosition: { x: 2.85, y: 1.3, z: 5.1 }, light: { kind: "point", color: "oklch(0.92 0.03 220)", intensity: 0.9, distance: 3 } });
   // pictures on three walls
-  put("radio-poster", "poster", -3.78, 1.0, 2.3, 90, 0.85, { physics: "none", state: { name: "Framed poster" } });
-  put("radio-picture-2", "poster", 3.78, 1.15, 2.4, 270, 0.75, { physics: "none", state: { name: "Framed poster" } });
+  put("radio-poster", "poster", -3.78, 1.0, 2.3, 270, 0.85, { physics: "none", state: { name: "Framed poster" } });
+  put("radio-picture-2", "poster", 3.78, 1.15, 2.4, 90, 0.75, { physics: "none", state: { name: "Framed poster" } });
   put("radio-picture-3", "poster", -2.3, 1.0, 1.3, 180, 0.8, { physics: "none", state: { name: "Framed poster" } });
   put("radio-floorlamp", "floorlamp", -3.62, 0.1, 5.7, 90, 1.6, { state: { name: "Floor lamp" } });
   sp("radio-floorlamp-light", { feetPosition: { x: -3.1, y: 1.55, z: 5.7 }, light: { kind: "point", color: "oklch(0.8 0.14 60)", intensity: 2.6, distance: 5 } });
