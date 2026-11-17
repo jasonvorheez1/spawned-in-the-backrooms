@@ -109,7 +109,7 @@ lm-light-6:
   light: {color: oklch(0.96 0.03 150), distance: 6.5, intensity: 2.2, kind: point}
 lm-rain:
   feetPosition: {x: 0, y: 0, z: 4}
-  fx: {script: "fx\npop rain rate=?mobile:300|900 on=box(<9,0.1,5>).c(6) life=.7..0.9 v=<0,-11,0>+sdir()*.2 size=.012..0.02 col=<.6,.65,.75> a=.35 floor=die r=sprite(streak,alpha,velocity,.18)\npop splash on=@rain.lives(1)?.25 life=.15..0.25 v=up(.6..1.2)+sdir()*.4 size=.02..0.04 col=<.55,.6,.7> a=.4>0 r=sprite(soft-disc,alpha)"}
+  fx: {script: "fx\npop rain rate=?mobile:300|900 on=box(<9,0.1,5>).c(6) life=.7..0.9 v=<0,-11,0>+sdir()*.2 size=.012..0.02 col=<.6,.65,.75> a=.35 floor=die r=sprite(streak,alpha,velocity,.18)\npop splash on=@rain?.25 life=.15..0.25 v=up(.6..1.2)+sdir()*.4 size=.02..0.04 col=<.55,.6,.7> a=.4>0 r=sprite(soft-disc,alpha)"}
   id: lm-rain
 lm-rain-sound:
   audio: {clip: /cdn/moodboard-realistic-gritty/sfx-heavy-rain-on-storefront-glass-loop.mp3, gain: 0.35, loop: true, maxDistance: 18, spatial: true}
