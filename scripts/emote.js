@@ -23,7 +23,7 @@ const TIMELESS = { duration: 2, tracks: {
   "mixamorig:LeftForeArm": { yaw: K([10, 18, 10, 6, 10, 18, 10, 6, 10]) },
   "mixamorig:RightForeArm": { yaw: K([-10, -6, -10, -18, -10, -6, -10, -18, -10]) },
 } }
-const CLIPS = { timeless: TIMELESS }
+const CLIPS = {} // TIMELESS T-posed real bodies (Shelly Nov 17); off until it plays right
 const SPIN = (r) => ({ clip: CLIPS[r.id] ?? r.clip, weight: 4, loop: "loop" })
 const UPPER = (r) => ({ clip: CLIPS[r.id] ?? r.clip, weight: 4, loop: "loop", mask: { from: "Spine" } })
 function stop(ctx) {
