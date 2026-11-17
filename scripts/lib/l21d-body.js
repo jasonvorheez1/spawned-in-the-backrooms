@@ -2,7 +2,7 @@
 // Tripo's bytes face +X, so each carries forward "+x"; the layout box stands it at its true height on the floor.
 // None is rigged with clips (Tripo's rigs came back without animations), so scripts/l21d-foes.js moves them in code.
 const BODIES = {
-  clicker: { id: "/cdn/value.385d0376cfcd31c508f793c54cd60a74561a41bf5078adf3851561d034bd372d.glb", h: 1.9, fwd: "-z" }, // pale re-roll, Nov 17: this one faces -Z   // gaunt eyeless humanoid, 1.9 m
+  clicker: { id: "/cdn/value.e571e23bb76943f82ad4414d96582dbd36c41cfcddced501697cd2b9d0055f2f.glb", h: 0.34, fwd: "-z" }, // Entity 94 (Shelly Nov 17): a heavy red typewriter that rolls the halls, 0.34 m
   stalker: { id: "/cdn/value.4d5a2f8ebbe0ed659efb6efa2cca22ca8481f48442727babe84cdce0f17db8d9.glb", h: 1.34 },  // on all fours: 1.2 m at the shoulder, 1.9 m long
   warden: { id: "/cdn/value.f5d23d882770b1b58995fec8f339406269a48e3b252280a6f92d129d7f6040df.glb", h: 2.3 },    // the dark wing's doorman, 2.3 m
 };

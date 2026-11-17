@@ -25,7 +25,7 @@ const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const arc = (a) => ((((a + 180) % 360) + 360) % 360) - 180;
 export const ears = {
-  noise(ctx, n) { if (n?.kind === "clack" && Math.random() < 0) return; const p = n?.position; if (!p) return; const q = (ctx.self.session.noise ??= []);
+  noise(ctx, n) { const p = n?.position; if (!p) return; const q = (ctx.self.session.noise ??= []);
     q.push({ x: p.x, z: p.z, r: n.radius ?? 25, loud: /gun|shot|expl|blast|bang|fire/i.test(String(n.kind ?? "")), at: ctx.now() }); if (q.length > 10) q.shift(); },
 };
 function hallOf(p) { if (Math.abs(p.z - DW.z) < 300) return -1; let b = 0, bd = -1e9; HALLS.forEach((H, i) => { const d = p.x * H.dir[0] + p.z * H.dir[1]; if (d > bd) { bd = d; b = i; } }); return b; }
