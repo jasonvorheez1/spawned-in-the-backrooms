@@ -90,6 +90,11 @@ SHOWS = {
   (R, "Maybe the way out isn't a door. Maybe it's just somebody to talk to when the lights hum too loud."),
   (R, "Call in and tell me what you'd do. The line's always open. Even when I'm asleep. Especially then."),
   (R, "Alright. Enough heavy stuff. Here's one you can tap your foot to.")]),
+ ("Mail Bag: From Other Levels", [
+  (R, "Mail bag. A postcard from Level Thirty-Seven. It says, the water's lovely, wish you were here. No signature. Water stains on the corners."),
+  (R, "A note from Level Eleven, written on a receipt. Ralph, the city has a radio station now and it's you. Thanks for the company."),
+  (R, "And one in crayon from Level Fun. It says, come to my party. I'm going to put that one in the fireplace. We don't have a fireplace. I'll make one."),
+  (R, "Keep writing, folks. I read every one, out loud, to an empty room. It's less empty when I do.")]),
  ("Ralph's Story: First Broadcast", [
   (R, "People ask how the station started. Truth is, I found a microphone plugged into nothing and said hello, just to hear a voice."),
   (R, "And somebody said hello back. A kid on Level Two, crying, lost. I talked to her for six hours until she found a door."),
@@ -164,6 +169,16 @@ SHOWS = {
   (T, "[quietly] Is that an apology, Hana?"),
   (H, "[softly] It is tea, Takeshi. Drink it before it gets cold."),
   (T, "[gently] Here is a song to drink tea to.")]),
+ ("Hana's Night Watch", [
+  (H, "[quiet, tired] Takeshi is asleep. So it is only me, listeners. The house creaks at this hour. Every room breathes."),
+  (H, "[softly] Sometimes I walk the halls and count the doors. I always get a different number. I stopped writing it down."),
+  (H, "[small laugh] Do not tell him, but I leave a cup of tea outside his room every night. He thinks the house makes it."),
+  (H, "[thoughtful] My brothers would laugh at me. A Kurosawa, making tea for a Moriyama. The war is very far away now."),
+  (H, "[gently] If you are awake too, somewhere in the dark, I hope your house is kind to you tonight."),
+  (T, "[sleepy, from far away] Hana? Who are you talking to?"),
+  (H, "[flustered] Nobody! The radio! Go back to sleep, you ox!"),
+  (T, "[mumbling] ...Thank you for the tea."),
+  (H, "[pause, very soft] ...Goodnight, Takeshi.")]),
  ("Letters from Level Eleven", [
   (H, "[reading] A letter, slipped under our door. It says: Dear Kyoto Dreams, I live in the city on Level Eleven. I miss rice. Signed, a hungry stranger."),
   (T, "[gasps] Hungry stranger! We have rice! Too much rice! The Rice Incident proved it!"),
@@ -220,6 +235,11 @@ SHOWS = {
   (S, "[excited] Third letter! It's from Ralph! It says, please do not mention me on your station. [giggles] RALPH RALPH RALPH!"),
   (S, "[sweetly] Last letter. It's blank. That means it's from someone who already came to the party. Hi! I miss you!"),
   (S, "[cheerful] Keep the letters coming, friends! I read every single one! Even the ones you didn't send!")]),
+ ("Sprinkles' Bedtime Story", [
+  (S, "[softly, sing-song] Story time, friends. Once upon a time there was a wanderer who walked and walked and never found a party."),
+  (S, "[sad] They were so lonely. Their feet hurt. Their almond water ran out."),
+  (S, "[brightening] And then they heard balloons! And music! And a friendly voice saying come in, come in!"),
+  (S, "[whispering] And they came in. And they never had to walk again. The end. [giggles] Sweet dreams!")]),
  ("Party Planning with Sprinkles", [
   (S, "[bubbly] Party planning time! Step one: balloons. Lots of balloons. More balloons than you think. MORE."),
   (S, "[counting] Step two: friends. Some friends come on their own. Some friends need a little... [giggles] encouragement."),
