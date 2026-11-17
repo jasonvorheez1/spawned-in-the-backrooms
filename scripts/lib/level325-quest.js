@@ -65,8 +65,8 @@ export function tick(ctx) {
   for (const id of [...tick.have]) if (!want.has(id)) { if (ctx.place.objects[id]) ctx.destroy(id); tick.have.delete(id); }
   for (const [id, w] of want) {
     const o = ctx.place.objects[id];
-    const c = { x: w.feetPosition.x, y: Math.max(GROUND, w.feetPosition.y + 1.4) + 0.35, z: w.feetPosition.z }; // E aims here: above ground while the heap sinks
-    if (o) { if (Math.abs(o.feetPosition.y - w.feetPosition.y) > 0.05) { o.feetPosition = w.feetPosition; o.state.c = c; } continue; }
+    const c = { x: w.feetPosition.x, y: Math.max(GROUND, w.feetPosition.y) + 0.45, z: w.feetPosition.z }; // E aims here: above ground while the heap sinks
+    if (o) { if (Math.abs(o.feetPosition.y - w.feetPosition.y) > 0.05) o.feetPosition = w.feetPosition; if (Math.abs((o.state.c?.y ?? 0) - c.y) > 0.05) o.state.c = c; continue; }
     const yld = w.crown ? { bamboo_pole: 1, steel_cable: 1, channel_glass: 1 } : w.h ? { bamboo_pole: 2, steel_cable: 1, rebar_rod: 1 } : { bamboo_pole: 2, rubble: 2 };
     ctx.spawn(id, { tags: ["l325salv", "usable"], feetPosition: w.feetPosition, rotation: { yaw: (w.h * 97 + id.length * 31) % 360 }, scale: 0.34,
       model: heapGlb, physics: "none", behavior: "scripts/l325-salvage.js",
