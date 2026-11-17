@@ -16,7 +16,7 @@ defaultSpawnPoint: { x: 0, y: { terrain: 0.2 }, z: 6 }
 defaultSpawnRotation: { yaw: 0 }
 worldBounds: { bottom: -40 }
 atmosphere:
-  look: { script: mods/awakening/look.js, params: { mistBase: 0, mistDensity: 0.01, mistReach: 120, bloomThreshold: 0.9, bloomStrength: 0.3, vignette: 0.16, aoStrength: 0.9, sharpen: 0.3 } }
+  look: { script: mods/awakening/look.js, params: { mistBase: 0, mistDensity: 0.01, mistReach: 120, bloomThreshold: 0.9, bloomStrength: 0.3, vignette: 0.16, aoStrength: 0.9, sharpen: 0.3, cloudCover: 0, cloudDensity: 0, cirrus: 0 } }
   sky: { kind: color, color: oklch(0.78 0.012 92) }
   timeOfDay: 13.5
   cycle: { frozen: 13.5 }
