@@ -8,8 +8,24 @@ pop face n=1 at=point() size=2.3 sz=$size*(1+.025*flick(1.6,1)) col=<.95,.85,.65
 pop halo n=1 at=point() size=3.2 col=<1,.75,.35> a=.05*flick(1.2,.4) r=sprite(soft-disc,add)
 pop tick rate=14 on=disc(1.05) life=.7..1.2 v=sdir()*.25+up(.2..0.5) size=.03..0.06 acc=drag(1.4) col=hdr(3.2,2.3,.8)>hdr(1.4,.7,.2) a=1>0 r=sprite(ember,add)
 pop glow n=1 at=point() r=light(<1,.78,.42>,1.2,3)`
-const SPIN = (r) => ({ clip: r.clip, weight: 4, loop: "loop" })
-const UPPER = (r) => ({ clip: r.clip, weight: 4, loop: "loop", mask: { from: "Spine" } })
+// Timeless, keyed by hand from Shelly's gif (Nov 17): arms held out wide, a sideways kick left, then right, the hips leaning away from each kick.
+// mixamo bones on the critter rig: UpLeg yaw + swings a leg out to its own side (measured on test dummies); arms at rest are the wide T
+const K = (a) => a.map((v) => +v.toFixed(1))
+const L = [8, 48, 14, 2, 0, 0, 0, 2, 8], R = [0, 0, 0, 2, 8, 48, 14, 2, 0]
+const TIMELESS = { duration: 2, tracks: {
+  "mixamorig:LeftUpLeg": { yaw: K(L), pitch: K(L.map((v) => v * 0.2)) },
+  "mixamorig:RightUpLeg": { yaw: K(R.map((v) => -v)), pitch: K(R.map((v) => v * 0.2)) },
+  "mixamorig:Spine": { yaw: K(L.map((v, i) => (R[i] - v) * 0.22)) },
+  "mixamorig:Spine2": { pitch: K([4, 0, 4, 0, 4, 0, 4, 0, 4]) },
+  "mixamorig:Head": { yaw: K(L.map((v, i) => (v - R[i]) * 0.2)), pitch: K([0, -6, 0, 0, 0, -6, 0, 0, 0]) },
+  "mixamorig:LeftArm": { roll: K([0, 6, 0, -4, 0, 6, 0, -4, 0]), pitch: K([0, -8, 0, 4, 0, -8, 0, 4, 0]) },
+  "mixamorig:RightArm": { roll: K([0, -6, 0, 4, 0, -6, 0, 4, 0]), pitch: K([0, 4, 0, -8, 0, 4, 0, -8, 0]) },
+  "mixamorig:LeftForeArm": { yaw: K([10, 18, 10, 6, 10, 18, 10, 6, 10]) },
+  "mixamorig:RightForeArm": { yaw: K([-10, -6, -10, -18, -10, -6, -10, -18, -10]) },
+} }
+const CLIPS = { timeless: TIMELESS }
+const SPIN = (r) => ({ clip: CLIPS[r.id] ?? r.clip, weight: 4, loop: "loop" })
+const UPPER = (r) => ({ clip: CLIPS[r.id] ?? r.clip, weight: 4, loop: "loop", mask: { from: "Spine" } })
 function stop(ctx) {
   const me = ctx.self, st = me.state, s = me.session
   if (!st.emote) return
