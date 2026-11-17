@@ -108,7 +108,7 @@ const SWING = {
     [0.82, -0.01, -0.08, 0.18, -32, 4, -8],
     [1, 0, 0, 0, 0, 0, 0]] },
 }
-const STYLE = { table_leg: 'club', pipe_scrap: 'club', crowbar: 'club', bat: 'club', rebar: 'club', wrench: 'club', stun_baton: 'club', crook: 'club', bobette: 'fists', knuckles22: 'fists',
+const STYLE = { table_leg: 'club', pipe_scrap: 'club', crowbar: 'club', bat: 'club', rebar: 'club', wrench: 'club', stun_baton: 'club', crook: 'club', bobette: 'fists', knuckles22: 'fists', valve_knuckles: 'fists', fire_extinguisher: 'heavy', meat_hook: 'slash', door_ram: 'heavy', concierge_key: 'club', wardens_lantern: 'heavy',
   hatchet: 'chop', fire_axe: 'heavy', sledgehammer: 'heavy', knife: 'stab', screwdriver: 'stab', lineman_machete: 'slash', fishing_rod: 'cast',
   pickaxe: 'heavy', cleaver: 'chop', golf_club: 'slash', tire_iron: 'club', baton: 'club', soup_bowl: 'chop', l178_bokken: 'slash', l178_kiseru: 'club', l178_tanto: 'stab', l178_katana: 'slash', l178_naginata: 'heavy' } // the same families scripts/lib/body3.js gives the third-person body: these five used to swing as plain clubs in first person
 
