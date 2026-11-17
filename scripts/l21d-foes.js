@@ -142,7 +142,7 @@ export function update(ctx, dt) {
     if ((s.stunUntil ?? 0) > now) { if (K) { play(f, m, "body", "idle", { clip: K.idle, loop: "loop", weight: 1 }); if (!m.hurtUntil || now > m.hurtUntil) { m.hurtUntil = s.stunUntil; play(f, m, "act", "stun", { clip: K.hit, loop: "once", weight: 4 }); } } continue; }
     const home = s.home ?? pos, sq = s.squad != null ? sqs[s.squad] : null, rank = sq ? sq.order.indexOf(f.id) : 0, front = rank <= 0;
     let nd = 1e9; for (const p of real) nd = Math.min(nd, flat(p.feetPosition, pos));
-    if (nd > T.wake && !m.pt && !m.act && !s.awake) continue; // nobody near: hold
+    if (nd > T.wake && !m.pt && !m.act && !s.awake) { if (K) play(f, m, "body", "idle", { clip: K.idle, loop: "loop", weight: 1 }); continue; } // nobody near: hold, breathing
     // ---- hearing
     let loud = null, ld = 1e9;
     const hear = (p) => {
