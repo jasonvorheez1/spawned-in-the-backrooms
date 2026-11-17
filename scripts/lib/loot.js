@@ -370,7 +370,7 @@ export function rollItemL5(ctx) {
 // ---- Level 21 "Numbered Doors" (place doors21): a hall closet, or a dark-wing closet (rich). Natural finds only: what a tenant or a lost survey team left behind.
 // rich leans to firesalt, the level's keys, ammo and medical, with a small chance of a weapon gated to the finder's level. Weights: Savi's pick, Nov 17.
 export const L21_KEY = "level_key";
-const L21_HALL = [["almond", 6], ["stillwater", 3], ["ration", 4], ["bandage", 4], ["firstaid", 2], ["ammo", 4], ["shells", 2], ["firesalt", 3], ["key", 1.5], ["battery", 2], ["bobbypin", 2], ["mag", 1]];
+const L21_HALL = [["almond", 6], ["stillwater", 3], ["ration", 4], ["bandage", 4], ["firstaid", 2], ["ammo", 4], ["shells", 2], ["firesalt", 3], ["key", 1.5], ["battery", 2], ["bobbypin", 2], ["mag", 1], ["stim_shot", 1], ["weapon", 1.2]];
 const L21_RICH = [["firesalt", 6], ["fs_ingot", 1], ["key", 4], ["ammo", 7], ["shells", 4], ["cells", 2], ["firstaid", 4], ["medkit", 3], ["stim_shot", 2], ["almond", 3], ["royal_ration", 1], ["kit", 2], ["weapon", 2.5]];
 export function rollItemL21(ctx, rich = false, level) {
   if (ctx.random() < (rich ? 0.2 : 0.12)) return rollCash(ctx);
