@@ -3,6 +3,7 @@ import { wristNav } from './lib/wrist-nav.js'
 // Buttons send the 'make' action: {k:'make', id, n: 1 | 5 | 'max'}, {k:'tab', c}, {k:'close'}.
 // Layout: tabs across the top, the scrap you carry as chips, then recipes, the ones you can make first.
 import C from './lib/data/craft.yml'
+import { needsStatus } from './lib/survival.js'
 import B from './lib/data/breakables.yml'
 import { skillsOf } from './lib/stats.js'
 import { SKILL_NAMES as SKN } from './lib/skill-check.js'
@@ -74,6 +75,7 @@ export function craftUi(ctx, player) {
   if (s.level == null || s.hunger == null) return ''
   const lo = C.needs.low
   let out = CSS + `<div id="nd"><div class="r h ${s.hunger < lo ? 'lo' : ''}"><span>FOOD</span><div class="b"><u style="width:${s.hunger}%"></u></div></div><div class="r ${s.thirst < lo ? 'lo' : ''}"><span>WATER</span><div class="b"><u style="width:${s.thirst}%"></u></div></div>${(s.l169sun ?? 0) > 0 || s.l169lit ? `<div class="r ${s.l169sun >= 50 ? 'lo' : ''}"><span>SUN</span><div class="b"><u style="width:${Math.min(100, s.l169sun ?? 0)}%"></u></div></div>` : ''}${(s.l169chill ?? 0) > 5 ? `<div class="r ${s.l169chill >= 50 ? 'lo' : ''}"><span>COLD</span><div class="b"><u style="width:${s.l169chill}%"></u></div></div>` : ''}</div>`
+  out += `<div style="position:fixed;left:22px;bottom:175px;font-size:10px;color:#ffcf87;text-shadow:0 1px 3px #000;pointer-events:none">${needsStatus(s)} · Food ${Math.round(s.hunger)}% · Water ${Math.round(s.thirst ?? 100)}%</div>`
   if (s.l4task) out += `<div id="tk">TASK · ${esc(s.l4task.text)} <b>${s.l4task.have ?? 0}/${s.l4task.need}</b></div>` // Level 4's office task (scripts/l4-office.js)
   if (!s.craftOpen) return out
   const sk = skillsOf(s), bench = s.craftOpen === 'bench', tab = CATS.some(([k])=>k===s.craftTab) ? s.craftTab : 'all'

@@ -1,4 +1,4 @@
-// Crafting and survival (scripts/lib/data/craft.yml). Hunger and thirst fall with time; at 0 you waste away (hp stops at 1).
+// Crafting and survival (scripts/lib/data/craft.yml). Hunger and thirst fall with time.
 // Scrap becomes ammo, kits, batteries and fuses at your hands (Y) or at a workbench you built (B, then look at it and press E).
 // Recipes are gated by a Fallout-style skill level, and spare skill points buy a chance of an extra item.
 // State: player.state.hunger, thirst (0..100), craftOpen ('hand' | 'bench'), craftBench (the bench's id).
@@ -70,16 +70,15 @@ export function update(ctx, dt) {
   const poll=m.acc>=.5
   if(poll){m.acc=0;if(s.craftOpen==='bench'&&!liveBench(ctx,s)){s.craftOpen='';s.craftBench=''}}
   if (ctx.self.place === 'level6' || ctx.self.place === 'bonus') { m.h = s.hunger ?? m.h; m.t = s.thirst ?? m.t; return } // Shelly: no hunger or thirst drain in Level 6
-  const mul = needsMul(s) * (s.sprinting ? N.sprintMul : 1) * (ctx.self.place === 'level21' ? L21H.heat : 1) // Level 2.1 is hot and humid · needsMul: the expedition's Hunger & Thirst pick
+  const mul = needsMul(s)
   // the bars follow the state (eating and drinking write it from scripts/player.js)
-  if (s.hunger != null && Math.abs(s.hunger - Math.round(m.h)) > 1) m.h = s.hunger
-  if (s.thirst != null && Math.abs(s.thirst - Math.round(m.t)) > 1) m.t = s.thirst
-  m.h = Math.max(0, m.h - N.hungerPerSec * mul * dt); m.t = Math.max(0, m.t - N.thirstPerSec * mul * dt)
+  if (s.hunger != null && s.hunger !== Math.round(m.h)) m.h = s.hunger
+  if (s.thirst != null && s.thirst !== Math.round(m.t)) m.t = s.thirst
+  m.h = Math.max(0, m.h - N.hungerPerSec * mul * (s.sprinting ? N.sprintMul : 1) * dt)
+  m.t = Math.max(0, m.t - N.thirstPerSec * mul * (s.sprinting ? N.sprintThirstMul : 1) * (ctx.self.place === 'level21' ? L21H.heat : 1) * dt)
   const h = Math.round(m.h), t = Math.round(m.t)
   if (h !== s.hunger) s.hunger = h
   if (t !== s.thirst) s.thirst = t
-  if ((m.h <= 0 || m.t <= 0) && s.hp > 1) s.hp = Math.max(1, s.hp - N.starveHp * dt)
-  if (m.h < N.low || m.t < N.low) s.sanity = Math.max(0, (s.sanity ?? 0) - N.lowSanity * dt)
   if (poll) {
     if (s.payout) { const p = s.payout; s.payout = null; gain(ctx, p.xp ?? 0); const itemOpt = (p.noItemXp || p.xp === 0) ? { xp: false } : undefined; for (const t of p.items ?? []) takeToken(ctx, t, itemOpt); if (p.text) s.notice = { text: p.text, at: ctx.now() } } // rewards other things owe you (Level 4's office tasks)
   }

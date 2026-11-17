@@ -3,6 +3,7 @@ import { xpNeed, migrateXp } from './lib/progression.js'
 export { xpNeed } from './lib/progression.js'
 import { migrate, wakePlace, wakeLog, canSaveHere } from "./lib/save.js"
 import { sanityMul, isMulti } from "./lib/run-opts.js"
+import { staminaFromNeeds } from "./lib/survival.js"
 import { spared, markDead } from "./lib/mp-guard.js"
 import { CORRIDOR, agilityProfile, hitObstacle } from './lib/levelrun-mechanics.js'
 import { layout as layout9, zoneAt as zoneAt9 } from './lib/level9.js'
@@ -1763,7 +1764,7 @@ export function update(ctx, dt) {
     s.heatWarnAt = nowS
     s.notice = { text: 'Suffocating heat (110°F) comes off the pipes. You tire faster here.', at: nowS }
   }
-  w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain * (green ? AW.green.staminaMul : 1) * (l2Hot ? 1.25 : 1) * (lrAgi ? lrAgi.sprintDrainMul : 1) : L.staminaRegen * dv.staRegen * (tired ? 0.3 : 1) * (w.winded ? (L.windedRegen ?? 0.6) : 1) * (l2Hot ? 0.68 : 1) * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
+  w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain * (green ? AW.green.staminaMul : 1) * (l2Hot ? 1.25 : 1) * (lrAgi ? lrAgi.sprintDrainMul : 1) : L.staminaRegen * dv.staRegen * staminaFromNeeds(s) * (tired ? 0.3 : 1) * (w.winded ? (L.windedRegen ?? 0.6) : 1) * (l2Hot ? 0.68 : 1) * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
   const inArch = fz === 'arches' && (ctx.self.place === 'main' || ctx.self.place === 'tutorial0') // the flooded arches are Level 0's alone: other places without their own zones fall through to Level 0's map
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
   const lrStumble = lrAgi && nowS < (w.lrunStumbleUntil ?? 0) ? (w.lrunStumbleMul ?? 0.5) : 1
