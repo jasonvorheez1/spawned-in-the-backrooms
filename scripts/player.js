@@ -685,6 +685,11 @@ export function onInput(ctx, input) {
   }
   if (input.pressed.flashlight) toggleLight(ctx)
   if (input.pressed.throw && !ctx.self.state.building && !ctx.self.state.invOpen) pullPin(ctx)
+  if (input.pressed.nadeCycle) { // B: the next grenade you carry becomes the one G throws
+    const s = ctx.self.state, order = ['frag', 'molotov', 'bauble', 'shock_pad', 'fresh'].filter((t) => THROW[t]?.key && (s[THROW[t].key] ?? 0) > 0)
+    if (!order.length) s.notice = { text: 'No grenades', at: ctx.now() }
+    else { const i = order.indexOf(s.nadePick); s.nadePick = order[(i + 1) % order.length]; s.notice = { text: `G throws: ${THROW[s.nadePick].name} · ${s[THROW[s.nadePick].key]} left · B swaps`, at: ctx.now() }; sound(ctx, 'gun-raise-cloth-rustle', 0.35, true) }
+  }
   if (input.released.throw || (walkOf(ctx).nade && !input.held.throw)) letFly(ctx)
 }
 
