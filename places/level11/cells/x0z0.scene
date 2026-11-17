@@ -193,6 +193,79 @@ l11-sedco-shift-note:
   rotation: {yaw: -10}
   state: {kind: l11-sedco-note, name: Folded shift note, verb: Read}
   tags: [usable]
+l11-site-barrier-n:
+  feetPosition: {x: 14.9, y: 0.1, z: 29.9}
+  id: l11-site-barrier-n
+  model: /cdn/value.88d8dc9d4a3d2ce24cbfc7b4f3ddc4c1f45f26423a5bf5bfcb3ef301931dcc53.glb
+  physics: static
+  rotation: {yaw: 70}
+l11-site-barrier-s:
+  feetPosition: {x: 14.9, y: 0.1, z: 32.5}
+  id: l11-site-barrier-s
+  model: /cdn/value.88d8dc9d4a3d2ce24cbfc7b4f3ddc4c1f45f26423a5bf5bfcb3ef301931dcc53.glb
+  physics: static
+  rotation: {yaw: 110}
+l11-site-cement:
+  feetPosition: {x: 26.2, y: 0.1, z: 34.8}
+  id: l11-site-cement
+  model: /cdn/value.dca160be7f4b1d2fd20259692b9becfe6c48d5214a062f73e086c112a2339437.glb
+  physics: static
+  rotation: {yaw: 15}
+l11-site-cone-0:
+  feetPosition: {x: 14.3, y: 0.1, z: 30.6}
+  id: l11-site-cone-0
+  model: /cdn/value.f8be9916c689114fb28e64e6d6be4c0dd72c421e4c503bb2970b854860ff918d.glb
+  physics: static
+  rotation: {yaw: 0}
+l11-site-cone-1:
+  feetPosition: {x: 14.5, y: 0.1, z: 31.8}
+  id: l11-site-cone-1
+  model: /cdn/value.f8be9916c689114fb28e64e6d6be4c0dd72c421e4c503bb2970b854860ff918d.glb
+  physics: static
+  rotation: {yaw: 37}
+l11-site-cone-2:
+  feetPosition: {x: 16.6, y: 0.1, z: 29.6}
+  id: l11-site-cone-2
+  model: /cdn/value.f8be9916c689114fb28e64e6d6be4c0dd72c421e4c503bb2970b854860ff918d.glb
+  physics: static
+  rotation: {yaw: 74}
+l11-site-gangbox:
+  feetPosition: {x: 24.6, y: 0.1, z: 35.6}
+  id: l11-site-gangbox
+  model: /cdn/value.2c02dedbeaf640665151c99c09562a6a679078976bc57fa28a62268d478cbd2e.glb
+  physics: static
+  rotation: {yaw: -12}
+l11-site-hoard-0:
+  feetPosition: {x: 15.6, y: 0.1, z: 26.4}
+  id: l11-site-hoard-0
+  model: /cdn/value.22aa423875c5ede95188a0cb671afd07e66a852a4c6fe5a866db13a80aa1b566.glb
+  physics: static
+  rotation: {yaw: 90}
+l11-site-hoard-1:
+  feetPosition: {x: 15.6, y: 0.1, z: 28.8}
+  id: l11-site-hoard-1
+  model: /cdn/value.22aa423875c5ede95188a0cb671afd07e66a852a4c6fe5a866db13a80aa1b566.glb
+  physics: static
+  rotation: {yaw: 91.5}
+l11-site-hoard-2:
+  feetPosition: {x: 15.6, y: 0.1, z: 33.6}
+  id: l11-site-hoard-2
+  model: /cdn/value.22aa423875c5ede95188a0cb671afd07e66a852a4c6fe5a866db13a80aa1b566.glb
+  physics: static
+  rotation: {yaw: 90}
+l11-site-hoard-3:
+  feetPosition: {x: 15.6, y: 0.1, z: 36}
+  id: l11-site-hoard-3
+  model: /cdn/value.22aa423875c5ede95188a0cb671afd07e66a852a4c6fe5a866db13a80aa1b566.glb
+  physics: static
+  rotation: {yaw: 91.5}
+l11-site-lamp:
+  children: [{feetPosition: {x: 0, y: 1.9, z: 0}, light: {color: oklch(0.92 0.09 85), distance: 9, intensity: 2.2, kind: point}}]
+  feetPosition: {x: 16.4, y: 0.1, z: 33}
+  id: l11-site-lamp
+  model: /cdn/value.e092e974c71f6be02c0dc9701749dffd7cb737df9adb1ee87851cecb29fde8a3.glb
+  physics: static
+  rotation: {yaw: 240}
 l11-site-noclip:
   behavior: scripts/l11-site-noclip.js
   feetPosition: {x: 22, y: 0.1, z: 31}
@@ -200,6 +273,12 @@ l11-site-noclip:
   physics: {body: static, collider: box, trigger: true}
   primitive: {depth: 5, height: 2.1, kind: box, width: 5}
   visible: false
+l11-site-poles:
+  feetPosition: {x: 25.5, y: 0.1, z: 27.2}
+  id: l11-site-poles
+  model: /cdn/value.711ee4789449e500dcc64aae825f43a63950e7c9b1df65267f555cb39e601a3a.glb
+  physics: static
+  rotation: {yaw: 8}
 l11-sub-nose-0:
   feetPosition: {x: 13.6, y: 0.048727272727272744, z: 58.44}
   id: l11-sub-nose-0
