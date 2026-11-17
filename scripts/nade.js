@@ -94,7 +94,7 @@ function shock(ctx) {
   if (s.ownerId) ctx.emit("blast", { hits, self: 0, from: c, shock: true }, { to: s.ownerId });
   for (const p of ctx.place.players) { // every player in the ring, the thrower too, is launched on their own machine (player.js ears.shockLaunch)
     const f = p.feetPosition; if (!f || Math.hypot(f.x - c.x, f.z - c.z) > R || Math.abs(f.y - c.y) > 2.5) continue;
-    ctx.emit("shockLaunch", { from: c }, { to: p.id });
+    p.state.shockHit = { x: c.x, y: c.y, z: c.z, at: ctx.now() }; // their own update reads the stamp and flies (player.js launchShock)
   }
   for (const o of ctx.query({ center: c, radius: R, excludeTags: ["player", "thrown"] })) { // loose things jump too
     const h = ctx.getObject(o.id); if (!h || h.physics?.body !== "dynamic") continue;

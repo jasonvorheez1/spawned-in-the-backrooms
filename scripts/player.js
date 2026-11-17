@@ -1808,6 +1808,7 @@ export function update(ctx, dt) {
   const v = ctx.self.velocity
   const along = intent.x * v.x + intent.z * v.z > 0 || (v.x === 0 && v.z === 0 && moving)
   if (now0(ctx) >= (w.slickAt ?? 0)) { w.slickAt = now0(ctx) + 150; w.onSlick = ctx.query({ tags: ['soupslick'], radius: 1.3, select: 'ids' }).length > 0 } // checked a few times a second, not every tick
+  const sh = s.shockHit; if (sh && sh.at !== w.shockSeen) { w.shockSeen = sh.at; if (now0(ctx) - sh.at < 1500) launchShock(ctx, { from: sh }) }
   if (w.shockAir) { // launched by a Shock Pad: your momentum carries, and the landing never hurts (data/throwables.yml shock_pad)
     const sa = w.shockAir, fy = ctx.self.feetPosition.y; if (fy > sa.peak) sa.peak = fy
     if ((ctx.self.grounded && now0(ctx) - sa.at > 300) || now0(ctx) - sa.at > 8000) { s.lastShock = { rise: Math.round((sa.peak - sa.y0) * 100) / 100, hp0: sa.hp0, hp: s.hp, at: now0(ctx) }; w.shockAir = null; w.noFall = false }
@@ -2164,7 +2165,9 @@ export const ears = {
       }
     }
   },
-  shockLaunch(ctx, b) { // a Shock Pad went off near you: up and away, and no fall damage on the landing that follows
+  shockLaunch(ctx, b) { launchShock(ctx, b) },
+}
+function launchShock(ctx, b) { // a Shock Pad went off near you: up and away, and no fall damage on the landing that follows
     const s = ctx.self.state, w = walkOf(ctx), S = THROW.shock_pad
     if (s.dead || s.downAt || ctx.self.controlling || !b?.from) return
     const f = ctx.self.feetPosition, dx = f.x - b.from.x, dz = f.z - b.from.z, d = Math.hypot(dx, dz)
@@ -2174,5 +2177,4 @@ export const ears = {
     w.shockAir = { at: now0(ctx), y0: f.y, peak: f.y, hp0: s.hp }; w.noFall = true
     ctx.emit('playSound', { clip: '/cdn/moodboard-scifi-neon/sfx-shock-pad-launch-rising-wind-whoosh.mp3', volume: 0.75, pitch: 0.95 + ctx.random() * 0.1 }, { audience: { player: ctx.self.id } })
     ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: 0 }, intensity: 0.5 }, { audience: { player: ctx.self.id } })
-  },
 }
