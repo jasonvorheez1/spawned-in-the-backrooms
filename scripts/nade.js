@@ -46,10 +46,74 @@ pop glint rate=?mobile:12|24 life=.3..0.6 v=sdir()*.3 size=.02..0.04 col=<%tint|
 export const RAG = `fx
 pop rag rate=?mobile:12|24 at=point() life=.2..0.35 v=up(.6)+sdir()*.3 size=.05..0.09 sz=$size*(1>.3) col=hdr(4,2,.5)>hdr(1.5,.4,.1) a=1>0 r=sprite(flame-wisp,add)`;
 
+// Shock Pad (throwables.yml shock_pad): a blue-white burst that launches, never burns
+const SHOCK = `fx
+pop flash burst=1 life=.18 size=3.6 col=hdr(3,5.5,9) a=1>0 sz=$size*(.4>1.4) r=sprite(soft-disc,add)
+pop ring burst=?mobile:36|72 on=disc(.3) life=.35..0.55 v=sdir()*<1,0,1>*(9..13) size=.25..0.45 acc=drag(3.2) sz=$size*(.6>1.6) col=hdr(1.6,3.6,6)>hdr(.2,.8,2) a=.9>0 rot=spin(.3) r=sprite(soft-disc,add)
+pop sparks burst=?mobile:30|60 life=.25..0.6 v=sdir()*(5..12)+up(3) size=.015..0.035 acc=grav()*.6+drag(1.2) col=hdr(3,6,9)>hdr(.6,1.8,4) a=(1>0)*flick(14,.5) floor=bounce(.4) r=sprite(ember,add,velocity,.03)
+pop column burst=?mobile:10|20 on=disc(.6) life=.3..0.5 v=up(10..16) size=.05..0.1 col=hdr(2,4.5,8)>hdr(.3,1,2.5) a=.8>0 r=sprite(ember,add,velocity,.05)
+pop dust burst=?mobile:8|16 on=disc(1) life=.6..1 v=sdir()*<1,0,1>*(3..5)+up(.3) size=.4..0.7 acc=drag(2.4) sz=$size*(.6>2) col=<.55,.6,.7> a=0>.35:.15>.6:.3>0 rot=spin(.1) r=sprite(smoke-puff,alpha)
+pop glow burst=1 life=.4 r=light(<.45,.75,1>,60*(1>0),12)`;
+const PADGLOW = `fx
+pop blink n=1 at=point() r=light(<.4,.75,1>,3*flick(2.5,.6),2.5)
+pop arc rate=?mobile:8|16 life=.08..0.16 v=sdir()*(.6..1.4) size=.01..0.02 col=hdr(3,6,9) a=1>0 r=sprite(ember,add,velocity,.02)`;
+const SCIFI = "/cdn/moodboard-scifi-neon/";
+const isFoe = (h) => !!h && FOES.some((t) => h.tags?.includes(t));
+function shockFly(ctx, dt) { // flies a short arc; a body met goes off at once, a wall or floor holds it for the fuse
+  const me = ctx.self, s = me.state, S = T.shock_pad;
+  if (!s.trail) { s.trail = true; me.fx = { script: PADGLOW }; }
+  if (s.rest) { if (ctx.now() >= (s.fuseAt ?? 0)) return shock(ctx); return ctx.sleep(Math.max(0.02, (s.fuseAt - ctx.now()) / 1000)); }
+  const g = ctx.place.gravity?.y ?? -9.8, v = { ...(s.vel ?? { x: 0, y: 0, z: 0 }) };
+  v.y += g * dt;
+  const p = me.feetPosition, speed = Math.hypot(v.x, v.y, v.z);
+  if ((s.age = (s.age ?? 0) + dt) > 6 || p.y < -60) return shock(ctx);
+  if (speed > 1e-4) {
+    const dir = { x: v.x / speed, y: v.y / speed, z: v.z / speed };
+    const hit = raycast(ctx, p, dir, { distance: speed * dt + 0.08, bodies: "all", physicsOnly: true, ignoreEntities: [me.id, s.ownerId].filter(Boolean) });
+    if (hit) {
+      const o = hit.id ? ctx.getObject(hit.id) : null;
+      me.feetPosition = { x: hit.position.x - dir.x * 0.05, y: hit.position.y - dir.y * 0.05, z: hit.position.z - dir.z * 0.05 };
+      if (isFoe(o) || o?.tags?.includes("player")) return shock(ctx); // straight onto a body: no wait
+      const n = hit.normal ?? { x: 0, y: 1, z: 0 };
+      s.rest = true; s.vel = { x: 0, y: 0, z: 0 }; s.fuseAt = ctx.now() + S.fuse;
+      me.feetPosition = { x: hit.position.x + n.x * 0.01, y: hit.position.y + n.y * 0.01, z: hit.position.z + n.z * 0.01 };
+      me.rotation = { yaw: s.yaw ?? 0, pitch: 0 };
+      ctx.emit("playSound", { clip: SCIFI + "sfx-shock-pad-magnetic-clamp-arming-whine.mp3", position: hit.position, volume: 0.7, maxDistance: 30 });
+      return;
+    }
+  }
+  s.vel = v; me.feetPosition = { x: p.x + v.x * dt, y: p.y + v.y * dt, z: p.z + v.z * dt };
+  s.spin = ((s.spin ?? 0) + dt * 540) % 360;
+  me.rotation = { yaw: (s.yaw ??= ctx.random() * 360) + s.spin, pitch: 0 };
+}
+function shock(ctx) {
+  const me = ctx.self, s = me.state, S = T.shock_pad, c = { ...me.feetPosition }, R = S.radius;
+  s.done = true;
+  // foes: S.damage at the centre, down to S.edge of it at the rim (Savi's pick: 35, a smiler's ~60 hp takes two), and thrown up and away
+  const hits = reached(ctx, c, R, 0.3).map((h) => { const k = 1 - h.flat / R; return { id: h.id, d: Math.round(S.damage * (S.edge + (1 - S.edge) * k)), dir: h.dir, heavy: 0, shock: { up: S.foeUp * (0.6 + 0.4 * k), out: S.foeOut * (0.5 + 0.5 * k) } }; });
+  if (s.ownerId) ctx.emit("blast", { hits, self: 0, from: c, shock: true }, { to: s.ownerId });
+  for (const p of ctx.place.players) { // every player in the ring, the thrower too, is launched on their own machine (player.js ears.shockLaunch)
+    const f = p.feetPosition; if (!f || Math.hypot(f.x - c.x, f.z - c.z) > R || Math.abs(f.y - c.y) > 2.5) continue;
+    ctx.emit("shockLaunch", { from: c }, { to: p.id });
+  }
+  for (const o of ctx.query({ center: c, radius: R, excludeTags: ["player", "thrown"] })) { // loose things jump too
+    const h = ctx.getObject(o.id); if (!h || h.physics?.body !== "dynamic") continue;
+    const dx = o.feetPosition.x - c.x, dz = o.feetPosition.z - c.z, d = Math.hypot(dx, dz) || 1, k = 1 - Math.min(1, d / R), m = h.measure?.mass ?? 10;
+    ctx.emit("impulse", { target: o.id, impulse: { x: dx / d * m * 5 * k, y: m * 8 * k, z: dz / d * m * 5 * k } });
+  }
+  ctx.emit("fx", { position: { x: c.x, y: c.y + 0.1, z: c.z }, script: SHOCK });
+  ctx.emit("shockwave", { position: { ...c, y: c.y + 0.3 }, speed: 28, thickness: 1.4, intensity: 0.7 });
+  ctx.emit("playSound", { clip: SCIFI + "sfx-shock-pad-burst-deep-bass-thump-electric-crack.mp3", position: c, volume: 1, maxDistance: 80 });
+  if (s.ownerId) ctx.emit("screenShake", { intensity: 0.25, duration: 0.25 }, { audience: { player: s.ownerId } });
+  ctx.emit("noise", { position: c, radius: 30, kind: "explosion" }, { audience: { nearby: c, radius: 30 } });
+  ctx.destroy(me.id);
+}
+
 export function update(ctx, dt) {
   const me = ctx.self, s = me.state;
   if (s.kind === "fire") return burn(ctx);
   if (s.done) return;
+  if (s.kind === "shock_pad") return shockFly(ctx, dt);
   if (!s.trail && (s.kind === "frag" || s.kind === "bauble")) { // once per throw: the frag's fuse smokes and blinks, a bauble glints in its own colour
     s.trail = true;
     if (s.kind === "bauble" && !s.tint) s.tint = TINTS[Math.floor(ctx.random() * TINTS.length)];
