@@ -1805,10 +1805,10 @@ export function update(ctx, dt) {
   const dDir = lrDodge && w.lrunDodgeDir ? w.lrunDodgeDir : dir
   const intent = lrDodge ? { x: dDir.x * lrAgi.dodgeSpeed, z: dDir.z * lrAgi.dodgeSpeed } : { x: dir.x * speed * (moving || !pressing ? 1 : 0.35), z: dir.z * speed * (moving || !pressing ? 1 : 0.35) } // stuck on a wall: a gentle lean, still enough to slide off a corner
   viewmodel(ctx, moving, sprinting)
+  const sh = s.shockHit; if (sh && sh.at !== w.shockSeen) { w.shockSeen = sh.at; if (now0(ctx) - sh.at < 1500) launchShock(ctx, { from: sh }) }
   const v = ctx.self.velocity
   const along = intent.x * v.x + intent.z * v.z > 0 || (v.x === 0 && v.z === 0 && moving)
   if (now0(ctx) >= (w.slickAt ?? 0)) { w.slickAt = now0(ctx) + 150; w.onSlick = ctx.query({ tags: ['soupslick'], radius: 1.3, select: 'ids' }).length > 0 } // checked a few times a second, not every tick
-  const sh = s.shockHit; if (sh && sh.at !== w.shockSeen) { w.shockSeen = sh.at; if (now0(ctx) - sh.at < 1500) launchShock(ctx, { from: sh }) }
   if (w.shockAir) { // launched by a Shock Pad: your momentum carries, and the landing never hurts (data/throwables.yml shock_pad)
     const sa = w.shockAir, fy = ctx.self.feetPosition.y; if (fy > sa.peak) sa.peak = fy
     if ((ctx.self.grounded && now0(ctx) - sa.at > 300) || now0(ctx) - sa.at > 8000) { s.lastShock = { rise: Math.round((sa.peak - sa.y0) * 100) / 100, hp0: sa.hp0, hp: s.hp, at: now0(ctx) }; w.shockAir = null; w.noFall = false }
