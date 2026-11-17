@@ -31,6 +31,7 @@ export const PLACES = {
   level31:   { name: "Level 31",       label: "Level 31 · The Roller Rink",            title: ["LEVEL 31", "THE ROLLER RINK"] },
   level34:   { name: "Level 34",       label: "Level 34 · Sewer System",               title: ["LEVEL 34", "SEWER SYSTEM"] },
   level325:  { name: "Level 325",      label: "Level 325 · Boom Town",                 title: ["LEVEL 325", "BOOM TOWN"] },
+  doors21:   { name: "Level 21",       label: "Level 21 · Numbered Doors",             title: ["LEVEL 21", "NUMBERED DOORS"] },
   level22:   { name: "Level 22",       label: "Level 22 · Ruins Left Behind",           title: ["LEVEL 22", "RUINS LEFT BEHIND"] },
   level69:   { name: "Level 69",       label: "Level 69 · The Road Trip of Affliction", title: ["LEVEL 69", "THE ROAD TRIP OF AFFLICTION"] },
   level70:   { name: "Level 70",       label: "Level 70 · Froidetown",                 title: ["LEVEL 70", "FROIDETOWN"] },

@@ -11,5 +11,6 @@ export function onTriggerEnter(ctx, other) {
     return
   }
   o.state.notice = { text: "You haul yourself up through the floor of somewhere else.", at: ctx.now() }
-  ctx.cross(o, "level21")
+  o.state.l21dFrom = "level22"
+  ctx.cross(o, "doors21")
 }

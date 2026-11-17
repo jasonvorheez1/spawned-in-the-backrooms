@@ -1,0 +1,40 @@
+# Level 21 "Numbered Doors": every tuned number (Savi's pick, Nov 17). A difficult area: meant for player level 12+.
+minLevel: 12
+safeRadius: 14            # nothing hunts inside the square
+respawnMin: 12
+kinds:
+  # Clickers (Wikidot): blind, hunt by sound. A sprint or a shot carries; a crouched walk does not.
+  clicker:   { name: Clicker,        hp: 150, dmg: 20, speed: 6.4, wander: 1.4, cooldown: 1.1, reach: 1.9, xp: 90,  hearWalk: 7,  hearSprint: 30, hearShot: 70, leash: 90, level: 12 }
+  stalker:   { name: Clicker Stalker, hp: 110, dmg: 28, speed: 7.6, wander: 1.8, cooldown: 0.9, reach: 2.0, xp: 130, hearWalk: 10, hearSprint: 36, hearShot: 80, leash: 120, level: 15 }
+  # the dark wing's own: they move in files of three and flank down the neighbouring hall
+  warden:    { name: Hall Warden,    hp: 260, dmg: 34, speed: 5.6, wander: 1.2, cooldown: 1.4, reach: 2.3, xp: 220, hearWalk: 9,  hearSprint: 34, hearShot: 90, leash: 170, level: 18, squad: true }
+# hall foes: [kind, hall 0-3, bay]
+foes:
+  - [clicker, 0, 6]
+  - [clicker, 0, 12]
+  - [stalker, 0, 19]
+  - [clicker, 0, 25]
+  - [stalker, 0, 29]
+  - [clicker, 1, 5]
+  - [clicker, 1, 11]
+  - [clicker, 1, 18]
+  - [stalker, 1, 25]
+  - [clicker, 2, 8]
+  - [clicker, 2, 15]
+  - [stalker, 2, 23]
+  - [clicker, 3, 6]
+  - [clicker, 3, 13]
+  - [stalker, 3, 22]
+  - [clicker, 3, 30]
+# dark wing squads: [lane 0-2, bay] three wardens each
+squads:
+  - [0, 6]
+  - [1, 11]
+  - [2, 15]
+  - [1, 18]
+nest: { chance: 1, kind: clicker, cooldownMin: 10 }   # a nest door lets one out, then is spent for a while
+loot:
+  closet: [2, 3]          # items a hall closet holds
+  rich: [3, 5]            # a dark-wing closet
+  hall: [almond, firesalt, level_key, bandage, ammo, stillwater, ration]
+  richAdds: [firesalt, level_key, red_almond, medkit, ammo, ammo, shells]
