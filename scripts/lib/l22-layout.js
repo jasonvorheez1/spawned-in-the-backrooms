@@ -23,8 +23,8 @@ export const DECKS = [
   { floor: 2, y: -FF, tier: "top", lit: 0.6, p: { holes: [[...CUT1, "sew"]], ceilHoles: [RAMP], ramps: [{ r: RAMP, dir: "+z" }] } },
   { floor: 13, y: -FF * 12, tier: "mid", lit: 0.35, p: { holes: [[...RAMP, "wen"], ...pan(13)], ceilHoles: [CUT1], stripped: [col(1, 2), col(4, 7)] } },
   { floor: 14, y: -FF * 13, tier: "mid", lit: 0.25, p: { holes: [[...CUT2, "s"], ...pan(14)], ceilHoles: [RAMP, ...pan(13)], ramps: [{ r: RAMP, dir: "+z" }], stripped: [col(0, 6), col(2, 1), col(3, 6)] } },
-  { floor: 20, y: -FF * 19, tier: "low", lit: 0.1, p: { holes: [[...RAMP, "w"], MINE, ...pan(20)], ceilHoles: [CUT2], stripped: [col(1, 4), col(2, 6), col(3, 2), col(4, 1), col(5, 6), col(0, 2)], missing: [col(2, 3), col(4, 5)] } },
-  { floor: 21, y: -FF * 20, tier: "low", lit: 0.06, p: { holes: [PIT, ...pan(21)], ceilHoles: [RAMP, MINE, ...pan(20)], ramps: [{ r: RAMP, dir: "+z", gap: [0.42, 0.56] }, { r: [-11, -6.6, -3, -1.4], dir: "-x", fallen: true }],
+  { floor: 20, y: -FF * 19, tier: "low", lit: 0.24, p: { holes: [[...RAMP, "w"], MINE, ...pan(20)], ceilHoles: [CUT2], stripped: [col(1, 4), col(2, 6), col(3, 2), col(4, 1), col(5, 6), col(0, 2)], missing: [col(2, 3), col(4, 5)] } },
+  { floor: 21, y: -FF * 20, tier: "low", lit: 0.18, p: { holes: [PIT, ...pan(21)], ceilHoles: [RAMP, MINE, ...pan(20)], ramps: [{ r: RAMP, dir: "+z", gap: [0.42, 0.56] }, { r: [-11, -6.6, -3, -1.4], dir: "-x", fallen: true }],
       stripped: [col(1, 5), col(1, 6), col(2, 4), col(3, 4), col(4, 4), col(4, 7), col(0, 7), col(2, 8), col(5, 3), col(1, 1), col(3, 1)], missing: [col(2, 7), col(4, 6), col(4, 2)] } },
 ];
 export const CUTS = [
