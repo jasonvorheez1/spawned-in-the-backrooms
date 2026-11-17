@@ -1,4 +1,5 @@
 import { questVoice } from "./lib/dina-quest.js";
+import { noStory } from "./lib/run-opts.js";
 import { animate } from "builtin/tween";
 // Dina's diary on her sleeping bag (Level 1): reading it plays the cutscene on the reader's own screen (scripts/lib/dina-quest.js)
 // Every press: the diary lifts off the bag, its cover flips, a page rustles.
@@ -12,7 +13,7 @@ export const ears = {
   press: (ctx, d) => {
     const p = ctx.getObject(d?.by), s = p?.state; if (!s || s.dcut) return;
     flip(ctx, p.id);
-    if (s.dinaDiary) {
+    if (s.dinaDiary || noStory(s)) { // Shelly Nov 17: the story is off, so its cutscene never runs; the diary reads as a page instead of hiding the HUD
       s.sub = { who: "DINA'S DIARY", t: "River copied the return test. Cabin 23, SS Fun. If I miss the handoff, look there.", at: ctx.now(), d: 9500 }; questVoice(ctx, "q-dina", "River copied the return test. Cabin 23, SS Fun. If I miss the handoff, look there.", p.id);
       return;
     }

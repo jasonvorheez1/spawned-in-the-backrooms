@@ -60,6 +60,7 @@ export function update(ctx) {
   // Level 0 after the intro: the ceiling drop, then the opening route.
   if (st.npcDead && ctx.now() - (ses.deadChk ?? 0) > 2000) { ses.deadChk = ctx.now(); const q = lazy("quests", () => import("./lib/quests.js"))?.deadCheck?.(st); if (q) st.notice = { text: `Quest failed: ${q}`, at: ctx.now() } } // Shelly Nov 17: quests know who died
   const story = !noStory(st) // Shelly Nov 14: a run with the main story off skips its cutscenes and trail
+  if (!story && st.dcut) { st.dcut = null; ses.dcut = null; ses.dskip = null; ctx.view.camera = null } // a story cutscene left set with the story off froze the HUD (Dina's diary)
   if (!story && !ses.mainSwept) { // Shelly Nov 17: main quest rows that bled in from the story run leave the journal and tracker
     ses.mainSwept = true
     const q = st.quests ?? {}, gone = Object.keys(q).filter((k) => q[k]?.main)
