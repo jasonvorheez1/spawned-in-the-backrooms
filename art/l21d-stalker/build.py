@@ -113,7 +113,7 @@ make("Hit", 12, hit, loop=False)
 def die(t):
     k = min(1, t * 1.25); e = 1 - (1 - k) ** 3; p = {}
     leg(p, "FR", -30 * e, 1.0 * e); leg(p, "FL", -40 * e, 1.1 * e); leg(p, "HR", 30 * e, 1.2 * e); leg(p, "HL", 45 * e, 1.0 * e)
-    p["Root"] = [(LONG, 80 * e), ("loc", UP * (-0.30 * e))]
+    p["Root"] = [(LONG, 80 * e), ("loc", UP * (0.06 * e))]
     p[SPINE0] = [(LAT, 15 * e)]; p[HEAD[0]] = [(LAT, 35 * e), (LONG, 20 * e)]
     return p
 make("Die", 30, die, loop=False)
