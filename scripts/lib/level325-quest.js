@@ -41,7 +41,7 @@ export function tick(ctx) {
       const L = lobe(t), sinkLeft = t.stage === "sink" ? 1 - t.prog : 1;
       for (let h = 0; h < 3; h++) { const f = 0.25 + h * 0.37, id = `l325s-${keyOf(t.ix, t.iz)}-${t.cycle}-${h}`;
         const side = (h - 1) * 7, px = t.x + (L.x1 - t.x) * f + t.lean.z * side, pz = t.z + (L.z1 - t.z) * f - t.lean.x * side;
-        want.set(id, { feetPosition: { x: px, y: GROUND - (1 - sinkLeft) * 2.6, z: pz }, h, crown: h === 2 }); } } }
+        want.set(id, { feetPosition: { x: px, y: GROUND - Math.max(0, (1 - sinkLeft) - 0.6) / 0.4 * 1.4, z: pz }, h, crown: h === 2 }); } } }
   tick.have ??= new Set(ctx.query({ tags: ["l325salv"], radius: 1e6, center: { x: 0, y: 0, z: 0 } }).map((o) => o.id));
   for (const id of [...tick.have]) if (!want.has(id)) { if (ctx.place.objects[id]) ctx.destroy(id); tick.have.delete(id); }
   for (const [id, w] of want) {
