@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 10033,
-  "updatedAt": "2026-11-17T01:43:04.210Z",
-  "summary": "Spawned in the Backrooms is a multiplayer survival RPG across Level 0, The Hub, the Bonus mall and authored destinations including Level 325: Boom Town. Character progression, inventory and appearance persist in player.state; Solo and Multiplayer keep separate mode/run state, and a brand-new player now opens in a solo laundromat cutscene before the tutorial. The main story is disabled globally while reusable place, combat, quest and creator systems remain in the tree.",
+  "basedOnSpecVersion": 10037,
+  "updatedAt": "2026-11-17T01:53:57.762Z",
+  "summary": "Spawned in the Backrooms is a multiplayer survival RPG across Level 0, The Hub, the Bonus mall and authored destinations including Level 325: Boom Town. Character progression, inventory and appearance persist in player.state while Solo and Multiplayer keep separate mode/run state; a fresh player enters through intake, a solo laundromat opening and the tutorial. Reusable place, combat, quest and creator systems remain in the tree.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes and anomalies; a walk-through Bonus Rooms door is north of the waking point in x0z0.",
     "places/bonus + places/testlab (3D) - vaporwave mall, shops, homes, atlas Teleport Station, interactive props and creator/body fixtures; Bonus sim adds mirror-ball lights, fountain ring, drifting dust and spray.",
     "places/thehub (3D) - tunnel crossroads and Camp Amber; sim/helpers compose doors, destinations, crews and local interactions.",
-    "places/intake + places/laundromat + places/tutorial0 (3D; laundromat and tutorial0 solo/ephemeral) - character creation, laundromat opening, waking and staged tutorial office route.",
+    "places/intake (3D) - character creator/salon; the fresh-player route visits here before its intro and tutorial.",
+    "places/laundromat (3D; solo, ephemeral) - at-2-am opening room; static appliances and local lighting are staged by scripts/lib/laundromat-cut.js before crossing to tutorial0.",
+    "places/tutorial0 (3D; solo, ephemeral) - staged office/corridor tutorial; sim builds the room dressing, supply containers, drawings and in-world warning scrawl.",
     "places/level1, level1c, level2, level21, level26 (3D) - procedural halls, camps, pipe halls, locked storage and authored levels.",
-    "places/level4, level5, level9, level10, level11, level12, level61, level70 (3D) - offices, hotel, cave, farm, city and Froidetown; Level 11 includes Sedco/Base Beta content and the scaffold-site crossing to Boom Town.",
-    "places/level325 (3D) - dark seeded city grid with coordinated tower collapse/salvage, Facelings, story camps/field notes and street-prop kit; quest, life, links and sound layers compose its sim.",
-    "places/level114, level27, gamma, level169, level132, level178, level31 and remaining places/* (3D) - authored destinations and local quests/setpieces; several use awakening lighting."
+    "places/level4, level5, level9, level10, level11, level12, level61, level70 (3D) - offices, hotel, cave, farm, city and Froidetown; Level 11 includes Sedco/Base Beta content and the scaffold-site crossing to Boom Town."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera and ordered player behavior/actions; locomotion, interaction, combat, social, quests and other systems attach here.",
@@ -21,8 +21,8 @@
     "places/level325/config.yaml + scripts/terrain325.js - seeded Boom Town height/material generator; places/level325/sim.js streams tower forms, collapse and street dressing around players.",
     "places/level325/sim.js + scripts/lib/level325-{quest,life,links,sound}.js - tower-cycle controller delegates quest/salvage, Faceling, travel-link and ambient-sound layers.",
     "places/level169, level132, level178 configs/sims + terrain scripts and local helpers - seeded terrain and authored setpieces, town schedules/barter, Kyoto residents and house quest.",
-    "places/laundromat/config.yaml + cells/x0z0.scene; scripts/laundromat-geo.js + scripts/lib/laundromat-cut.js - static room/appliances and the player-specific opening sequence before tutorial0.",
-    "mods/modeling-studio, mods/advanced-transform, mods/held-gizmo and mods/bodyworks - creator UI, transforms/posing and garment fitting/export; art/cat-wardrobe/body-relax.py and face-relax.py are Blender mesh-edit tools."
+    "places/laundromat/config.yaml + cells/x0z0.scene; scripts/lib/laundromat-cut.js - local opening/cutscene behavior and handoff to tutorial0.",
+    "places/tutorial0/sim.js + scripts/lib/tutorial.js + scripts/tutorial-ui.js - tutorial room dressing, position/state-based prompts, and reusable Field Guide rendering."
   ],
   "shared": [
     "scripts/lib/level325.js + scripts/lib/l325-hazard.js - Boom Town grid/tower clock, deterministic stages, zones and hazard/cover queries; terrain, sim, player zone resolver, Facelings and damage handling reuse them.",
@@ -42,7 +42,7 @@
     "scripts/lib/grid-path.js - DIRS, createGridPather; places/level10/sim.js and places/level21/sim.js - cadence, tick.",
     "scripts/lib/companion.js - PERKS, perkOf, isMine, followersOf, loyaltyScale, whyNot, recruit/adopt/dismiss/order, weapon handoff, tick, bring; carry.js - carryAcross.",
     "scripts/lib/ui-kit.js - esc, uiPrefsOf/Attrs, escKeyHandler, emptyState, classifyNotice/noticeToast; scripts/lib/save.js - SAVE_V, canSaveHere, wakePlace, migrate.",
-    "scripts/lib/laundromat-cut.js - lmTick; scripts/laundromat-geo.js - geometry, collider; scripts/bonus-door-geo.js - geometry, collider; scripts/bonus-door.js - onTriggerEnter."
+    "scripts/lib/laundromat-cut.js - lmTick; scripts/lib/tutorial.js - inOrientation, GUIDE_CHAPTERS, orientation, GUIDE_LESSONS, tipsMuted, currentTip, guideTick, guideInput; scripts/tutorial-ui.js - tutUi, fieldGuideUi."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable character player.state: progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, currency and gear shared across Solo/Multiplayer.",
@@ -52,25 +52,25 @@
     "scripts/main-menu.js writes solo run.needs/run.sanity survival switches (and fills hunger/thirst when needs are disabled); scripts/player.js applies sanityMul and food/water drain rules.",
     "scripts/lib/hub.js noteAtlas, called by scripts/player.js on arrival - player.state.atlas first-seen dates/visit counts; place sims own local texV/signTexV completion stamps.",
     "scripts/quest-prop-use.js and level quest layers own player.state clue/quest flags; Level 325 owns l325 salvage/scrap progress; page IDs and current reading are player.state.pages/reading.",
-    "scripts/main-menu.js + scripts/lib/laundromat-cut.js - opening progression flags lmDone/arrivePending, skip timing and session cutscene/light/sound state; scripts/lib/mp-guard.js owns place.state.npcPerm and per-player npcDead reports for permanent solo deaths."
+    "scripts/main-menu.js + scripts/lib/laundromat-cut.js - lmDone/arrivePending and opening progression in player.state; lmSkip, cut timing and camera/light/sound staging are session/cutscene state. scripts/lib/tutorial.js uses player.state.t0n/t0Done, guideSeen/guideTip/guideMuted for tutorial progress and lessons."
   ],
   "flows": [
     "world.config.yaml actions → templates/player.js ordered player behavior stack for locomotion, interaction, combat, inventory, social, hub, camera, quest, CCTV, radio, barter and phone; scripts/interact.js dispatches focused interactions.",
     "scripts/fall-guard.js holds velocity across place changes for ground streaming; grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit → camera and aimPt/aimPitch → ballistics/weaponAim; player.js builds viewmodel/avatar through critter-model appearance builders.",
-    "Fresh player detected by scripts/main-menu.js → cross to solo places/laundromat; main-menu loads scripts/lib/laundromat-cut.js lmTick, which plays the rain/dryer/lights/fall opening and crosses to tutorial0; jump/main-menu skips it.",
+    "Fresh player detected in scripts/main-menu.js → intake/creator then solo laundromat; main-menu loads scripts/lib/laundromat-cut.js lmTick, which plays the opening and crosses to tutorial0; jump/main-menu skip sets session lmSkip.",
+    "laundromat-cut.js completion clears player.state.cut and session cut/camera state, sets lmDone/arrivePending, then crosses to tutorial0; main-menu consumes arrivePending, resets t0n/t0cut and starts the arrival handoff without carrying the laundromat yellow fade.",
+    "places/tutorial0/sim.js tick → dresses the room, places supply cartons, props/drawings and the 'STAY LOW / KEEP IT DARK' scrawl, then adds the fallen shelf/copier and dims the last hall light.",
+    "scripts/lib/tutorial.js orientation(s, place, feetPosition) → scripts/tutorial-ui.js small crosshair key chips for tutorial moments; tutorial state t0n and player position/focus/light/crouch/inventory drive them.",
+    "scripts/main-menu.js calls scripts/lib/tutorial.js guideTick/guideInput; guideTick writes guideTip/guideSeen and session lesson timing, while tutorial-ui.js renders moment-of-need/Field Guide content and fieldGuide input opens, mutes or navigates it.",
     "scripts/player.js wake → scripts/lib/save.js migration/log/wakePlace; valid savePlace crosses to saved place and savePos restores coordinates; player update calls clockHeal on arrival.",
     "scripts/main-menu-ui.js renders Continue/Start and mode/run/save/settings links; title/pause actions → scripts/main-menu.js, which routes starts/mode picks and applies solo needs/sanity switches.",
     "scripts/lib/run-opts.js mpRoom(party/user) → scripts/lib/hub.js toSolo → party room mp-<party> (or user room); scripts/bonus-door.js onTriggerEnter → toHub for the Level 0 Bonus door; thresholds call carryAcross for held props/followers.",
-    "scripts/lib/mp-guard.js multiRoom/soloPlace → scripts/player.js damage and scripts/meg-agent.js death handling: multiplayer friendly NPCs are downed and recover; solo NPC deaths persist and scripts/lib/quests.js deadCheck fails quests tied to them.",
-    "scripts/player.js zone resolver → player.state.zone; scripts/lib/places.js → feed, quest labels and scripts/ui.js HUD titles/markers/compass; arrival → hub.noteAtlas writes player.state.atlas for Bonus Teleport Station.",
-    "Level 325 world.state.l325 clock + cell hashes → level325.js towerAt → places/level325/sim.js streams towers and collapse; l325-hazard handles impacts, quest layer lays salvage/story camps, scripts/l325-salvage.js grants per-player scrap progress.",
-    "Level 325 field-note E → scripts/quest-prop-use.js records page IDs in player.state.pages and sets reading → scripts/ui.js loads scripts/lib/data/pages.yml; supply containers from level325-quest yield backpacks/crates and supplies.",
-    "scripts/lib/run-opts.js noStory() → scripts/main-menu.js clears inherited main quest rows and scripts/lib/quests.js blocks new main rows; optional story files remain in the tree but are not an active main-story route."
+    "scripts/lib/mp-guard.js multiRoom/soloPlace → scripts/player.js damage and scripts/meg-agent.js death handling: multiplayer friendly NPCs are downed and recover; solo NPC deaths persist and scripts/lib/quests.js deadCheck fails quests tied to deaths."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs with paired orientations.",
-    "scripts/lib/data/weapons.yml + scripts/player.js + ballistics.js + knock.js + loot.js - weapon variants share combat and rarity/level gates; weights and upgrade rolls vary by level; Boom Town maul/crossbow use fitted models and two-hand grips.",
+    "scripts/lib/data/weapons.yml + scripts/player.js + ballistics.js + knock.js + loot.js - weapon variants share combat and rarity/level gates; weights and upgrade rolls vary by level; Boom Town maul/crossbow use fitted models and two-hand grip.",
     "scripts/door-geo.js + door-swing.js + prop-interactions.js + interactive-props data + prop-part.js - parametric doors/storage, legacy migration and paired leaves; thresholds/sign boards share geometry.",
     "scripts/crawl.js + scripts/player.js + humanoid-locomotion.js + scripts/lib/data/player.yml - global crawl/crouch and gait; held crouch initiates crawl and tight spaces trigger automatic crawl.",
     "scripts/lib/sleep.js + scripts/interact.js + scripts/rest.js + scripts/l178-prop.js - common bed detection/entry, with ordinary rest and Kyoto futon crossing as distinct outcomes.",
@@ -89,9 +89,9 @@
   "migrationNotes": [
     "Solo and Multiplayer share one character but not run/story state: scripts/lib/run-opts.js isStoryKey defines the swapped key family; MODE_SLOT 91/92 are separate SQL snapshots and hidden from ordinary Save Manager slots.",
     "scripts/lib/run-opts.js noStory() currently returns true in every mode; main-menu sweeps inherited main quest rows from quests/qtrack, and quests.setQuest refuses main rows. Side quests remain separate.",
-    "Fresh-player opening chain is main-menu → laundromat → tutorial0; lmDone/arrivePending are player.state flags, while lmSkip and cut timing are session state. The laundromat place is solo/ephemeral.",
-    "scripts/lib/mp-guard.js distinguishes multiplayer nonlethal downs from permanent solo NPC deaths; solo permanence is place.state.npcPerm and per-player npcDead drives quest failure, while temporary NPC return timing is scripts/lib/npc-respawn.js via data/meg.yml.",
-    "Level 0's Bonus door is a trigger at x=2.5, z=-7.7 in places/main/cells/x0z0.scene and routes through scripts/bonus-door.js → hub.toHub; keep geometry, glow/sign and trigger aligned when moving it.",
-    "Level 325 tower stages derive from rebased shared world.state.l325 clock plus deterministic cell hashes; collapse phase state lives in place.state.l325ev. The warning shake ends before the fall tween so it cannot pin sections in place."
+    "Fresh-player opening chain is main-menu → intake → laundromat → tutorial0; lmDone/arrivePending are player.state flags, while lmSkip and cut timing are session state. The laundromat and tutorial0 places are solo/ephemeral.",
+    "The laundromat-to-tutorial handoff must clear st.cut and me.anim.cut before crossing: stale cut marks made the HUD paint the laundromat's yellow fade over the tutorial; main-menu resets t0n/t0cut on arrival.",
+    "Tutorial key prompts come from scripts/lib/tutorial.js orientation using tutorial chapter, position and player state; the room's scrawl/dressing in places/tutorial0/sim.js carries teaching cues. General Field Guide lessons persist through guideSeen and tips can be muted with guideMuted.",
+    "Level 0's Bonus door is a trigger at x=2.5, z=-7.7 in places/main/cells/x0z0.scene and routes through scripts/bonus-door.js → hub.toHub; keep geometry, glow/sign and trigger aligned when moving it."
   ]
 }
