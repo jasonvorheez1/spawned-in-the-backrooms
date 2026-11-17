@@ -3,6 +3,7 @@
 // starts to shake it climbs down and leaves: it doesn't know the timing either, it just feels it like you do.
 // Savi's picks: range 38 m, a throw every 3.2 s (first after 2 s of seeing you), bolt 17 m/s, 14 damage inside 1.4 m, 70 hp.
 import { towerAt } from "./lib/level325.js";
+import { animate } from "builtin/tween";
 const BOLT = "/cdn/value.6685491fa57552cc00b59fd5148bed46dfa2f329a44d6e1f0e3a5872779b9336.glb";
 const SFX = (n) => "/cdn/moodboard-realistic-gritty/sfx-" + n + ".mp3";
 const RANGE = 38, EVERY = 3200, SPEED = 17, DMG = 14, HITR = 1.4;
@@ -33,17 +34,13 @@ function throwAt(ctx, p) {
     fx: { script: `fx\npop trail rate=40 life=.25 size=.04 col=<.6,.55,.5> a=.5>0 sz=$size r=sprite(soft-disc,alpha)` } });
   ctx.emit("playSound", { clip: SFX("rebar-thrown-whoosh"), position: hand, volume: 0.7, maxDistance: 45 });
   // a flat throw with a lob: the bolt rises a little then drops onto where it aimed
-  ctx.self.session.flights = [...(ctx.self.session.flights ?? []), { id, a: hand, b: aim, t0: ctx.now(), T: T * 1000 }];
   animateFlight(ctx, id, hand, aim, T);
   ctx.after(T, "land", { x: aim.x, y: aim.y, z: aim.z });
 }
 function animateFlight(ctx, id, a, b, T) {
   const o = ctx.getObject(id); if (!o) return;
   const mid = { x: (a.x + b.x) / 2, y: Math.max(a.y, b.y) + 1.2 + T * 1.5, z: (a.z + b.z) / 2 };
-  ctx.emit("noop", {}); // keeps emit order: the tween below rides the room clock
-  import("builtin/tween").then(({ animate }) => {
-    animate(ctx, o, { "feetPosition.x": [a.x, mid.x, b.x], "feetPosition.y": [a.y, mid.y, b.y], "feetPosition.z": [a.z, mid.z, b.z] }, { duration: T, easing: "linear" });
-  });
+  animate(ctx, o, { "feetPosition.x": [a.x, mid.x, b.x], "feetPosition.y": [a.y, mid.y, b.y], "feetPosition.z": [a.z, mid.z, b.z] }, { duration: T, easing: "linear" });
 }
 export function land(ctx, at) {
   ctx.emit("fx", { position: at, script: `fx\npop chip burst=10 life=.5..1 v=sdir()*(1..3)+up(2..4) size=.05..0.12 acc=grav()+drag(.3) col=<.5,.45,.4> a=1>0 sz=$size floor=die r=sprite(chip,alpha,velocity,.02)` });
@@ -61,7 +58,8 @@ function die(ctx) {
   me.tags = (me.tags ?? []).filter((t) => t !== "l325foe");
   ctx.emit("playSound", { clip: SFX("body-falls-onto-bamboo-and-concrete"), position: me.feetPosition, volume: 0.8, maxDistance: 40 });
   const f = me.feetPosition;
-  import("builtin/tween").then(({ animate }) => animate(ctx, me, { "feetPosition.y": [f.y, 0.15], "rotation.roll": [0, 85] }, { duration: Math.max(0.5, Math.sqrt(f.y / 4.9)), easing: "easeInQuad" }));
+  animate(ctx, me, { "feetPosition.y": [f.y, 0.15] }, { duration: Math.max(0.5, Math.sqrt(f.y / 4.9)), easing: "easeInQuad" });
+  me.anim = { die: { clip: "death", loop: false } };
   me.lifetime = 60;
   ctx.place.state.l325dead = { ...(ctx.place.state.l325dead ?? {}), [s.slot]: true };
 }
