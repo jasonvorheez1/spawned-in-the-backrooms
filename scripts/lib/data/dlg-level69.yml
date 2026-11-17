@@ -1,14 +1,14 @@
 # Level 69 people, written by hand. Quest lines live in scripts/lib/level69-quest.js (l69Choices).
-# Wren Adeyemi: M.E.G. field surveyor, van dead at the pull-off, tired, dry, precise. Doesn't oversell the dark.
+# Wren Adeyemi: M.E.G. field surveyor camped beside the Level 69 sedan in Boom Town, tired, dry, precise. Doesn't oversell the dark.
 l69-npc-wren:
-  hi: ["Oh. Headlights. Real ones. Hi. Don't turn them off."]
-  back: ["You came back. People don't, usually. They just keep driving."]
+  hi: ["Oh. Someone who isn't running from a tower. Hi. Can you drive?"]
+  back: ["You came back up. People don't, usually. They just keep driving."]
   warm: ["There's my driver. Engine still sound?"]
   cold: ["Keep your distance, please. I've had a long few days."]
   bye: ["Keep the doors shut.", "Drive in the middle lane. The edges whisper."]
   ask:
     - q: "Where is this?"
-      a: ["Level 69, on our charts. A highway. Four lanes, two walls, no exits we've ever mapped, and fog that won't come near a running car."]
+      a: ["Boom Town, up here. Down there, through that sedan, is Level 69 on our charts. A highway. Four lanes, two walls, no exits we've ever mapped, and fog that won't come near a running car."]
       then:
         - q: "Why won't the fog come near cars?"
           a: ["Nobody knows. I've got a thermometer on the dash and a theory I'm not proud of. The car is the only thing here that belongs to us. Maybe the fog knows that."]
@@ -26,7 +26,7 @@ l69-npc-wren:
     idle: ["Six hundred metres. Six-forty. Seven hundred.", "Come on, come on.", "Don't look up. Don't look up."]
     hi: ["Hi.", "Lights on, please."]
     drawn: ["Whoa. I'm a surveyor. I carry a tripod.", "Please don't."]
-    hurt: ["You're bleeding. There's gauze in the van."]
+    hurt: ["You're bleeding. There's gauze in my pack."]
     close: ["Oh! You walk quiet."]
     spot: ["Something's above us. Get in the car."]
     hostile: ["I mapped worse than you!"]

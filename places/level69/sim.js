@@ -184,7 +184,8 @@ export function tick(ctx) {
   const p = ctx.place.players[0]; if (!p) return;
   if (!ctx.place.objects["l69-bed"]) ctx.spawn("l69-bed", { feetPosition: { x: 0, y: 0, z: 0 }, audio: { clip: G("deep-empty-highway-wind-drone-with-far-concrete-groans-loop"), loop: true, gain: 0.16, spatial: false } });
   if (!ctx.place.objects["l69-car"]) ctx.spawn("l69-car", carSpec("l69-car", { x: -3.5, y: 0.6, z: -12 }));
-  layWren(ctx);
+  // Wren lives in Boom Town now (Shelly Nov 17: "i actually wanted the person surveying the area to be in boomtown asking me to go there")
+  for (const id of ["l69-npc-wren", "l69-wren-car", "l69-wren-lamp", "l69-wren-pack", "l69-wren-crate"]) if (ctx.place.objects[id]) ctx.destroy(id);
   const car = ctx.place.objects["l69-car"];
   const s = p.state, l = s.l69 ? { ...s.l69 } : {}; let dirty = false;
   // a death here (Nov 17, "im being rapidly spawn killed"): the clock above stops; back on your feet, you're back behind the wheel with a fresh grace

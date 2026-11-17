@@ -4,6 +4,9 @@
 // they are light sections. Models come from the kit files the art lanes write; until a key lands its piece is a blueprint box.
 // Layers (quest, links, life, sound) are their own files: lay() once per V, tick() every second.
 import { animate } from "builtin/tween";
+import { critterSpec } from "../../scripts/lib/critter-model.js";
+import { npcLook } from "../../scripts/lib/clothes.js";
+import CAMP from "../../scripts/lib/data/l0-kit-camp.yml";
 import { CELL, GROUND, STOREY, SECTION, WARN_S, FLASH_S, FALL_S, FOOT, WRAP, hash, cellOf, cellInfo, keyOf, towerAt, keepClock, nudge, lobe, distToLobe } from "../../scripts/lib/level325.js";
 import { debrisHit, impact } from "../../scripts/lib/l325-hazard.js";
 import * as quest from "../../scripts/lib/level325-quest.js";
@@ -187,11 +190,25 @@ function spine(ctx) {
   sp("l325-from-l11", { feetPosition: { x: 0, y: 0.25, z: 6 }, rotation: { yaw: 0 } });
   sp("l325-dustair", { feetPosition: { x: 0, y: 0, z: 0 }, fx: { script: DUSTAIR } });
 }
+// Wren Adeyemi, M.E.G. surveyor (Shelly Nov 17): parked her survey camp beside the empty sedan; she wants Level 69 measured and you're driving
+function layWren(ctx) {
+  if (ctx.place.objects["l69-npc-wren"]) return;
+  const g = (x, z) => ({ x, z, y: { terrain: 0.02 } });
+  ctx.spawn("l325-wren-lamp", { feetPosition: g(2.6, 6.4), model: CAMP.models.lantern, layout: { box: { min: { x: -0.08, y: 0, z: -0.08 }, max: { x: 0.08, y: 0.32, z: 0.08 } } },
+    light: { kind: "point", color: "oklch(0.85 0.12 75)", intensity: 3, distance: 9 } });
+  ctx.spawn("l325-wren-pack", { feetPosition: g(4.6, 7.4), rotation: { yaw: 40 }, model: CAMP.models.backpack, layout: { box: { min: { x: -0.18, y: 0, z: -0.18 }, max: { x: 0.18, y: 0.48, z: 0.18 } } } });
+  ctx.spawn("l325-wren-crate", { tags: ["container"], feetPosition: g(1.9, 7.6), rotation: { yaw: 12 }, model: CAMP.models["almond-crate"], layout: { box: { min: { x: -0.4, y: 0, z: -0.3 }, max: { x: 0.4, y: 0.5, z: 0.3 } } },
+    state: { name: "Wren's supply crate", items: "almond,almond,beans", info: "M.E.G. stencil. Road rations. She says take what you need for the drive." } });
+  const look = npcLook("l69-npc-wren", { species: "cat", sex: "f", topw: "jacket", botw: "cargo", shoes: "boots", hat: "beanie" }, "survivor", 2);
+  ctx.spawn("l69-npc-wren", { ...critterSpec(look), tags: ["npc", "l69npc"], feetPosition: g(3.4, 6.6), rotation: { yaw: 150 }, physics: { body: "kinematic", collider: "capsule" },
+    state: { name: "Wren Adeyemi", dlg: "l69-npc-wren", faction: "meg", role: "scout", look, hostile: false, unconscious: false } });
+}
 export function tick(ctx) {
   if (!ctx.place.objects["l325-to-l69"]) ctx.spawn("l325-to-l69", { tags: ["usable"], feetPosition: { x: 6, z: 3, y: { terrain: 0.02 } }, rotation: { yaw: 70 }, // Level 69's car (Shelly Nov 17: "it should be in boomtown too")
     model: { id: "/cdn/value.75b49ca4395a7da77d80c0fe5589224c21034b5a646d18f6577609e76845c706.glb", forward: "+x" }, layout: { box: { min: { x: -1, y: 0, z: -2.6 }, max: { x: 1, y: 1.6, z: 2.6 } } }, physics: "static",
     behavior: "scripts/l69-portal-car.js", state: { name: "An empty sedan", verb: "Sit in it", info: "Engine ticking. Keys in. Nobody around." },
     children: [{ feetPosition: { x: 0, y: 1.0, z: -0.5 }, light: { kind: "point", color: "oklch(0.75 0.1 200)", intensity: 0.4, distance: 2 } }] });
+  layWren(ctx);
   const s = ctx.place.state; n++;
   keepClock(ctx);
   for (let i = pending.length - 1; i >= 0; i--) if (ctx.now() >= pending[i].at) { const h = pending.splice(i, 1)[0]; ctx.emit("fx", { position: h.pos, script: THUD }); debrisHit(ctx, h.pos, h.key); }
