@@ -685,6 +685,7 @@ export function onInput(ctx, input) {
   }
   if (input.pressed.flashlight) toggleLight(ctx)
   if (input.pressed.throw && !ctx.self.state.building && !ctx.self.state.invOpen) pullPin(ctx)
+  if (input.pressed.nadeCycle && !walkOf(ctx).nade) clearNadeVm(ctx)
   if (input.pressed.nadeCycle) { // B: the next grenade you carry becomes the one G throws
     const s = ctx.self.state, order = ['frag', 'molotov', 'bauble', 'shock_pad', 'fresh'].filter((t) => THROW[t]?.key && (s[THROW[t].key] ?? 0) > 0)
     if (!order.length) s.notice = { text: 'No grenades', at: ctx.now() }
@@ -2114,7 +2115,8 @@ function pullPin(ctx) {
   // the arm draws back and holds there (the clip's wind-up, slowed) until you let go
   ctx.self.anim.nade = { clip: OVERHAND.clip, weight: OVERHAND.weight, loop: 'once', speed: 0.55, time: 0, mask: OVERHAND.mask, blendIn: OVERHAND.blendIn, blendOut: OVERHAND.blendOut, clampWhenFinished: true }
   // in first person: the grenade or bottle comes up in your free left hand, the gun stays up in the right
-  w.nadeVm = ctx.spawn({ audience: 'local', scope: 'session', feetPosition: { attach: 'camera', x: -0.26, y: -0.3, depth: 0.55 }, rotation: { yaw: -20, pitch: kind === 'frag' ? 0 : -20 }, ...(T.model ? { model: T.model, layout: { box: { min: { x: -T.size / 2, y: 0, z: -T.size / 2 }, max: { x: T.size / 2, y: T.size, z: T.size / 2 } } } } : { ...FRESH_BODY, children: FRESH_BODY.children.filter((c) => !c.light) }), visibleInFirstPerson: true, castShadow: false })
+  clearNadeVm(ctx)
+  w.nadeVm = ctx.spawn({ tags: ['nadevm'], audience: 'local', scope: 'session', feetPosition: { attach: 'camera', x: -0.26, y: -0.3, depth: 0.55 }, rotation: { yaw: -20, pitch: kind === 'frag' ? 0 : -20 }, ...(T.model ? { model: T.model, layout: { box: { min: { x: -T.size / 2, y: 0, z: -T.size / 2 }, max: { x: T.size / 2, y: T.size, z: T.size / 2 } } } } : { ...FRESH_BODY, children: FRESH_BODY.children.filter((c) => !c.light) }), visibleInFirstPerson: true, castShadow: false })
   animate(ctx, w.nadeVm, { 'feetPosition.y': [-0.5, -0.22], 'feetPosition.x': [-0.3, -0.32] }, { duration: 0.25, easing: 'easeOutCubic' })
   ctx.emit('playSound', { clip: kind === 'fresh' ? 'cdn/sfx-aerosol-can-short-hiss-click-plastic-cap.mp3' : kind === 'frag' ? '/cdn/moodboard-realistic-gritty/sfx-grenade-pin-pull-metal-ring-click.mp3' : kind === 'shock_pad' ? '/cdn/moodboard-scifi-neon/sfx-shock-pad-power-on-rising-charge-chirp.mp3' : '/cdn/moodboard-realistic-gritty/sfx-lighter-flick-cloth-rag-catches-fire.mp3', volume: 0.75 })
   if (kind === 'frag') w.nadeCook = ctx.after(T.fuse / 1000, 'cookedOff', { at: w.nade.at })
@@ -2133,7 +2135,7 @@ function letFly(ctx) {
   // the arm whips through: the rest of the clip at full speed from the wind-up
   ctx.self.anim.nade = { clip: OVERHAND.clip, weight: OVERHAND.weight, loop: 'once', speed: 1.6, time: 0.62, mask: OVERHAND.mask, blendIn: 0.05, blendOut: 0.3 }
   ctx.after(0.5, 'nadeArmDown', { at: now })
-  if (w.nadeVm) { const vm = w.nadeVm; w.nadeVm = null; animate(ctx, vm, { 'feetPosition.y': [-0.22, 0.05], 'feetPosition.depth': [0.55, 1.1], 'feetPosition.x': [-0.32, -0.05] }, { duration: 0.12 }); ctx.after(0.12, 'nadeVmGone', { id: vm }) }
+  clearNadeVm(ctx) // gone the moment it leaves your hand: the thrown one takes over in the air
   ctx.emit('cameraPunch', { direction: { x: 0, y: -0.2, z: -1 }, intensity: 0.25 }, { audience: { player: ctx.self.id } })
   const p = ctx.self.feetPosition, f = w.fwd ?? { x: 0, z: -1 }
   const eye = { x: p.x + f.x * 0.5, y: p.y + (s.crouch ? 1.0 : 1.5), z: p.z + f.z * 0.5 }
@@ -2155,6 +2157,10 @@ function letFly(ctx) {
 }
 export function nadeArmDown(ctx) { if (!walkOf(ctx).nade) ctx.self.anim.nade = null }
 export function nadeVmGone(ctx, p) { if (p?.id) ctx.destroy(p.id) }
+function clearNadeVm(ctx) { // the held grenade in first person: never more than the one in your hand
+  const w = walkOf(ctx); if (w.nadeVm) { ctx.destroy(w.nadeVm); w.nadeVm = null }
+  for (const o of ctx.query({ tags: ['nadevm'], radius: 9999 })) ctx.destroy(o.id)
+}
 // a blast or a fire patch you made reports who it reached: each lands as your hit (XP, loot, ragdoll); some of it can be you
 export const ears = {
   blast(ctx, b) {
