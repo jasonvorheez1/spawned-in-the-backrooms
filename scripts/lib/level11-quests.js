@@ -7,6 +7,7 @@
 import { setQuest, endQuest, tellQuest, advanceQuest, finishLevelQuest } from "./quests.js";
 import { rollCheck } from "./npc-talk.js";
 import { addRep, repOf } from "./rep.js";
+import { BOOM } from "./boom-quest.js";
 
 const MARK = (id) => ({ place: "level11", id });
 const SEDCO_COPY = "sedco-platform-footage";
@@ -104,6 +105,23 @@ export function handleDialogueQuest(ctx, p, npc, text) {
       s.homeAsk = ctx.now();
       return { reply: `The green house down the street. Porch, two floors, a lock that actually works. ${usd}, cash. Want it?`, mood: "happy" };
     }
+  }
+
+  // ---- Ground Rent (Vance): the scaffold site noclips to Boom Town; he wants proof (scripts/lib/boom-quest.js) ----
+  if (npcId === "l11-meg-agent-vance") {
+    if (t.includes("runner") && !s.boomQ) {
+      s.boomBase = s.l325?.salvaged ?? 0;
+      advanceQuest(ctx, p, BOOM, 1, "Quest Started: Ground Rent · Walk in under the scaffold deck by the shed");
+      return { reply: "Okami. Survey runner. Walked in under the scaffold deck by the shed to log the roadworks. Nobody walked out. Her radio still keys up at night. No words. Drilling. Hammers. Something big falling a long way. If you go in, bring me something from there I can hold. Proof. And come back.", mood: "calm" };
+    }
+    if (t.includes("blue glass") && s.boomQ === 4) {
+      const sc = { ...(s.scrap ?? {}) };
+      if (!(sc.channel_glass > 0)) return { reply: "I don't see glass, citizen. Talk's cheap. Glass isn't.", mood: "calm" };
+      sc.channel_glass -= 1; s.scrap = sc;
+      finishLevelQuest(ctx, p, BOOM.key, BOOM, { xp: 300, cents: 6000, rep: [["meg", 10]], by: "meg", text: "Ground Rent: Vance logs the glass. Okami's radio is still drilling." });
+      return { reply: "Blue. Warm. Humming? That's not possible. ...Okami's set went quiet for a minute last night, then the hammering came back. Here. Base pay, and Beta owes you. I'm logging the site as do-not-enter. Nobody will read it.", mood: "calm" };
+    }
+    if (t.includes("where is it") && s.boomQ >= 2 && s.boomQ < 99) return { reply: "It's in the job. Go under the deck by the shed. If you're past it, find a basement. Stairs go somewhere else there.", mood: "calm" };
   }
 
   // ---- Spotlight on Sedco (the courier; Vance takes the drive too) ----
@@ -267,6 +285,9 @@ export function l11Choices(id, s) {
     if (!s?.quests?.[WINDOW.id] && !s?.qdone?.[WINDOW.id]) out.push({ text: "You said don't look in that window. What is it?", tag: "Quest Start" });
     if (s?.quests?.[WINDOW.id] && !s?.know12 && !s?.vanceWinAsk) out.push({ text: "You've heard the tape. What did Harris say?", tag: "Speech 35" });
     if (s?.qdone?.[WINDOW.id]) out.push({ text: "I walked through that window. And back.", tag: "Talk" });
+    if (!s?.boomQ) out.push({ text: "You look like a man missing a runner.", tag: "Quest Start" });
+    if (s?.boomQ === 4) out.push({ text: "I brought you blue glass from the falling city.", tag: "Quest Turn-In" });
+    if (s?.boomQ >= 1 && s?.boomQ < 4) out.push({ text: "That scaffold site. Where is it really?", tag: "Ask" });
   } else if (id === "l11-trader-kael") {
     const q = s?.craneQ ?? 0;
     if (!q && repOf(s, "bntg") > -35) out.push({ text: "Docks are dead quiet. Something wrong with the canal?", tag: "Quest Start" });
