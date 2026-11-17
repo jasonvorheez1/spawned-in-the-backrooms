@@ -103,7 +103,7 @@ def bake_dust(o, key, c):
     d = c["dust"]
     lay = math_("MULTIPLY", up.outputs[0], math_("ADD", math_("MULTIPLY", nz.outputs["Fac"], 0.9), 0.25))   # settled on top
     film = math_("ADD", math_("MULTIPLY", nz.outputs["Fac"], 0.22), math_("MULTIPLY", nz2.outputs["Fac"], 0.12))  # film everywhere
-    fac = math_("MULTIPLY", math_("ADD", lay, film), d * 1.25)
+    fac = math_("MULTIPLY", math_("ADD", lay, film), d * 0.85)
     mix = N.new("ShaderNodeMix"); mix.data_type = "RGBA"; L.new(fac, mix.inputs[0]); L.new(col.outputs[0], mix.inputs[6]); mix.inputs[7].default_value = DUST
     em = N.new("ShaderNodeEmission"); L.new(mix.outputs[2], em.inputs[0])
     out = next(n for n in N if n.type == "OUTPUT_MATERIAL"); L.new(em.outputs[0], out.inputs[0])
@@ -156,7 +156,7 @@ def cut_part(o, name, lo, hi, hinge, pred=None):
     part = next(x for x in bpy.context.selected_objects if x != o)
     part.name = name; part.data.name = name
     part.data.transform(Matrix.Translation(-Vector(hinge))); part.location = Vector(hinge)
-    part.parent = o
+    part.parent = o; part.rotation_mode = "XYZ"
     print("PART", o.name, name, "tris", tris_of(part), "hinge", [round(v, 3) for v in hinge])
     return part
 
@@ -223,7 +223,7 @@ def proof(key, o, parts):
     w.node_tree.nodes["Background"].inputs[0].default_value = (0.8, 0.82, 0.85, 1); w.node_tree.nodes["Background"].inputs[1].default_value = 1.0
     mn, mx = bbox([o] + parts); c = (mn + mx) / 2; r = (mx - mn).length
     # the 1.2 m player stands beside it (never exported)
-    bpy.ops.mesh.primitive_cylinder_add(radius=0.22, depth=1.2, location=(mx.x + 0.45, mn.y, 0.6)); ref = bpy.context.object; ref.name = "ref12"
+    bpy.ops.mesh.primitive_cylinder_add(radius=0.22, depth=1.2, location=(mn.x - 0.45, mn.y, 0.6)); ref = bpy.context.object; ref.name = "ref12"
     rm = bpy.data.materials.new("ref"); rm.diffuse_color = (0.9, 0.2, 0.5, 1); rm.use_nodes = True; rm.node_tree.nodes["Principled BSDF"].inputs[0].default_value = (0.9, 0.2, 0.5, 1); ref.data.materials.append(rm)
     opened = []
     views = [("a", (0.75, -1, 0.5)), ("b", (-0.6, 1, 0.45)), ("c", (0, -0.02, 1))]
