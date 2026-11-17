@@ -12,11 +12,13 @@ import { SKILL_NAMES as SKN } from './lib/skill-check.js'
 import { takeToken, gain } from './player.js'
 import { recipeStatus, maxMakes, craftOne, benchAvailable, scrapCount, inputName, CRAFT_LIMIT, CATS } from './lib/craft.js'
 import {raycast} from 'builtin/physics'
+import { markInput, isAfk } from './lib/afk.js'
 
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 const note = (s, ctx, text) => { s.notice = { text, at: ctx.now() } }
 
 export function onInput(ctx, input) {
+  markInput(ctx, input)
   if (!input.pressed?.craft && !input.pressed?.make) return // only its own keys: every other press skips the player's whole state read
   const s = ctx.self.state
   if (s.level == null) return
@@ -69,7 +71,7 @@ export function update(ctx, dt) {
   m.acc += dt
   const poll=m.acc>=.5
   if(poll){m.acc=0;if(s.craftOpen==='bench'&&!liveBench(ctx,s)){s.craftOpen='';s.craftBench=''}}
-  if (ctx.self.place === 'level6' || ctx.self.place === 'bonus') { m.h = s.hunger ?? m.h; m.t = s.thirst ?? m.t; return } // Shelly: no hunger or thirst drain in Level 6
+  if (ctx.self.place === 'level6' || ctx.self.place === 'bonus' || isAfk(ctx)) { m.h = s.hunger ?? m.h; m.t = s.thirst ?? m.t; return } // Shelly: no hunger or thirst drain in Level 6
   const mul = needsMul(s)
   // the bars follow the state (eating and drinking write it from scripts/player.js)
   if (s.hunger != null && s.hunger !== Math.round(m.h)) m.h = s.hunger

@@ -70,6 +70,7 @@ import { zoneAt as zoneAt3 } from './lib/level3.js'
 import { zoneAt as zoneAt4, DRAIN4 } from './lib/level4.js'
 import { zoneAt as zoneAt5, DRAIN5 } from './lib/level5.js'
 import L3 from './lib/data/level3.yml'
+import { isAfk } from './lib/afk.js'
 let L9 = null
 const zone9 = (ctx, x, z) => { const sd = ctx.place?.state?.l9seed; if (sd == null) return 'l9_street'; if (L9?.seed !== sd) L9 = layout9(sd); return zoneAt9(L9, x, z) }
 const ZONE_RESOLVERS = {
@@ -1890,6 +1891,7 @@ function tickStats(ctx, t, moving) {
   if (drain > 0 && nearFresh(ctx)) drain = 0
   { const mb = musicNear(ctx); if (mb) drain = Math.min(drain, 0) - mb } // a playing music box steadies whoever stays near it // a set-down Reality Freshener holds the room still (scripts/lib/remodel-quest.js)
   if (ctx.self.place === 'level5' && s.l5room && zone.slice(3) === s.l5room && ctx.now() < (s.l5until ?? 0)) drain = -0.6 // a rented Homely Hotel suite: your own room, the hotel can't reach you (scripts/l5-resident.js)
+  if (drain > 0 && isAfk(ctx)) drain = 0 // afk: the halls wait for you (scripts/lib/afk.js)
   if (drain > 0 && ctx.now() < (s.blueUntil ?? 0)) drain = 0 // blue almond water: the halls can't get in
   s.sanity -= drain * (drain > 0 ? derived(s).drain * sanityMul(s) : 1) * t // sanityMul: the expedition's Sanity Drain pick
   if (w.ledge) s.sanity += L.ledgeRest.sanity * t
