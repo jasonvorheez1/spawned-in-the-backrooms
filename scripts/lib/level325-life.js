@@ -25,8 +25,8 @@ export function tick(ctx) {
   for (const [id, w] of want) { if (tick.have.has(id) || ctx.place.objects[id]) continue;
     const look = npcLook(id, { species: "faceling", sex: w.k ? "m" : "f", botw: "pants", shoes: "boots", ...WEAR[w.k] }, "wanderer", 3);
     ctx.spawn(id, { ...critterSpec(look), tags: ["npc", "faceling", "l325f", "l325foe", "enemy"], feetPosition: w.pos, physics: { body: "kinematic", collider: "capsule" },
-      behavior: ["scripts/l325-faceling.js"],
-      state: { name: "Adult Faceling", faction: "feral", factionName: "Faceling", killable: true, attackOnSight: true, hp: 70, maxHp: 70, ix: w.t.ix, iz: w.t.iz, cycle: w.t.cycle, slot: id } });
+      behavior: ["scripts/humanoid-locomotion.js", "scripts/l325-faceling.js"],
+      state: { name: "Adult Faceling", faction: "feral", factionName: "Faceling", killable: true, attackOnSight: true, stay: true, home: { x: w.pos.x, z: w.pos.z }, hp: 70, maxHp: 70, ix: w.t.ix, iz: w.t.iz, cycle: w.t.cycle, slot: id } });
     tick.have.add(id);
   }
   if (n % 300 === 0) { const keep = {}; for (const k of Object.keys(dead)) if (ctx.place.objects[k]) keep[k] = true; ctx.place.state.l325dead = keep; }
