@@ -25,7 +25,7 @@ const flat = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const arc = (a) => ((((a + 180) % 360) + 360) % 360) - 180;
 export const ears = {
-  noise(ctx, n) { const p = n?.position; if (!p) return; const q = (ctx.self.session.noise ??= []);
+  noise(ctx, n) { if (n?.kind === "clack" && Math.random() < 0) return; const p = n?.position; if (!p) return; const q = (ctx.self.session.noise ??= []);
     q.push({ x: p.x, z: p.z, r: n.radius ?? 25, loud: /gun|shot|expl|blast|bang|fire/i.test(String(n.kind ?? "")), at: ctx.now() }); if (q.length > 10) q.shift(); },
 };
 function hallOf(p) { if (Math.abs(p.z - DW.z) < 300) return -1; let b = 0, bd = -1e9; HALLS.forEach((H, i) => { const d = p.x * H.dir[0] + p.z * H.dir[1]; if (d > bd) { bd = d; b = i; } }); return b; }
@@ -58,6 +58,44 @@ function strike(ctx, f, B, v, pos, clip) {
   ctx.emit("squash", { target: f.id, axis: "z", intensity: 0.18, duration: 0.2 });
   ctx.emit("cameraPunch", { direction: { x: q.x - pos.x, y: 0, z: q.z - pos.z }, intensity: 0.35 }, { audience: { player: v.id } });
 }
+// Entity 94 (Shelly Nov 17, the wiki page): a clicker is a heavy red typewriter on little wheels, not a beast. It rolls hall to hall at
+// a walking pace, ignores everyone, can't be stopped or broken, bowls over whoever stands in its road, speeds off when you stand and
+// watch it, and its clacking carries: the stalkers come to the sound. Paper can be pulled out of its back (it's a container row).
+const CLK = { walk: 1.25, flee: 3.6, watch: 9, watchCos: 0.93, bump: 0.75, shove: 7, hurt: 4, clackEar: 30, lure: 16, paperMs: 180000 }; // Savi's picks
+const TYPE = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
+const CS = { clack: TYPE("old-manual-typewriter-keys-clacking-steady-typing"), ding: TYPE("typewriter-carriage-return-bell-ding-and-slide"), roll: TYPE("heavy-iron-caster-wheels-rolling-on-tile"), knock: TYPE("heavy-object-knocks-person-over-thud") };
+function typewriter(ctx, f, s, m, pos, real, blk, now, dt) {
+  if ((s.hp ?? 1) < (s.maxHp ?? 1) || s.dead) { s.hp = s.maxHp; s.dead = false; } // too dense to break
+  if (!s.items && now > (m.paperAt ?? 0)) { s.items = "paper_scrap,paper_scrap,paper_scrap"; m.paperAt = now + CLK.paperMs; }
+  let watched = false, near = 1e9;
+  for (const p of real) { const q = p.feetPosition, d = flat(q, pos); near = Math.min(near, d); if (d > CLK.watch) continue;
+    const yaw = (p.camera?.rotation?.yaw ?? 0) / DEG, fx = -Math.sin(yaw), fz = -Math.cos(yaw), dx = (pos.x - q.x) / (d || 1), dz = (pos.z - q.z) / (d || 1);
+    if (fx * dx + fz * dz > CLK.watchCos) watched = true;
+    if (d < CLK.bump && now > (m.knockAt ?? 0) && p.state && !p.state.dead) { // it doesn't stop
+      m.knockAt = now + 1500; const o = ctx.getObject(p.id), ux = Math.sin(m.yaw / DEG) * -1, uz = Math.cos(m.yaw / DEG) * -1;
+      if (o) o.velocity = { x: ux * CLK.shove, y: 3.5, z: uz * CLK.shove };
+      p.state.hp = Math.max(1, (p.state.hp ?? 100) - CLK.hurt);
+      ctx.emit("playSound", { clip: CS.knock, position: q, volume: 0.9 }); ctx.emit("cameraPunch", { direction: { x: ux, y: 0, z: uz }, intensity: 0.5 }, { audience: { player: p.id } });
+      ctx.emit("screenShake", { intensity: 0.3, duration: 0.3 }, { audience: { player: p.id } });
+      p.state.notice = { text: "It doesn't stop. It never stops.", at: now };
+    } }
+  if (near > T.wake && !s.awake) return;
+  if (watched && !m.fled) { m.fled = now; m.w = null; m.wUntil = 0; } if (!watched && m.fled && now - m.fled > 4000) m.fled = 0;
+  if (!m.w || now > (m.wUntil ?? 0) || flat(pos, m.w) < 0.6) { // aimless: room to room along its hall
+    const o = (ctx.random() * 2 - 1) * (m.fled ? T.roam * 2 : T.roam), l = (ctx.random() * 2 - 1) * (HW - 0.8), home = s.home ?? pos;
+    m.w = m.hall < 0 ? fence(m, home.x + o, DW.z + DW.lanes[m.lane] + l, blk) : fence(m, pos.x + HALLS[m.hall].dir[0] * o + HALLS[m.hall].right[0] * l, pos.z + HALLS[m.hall].dir[1] * o + HALLS[m.hall].right[1] * l, blk);
+    m.wUntil = now + 6000 + ctx.random() * 6000;
+  }
+  const speed = m.fled ? CLK.flee : CLK.walk, gx = m.w.x - pos.x, gz = m.w.z - pos.z, gd = Math.hypot(gx, gz);
+  let nx = pos.x, nz = pos.z; if (gd > 0.3) { const k = Math.min(1, (speed * dt) / gd); nx += gx * k; nz += gz * k; m.yawT = Math.atan2(-gx, -gz) * DEG; }
+  const p2 = fence(m, nx, nz, blk); m.yaw += arc(m.yawT - m.yaw) * Math.min(1, dt * 5);
+  const jit = Math.sin(now / 45) * 0.006; // the keys hammering shake the whole body
+  f.feetPosition = { x: p2.x, y: 0.02 + Math.abs(jit), z: p2.z }; f.rotation = { yaw: m.yaw, pitch: jit * 40, roll: Math.sin(now / 70) * 0.6 };
+  if (now >= (m.clickAt ?? 0) && near < CLK.clackEar) { const ding = ctx.random() < 0.2;
+    m.clickAt = now + (ding ? 2600 : m.fled ? 900 : 1700 + ctx.random() * 1200);
+    heard(ctx, { clip: ding ? CS.ding : CS.clack, position: pos, volume: 0.75, maxDistance: CLK.clackEar });
+    ctx.emit("noise", { position: { x: pos.x, y: 1, z: pos.z }, radius: CLK.lure, kind: "clack" }); } // the sound brings the hunters
+}
 const ISP = new Set(), TV = new Map(); // this machine's read of who is a real player and how fast each body moves
 export function update(ctx, dt) {
   const foes = ctx.query({ tags: ["l21d-foe"], radius: 1e5, center: { x: 0, y: 0, z: 0 } });
@@ -80,6 +118,7 @@ export function update(ctx, dt) {
   for (const f of foes) {
     const s = f.state, B = s.brain; if (!B) continue;
     const pos = f.feetPosition, kind = s.kind, m = (mem[f.id] ??= init(s, pos, now));
+    if (kind === "clicker") { typewriter(ctx, f, s, m, pos, real, blk, now, dt); continue; }
     if ((s.hp ?? 1) <= 0 || s.dead) {
       if (!m.diedAt) { m.diedAt = now; s.dead = s.dead || true; ctx.place.state.l21dDead = { ...(ctx.place.state.l21dDead ?? {}), [f.id]: now }; heard(ctx, { clip: S.die, position: pos, volume: 0.8, maxDistance: 26 }); f.material = { dissolve: 0 }; }
       const k = Math.min(1, (now - m.diedAt) / 1500);

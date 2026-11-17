@@ -41,7 +41,7 @@ function doorSet(ctx, dr, yaw, hallPt, extra = {}) {
 }
 function foe(ctx, id, kind, x, z, extra) {
   const K = D.kinds[kind];
-  ctx.spawn(id, { tags: ["l21d", "l21d-foe", "l8-hostile", "l21d-" + kind], feetPosition: { x, y: 0.05, z }, physics: { body: "kinematic", collider: "capsule" }, castShadow: false, visibleRange: { max: 90 }, ...foeBody(kind),
+  ctx.spawn(id, { tags: kind === "clicker" ? ["l21d", "l21d-foe", "l21d-clicker", "container"] : ["l21d", "l21d-foe", "l8-hostile", "l21d-" + kind], feetPosition: { x, y: 0.05, z }, physics: { body: "kinematic", collider: "capsule" }, castShadow: false, visibleRange: { max: 90 }, ...foeBody(kind),
     state: { hp: K.hp, maxHp: K.hp, name: K.name, kind, xp: K.xp, home: { x, z }, brain: K, ...extra } });
 }
 const FOES = [

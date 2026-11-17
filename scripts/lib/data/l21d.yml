@@ -32,7 +32,7 @@ squads:
   - [1, 11]
   - [2, 15]
   - [1, 18]
-nest: { chance: 1, kind: clicker, cooldownMin: 10 }   # a nest door lets one out, then is spent for a while
+nest: { chance: 1, kind: stalker, cooldownMin: 10 }   # a nest door lets one out, then is spent for a while
 loot:
   closet: [2, 3]          # items a hall closet holds
   rich: [3, 5]            # a dark-wing closet
