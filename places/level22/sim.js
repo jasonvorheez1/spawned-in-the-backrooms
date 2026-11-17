@@ -18,7 +18,7 @@ const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const SEDAN = "/cdn/value.75b49ca4395a7da77d80c0fe5589224c21034b5a646d18f6577609e76845c706.glb";
 const CAR_BOX = { min: { x: -1.0, y: 0, z: -2.6 }, max: { x: 1.0, y: 1.6, z: 2.6 } };
 const WARN = 1500, DEBRIS_WARN = 1700; // ms between the first creak and the drop
-const TIER = { top: { grime: 0.05, light: "#e9f0d8", li: 5.5 }, mid: { grime: 0.5, light: "#f0d9a6", li: 4.5 }, low: { grime: 1, light: "#e8b070", li: 5 } };
+const TIER = { top: { grime: 0.05, light: "#e9f0d8", li: 5.5 }, mid: { grime: 0.5, light: "#f0d9a6", li: 7 }, low: { grime: 1, light: "#f0b878", li: 11 } };
 const hash = (a, b) => { const v = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return v - Math.floor(v); };
 const sfx = (ctx, p, clip, vol = 0.7, at) => ctx.emit("playSound", { clip, volume: vol, ...(at ? { position: at, maxDistance: 45 } : {}) }, { audience: { player: p.id } });
 const DUST = `fx
@@ -35,7 +35,7 @@ function lay(ctx, s) {
     for (let n = 0; n < 40; n++) if (hash(n, d.floor) < d.lit) lit.push(n);
     const kids = [];
     let n = 0;
-    for (const x of [-16, -8, 0, 8, 16]) for (let z = -28; z <= 28; z += 8) { if (lit.includes(n)) kids.push({ id: `lt${n}`, feetPosition: { x, y: H - 0.75, z }, light: { kind: "point", color: t.light, intensity: t.li * (0.7 + hash(n, 9) * 0.5), distance: 13, shadow: { enabled: false } } }); n++; }
+    for (const x of [-16, -8, 0, 8, 16]) for (let z = -28; z <= 28; z += 8) { if (lit.includes(n)) kids.push({ id: `lt${n}`, feetPosition: { x, y: H - 0.75, z }, light: { kind: "point", color: t.light, intensity: t.li * (0.7 + hash(n, 9) * 0.5), distance: 16, shadow: { enabled: false } } }); n++; }
     // the floor's number, stencilled on four columns
     for (const [x, z, yaw] of [[12, 16, 0], [-12, 0, 180], [4, -16, 90], [-4, 24, -90]]) {
       const ox = yaw === 90 ? 0.306 : yaw === -90 ? -0.306 : 0, oz = yaw === 0 ? -0.306 : yaw === 180 ? 0.306 : 0;
@@ -47,7 +47,7 @@ function lay(ctx, s) {
   }
   for (const c of CUTS) {
     const cx = (c.r[0] + c.r[2]) / 2, cz = (c.r[1] + c.r[3]) / 2, kids = [];
-    for (let y = -5; y > -c.depth; y -= 9) kids.push({ feetPosition: { x: 0, y, z: 0 }, light: { kind: "point", color: c.flights ? "#cfd8e6" : "#8fa2c4", intensity: c.flights ? 5 : 6, distance: c.flights ? 12 : 24, shadow: { enabled: false } } });
+    for (let y = -5; y > -c.depth; y -= 9) kids.push({ feetPosition: { x: 0, y, z: 0 }, light: { kind: "point", color: c.flights ? "#cfd8e6" : "#8fa2c4", intensity: c.flights ? 14 : 16, distance: c.flights ? 14 : 30, shadow: { enabled: false } } });
     c.floors.forEach((f, i) => { const y = -FF * (i + 1) + 0.9; if (c.flights) kids.push({ feetPosition: { x: (c.r[2] - c.r[0]) / 2 - 0.02, y, z: 0 }, rotation: { yaw: 90 }, castShadow: false, vector: `<svg viewBox='0 0 120 80' width='0.7m'><text x='60' y='66' font-size='74' text-anchor='middle' font-family='sans-serif' font-weight='700' fill='#2a2825' opacity='0.7'>${f}</text></svg>` }); });
     ctx.spawn(c.id, { feetPosition: { x: cx, y: c.y, z: cz }, physics: "static", castShadow: false,
       primitive: { kind: "scripted", script: "scripts/l22-cut-geo.js", params: { w: c.r[2] - c.r[0], d: c.r[3] - c.r[1], depth: c.depth, flights: c.flights, seed: c.depth } }, material: { pbr: true }, children: kids,

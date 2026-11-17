@@ -18,6 +18,6 @@ atmosphere:
   stars: { enabled: false }
   timeOfDay: 0
   wind: { direction: 0, speed: 0.5 }
-  ambient: { light: { color: "#4a463e", intensity: 0.9 } }
-  hemisphere: { skyColor: "#35322c", groundColor: "#161513", intensity: 0.7 }
+  ambient: { light: { color: "#4f4a42", intensity: 1.5 } }
+  hemisphere: { skyColor: "#35322c", groundColor: "#1b1a17", intensity: 1.1 }
 acoustics: { reverb: 0.55 }
