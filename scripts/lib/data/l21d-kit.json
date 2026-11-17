@@ -1,1 +1,218 @@
-{}
+{
+ "front_desk": {
+  "glb": "/cdn/value.0b8b3ecceb3eabaaceec48a84fce1de46be3dbba661cb6377fa4b46940a6c074.glb",
+  "size": [
+   2.6,
+   1.1,
+   0.8
+  ],
+  "tris": 4930
+ },
+ "desk_chair": {
+  "glb": "/cdn/value.38ab81e6063f8b45c8e61e6a2258eabb783a782ded2c295a84eea65d7af11d46.glb",
+  "size": [
+   0.748,
+   0.98,
+   0.747
+  ],
+  "tris": 4942
+ },
+ "wait_chair": {
+  "glb": "/cdn/value.383f69e784b34f38c7daa7ec9d23a8660ae6045fe762e44a6efd08f750e0c4b4.glb",
+  "size": [
+   0.594,
+   0.8,
+   0.591
+  ],
+  "tris": 4751
+ },
+ "wait_bench": {
+  "glb": "/cdn/value.0758649d762352960c8ed2296732aef5f7393e61fa3f9dbe489c4612f9379615.glb",
+  "size": [
+   1.7,
+   1.094,
+   0.768
+  ],
+  "tris": 4604
+ },
+ "desk_lamp": {
+  "glb": "/cdn/value.7c1ea021976f0225ea8fc02931791d60298fbcde2fb27850753deb9c7036243e.glb",
+  "size": [
+   0.273,
+   0.4,
+   0.291
+  ],
+  "tris": 4652
+ },
+ "desk_bell": {
+  "glb": "/cdn/value.1450e83563daf3a52fef1f3638534cbbee0f94d3874e75529ff3194918e16b32.glb",
+  "size": [
+   0.09,
+   0.072,
+   0.09
+  ],
+  "tris": 5111
+ },
+ "guest_ledger": {
+  "glb": "/cdn/value.28da9cc6d531a213e09f1bc657d528902c1ef958b4b5dcf6fd45d9a8e87012d6.glb",
+  "size": [
+   0.4,
+   0.275,
+   0.194
+  ],
+  "tris": 5098
+ },
+ "key_rack": {
+  "glb": "/cdn/value.568017ca8a0e7ff7fe6265db6a88c0d6d1e56d376a9845c5ebc901cea3926b62.glb",
+  "size": [
+   0.9,
+   0.6,
+   0.056
+  ],
+  "tris": 5342
+ },
+ "exit_sign": {
+  "glb": "/cdn/value.e3a3eedca95f66596166ba404c246bd1788daead673bef38700c356b83970a13.glb",
+  "size": [
+   0.9,
+   0.35,
+   0.142
+  ],
+  "tris": 5006
+ },
+ "tube_light": {
+  "glb": "/cdn/value.c53b1b28de994d8b8d6303076714a6a83aa8936809647d4d6afe9332fdf305a8.glb",
+  "size": [
+   1.2,
+   0.16,
+   0.32
+  ],
+  "tris": 4689
+ },
+ "wall_sconce": {
+  "glb": "/cdn/value.5afcaf97f43476a94c5857e1403ccc31d7991944c849d608b98bfd11c694dcc3.glb",
+  "size": [
+   0.151,
+   0.3,
+   0.267
+  ],
+  "tris": 4996
+ },
+ "closet_shelf": {
+  "glb": "/cdn/value.5937e1a793467b1a845b64b332e6109e0d6b024ba66648f001b17a542b131351.glb",
+  "size": [
+   0.9,
+   1.9,
+   0.4
+  ],
+  "tris": 4740
+ },
+ "brick_fill": {
+  "glb": "/cdn/value.d9af54bd5f610aeae40a57f16c73996bd08a40eb94f3212bc45db50c8884b81a.glb",
+  "size": [
+   1.0,
+   2.1,
+   0.25
+  ],
+  "tris": 5216
+ },
+ "door_tear": {
+  "glb": "/cdn/value.dd035e71a9c680c0be528ecd7b06ae1b2ae858cb992664ceb83149ee2ca3283c.glb",
+  "size": [
+   1.0,
+   2.1,
+   0.419
+  ],
+  "tris": 4913
+ },
+ "floor_rubble_rim": {
+  "glb": "/cdn/value.36247fdb12dcbf72038567fdb552970fb7a2285944d12345de42a01e10169014.glb",
+  "size": [
+   3.6,
+   0.5,
+   3.6
+  ],
+  "tris": 4039
+ },
+ "radiator": {
+  "glb": "/cdn/value.2a3e4ad09501d0aa8078e01e054ffd0146e342e4ca5c315279ad7a0aa6ef0650.glb",
+  "size": [
+   0.542,
+   0.75,
+   0.239
+  ],
+  "tris": 5326
+ },
+ "fire_hose_box": {
+  "glb": "/cdn/value.015b36a10dd498d4a2d513ef4563c0f72c219b5466f1fabd43b21826315ed342.glb",
+  "size": [
+   0.6,
+   0.8,
+   0.25
+  ],
+  "tris": 4839
+ },
+ "umbrella_stand": {
+  "glb": "/cdn/value.878aa083f67557c271618e1ed337ca82b7a765db050d2eacfdf03e4fce6da3cc.glb",
+  "size": [
+   0.249,
+   0.85,
+   0.212
+  ],
+  "tris": 4740
+ },
+ "dead_fern": {
+  "glb": "/cdn/value.b877bf0ed85006796a4eebb834c563f74b2de3359c9d8e910b88219726c4260d.glb",
+  "size": [
+   0.7,
+   0.7,
+   0.688
+  ],
+  "tris": 4363
+ },
+ "mail_slots": {
+  "glb": "/cdn/value.7f0e319ff13f0930199e9b470dec8cb01bc931aad9fa0f3456205f27e5b49c64.glb",
+  "size": [
+   1.2,
+   0.9,
+   0.409
+  ],
+  "tris": 4706
+ },
+ "luggage_cart": {
+  "glb": "/cdn/value.7c2928eda851cad1051b836c6792a1998c215df20fe2cbf55bb9357d7a90b57d.glb",
+  "size": [
+   1.352,
+   1.8,
+   1.091
+  ],
+  "tris": 4880
+ },
+ "firesalt_jar": {
+  "glb": "/cdn/value.1f34c4b771d87e5b1a95d6a6af6883f1078b07e254c1cc741975830163889fc3.glb",
+  "size": [
+   0.095,
+   0.12,
+   0.093
+  ],
+  "tris": 5412
+ },
+ "level_key": {
+  "glb": "/cdn/value.539165db2d05cb2a286a644a8d62c3644a1eb932e93bff68de95b7db94ccbf60.glb",
+  "size": [
+   0.063,
+   0.024,
+   0.09
+  ],
+  "tris": 5293
+ },
+ "fallen_ceiling": {
+  "glb": "/cdn/value.5576a69975079bb4ad5d3160f25492879898ee5bfaad16e2181bc539dbfb541c.glb",
+  "size": [
+   4.0,
+   3.0,
+   2.0
+  ],
+  "tris": 4245
+ }
+}
