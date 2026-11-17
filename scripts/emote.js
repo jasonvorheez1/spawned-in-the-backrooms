@@ -19,12 +19,14 @@ function stop(ctx) {
   if (st.face?.emote) st.face = null
   if (s.emoteTp === false) st.tp = false
   s.emoteTp = null
+  if (s.emoteSheath) { st.sheathed = false; s.emoteSheath = false }
 }
 function play(ctx, row) {
   stop(ctx)
   const me = ctx.self, st = me.state, s = me.session
   st.emote = row.id; s.emoteRow = row; s.emoteUpper = false
   me.anim.emote = SPIN(row)
+  if (!st.sheathed) { st.sheathed = true; st.sheathAt = ctx.now() - 1000; s.emoteSheath = true } // both hands free to dance
   s.emoteTp = !!st.tp; st.tp = true // third person while it plays, put back after
   if (row.face) st.face = { expr: row.face, until: ctx.now() + 600000, emote: true }
   if (row.song) s.emoteSong = ctx.emit("playSound", { clip: row.song, position: me.feetPosition, volume: 0.7, refDistance: 3, maxDistance: 30 })
