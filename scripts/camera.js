@@ -30,7 +30,7 @@ function seatedOn(player, ride) {
 export function update(ctx, dt) {
   // The eye sits inside the body, so the body is not drawn for its owner (everyone else still sees it).
   ctx.self.hideLocalPlayer = true
-  { const v = ctx.view?.camera, b = ctx.player?.feetPosition // a stray view (a cut's eye lost in the void, non-finite or km off its player) is handed back
+  { const v = ctx.view?.camera, b = ctx.player?.worldFeetPosition ?? ctx.player?.feetPosition // a stray view (a cut's eye lost in the void, non-finite or km off its player) is handed back
     const e = v && !v.parent && v.eye && typeof v.eye === 'object' ? v.eye : null
     if (e && b && (![e.x, e.y, e.z].every(Number.isFinite) || Math.abs(e.x - b.x) + Math.abs(e.y - b.y) + Math.abs(e.z - b.z) > 2000)) { ctx.view.camera = null; ctx.log('[camera] stray view dropped', e) } }
   { const cs = ctx.player?.state // Absolute Cinema drives the view while a shot is possessed or a sequence plays
@@ -39,7 +39,7 @@ export function update(ctx, dt) {
 
   // Aiming down sights eases the field of view in (player.state.ads is written by scripts/player.js).
   const ps = ctx.player?.state, sess = (ctx.self.session.cam ??= { t: 0 })
-  { const e = ctx.self.feetPosition, b = ctx.player?.feetPosition // a lost eye (non-finite, or far from its body) is set back on the head and every rig's memory cleared
+  { const e = ctx.self.worldFeetPosition ?? ctx.self.feetPosition, b = ctx.player?.worldFeetPosition ?? ctx.player?.feetPosition // a lost eye (non-finite, or far from its body) is set back on the head and every rig's memory cleared
     if (e && b && (![e.x, e.y, e.z].every(Number.isFinite) || Math.abs(e.x - b.x) + Math.abs(e.y - b.y) + Math.abs(e.z - b.z) > 500)) {
       if (ctx.self.parent) { ctx.log('[camera] eye was riding', ctx.self.parent.id); ctx.self.parent = null }
       const S = ctx.self.session; S.cam = { t: 0 }; S.tpCam = null; S.sitCam = null; S.deathCam = null; S.talkCam = null; S.dive = null; S.crouchK = 1
