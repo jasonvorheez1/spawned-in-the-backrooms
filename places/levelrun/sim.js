@@ -1,9 +1,10 @@
+import { animate } from "builtin/tween";
 import { dressLevel } from "../../scripts/lib/kit-levels.js";
 // Level ! ("Run for Your Life!") Chapter 2 Finale.
 // Intake room (door slam + chained door horde breach) -> 200m crimson corridor with Agility obstacles & chasing wave
 // -> collapse at z <= -198 -> Phoebe's spatial ward rescue into the quiet Safe Alcove (x: 80, z: 0).
 import { CORRIDOR, OBSTACLES, stepHordeZ } from "../../scripts/lib/levelrun-mechanics.js";
-import { LRUN_INTRO_LEN, LRUN_RESCUE_LEN, startIntroCut, startRescueCut, finishRescueToAlcove } from "../../scripts/lib/levelrun-cut.js";
+import { LRUN_INTRO_LEN, LRUN_RESCUE_LEN, LRUN_MID_LEN, startIntroCut, startRescueCut, finishRescueToAlcove } from "../../scripts/lib/levelrun-cut.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 import { npcState } from "../../scripts/lib/stats.js";
@@ -133,7 +134,7 @@ function layWorld(ctx) {
 
   // 3. 208m Crimson Hospital Corridor (z = -5.5 down to -213.5) in modular 26m chunks
   const CHUNK_LEN = 26;
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < CORRIDOR.chunks; i++) {
     const z0 = CORRIDOR.corridorStartZ - i * CHUNK_LEN;
     const zc = z0 - CHUNK_LEN / 2;
     bx(`lrun-fl-${i}`, 0, -0.05, zc, CORRIDOR.width, 0.1, CHUNK_LEN + 0.1, MAT.floor);
@@ -145,11 +146,11 @@ function layWorld(ctx) {
   }
 
   // Far corridor end cap behind EXIT doors
-  bx("lrun-far-wall", 0, 0, -213.6, CORRIDOR.width + 0.5, CORRIDOR.height, 0.3, MAT.wall);
+  bx("lrun-far-wall", 0, 0, CORRIDOR.corridorStartZ - CORRIDOR.chunks * CHUNK_LEN - 0.1, CORRIDOR.width + 0.5, CORRIDOR.height, 0.3, MAT.wall);
 
   // Side ward doors + crimson emergency lights every 14m down the run
-  for (let i = 0; i < 15; i++) {
-    const z = -11 - i * 14;
+  for (let i = 0; i < CORRIDOR.doors; i++) {
+    const z = -11 - i * 14, dark = z < CORRIDOR.midZ; // past the blackout the strobes are dying: dim, stuttering
     const side = i % 2 === 0 ? -1 : 1;
     bx(`lrun-sidedoor-${i}`, side * (CORRIDOR.halfW - 0.01), 0, z, 0.08, 2.25, 1.05, MAT.doorDark, { physics: undefined });
     ctx.spawn(`lrun-strobe-${i}`, {
@@ -157,7 +158,8 @@ function layWorld(ctx) {
       physics: "none",
       castShadow: false,
       visibleRange: { max: 48 },
-      light: { kind: "point", color: i % 3 === 1 ? "#ff4020" : "#ff1515", intensity: 4.0, distance: 17, shadow: { enabled: false } },
+      light: { kind: "point", color: i % 3 === 1 ? "#ff4020" : "#ff1515", intensity: dark ? 1.6 : 4.0, distance: dark ? 11 : 17, shadow: { enabled: false } },
+      ...(dark ? { behavior: "scripts/lrun-strobe.js", state: { peak: 1.9, period: 0.31 + (i % 4) * 0.21, phase: i * 0.43 } } : {}),
       children: [{ feetPosition: { x: 0, y: 0.32, z: 0 }, primitive: box(0.45, 0.09, 0.14), material: { color: "#ff2a2a", emissive: "#ff1a1a", emissiveIntensity: 3.2 } }],
     });
   }
@@ -319,8 +321,8 @@ function syncAlcovePhoebe(ctx, players) {
 export function tick(ctx) {
   dressLevel(ctx, "levelrun");
   const st = ctx.place.state;
-  if (!st.seeded || !("lrun-intake-floor" in (ctx.place.objects ?? {}))) {
-    st.seeded = 1;
+  if (st.seeded !== 2 || !("lrun-intake-floor" in (ctx.place.objects ?? {}))) {
+    st.seeded = 2;
     st.chase = { active: false, hordeZ: 4.5, gateOpen: false, lastHitAt: 0, roarAt: 0 };
     layWorld(ctx);
   }
@@ -344,7 +346,7 @@ export function tick(ctx) {
   st.lastTickAt = now;
 
   // Toggle ward bulkhead gate open when no active intro lock is holding it shut
-  const introHolding = players.some((p) => p.state?.lrunCut?.phase === "intro");
+  const introHolding = players.some((p) => p.state?.lrunCut?.phase === "intro" || p.state?.lrunCut?.phase === "again");
   const gate = ctx.place.objects?.["lrun-ward-gate"];
   if (gate) {
     const wantY = introHolding && !chase.gateOpen ? 0 : 3.45;
@@ -356,21 +358,26 @@ export function tick(ctx) {
   // Trigger intro once for fresh runners arriving in intake
   for (const p of players) {
     const ps = p.state ?? {};
-    if (ps.dead) continue;
-    const plain = noStory(ps); // story off: no cutscenes here, the hall is just a hall with a way out
-    if (plain && !ps.lrunIntroDone && !ps.lrunRescued) { // no intro to sit through: the doors stand open and the run is on
-      ps.lrunCut = null; ps.lrunIntroDone = 1;
-      for (const id of ["lrun-entry-door", "lrun-chain-door"]) { const d = ctx.place.objects?.[id]; if (d) d.rotation = { yaw: 0 }; }
-      chase.gateOpen = true;
+    if (ps.dead || (ps.hp ?? 1) <= 0) { // Shelly Nov 17: dying restarts the run, the music from the top
+      if (!ps.lrunRescued && (chase.active || ps.lrunIntroDone)) {
+        chase.active = false; chase.gateOpen = false; chase.hordeZ = 4.5;
+        ctx.music.stop({ fade: 0.2 });
+        const lead = ctx.place.objects?.[HORDE_MEMBERS[0].id]; if (lead) lead.audio = null;
+        for (const m of HORDE_MEMBERS) { const e = ctx.place.objects?.[m.id]; if (e) e.feetPosition = { x: m.dx, y: -30, z: 8 + m.dz }; }
+        const beam = ctx.place.objects?.["lrun-collapse-beam"]; if (beam) beam.feetPosition = { x: 0, y: 2.9, z: CORRIDOR.collapseZ - 0.6 };
+        const cd = ctx.place.objects?.["lrun-chain-door"]; if (cd) cd.rotation = { yaw: 0 };
+        ps.lrunIntroDone = 0; ps.lrunRetry = 1; ps.lrunMid = 0; ps.lrunScare = 0; ps.lrunCut = null;
+      }
       continue;
     }
-    if (ps.lrunCut?.phase === "rescue" && (plain || now - (ps.lrunCut.at ?? 0) >= LRUN_RESCUE_LEN * 1000 + 600)) {
+    if (ps.lrunCut?.phase === "rescue" && now - (ps.lrunCut.at ?? 0) >= LRUN_RESCUE_LEN * 1000 + 3000) {
       finishRescueToAlcove(ctx, p, null);
       continue;
     }
     if (ps.menuOpen) continue;
     // the intro cut is played by the player's own main-menu tick; when it never runs (story off, a stalled load), let them go after its length
-    if (ps.lrunCut?.phase === "intro" && now - (ps.lrunCut.at ?? 0) > (LRUN_INTRO_LEN + 3) * 1000) {
+    if (ps.lrunCut?.phase === "mid" && now - (ps.lrunCut.at ?? 0) > (LRUN_MID_LEN + 3) * 1000) { ps.lrunCut = null; continue; }
+    if ((ps.lrunCut?.phase === "intro" || ps.lrunCut?.phase === "again") && now - (ps.lrunCut.at ?? 0) > (LRUN_INTRO_LEN + 3) * 1000) {
       ps.lrunCut = null; ps.lrunIntroDone = 1;
       for (const id of ["lrun-entry-door", "lrun-chain-door"]) { const d = ctx.place.objects?.[id]; if (d) d.rotation = { yaw: 0 }; }
       chase.gateOpen = true;
@@ -396,7 +403,21 @@ export function tick(ctx) {
 
     // Active runner in corridor
     if (!ps.lrunCut && ps.lrunIntroDone && (p.feetPosition?.z ?? 0) <= CORRIDOR.corridorStartZ) {
-      // Final collapse & Phoebe rescue threshold
+      // halfway: the lights go (scripts/lib/levelrun-cut.js mid), once a run
+      if (!ps.lrunMid && p.feetPosition.z <= CORRIDOR.midZ) { ps.lrunMid = 1; ps.lrunCut = { phase: "mid", at: now }; continue; }
+      // something in the side doors: it lunges, shrieks and pulls back as you pass (scares, not damage)
+      const k = ps.lrunScare ?? 0, SCARE = [-62, -138, -238, -296, -352]
+      if (k < SCARE.length && p.feetPosition.z <= SCARE[k]) {
+        ps.lrunScare = k + 1
+        const side = k % 2 ? 1 : -1, z = p.feetPosition.z - 5.5, id = `lrun-scare-${k}`
+        if (ctx.place.objects?.[id]) ctx.destroy(id)
+        ctx.spawn(id, { audience: "local", lifetime: 2.2, feetPosition: { x: side * 2.7, y: 0.1, z }, rotation: { yaw: side > 0 ? 90 : -90 }, model: { id: PARTYGOER_MODEL, forward: "-z" }, material: { color: "#0c0203", roughness: 1 }, physics: "none",
+          children: [{ feetPosition: { x: 0, y: 1.5, z: 0 }, light: { kind: "point", color: "#ff2a1a", intensity: 2.5, distance: 4, shadow: { enabled: false } } }] })
+        animate(ctx, id, { "feetPosition.x": [side * 2.7, side * 1.1, side * 1.3, side * 2.9] }, { duration: 1.6, easing: "easeOutQuad" })
+        heard(ctx, { clip: "/cdn/moodboard-gothic-horror/sfx-sudden-inhuman-shriek-from-a-dark-doorway.mp3", position: { x: side * 2.2, y: 1.4, z }, volume: 1, maxDistance: 30 })
+        ctx.emit("screenShake", { intensity: 0.25, duration: 0.3 }, { audience: { player: p.id } })
+      }
+      // Final collapse threshold
       if (p.feetPosition.z <= CORRIDOR.collapseZ) {
         chase.active = false;
         ctx.music.stop({ fade: 1.5 });

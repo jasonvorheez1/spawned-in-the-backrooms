@@ -1,7 +1,7 @@
 // Level ! dressing: the box shells stay as invisible colliders; real geometry and fitted models stand over them.
 // Gate: place.state.dressV. Bump DRESS_V to re-lay (tagged "lrun-dress" pieces are destroyed first).
 import { CORRIDOR, OBSTACLES } from "./levelrun-mechanics.js";
-export const DRESS_V = 3; // 3: studio-cleaned models, cot with mattress, posters dimmed to paper; 2: dying cold fluorescent tubes break the red every 26 m
+export const DRESS_V = 4; // 3: studio-cleaned models, cot with mattress, posters dimmed to paper; 2: dying cold fluorescent tubes break the red every 26 m
 const GEO = "scripts/levelrun-geo.js", DOOR = "scripts/door-geo.js";
 export const LRUN_MODELS = {
   gurney: "/cdn/value.b1dc5ac5f129a0ca27a2aa8cf1add8087d64608161472c14347ebd5d390680e2.glb", // Tripo + studio clean (weld, smooth, slim, -Z)
@@ -19,7 +19,7 @@ const M = LRUN_MODELS;
 const fit = (hx, y1, hz, y0 = 0) => ({ box: { min: { x: -hx, y: y0, z: -hz }, max: { x: hx, y: y1, z: hz } } });
 const HIDE = ["lrun-intake-floor", "lrun-intake-ceil", "lrun-intake-back", "lrun-intake-left", "lrun-intake-right", "lrun-intake-front-l", "lrun-intake-front-r", "lrun-intake-front-hdr", "lrun-far-wall",
   "lrun-alcove-floor", "lrun-alcove-ceil", "lrun-alcove-back", "lrun-alcove-east", "lrun-alcove-north", "lrun-alcove-south"];
-for (let i = 0; i < 8; i++) HIDE.push(`lrun-fl-${i}`, `lrun-ce-${i}`, `lrun-wl-${i}`, `lrun-wr-${i}`, `lrun-wll-${i}`, `lrun-wlr-${i}`);
+for (let i = 0; i < CORRIDOR.chunks; i++) HIDE.push(`lrun-fl-${i}`, `lrun-ce-${i}`, `lrun-wl-${i}`, `lrun-wr-${i}`, `lrun-wll-${i}`, `lrun-wlr-${i}`);
 const doorZ = (k) => -11 - k * 14, doorSide = (k) => (k % 2 === 0 ? -1 : 1), ajar = (k) => k % 4 === 1 || k === 10;
 function rng(seed) { let s = (seed * 9301 + 49297) % 233280 || 1; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
 
@@ -32,10 +32,10 @@ export function dressWorld(ctx) {
   const W = CORRIDOR.width, HW = CORRIDOR.halfW;
 
   // 1. corridor halls, seeded per 26 m chunk
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < CORRIDOR.chunks; i++) {
     const z0 = CORRIDOR.corridorStartZ - i * 26, zc = z0 - 13, gaps = [];
-    for (let k = 0; k < 15; k++) { const z = doorZ(k); if (z < z0 - 0.7 && z > z0 - 25.3) gaps.push(doorSide(k) < 0 ? { wall: "w", c: 13 - (z - zc), w: 1.1, kind: ajar(k) ? "ajar" : "door" } : { wall: "e", c: z - zc + 13, w: 1.1, kind: ajar(k) ? "ajar" : "door" }); }
-    D(`lrun-dress-hall-${i}`, { feetPosition: { x: 0, y: 0, z: zc }, primitive: { kind: "scripted", script: GEO, params: { part: "hall", w: W, d: 26, h: 3.6, ceil: 3.3, walls: i === 7 ? "ewn" : "ew", gaps, seed: i + 1, tone: "red", conduit: true, trail: i % 3 === 0 } }, material: { pbr: true } });
+    for (let k = 0; k < CORRIDOR.doors; k++) { const z = doorZ(k); if (z < z0 - 0.7 && z > z0 - 25.3) gaps.push(doorSide(k) < 0 ? { wall: "w", c: 13 - (z - zc), w: 1.1, kind: ajar(k) ? "ajar" : "door" } : { wall: "e", c: z - zc + 13, w: 1.1, kind: ajar(k) ? "ajar" : "door" }); }
+    D(`lrun-dress-hall-${i}`, { feetPosition: { x: 0, y: 0, z: zc }, primitive: { kind: "scripted", script: GEO, params: { part: "hall", w: W, d: 26, h: 3.6, ceil: 3.3, walls: i === CORRIDOR.chunks - 1 ? "ewn" : "ew", gaps, seed: i + 1, tone: "red", conduit: true, trail: i % 3 === 0 } }, material: { pbr: true } });
     const r = rng(i + 11), side = r() > 0.5 ? 1 : -1;
     // chunk clutter hugs the walls, clear of the run lane (visual only, never a fake obstacle)
     const pick = Math.floor(r() * 3);
@@ -46,7 +46,7 @@ export function dressWorld(ctx) {
       children: [0, 1, 2, 3, 4].map((n) => ({ feetPosition: { x: (r() - 0.5) * 0.9, y: n * 0.002, z: (r() - 0.5) * 0.9 }, rotation: { yaw: r() * 360 }, primitive: { kind: "box", width: 0.22, height: 0.002, depth: 0.29 }, material: { color: n % 3 ? "oklch(0.86 0.02 90)" : "oklch(0.7 0.06 75)", roughness: 0.95 } })) });
   }
   // 2. ward doors: the same rows wear real leaves; some ajar onto a dark room
-  for (let k = 0; k < 15; k++) {
+  for (let k = 0; k < CORRIDOR.doors; k++) {
     const h = objs[`lrun-sidedoor-${k}`]; if (!h) continue;
     const z = doorZ(k), s = doorSide(k), a = ajar(k);
     h.feetPosition = { x: s * (HW - 0.03), y: 0, z: z + s * 0.525 * (s < 0 ? 1 : -1) * -1 };
@@ -55,7 +55,7 @@ export function dressWorld(ctx) {
     h.material = { pbr: true, color: "oklch(0.62 0.05 25)" };
   }
   // 3. caged red strobes on the same rows, pulsing on a tween
-  for (let k = 0; k < 15; k++) {
+  for (let k = 0; k < CORRIDOR.doors; k++) {
     const h = objs[`lrun-strobe-${k}`]; if (!h) continue;
     for (const c of h.children ?? []) c.visible = false;
     h.feetPosition = { x: 0, y: 3.3, z: doorZ(k) };
@@ -88,7 +88,7 @@ export function dressWorld(ctx) {
     D("lrun-dress-exit", { feetPosition: { x: 0, y: 0, z: CORRIDOR.exitZ - 1.15 }, primitive: { kind: "scripted", script: DOOR, params: { style: "fire", part: "set", w: 1.7, h: 2.25, seed: 9 } }, material: { pbr: true, color: "oklch(0.55 0.08 150)" },
       light: { kind: "point", color: "#3dff8a", intensity: 2.2, distance: 7, shadow: { enabled: false } } }); }
   // 6b. dying fluorescent tubes: one per chunk, cold white stutter against the red strobes so the run has contrast
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < CORRIDOR.chunks; i++) {
     const z = CORRIDOR.corridorStartZ - 6 - i * 26, x = (i % 2 ? 1 : -1) * 0.9;
     D(`lrun-dress-tube-${i}`, { feetPosition: { x, y: 3.22, z }, rotation: { yaw: 90 },
       primitive: { kind: "capsule", radius: 0.035, halfHeight: 0.55 }, pivot: "center",

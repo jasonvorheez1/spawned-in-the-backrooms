@@ -87,7 +87,7 @@ export function update(ctx) {
   // Level 26: the first time aboard, the ship in the fog and Phoebe at the rail (scripts/lib/l26-cut.js)
   if (story && place === "level26" && !st.menuOpen && (st.l26cut || !st.l26seen)) { if (lazy("l26", () => import("./lib/l26-cut.js"))?.l26Tick?.(ctx, ses, st)) return ctx.sleep(0) }
   if (st.hubcut) st.hubcut = null
-  if (story && !st.menuOpen && (place === "levelrun" || st.lrunCut)) { if (lazy("lrun", () => import("./lib/levelrun-cut.js"))?.lrunCutTick?.(ctx, ses, st, place)) return ctx.sleep(0) }
+  if (!st.menuOpen && (place === "levelrun" || st.lrunCut)) { if (lazy("lrun", () => import("./lib/levelrun-cut.js"))?.lrunCutTick?.(ctx, ses, st, place)) return ctx.sleep(0) }
   if (!st.menuOpen && place !== "tutorial0" && place !== "intake") {
     if (story && lazy("dina", () => import("./lib/dina-quest.js"))?.dinaTick?.(ctx, ses, st, place)) return ctx.sleep(0)
     if (story && lazy("ch2", () => import("./lib/ch2-quest.js"))?.ch2Tick?.(ctx, ses, st, place)) return ctx.sleep(0)

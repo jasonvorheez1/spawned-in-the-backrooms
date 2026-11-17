@@ -9,8 +9,11 @@ export const CORRIDOR = {
   height: 3.6,
   startZ: 4.8,
   corridorStartZ: -5.5,
-  collapseZ: -198,
-  exitZ: -210,
+  chunks: 16, // Shelly Nov 17: "be longer": 416 m of hall, twice the old run
+  doors: 29,
+  midZ: -212, // where the lights go (scripts/lib/levelrun-cut.js mid)
+  collapseZ: -406,
+  exitZ: -418,
   safePos: { x: 80, y: 0.1, z: 0 },
   safeYaw: -90,
 };
@@ -38,6 +41,8 @@ export const OBSTACLES = [
   { id: "lrun-obs-18", kind: "gurney", x: 0.9, z: -182, w: 2.3, h: 0.78, d: 0.95, vault: true },
   { id: "lrun-obs-19", kind: "barrier", x: -0.95, z: -190, w: 2.6, h: 1.15, d: 0.75, vault: false },
 ];
+// the back half: the same beats mirrored 208 m on, so the dark stretch has its own rhythm
+for (const o of OBSTACLES.slice()) OBSTACLES.push({ ...o, id: o.id.replace("lrun-obs-", "lrun-obs-b"), x: -o.x, z: o.z - 208 });
 
 // Agility drives sprint efficiency, jump/vault boost, stumble recovery, and dodge cooldown in Level !.
 // Balanced so low Agility (1-4) remains completable with clean routing while high Agility (7-10) feels noticeably sharper.
