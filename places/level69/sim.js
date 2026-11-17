@@ -118,12 +118,12 @@ function being(ctx, p, l, now) {
     const t = o.feetPosition; o.feetPosition = { x: t.x + (pos.x + 2 - t.x) * 0.08, y, z: t.z + (pos.z - 3 - t.z) * 0.08 };
   }
   if (out > 21 && now - (l.hitAt ?? 0) > 6000 && (p.state.hp ?? 0) > 0 && !p.state.dead) {
-    l.hitAt = now; p.state.hp -= 55; p.state.sanity = Math.max(0, (p.state.sanity ?? 100) - 20);
+    l.hitAt = now; p.state.l69 = { ...l }; p.state.hp -= 55; p.state.sanity = Math.max(0, (p.state.sanity ?? 100) - 20);
     sfx(ctx, p, G("chitin-spike-impales-flesh-wet-crunch-and-scream-of-metal"), 1);
     ctx.emit("screenFlash", { color: "#300000", duration: 0.5, intensity: 0.6 }, { audience: { player: p.id } });
     ctx.emit("screenShake", { intensity: 0.7, duration: 0.6 }, { audience: { player: p.id } });
     ctx.emit("damageNumber", { position: { x: pos.x, y: pos.y + 1.6, z: pos.z }, value: 55, color: "#a01818" });
-    p.velocity = { x: 0, y: 9, z: 0 }; // lifted, then dropped
+    p.velocity = { x: 0, y: 5, z: 0 }; // lifted, then dropped
   }
 }
 
