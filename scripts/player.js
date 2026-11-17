@@ -2172,7 +2172,7 @@ function launchShock(ctx, b) { // a Shock Pad went off near you: up and away, an
     const s = ctx.self.state, w = walkOf(ctx), S = THROW.shock_pad
     if (s.dead || (s.hp ?? 1) <= 0 || (s.downAt && ctx.now() - s.downAt < 4500) || ctx.self.controlling || !b?.from) return
     const f = ctx.self.feetPosition, dx = f.x - b.from.x, dz = f.z - b.from.z, d = Math.hypot(dx, dz)
-    const k = Math.max(S.edgeLaunch, 1 - d / S.radius), g = Math.abs(ctx.place.gravity?.y ?? -9.8)
+    const k = Math.max(S.edgeLaunch, 1 - d / S.radius), g = Math.abs(ctx.place.gravity?.y ?? -9.8) * (S.gMul ?? 1) // the body falls about twice the place gravity in practice (measured Nov 17: 6.5 m solved at 1x rose 1.8 m)
     const up = Math.sqrt(2 * g * S.launchH) * k, out = d > 0.35 ? S.out * k : 0, v = ctx.self.velocity ?? { x: 0, z: 0 }
     ctx.self.velocity = { x: (v.x ?? 0) + (out ? dx / d * out : 0), y: up, z: (v.z ?? 0) + (out ? dz / d * out : 0) }
     w.shockAir = { at: now0(ctx), y0: f.y, peak: f.y, hp0: s.hp }; w.noFall = true
