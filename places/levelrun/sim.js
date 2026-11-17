@@ -128,7 +128,7 @@ function layWorld(ctx) {
       <circle cx='14' cy='14' r='3' fill='#6b6a64'/><circle cx='286' cy='76' r='3' fill='#6b6a64'/>
       <text x='150' y='38' font-size='22' font-family='sans-serif' font-weight='700' fill='#2b4a6a' text-anchor='middle' letter-spacing='5'>WARD 7 · ISOLATION</text>
       <rect x='36' y='18' width='228' height='26' fill='#c94a3a' opacity='0.85' transform='rotate(-1.5 150 31)'/>
-      <path d='M60 70 l8 -22 l8 22 M66 62 h6 M84 48 v22 h12 M104 48 v22 h12 M104 59 h9 M104 48 h12 M122 48 l7 22 l7 -22 M142 48 v22 h12 M142 59 h9 M142 48 h12 M160 48 v22 h12 M190 46 v17 M190 69 v2' stroke='#2a1410' stroke-width='3' fill='none' stroke-linecap='round'/>
+      <path d='M84 48 v22 h12 M104 48 v22 h12 M104 59 h9 M104 48 h12 M122 48 l7 22 l7 -22 M142 48 v22 h12 M142 59 h9 M142 48 h12 M160 48 v22 h12 M190 46 v17 M190 69 v2' stroke='#2a1410' stroke-width='3' fill='none' stroke-linecap='round'/>
       <text x='220' y='72' font-size='11' font-family='sans-serif' fill='#3a2a22' font-style='italic' transform='rotate(-4 220 72)'>don't stop</text></svg>`,
   });
 
