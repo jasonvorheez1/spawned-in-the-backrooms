@@ -1907,7 +1907,16 @@ const L11_VOICES = {
 // Master tick simulation loop
 const mem = { ringAt: 0, adAt: 0, lightAt: 0, lightPhase: 0 };
 export function tick(ctx) {
-  if (ctx.place.state.radioV !== 2 || !ctx.place.objects["l11-to-radio"]) { ctx.place.state.radioV = 2; // Wikidot: the Radio Station in Level 11 leads to Radio Backrooms
+  if (ctx.place.state.radioV !== 3 || !ctx.place.objects["l11-to-radio"]) { ctx.place.state.radioV = 3;
+    { // the station house: a squat brick booth the door is set into, a flat tar roof, an aerial on top
+      const B = { texture: "cdn/texture-weathered-red-brick-wall.png", repeat: [1, 1], wrap: "repeat", color: "oklch(0.62 0.07 35)", roughness: 0.9 };
+      const W = (id, x, z, w, d, h = 3) => ctx.spawn(id, { feetPosition: { x, y: 0, z }, physics: "static", primitive: { kind: "box", width: w, height: h, depth: d }, material: B });
+      W("l11-radio-hut-n", -8.4, 15.15, 3.4, 0.3); W("l11-radio-hut-s", -8.4, 11.85, 3.4, 0.3); W("l11-radio-hut-w", -9.95, 13.5, 0.3, 3.6);
+      W("l11-radio-hut-fl", -6.7, 14.6, 0.3, 1.4); W("l11-radio-hut-fr", -6.7, 12.4, 0.3, 1.4);       ctx.spawn("l11-radio-hut-lintel", { feetPosition: { x: -6.7, y: 2.3, z: 13.5 }, physics: "static", primitive: { kind: "box", width: 0.3, height: 0.7, depth: 0.9 }, material: B });
+      ctx.spawn("l11-radio-hut-roof", { feetPosition: { x: -8.35, y: 3, z: 13.5 }, physics: "static", primitive: { kind: "box", width: 3.7, height: 0.18, depth: 3.9 }, material: { texture: "cdn/texture-tar-paper-roof.png", repeat: [1, 1], wrap: "repeat", color: "oklch(0.32 0.01 60)", roughness: 1 } });
+      ctx.spawn("l11-radio-aerial", { feetPosition: { x: -9.2, y: 3.18, z: 14.4 }, primitive: { kind: "cylinder", radiusTop: 0.02, radiusBottom: 0.04, height: 3.2 }, material: { color: "oklch(0.55 0.01 250)", metalness: 0.8, roughness: 0.4 } });
+      ctx.spawn("l11-radio-aerial-tip", { feetPosition: { x: -9.2, y: 6.35, z: 14.4 }, primitive: { kind: "sphere", radius: 0.07 }, material: { color: "#ff3a22", emissive: "#ff3a22", emissiveIntensity: 3 }, light: { kind: "point", color: "#ff4a2e", intensity: 0.6, distance: 6 } });
+    } // Wikidot: the Radio Station in Level 11 leads to Radio Backrooms
     ctx.spawn("l11-radio-door-mesh", { feetPosition: { x: -6.5, y: 0, z: 13.5 }, rotation: { yaw: 90 }, physics: { body: "static", collider: "mesh" }, primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "metal", w: 1.0, h: 2.15, part: "set", vision: true, seed: 11 } }, material: { pbr: true } });
     ctx.spawn("l11-to-radio", { tags: ["door"], feetPosition: { x: -6.85, y: 0, z: 13.5 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.5, height: 2.3, depth: 1.1 }, visible: false, behavior: "scripts/level-door.js", state: { to: "radio" } });
     ctx.spawn("l11-radio-sign", { feetPosition: { x: -6.62, y: 2.35, z: 13.5 }, rotation: { yaw: 90 }, castShadow: false, vector: "<svg viewBox='0 0 300 60' width='1.3m'><rect x='2' y='2' width='296' height='56' rx='4' fill='#14110d' stroke='#d8452e' stroke-width='3'/><circle cx='26' cy='30' r='8' fill='#ff4a2e' filter='drop-shadow(0 0 6 #ff4a2e)'/><text x='160' y='41' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='30' fill='#f3ead8'>RADIO STATION</text></svg>" });
