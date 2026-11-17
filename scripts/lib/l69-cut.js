@@ -18,6 +18,6 @@ export function l69CutTick(ctx, ses, st, place) {
   if (t < 9.4) { const k = ease((t - 5.6) / 3.8); // the low pass: asphalt height, left side, sliding from tail to nose
     ctx.view.camera = { eye: { x: c.x - 2.6, y: 0.45, z: c.z + lerp(4.5, -3.2, k) }, aim: { x: c.x - 0.4, y: 0.75, z: c.z + lerp(0, -6, k) }, fov: 50 }; return true; }
   const k = ease((t - 9.4) / 3.2); // the back seat: over the shoulder, easing toward the driver's eye
-  ctx.view.camera = { eye: { x: c.x + lerp(0.1, -0.45, k), y: c.y + lerp(1.55, 1.25, k), z: c.z + lerp(1.6, 0.25, k) }, aim: { x: c.x - 0.45, y: c.y + 1.0, z: c.z - 30 }, fov: lerp(55, 60, k) };
+  ctx.view.camera = { eye: { x: c.x + lerp(0.35, 0.05, k), y: c.y + lerp(1.4, 1.3, k), z: c.z + lerp(1.5, 0.95, k) }, aim: { x: c.x - 0.3, y: c.y + 0.95, z: c.z - 30 }, fov: lerp(55, 60, k) };
   return true;
 }
