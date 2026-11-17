@@ -43,7 +43,7 @@ const DIM = { foundation: [24, 0.5, 24], lobby: [26, 3.2, 26], floor: [26, 3.2, 
 const pick = (...keys) => keys.find((k) => K[k]?.glb);
 function body(keys, dim, collide) {
   const k = pick(...keys);
-  if (k) return { model: K[k].glb, physics: collide ? { body: "static", collider: "mesh" } : "none" };
+  if (k) return { model: K[k].offset ? { id: K[k].glb, offset: K[k].offset } : K[k].glb, physics: collide ? { body: "static", collider: "mesh" } : "none" };
   const d = DIM[dim]; return { primitive: { kind: "box", width: d[0], height: d[1], depth: d[2] }, material: BP, physics: collide ? "static" : "none" };
 }
 // what should stand for one tower: [{ id, sig, spec, tween? }]
