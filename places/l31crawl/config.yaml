@@ -1,0 +1,22 @@
+# The crawl under Level 31: the rink's maintenance underbelly, found through a service hatch behind the arcade back room.
+mode: 3d
+instance: solo
+persistence: ephemeral
+terrain:
+  kind: "off"
+gravity: { x: 0, y: -24, z: 0 }
+defaultSpawnPoint: { x: 0, y: 0.1, z: 1.5 }
+defaultSpawnRotation: { yaw: 0 }
+worldBounds: { bottom: -25 }
+atmosphere:
+  look: { script: scripts/look-photo.js }
+  clouds: { enabled: false }
+  fog: { kind: linear, near: 6, far: 38, color: "#07090a" }
+  moon: { enabled: false, intensity: 0 }
+  sky: { kind: color, color: "#020303" }
+  stars: { enabled: false }
+  timeOfDay: 0
+  wind: { direction: 0, speed: 0 }
+  ambient: { light: { color: "#5a6a70", intensity: 0.55 } }
+  hemisphere: { skyColor: "#3a4a52", groundColor: "#120c08", intensity: 0.35 }
+acoustics: { reverb: 0.5 }
