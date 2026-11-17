@@ -4,6 +4,7 @@ import { onAir } from "../../scripts/lib/radio.js";
 import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
+import { holder } from "../../scripts/lib/seat.js";
 export const cadence = "1s";
 const V = 7;
 const RALPH = "radio-ralph", HOME = { x: 0, z: -3.6 };
@@ -86,7 +87,7 @@ function lay(ctx) {
     face(`radio-veneer-${id}`, x, 0.1, z, w, 1.0, d, VENEER);
     face(`radio-foam-${id}`, x, 1.1, z, w, 1.6, d, FOAM);
   }
-  // a model at height h, its footprint from its own proportions; yaw 0 faces -Z, 90 +X, 180 +Z, 270 -X
+  // a model at height h, its footprint from its own proportions; yaw 0 faces -Z, 90 -X, 180 +Z, 270 +X
   const put = (id, k, x, y, z, yaw, h, extra = {}) => fit(id, M[k], x, y, z, yaw, [R[k][0] * h, h, R[k][2] * h], extra);
   // studio: Ralph's console faces him (north), the wall of CDs behind him faces the room
   put("radio-console", "console", 0, 0.1, -2.8, 0, 0.95, { tags: ["radioprop"], state: { name: "Ralph's console" } });
@@ -101,9 +102,9 @@ function lay(ctx) {
   sp("radio-tv-screen", { feetPosition: { x: -1.43, y: 0.69, z: -2.565 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 0.31, height: 0.24, depth: 0.005 }, material: { color: "oklch(0.2 0 0)" },
     ui: `<div face="front" emissive style="width:300px;height:220px;background:repeating-linear-gradient(0deg,#9a9a9a 0px,#3c3c3c 2px,#d8d8d8 3px,#555 5px),repeating-linear-gradient(90deg,#666 0px,#bbb 1px,#444 3px);display:flex;align-items:flex-end;justify-content:center;font-family:monospace;font-size:26px;color:#e8ffe8;text-shadow:0 0 6px #000"><span style="background:#000a;padding:2px 6px">{{ state.line }}</span></div>`, state: { line: "" } });
   sp("radio-tv-glow", { feetPosition: { x: -1.45, y: 0.9, z: -2.2 }, light: { kind: "point", color: "oklch(0.85 0.03 230)", intensity: 0.5, distance: 2.2 } });
-  // computer desk against the east wall, the chair pulled up to it: sitting here you never tire
-  put("radio-pc", "pcdesk", 3.5, 0.1, -1.7, 270, 0.9, use("pc", "Ralph's PC", "Use PC"));
-  put("radio-chair", "chair", 2.65, 0.1, -1.7, 90, 1.0, { tags: ["seat", "radioprop"], state: { name: "Studio chair", seat: { w: 1 }, rest: 1 } });
+  // The PC model includes its own chair; the studio chair sits beside the console.
+  put("radio-pc", "pcdesk", 3.5, 0.1, -1.7, 90, 0.9, use("pc", "Ralph's PC", "Use PC"));
+  put("radio-chair", "chair", 1.2, 0.1, -1.9, 0, 0.9, { tags: ["seat", "radioprop"], state: { name: "Studio chair", seat: { w: 1 }, rest: 1 } });
   put("radio-clock", "clock", -3.92, 1.85, -3.2, 90, 0.34, { physics: "none", state: { name: "Wall clock" } });
   put("radio-mirror", "mirror", -3.87, 0.95, -0.7, 90, 0.8, use("mirror", "Mirror", "Look"));
   put("radio-plant-studio", "plant", -3.55, 0.1, -3.9, 90, 1.5, { state: { name: "Fig" } });
@@ -122,7 +123,7 @@ function lay(ctx) {
   for (const [i, x, z, yaw, tex] of [[0, -2.08, 3.85, 14, "glossy-2006-music-magazine-cover"], [1, -1.95, 4.2, -22, "glossy-2006-tv-guide-magazine-cover"], [2, -2.05, 3.92, 41, "glossy-2006-celebrity-gossip-magazine-cover"]])
     sp(`radio-mag-${i}`, { feetPosition: { x, y: TOP.ctable + 0.001 + i * 0.007, z }, rotation: { yaw }, primitive: { kind: "box", width: 0.21, height: 0.006, depth: 0.28 }, material: MAG(tex) });
   const arm = (id, x, z, yaw) => put(id, "armchair", x, 0.1, z, yaw, 0.95, { tags: ["seat", "radioprop"], state: { name: "Armchair", seat: { w: 1 }, rest: 0.5 } });
-  arm("radio-armchair-1", -3.4, 4.0, 90); arm("radio-armchair-2", -2.0, 2.6, 180); arm("radio-armchair-3", -2.0, 5.45, 0);
+  arm("radio-armchair-1", -3.4, 4.0, 270); arm("radio-armchair-2", -2.0, 2.6, 180); arm("radio-armchair-3", -2.0, 5.45, 0);
   put("radio-side", "side", 3.53, 0.1, 2.4, 270, 0.6, { state: { name: "Side table" } });
   put("radio-coffee", "coffee", 3.55, TOP.side, 2.4, 270, 0.4, use("coffee", "Coffee machine", "Pour coffee", {}));
   ctx.place.objects["radio-coffee"].audio = { clip: "cdn/sfx-coffee-machine-quiet-electrical-hum-loop.mp3", gain: 0.08, loop: true, spatial: true, maxDistance: 6 };
@@ -147,6 +148,17 @@ function lay(ctx) {
 export function tick(ctx) {
   const st = ctx.place.state, now = ctx.now(), O = ctx.place.objects;
   if (st.builtV !== V) { lay(ctx); st.builtV = V; }
+  // Older rooms retain their furniture between updates; move it without rebuilding the room.
+  if (!st.furnitureAligned) {
+    let pending = false;
+    for (const [id, x, z, yaw] of [["radio-pc", 3.5, -1.7, 90], ["radio-chair", 1.2, -1.9, 0], ["radio-armchair-1", -3.4, 4, 270], ["radio-armchair-2", -2, 2.6, 180], ["radio-armchair-3", -2, 5.45, 0]]) {
+      const o = O[id]; if (!o) continue;
+      if (o.tags?.includes("seat") && holder(ctx, o, 0)) { pending = true; continue; }
+      o.feetPosition = { x, y: 0.1, z }; o.rotation = { yaw };
+      if (id === "radio-chair") o.layout = { box: { min: { x: -0.2835, y: 0, z: -0.2925 }, max: { x: 0.2835, y: 0.9, z: 0.2925 } } };
+    }
+    if (!pending) st.furnitureAligned = true;
+  }
   if (!st.ralphLaid) { ralph(ctx); st.ralphLaid = 1; } else keepPeople(ctx, [RALPH], ralph);
   // ON AIR: lit while Ralph's voice is on, dim through the music
   const live = onAir(now).seg.kind === "host";
