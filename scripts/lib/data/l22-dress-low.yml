@@ -35,6 +35,9 @@ rows:
   glb: /cdn/value.8479da2c7748c8cc7686ada842788dc44e2f1aa309ec6516ec9f7f3de65e18d4.glb
   size: *id001
   solid: false
+  name: Sleeping bag
+  items: almond
+  verb: Search
 - id: f20-bag4
   floor: 20
   x: 2
@@ -225,6 +228,10 @@ rows:
   - 0.48
   - 0.367
   solid: false
+  name: Jacobs's pack
+  items: weapon:knuckles22,ration,stillwater
+  verb: Search
+  info: Heavy. A miner's pack, the straps worn white.
 - id: paper-hilda-1
   floor: 21
   x: -4.3
@@ -379,6 +386,9 @@ rows:
   - 1.3
   - 1.84
   solid: true
+  name: Car husk
+  items: scrap,stillwater
+  verb: Search
 - id: f20-drum
   floor: 20
   x: -18

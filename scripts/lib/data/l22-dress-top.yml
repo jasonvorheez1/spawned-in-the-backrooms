@@ -52,6 +52,9 @@ rows:
   - 0.9
   - 0.6
   solid: true
+  name: Electric cooker, oven door ajar
+  items: tomato_soup,beans
+  verb: Search
 - id: f1-cook1
   floor: 1
   x: -21.5
@@ -93,6 +96,9 @@ rows:
   - 1.2
   - 0.646
   solid: true
+  name: Desk drawer
+  items: cash:30,bandage
+  verb: Search
 - id: paper-census
   floor: 1
   x: -8.0
@@ -216,6 +222,9 @@ rows:
   glb: /cdn/value.2ee1e57990e2714bd8bdbccf691335cdf1815b5b14d7a8340bdfe5f3e4b18380.glb
   size: *id002
   solid: true
+  name: Electric cooker
+  items: peach_jar,mineralwater
+  verb: Search
 - id: f2-shelf
   floor: 2
   x: -23.4

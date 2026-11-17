@@ -279,6 +279,9 @@ rows:
   - 1.41
   - 2.4
   solid: true
+  name: Tent
+  items: almond,cash:6
+  verb: Search
 - id: f13-tent1
   floor: 13
   x: -16
@@ -295,6 +298,9 @@ rows:
   glb: /cdn/value.38df66c39278a35809c4d01d481dd80b751f058cfa313fee1ba4b946c9b80a18.glb
   size: *id007
   solid: true
+  name: Tent
+  items: stillwater
+  verb: Search
 - id: f13-tent3
   floor: 13
   x: 14
@@ -314,6 +320,9 @@ rows:
   - 2.33
   - 2.5
   solid: true
+  name: Lean-to shack
+  items: ration,stillwater,bandage
+  verb: Search
 - id: f13-shack2
   floor: 13
   x: -21
@@ -322,6 +331,9 @@ rows:
   glb: /cdn/value.df8e30efdfb007027000fa415d5469e73548ede2e91fe28bdfa62f6c49978394.glb
   size: *id008
   solid: true
+  name: Lean-to shack
+  items: beans,almond
+  verb: Search
 - id: f13-drum
   floor: 13
   x: -13
@@ -344,6 +356,9 @@ rows:
   - 1.3
   - 1.84
   solid: true
+  name: Husk somebody lived in
+  items: bandage,almond
+  verb: Search
 - id: f13-rub
   floor: 13
   x: -1.5
@@ -371,6 +386,9 @@ rows:
   glb: /cdn/value.38df66c39278a35809c4d01d481dd80b751f058cfa313fee1ba4b946c9b80a18.glb
   size: *id007
   solid: true
+  name: Tent
+  items: mineralwater,beans
+  verb: Search
 - id: f14-tentc
   floor: 14
   x: -8
@@ -390,6 +408,9 @@ rows:
   glb: /cdn/value.df8e30efdfb007027000fa415d5469e73548ede2e91fe28bdfa62f6c49978394.glb
   size: *id008
   solid: true
+  name: Lean-to shack
+  items: firstaid,ration
+  verb: Search
 - id: f14-shore
   floor: 14
   x: 4
