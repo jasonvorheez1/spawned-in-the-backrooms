@@ -110,7 +110,7 @@ export function tick(ctx) {
       sfx(ctx, p, G("concrete-floor-slab-gives-way-and-crashes-down-a-storey"), 1, c);
       ctx.emit("screenShake", { intensity: 0.3, duration: 0.7 }, { audience: { player: p.id } });
       animate(ctx, o, { "feetPosition.y": d.y - FF + 0.45, rotation: { pitch: 7, roll: -5, yaw: 3 } }, { duration: 0.62, easing: "easeInQuad" });
-      ctx.after(0.62, "landed", { x: c.x, y: d.y - FF, z: c.z, pid: p.id, deep: pn.floor === 21 });
+      ctx.after(0.62, "landed", { x: c.x, y: d.y - FF, z: c.z, pid: p.id, deep: pn.floor === 21, hurt: on ? 9 : 0, ride: true });
       if (pn.floor === 21) ctx.after(0.7, "sink", { id });
     }
   }
@@ -143,13 +143,13 @@ export function tick(ctx) {
   if (dirty) s.l22 = l;
 }
 const PIT_BOTTOM = -FF * 20 - 16;
-export function landed(ctx, { x, y, z, pid, hurt, deep } = {}) {
+export function landed(ctx, { x, y, z, pid, hurt, deep, ride } = {}) {
   const at = { x, y, z };
   if (!deep) { ctx.emit("fx", { position: at, script: CRASH }); ctx.emit("playSound", { clip: G("heavy-concrete-chunk-smashes-on-concrete-floor"), position: at, volume: 1, maxDistance: 50 }); }
   const p = ctx.place.players.find((q) => q.id === pid); if (!p) return;
   const d = Math.hypot(p.feetPosition.x - x, p.feetPosition.z - z);
   if (d < 9) ctx.emit("screenShake", { intensity: 0.35 * (1 - d / 9), duration: 0.4 }, { audience: { player: pid } });
-  if (hurt && d < 1.2 && Math.abs(p.feetPosition.y - y) < 2) { p.state.hp -= hurt; p.state.notice = { text: "A piece of the ceiling finds your shoulder.", at: ctx.now() }; ctx.emit("screenFlash", { color: "#5a0d0d", duration: 0.3, intensity: 0.5 }, { audience: { player: pid } }); }
+  if (hurt && d < (ride ? 2.2 : 1.2) && Math.abs(p.feetPosition.y - y) < 2) { p.state.hp -= hurt; p.state.notice = { text: ride ? "The floor goes. You ride it down a storey and land badly." : "A piece of the ceiling finds your shoulder.", at: ctx.now() }; ctx.emit("screenFlash", { color: "#5a0d0d", duration: 0.3, intensity: 0.5 }, { audience: { player: pid } }); }
 }
 export function sink(ctx, { id } = {}) { const o = ctx.place.objects[id]; if (!o) return; animate(ctx, o, { "feetPosition.y": "-=40" }, { duration: 2.2, easing: "easeInQuad" }); ctx.after(2.3, "gone", { id }); }
 export function gone(ctx, { id } = {}) { if (ctx.place.objects[id]) ctx.destroy(id); }
