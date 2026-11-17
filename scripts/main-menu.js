@@ -51,6 +51,7 @@ export function update(ctx) {
     if (st.cut && lazy("intro", () => import("./lib/intro-cut.js"))?.cutTick?.(ctx, ses, st)) { music(ctx, false); if (isMulti(st)) { st.t0Done = true; import("./lib/hub.js").then((m) => m.toHub(ctx)); return } ctx.cross(ctx.self, st.t0Done ? "main" : "tutorial0"); return } // the intro lands you in the tutorial Level 0 the first time, the real one after
   } else ses.inIntake = false
   // Level 0 after the intro: the ceiling drop, then the opening route.
+  if (st.npcDead && ctx.now() - (ses.deadChk ?? 0) > 2000) { ses.deadChk = ctx.now(); const q = lazy("quests", () => import("./lib/quests.js"))?.deadCheck?.(st); if (q) st.notice = { text: `Quest failed: ${q}`, at: ctx.now() } } // Shelly Nov 17: quests know who died
   const story = !noStory(st) // Shelly Nov 14: a run with the main story off skips its cutscenes and trail
   if (!story && !ses.mainSwept) { // Shelly Nov 17: main quest rows that bled in from the story run leave the journal and tracker
     ses.mainSwept = true
