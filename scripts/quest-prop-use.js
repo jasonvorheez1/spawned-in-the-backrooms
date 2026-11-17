@@ -19,6 +19,13 @@ export const ears = {
     const now = ctx.now(), pos = ctx.self.worldFeetPosition ?? ctx.self.feetPosition;
     const note = (text) => { w.notice = { text, at: now }; };
 
+    if (s.kind === "l325-note") {
+      kick(ctx, ctx.self, "flutter", { d: 0.4 });
+      heard(ctx, { clip: G("paper-flip-card-stand"), position: pos, volume: 0.45, maxDistance: 10 });
+      readPage(w, s.page);
+      return;
+    }
+
     if (s.kind === "l1-ration-note") {
       kick(ctx, ctx.self, "flutter", { d: 0.4 });
       heard(ctx, { clip: G("paper-flip-card-stand"), position: pos, volume: 0.45, maxDistance: 10 });

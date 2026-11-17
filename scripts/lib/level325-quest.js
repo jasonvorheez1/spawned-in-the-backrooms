@@ -5,7 +5,8 @@
 // Salvage: 3 heaps per fallen tower near a player, along its fall line, gone when the rubble finishes sinking.
 import { towerAt, cellOf, lobe, keyOf, GROUND } from "./level325.js";
 import { setQuest, tellQuest, finishLevelQuest } from "./quests.js";
-export const V = 1;
+import CAMP from "./data/l0-kit-camp.yml";
+export const V = 2;
 export const Q325 = { key: "q325", id: "fifteen-seconds", name: "Fifteen Seconds", tips: {
   1: "Find a tower that's still building and watch it.",
   2: "Learn the warning. Feel the street shake, look up for the blue.",
@@ -24,7 +25,21 @@ export function step325(ctx, p) {
   setQuest(w, Q325.id, { name: Q325.name, step: Q325.tips[n] });
   if (n > 1) tellQuest(ctx, p, `${Q325.name} · ${Q325.tips[n]}`);
 }
-export function lay(ctx) {}
+export function lay(ctx) {
+  // Abandoned stops on permanent empty lots, clear of roads and tower footprints.
+  const stops = [
+    { x: -9, z: -8, page: 3251, props: [["backpack", 0, 0, 55], ["note-clipboard", 0.55, 0.1, 20], ["lantern", -0.5, 0.3, 0]] },
+    { x: -55, z: 43, page: 3252, props: [["almond-crate", 0, 0, 15], ["note-clipboard", 0.5, 0.15, 75], ["tape-marks", -0.45, 0.15, 20]] },
+    { x: -150, z: 90, page: 3253, props: [["backpack", 0, 0, 150], ["note-clipboard", 0.55, 0.1, 45], ["shoes", -0.5, 0.2, 30]] },
+  ];
+  for (const stop of stops) for (const [model, dx, dz, yaw] of stop.props) {
+    const id = `l325-story-${stop.page}-${model}`;
+    if (ctx.place.objects[id]) continue;
+    const note = model === "note-clipboard";
+    ctx.spawn(id, { feetPosition: { x: stop.x + dx, y: GROUND, z: stop.z + dz }, rotation: { yaw }, model: CAMP.models[model], physics: "none",
+      ...(note ? { tags: ["usable"], behavior: "scripts/quest-prop-use.js", state: { kind: "l325-note", page: stop.page, name: "Wanderer's field note", verb: "Read" } } : {}) });
+  }
+}
 let n = 0;
 const HEAP = (ctx) => { try { const k = JSON.parse(ctx.files.read("scripts/lib/data/l325-kit-bamboo.json") ?? "{}"); return k.wreck?.glb ?? null; } catch { return null; } };
 let heapGlb, heapAt = -1e9;
