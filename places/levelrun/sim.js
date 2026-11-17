@@ -47,6 +47,36 @@ const HORDE_MEMBERS = [
   { id: "lrun-pursuer-5", kind: "smiler", dx: -1.9, dz: 2.5 },
 ];
 
+// Shelly Nov 17: "more obstacles (animated dangerous and scary) + more monsters gradually showing up and it getting louder".
+// Hazards are driven from the sim clock so what you see is what hits: beam = an I-beam on chains swinging across the hall (hits while passing
+// the centre), gurney = a runaway gurney rolling wall to wall (hits where it is). Savi's picks: 18 damage, 1.2 s grace after a hit.
+const HAZ = [
+  { id: "lrun-haz-0", kind: "beam", z: -40, period: 2.6 }, { id: "lrun-haz-1", kind: "gurney", z: -82, period: 2.2 },
+  { id: "lrun-haz-2", kind: "beam", z: -128, period: 2.2 }, { id: "lrun-haz-3", kind: "gurney", z: -170, period: 1.9 },
+  { id: "lrun-haz-4", kind: "beam", z: -236, period: 2.0 }, { id: "lrun-haz-5", kind: "gurney", z: -268, period: 1.7 },
+  { id: "lrun-haz-6", kind: "beam", z: -312, period: 1.8 }, { id: "lrun-haz-7", kind: "gurney", z: -348, period: 1.6 },
+  { id: "lrun-haz-8", kind: "beam", z: -384, period: 1.6 },
+];
+const GURNEY_MODEL = "/cdn/value.b1dc5ac5f129a0ca27a2aa8cf1add8087d64608161472c14347ebd5d390680e2.glb";
+const SPARK = `fx
+pop sp rate=?mobile:14|30 on=point() life=.25..0.6 v=sdir()*(1.5..3.5)+up(.5) size=.015..0.03 acc=grav() col=hdr(4,2.6,1) a=1>0 floor=bounce(.3) r=sprite(ember,add,velocity,.02)`;
+function hazPose(h, now) { const ph = ((now / 1000) % h.period) / h.period, s = Math.sin(ph * 6.283);
+  return h.kind === "beam" ? { roll: s * 62, danger: Math.abs(s) < 0.35, x: 0 } : { x: s * 2.1, danger: true, roll: 0 }; }
+function layHazards(ctx) {
+  for (const h of HAZ) {
+    if (ctx.place.objects?.[h.id]) continue;
+    if (h.kind === "beam") ctx.spawn(h.id, { feetPosition: { x: 0, y: 3.5, z: h.z }, pivot: "top", castShadow: false, children: [
+      { id: "chain", feetPosition: { x: 0, y: -1.6, z: 0 }, primitive: { kind: "scripted", script: "scripts/levelrun-geo.js", params: { part: "ibeam", len: 1.6 } }, rotation: { roll: 90 }, material: { pbr: true } },
+      { id: "beam", feetPosition: { x: 0, y: -2.2, z: 0 }, primitive: { kind: "scripted", script: "scripts/levelrun-geo.js", params: { part: "ibeam", len: 2.4 } }, material: { pbr: true }, fx: { script: SPARK },
+        audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-heavy-steel-chain-creaking-swing-loop.mp3", loop: true, gain: 0.5, maxDistance: 18, spatial: true } }] });
+    else ctx.spawn(h.id, { feetPosition: { x: 0, y: 0, z: h.z }, model: GURNEY_MODEL, layout: { box: { min: { x: -1.1, y: 0, z: -0.45 }, max: { x: 1.1, y: 1.1, z: 0.45 } } }, castShadow: false,
+      audio: { clip: "/cdn/moodboard-realistic-gritty/sfx-rattling-hospital-gurney-wheels-rolling-loop.mp3", loop: true, gain: 0.55, maxDistance: 18, spatial: true } });
+  }
+}
+// the pack grows as you go: each extra joins once you pass its mark
+const LATE = [{ z: -60, kind: "hound", dx: 0.4, dz: 3.2 }, { z: -130, kind: "stalker", dx: -1.2, dz: 3.8 }, { z: -200, kind: "hound", dx: 1.6, dz: 4.4 },
+  { z: -270, kind: "smiler", dx: -0.6, dz: 5.0 }, { z: -330, kind: "stalker", dx: 1.0, dz: 5.6 }, { z: -380, kind: "hound", dx: -1.6, dz: 6.0 }].map((m, i) => ({ ...m, id: `lrun-pursuer-l${i}` }));
+
 const PHOEBE_LOOK = npcLook("phoebe-lrun", {
   species: "cat",
   sex: "f",
@@ -257,9 +287,9 @@ function layWorld(ctx) {
   });
 }
 
-function ensureHorde(ctx, z0) {
+function ensureHorde(ctx, z0, list = HORDE_MEMBERS) {
   const obj = ctx.place.objects ?? {};
-  for (const m of HORDE_MEMBERS) {
+  for (const m of list) {
     if (obj[m.id]) continue;
     const at = { x: m.dx, y: 0.1, z: z0 + m.dz };
     if (m.kind === "hound") {
@@ -344,6 +374,7 @@ export function tick(ctx) {
 
   const players = ctx.place.players ?? [];
   if (!players.length) return;
+  layHazards(ctx);
   if (!ctx.place.objects?.["lrun-adrenaline-zone"]) ctx.spawn("lrun-adrenaline-zone", { feetPosition: { x: 1.6, y: 0, z: -3.6 }, primitive: { kind: "box", width: 2.4, height: 2.2, depth: 2.4 }, visible: false, physics: { body: "static", trigger: true }, behavior: "scripts/lrun-adrenaline.js" }) // walk near the cart and you take it
   if (!ctx.place.objects?.["lrun-adrenaline"]) ctx.spawn("lrun-adrenaline", { feetPosition: { x: 2.0, y: 0, z: -3.6 }, rotation: { yaw: -90 }, model: "/cdn/value.fc6f9622c8597af8969820692ee18f20f1f054fb44eac9ec771668dd197f7e2e.glb",
     layout: { box: { min: { x: -0.45, y: 0, z: -0.3 }, max: { x: 0.45, y: 1.0, z: 0.3 } } }, physics: "static",
@@ -370,6 +401,7 @@ export function tick(ctx) {
   // Trigger intro once for fresh runners arriving in intake
   for (const p of players) {
     const ps = p.state ?? {};
+    if ((ps.hunger ?? 100) < 100 || (ps.thirst ?? 100) < 100 || (ps.sanity ?? 100) < 100) { ps.hunger = 100; ps.thirst = 100; ps.sanity = Math.max(ps.sanity ?? 100, 100) } // Shelly Nov 17: Level ! fills and holds your needs
     st.seen ??= {};
     if (!st.seen[p.id]) { // a fresh solo copy: whatever an earlier run left on you starts over (intro, blackout, scares, the shot)
       st.seen[p.id] = 1;
@@ -382,6 +414,7 @@ export function tick(ctx) {
         ctx.music.stop({ fade: 0.2 });
         const lead = ctx.place.objects?.[HORDE_MEMBERS[0].id]; if (lead) lead.audio = null;
         for (const m of HORDE_MEMBERS) { const e = ctx.place.objects?.[m.id]; if (e) e.feetPosition = { x: m.dx, y: -30, z: 8 + m.dz }; }
+        for (const m of LATE) if (ctx.place.objects?.[m.id]) ctx.destroy(m.id); chase.late = 0;
         const beam = ctx.place.objects?.["lrun-collapse-beam"]; if (beam) beam.feetPosition = { x: 0, y: 2.9, z: CORRIDOR.collapseZ - 0.6 };
         const cd = ctx.place.objects?.["lrun-chain-door"]; if (cd) cd.rotation = { yaw: 0 };
         ps.lrunIntroDone = 0; ps.lrunRetry = 1; ps.lrunMid = 0; ps.lrunScare = 0; ps.lrunCut = null;
@@ -464,8 +497,27 @@ export function tick(ctx) {
       if (lead && !lead.audio) lead.audio = { clip: "/cdn/moodboard-gothic-horror/sfx-many-heavy-feet-stampeding-on-wet-tile-corridor-loop.mp3", loop: true, gain: 0.5, spatial: true, maxDistance: 40 };
 
       chase.hordeZ = stepHordeZ(p.feetPosition.z, chase.hordeZ, dt, ps);
-      ensureHorde(ctx, chase.hordeZ);
-      for (const m of HORDE_MEMBERS) {
+      const pz = p.feetPosition.z, late = LATE.filter((m) => pz <= m.z), pack = [...HORDE_MEMBERS, ...late];
+      ensureHorde(ctx, chase.hordeZ, pack);
+      if (late.length !== (chase.late ?? 0)) { // another one joins: a howl from behind, and the stampede swells
+        chase.late = late.length;
+        if (late.length) heard(ctx, { clip: "/cdn/moodboard-gothic-horror/sfx-crowd-of-monsters-roaring-together-in-a-corridor.mp3", position: { x: 0, y: 1.4, z: chase.hordeZ + 4 }, volume: 1, maxDistance: 70 });
+        const ld = ctx.place.objects?.[HORDE_MEMBERS[0].id]; if (ld?.audio) ld.audio = { ...ld.audio, gain: Math.min(1.2, 0.5 + late.length * 0.12) };
+      }
+      for (const h of HAZ) { // the hall swings and rolls at you
+        if (Math.abs(h.z - pz) > 40) continue;
+        const o = ctx.place.objects?.[h.id], q = hazPose(h, now); if (!o) continue;
+        if (h.kind === "beam") o.rotation = { roll: q.roll }; else o.feetPosition = { x: q.x, y: 0, z: h.z };
+        const hitX = h.kind === "beam" ? true : Math.abs(p.feetPosition.x - q.x) < 1.2;
+        if (q.danger && hitX && Math.abs(pz - h.z) < 0.7 && now - (ps.lrunHazAt ?? 0) > 1200) {
+          ps.lrunHazAt = now; ps.hp = Math.max(0, (ps.hp ?? 50) - 18);
+          heard(ctx, { clip: h.kind === "beam" ? "/cdn/moodboard-realistic-gritty/sfx-steel-beam-crashes-onto-concrete-floor-clang.mp3" : "/cdn/moodboard-realistic-gritty/sfx-body-falls-hard-onto-tile-floor-thud.mp3", position: p.feetPosition, volume: 1, maxDistance: 20 });
+          ctx.emit("screenShake", { intensity: 0.5, duration: 0.4 }, { audience: { player: p.id } });
+          ctx.emit("screenFlash", { color: "#b30000", duration: 0.3, intensity: 0.6 }, { audience: { player: p.id } });
+          ctx.emit("damageNumber", { position: { ...p.feetPosition, y: 1.5 }, value: 18, color: "#ff4444" }, { audience: { player: p.id } });
+        }
+      }
+      for (const m of pack) {
         const ent = ctx.place.objects?.[m.id];
         if (ent) {
           ent.feetPosition = { x: m.dx, y: 0.1, z: chase.hordeZ + m.dz };
