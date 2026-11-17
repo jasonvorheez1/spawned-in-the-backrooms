@@ -5,7 +5,7 @@ import { keepPeople } from "../../scripts/lib/level-kit.js";
 import { critterSpec } from "../../scripts/lib/critter-model.js";
 import { npcLook } from "../../scripts/lib/clothes.js";
 export const cadence = "1s";
-const V = 1;
+const V = 2;
 const RALPH = "radio-ralph", HOME = { x: 0, z: -3.6 };
 const FOES = ["hound", "stealer", "smiler", "lurker", "l5rat", "l3rat", "l5staff", "hostile", "moth", "moths", "l8spider", "l8-hostile", "zdrone", "l11foe", "l7beast", "l10worm"];
 const T = (name, rep, color) => ({ texture: `cdn/texture-${name}.png`, repeat: [rep, rep], wrap: "repeat", color, roughness: 0.9 });
@@ -20,7 +20,7 @@ const M = {
   console: "/cdn/value.676b1bc3626114b9f00742c9e0c2d6f4d963b2c7e8cb54b91f1a40b922f58696.glb",
   mic: "/cdn/value.824dcc76ab1d7ead9b6938e9b5ac90106022237535e8e79a9d3fc283764d169f.glb",
   decks: "/cdn/value.497b02ed22dc9cc9e722c965192d5c0af9abdbaa43c113a181a0bb7817127e9c.glb",
-  cdrack: "/cdn/value.6b3a28ca3cb58efe606cf0ffe79bdd5aaa1a72a65d5552c16ab832e2b9ce4cf6.glb",
+  cdrack: "/cdn/value.f0611ad139a7b36423c4918f37b59eb9215db0d2cbe1ce0d0eeaf8575eaa42d5.glb",
   pcdesk: "/cdn/value.c19a3a1207063b8231b343d67d98657a158515407d7c01b6c2286a1bd2d5c18c.glb",
   chair: "/cdn/value.30d333d7ece8eeaa28a42690ff495b03f091dcdfacaf8d19126889392ca43131.glb",
   tv: "/cdn/value.30ae8e4fd0c2e307d21943aa6fa38f3f816fcc7a10335f5a15ff865b00b84ce4.glb",
@@ -85,7 +85,7 @@ function lay(ctx) {
   sp("radio-lamp-light", { feetPosition: { x: -0.75, y: 1.45, z: -2.9 }, light: { kind: "point", color: "oklch(0.85 0.12 70)", intensity: 2.2, distance: 4.5 } });
   sp("radio-monitor-glow", { feetPosition: { x: 0, y: 1.35, z: -3.1 }, light: { kind: "point", color: "oklch(0.8 0.08 230)", intensity: 0.7, distance: 2.6 } });
   fit("radio-decks", M.decks, -1.6, 0.1, -2.9, 0, [0.55, 1.0, 0.5], { tags: ["radioprop"], state: { name: "CD decks" } });
-  for (const [i, x] of [[0, -2.6], [1, 0], [2, 2.6]]) fit(`radio-cds-${i}`, M.cdrack, x, 0.1, -4.75, 180, [2.3, 2.3, 0.42], { state: { name: "CD shelves" } });
+  for (const [i, x] of [[0, -2.6], [1, 0], [2, 2.6]]) fit(`radio-cds-${i}`, M.cdrack, x, 0.1, -4.72, 0, [2.5, 2.3, 0.5], { state: { name: "CD shelves" } });
   // the small TV on the deck rack: static, and now and then a camera somewhere else
   fit("radio-tv", M.tv, -1.6, 1.1, -2.9, 180, [0.48, 0.4, 0.42], use("tv", "Small TV", "Watch", { line: "" }));
   sp("radio-tv-screen", { feetPosition: { x: -1.6, y: 1.16, z: -2.67 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 0.3, height: 0.22, depth: 0.005 }, material: { color: "oklch(0.2 0 0)" },
@@ -96,7 +96,7 @@ function lay(ctx) {
   fit("radio-chair", M.chair, 2.65, 0.1, -1.7, 90, [0.65, 1.05, 0.65], { tags: ["seat", "radioprop"], state: { name: "Studio chair", seat: { w: 1 }, rest: 1 } });
   fit("radio-clock", M.clock, -3.96, 1.85, -3.2, 90, [0.34, 0.34, 0.06], { physics: "none", state: { name: "Wall clock" } });
   fit("radio-mirror", M.mirror, -3.95, 0.95, -0.7, 90, [0.55, 0.8, 0.1], use("mirror", "Mirror", "Look"));
-  sp("radio-light-studio", { feetPosition: { x: 0, y: 2.45, z: -1.6 }, light: { kind: "point", color: "oklch(0.82 0.1 65)", intensity: 2.4, distance: 9 } });
+  sp("radio-light-studio", { feetPosition: { x: 0, y: 2.45, z: -1.6 }, light: { kind: "point", color: "oklch(0.82 0.1 65)", intensity: 4, distance: 10 } });
   // the broadcast out of the studio monitors: the same clock as every radio in the Backrooms
   sp("radio-speakers", { feetPosition: { x: 0, y: 1.4, z: -2.8 }, behavior: "scripts/world-radio.js", state: { clean: true, gain: 0.35, reach: 10, station: 0 } });
   // ON AIR over the doorway, guest side
