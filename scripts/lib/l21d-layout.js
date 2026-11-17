@@ -28,6 +28,7 @@ export const KNOWN = [
   { h: 1, k: 7, label: "9", to: "level9", name: "Level 9" }, { h: 2, k: 12, label: "8", to: "level8", name: "Level 8" },
   { h: 0, k: 14, label: "11", to: "level11", name: "Level 11" }, { h: 3, k: 17, label: "10", to: "level10", name: "Level 10" },
   { h: 1, k: 21, label: "12", to: "level12", name: "Level 12" }, { h: 1, k: 27, label: "=)", to: "level26", name: "a party" },
+  { h: 3, k: 4, label: "RADIO", to: "radio", name: "Radio Backrooms" },
 ];
 export const EXIT = { h: 0, k: 30 };      // the rumoured door: neon red EXIT over it
 export const HOLE = { h: 2, k: 2 };       // the west hall's floor is broken through here: Level 22's rubble heap climbs up to it
