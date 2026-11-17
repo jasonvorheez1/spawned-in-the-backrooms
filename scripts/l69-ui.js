@@ -1,7 +1,7 @@
 // Level 69 overlay: the wake-up (text on black, then the dash fades in), the car's gauges while you drive,
 // and a whispered line when the Whispers find you. Pure render: reads player.state.l69 and the car you control.
 export function l69Ui(ctx, player) {
-  if (player?.place !== "level69") return "";
+  if (!String(player?.place ?? "").startsWith("level69")) return "";
   const s = player.state ?? {}, l = s.l69 ?? {}, now = ctx.now(), out = [];
   const t = l.introAt ? (now - l.introAt) / 1000 : 99;
   if (t < 11) { // 0-3 black, the engine already idling; two lines; 7-11 the black lifts
