@@ -153,7 +153,7 @@ rows:
   solid: false
 - id: paper-hilda-2
   floor: 20
-  x: 12.7
+  x: 11
   z: -9.2
   yaw: 90
   glb: /cdn/value.ca886a43afd880b8c071d5c0c9369d2a191ba94a36eee152c71dcc0ac7bbc234.glb
@@ -698,7 +698,7 @@ rows:
   solid: false
 - id: deb20-18
   floor: 20
-  x: -5.9
+  x: -7.9
   z: -26.78
   yaw: 348
   glb: /cdn/value.1ad3f00881db489db6754a9a49e686838e0581f8b645f45f46845056b2f2544c.glb
@@ -1323,8 +1323,8 @@ rows:
   solid: false
 - id: deb21-19
   floor: 21
-  x: 20.37
-  z: -30.44
+  x: 17.37
+  z: -33.44
   yaw: 260
   glb: /cdn/value.23fda33d2442a8df7535ed77458d8110902f4db1c4e8c3787e9478c9ecd03631.glb
   size:
@@ -1527,8 +1527,8 @@ rows:
   solid: true
 - id: deb21-37
   floor: 21
-  x: 20.9
-  z: 10.6
+  x: 21.9
+  z: 11.6
   yaw: 14
   glb: /cdn/value.1ad3f00881db489db6754a9a49e686838e0581f8b645f45f46845056b2f2544c.glb
   size:
@@ -1770,7 +1770,7 @@ rows:
   solid: false
 - id: deb21-58
   floor: 21
-  x: 21.47
+  x: 22.47
   z: 8.33
   yaw: 220
   glb: /cdn/value.1ad3f00881db489db6754a9a49e686838e0581f8b645f45f46845056b2f2544c.glb

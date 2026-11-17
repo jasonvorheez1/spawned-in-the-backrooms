@@ -18,6 +18,7 @@ const G = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`;
 const SEDAN = "/cdn/value.75b49ca4395a7da77d80c0fe5589224c21034b5a646d18f6577609e76845c706.glb";
 const CAR_BOX = { min: { x: -1.0, y: 0, z: -2.6 }, max: { x: 1.0, y: 1.6, z: 2.6 } };
 const WARN = 1500, DEBRIS_WARN = 1700; // ms between the first creak and the drop
+const REFIT = new Set(["f13-tent2", "paper-hilda-2", "deb1-17", "deb2-20", "deb2-21", "deb13-1", "deb13-24", "deb20-18", "deb21-19", "deb21-37", "deb21-58"]);
 const TIER = { top: { grime: 0.3, light: "#d6ecdc", li: 6 }, mid: { grime: 0.6, light: "#cfe6d4", li: 7 }, low: { grime: 1, light: "#c8dccb", li: 11 } };
 const hash = (a, b) => { const v = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return v - Math.floor(v); };
 const sfx = (ctx, p, clip, vol = 0.7, at) => ctx.emit("playSound", { clip, volume: vol, ...(at ? { position: at, maxDistance: 45 } : {}) }, { audience: { player: p.id } });
@@ -96,6 +97,12 @@ export function tick(ctx) {
   if (!ctx.place.objects["l22-deck-1"]) { lay(ctx, s); st.laidAt = now; }
   const nRows = (TOP?.rows?.length ?? 0) + (MID?.rows?.length ?? 0) + (LOW?.rows?.length ?? 0);
   if (st.dressN !== nRows) { st.dressN = nRows; for (const tb of [TOP, MID, LOW]) for (const r of tb?.rows ?? []) if (!ctx.place.objects[`l22-${r.id}`]) dress(ctx, r); } // rows added after this copy was laid
+  if (st.l22FitV !== 1) {
+    for (const tb of [TOP, MID, LOW]) for (const r of tb?.rows ?? []) if (REFIT.has(r.id)) {
+      const o = ctx.place.objects[`l22-${r.id}`]; if (o?.feetPosition) o.feetPosition = { ...o.feetPosition, x: r.x, z: r.z };
+    }
+    st.l22FitV = 1;
+  }
   const l = s.l22 ? { ...s.l22 } : {}; let dirty = false;
   const pos = p.feetPosition, deck = deckOf(pos.y);
   if (!l.arrivedAt) { l.arrivedAt = now; l.fallen = l.fallen ?? []; dirty = true; startL22(ctx, p); }

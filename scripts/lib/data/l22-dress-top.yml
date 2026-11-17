@@ -521,7 +521,7 @@ rows:
   solid: false
 - id: deb1-17
   floor: 1
-  x: 9.55
+  x: 10.55
   z: -25.51
   yaw: 242
   glb: /cdn/value.1ad3f00881db489db6754a9a49e686838e0581f8b645f45f46845056b2f2544c.glb
@@ -802,7 +802,7 @@ rows:
   solid: false
 - id: deb2-20
   floor: 2
-  x: -22.84
+  x: -20.84
   z: -18.03
   yaw: 12
   glb: /cdn/value.23fda33d2442a8df7535ed77458d8110902f4db1c4e8c3787e9478c9ecd03631.glb
@@ -813,7 +813,7 @@ rows:
   solid: true
 - id: deb2-21
   floor: 2
-  x: 20.09
+  x: 19.09
   z: -27.11
   yaw: 89
   glb: /cdn/value.1ad3f00881db489db6754a9a49e686838e0581f8b645f45f46845056b2f2544c.glb

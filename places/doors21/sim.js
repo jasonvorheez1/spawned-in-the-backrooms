@@ -15,6 +15,8 @@ const TUBE = "oklch(0.95 0.05 112)";
 const fit = ([w, h, d]) => ({ box: { min: { x: -w / 2, y: 0, z: -d / 2 }, max: { x: w / 2, y: h, z: d / 2 } } });
 const rad = (a) => (a * Math.PI) / 180;
 const right = (yaw) => [Math.cos(rad(yaw)), -Math.sin(rad(yaw))], fwd = (yaw) => [-Math.sin(rad(yaw)), -Math.cos(rad(yaw))];
+const wallInset = (name) => Math.max(0.08, (KIT[name]?.size?.[2] ?? 0.12) / 2 + 0.02);
+const LINE = ["radiator", "fire_hose_box", "wall_sconce", "dead_fern", "umbrella_stand", "luggage_cart", "wait_chair", "mail_slots"];
 const roll = (ctx, rich) => (LOOT.rollItemL21 ? LOOT.rollItemL21(ctx, rich) : LOOT.rollItemL1(ctx));
 const stock = (ctx, rich) => { const [a, b] = rich ? D.loot.rich : D.loot.closet; return Array.from({ length: a + Math.floor(ctx.random() * (b - a + 1)) }, () => roll(ctx, rich)).join(","); };
 
@@ -86,17 +88,16 @@ function dress(ctx) {
   for (const o of ctx.query({ tags: ["l21d-dress"], radius: 1e6, center: { x: 0, y: 0, z: 0 } })) ctx.destroy(o.id);
   const dh = KIT.front_desk?.size?.[1] ?? 1.1;
   prop(ctx, "l21d-desk", "front_desk", 0, 0, 0, 180); prop(ctx, "l21d-desk-chair", "desk_chair", 0.95, 0, -1.7, 200, { tags: ["seat"] });
-  prop(ctx, "l21d-desk-lamp", "desk_lamp", -0.9, dh, 0, 180, { solid: false }); if (KIT.desk_lamp) lamp(ctx, "l21d-desk-lamp-l", -0.9, dh + 0.3, 0.1, "oklch(0.85 0.12 150)", 1.2, 4, 40);
+  prop(ctx, "l21d-desk-lamp", "desk_lamp", -0.72, dh, 0, 180, { solid: false }); if (KIT.desk_lamp) lamp(ctx, "l21d-desk-lamp-l", -0.72, dh + 0.3, 0.1, "oklch(0.85 0.12 150)", 1.2, 4, 40);
   prop(ctx, "l21d-desk-bell", "desk_bell", 0.55, dh, 0.2, 0, { solid: false, range: 25 }); prop(ctx, "l21d-desk-ledger", "guest_ledger", 0, dh, 0.12, 180, { solid: false, range: 25 });
-  prop(ctx, "l21d-keys", "key_rack", 0, 1.25, -C + 0.06, 180, { solid: false }); prop(ctx, "l21d-mail", "mail_slots", -2.6, 1.1, -C + 0.1, 180, { solid: false }); prop(ctx, "l21d-hose", "fire_hose_box", 5, 1.1, -C + 0.1, 180, { solid: false });
+  prop(ctx, "l21d-keys", "key_rack", 0, 1.25, -C + wallInset("key_rack"), 180, { solid: false }); prop(ctx, "l21d-mail", "mail_slots", -2.6, 1.1, -C + wallInset("mail_slots"), 180, { solid: false }); prop(ctx, "l21d-hose", "fire_hose_box", 5, 1.1, -C + wallInset("fire_hose_box"), 180, { solid: false });
   for (const [i, z] of [[0, -3.6], [1, 3.6]]) prop(ctx, "l21d-bench-" + i, "wait_bench", -C + 0.6, 0, z, -90, { tags: ["seat"] });
   for (const [i, z] of [[0, -5], [1, -4.1], [2, 4.4]]) prop(ctx, "l21d-chair-" + i, "wait_chair", C - 0.55, 0, z, 90, { tags: ["seat"] });
   prop(ctx, "l21d-fern-0", "dead_fern", -C + 0.7, 0, -C + 0.7, 30); prop(ctx, "l21d-fern-1", "dead_fern", C - 0.7, 0, C - 0.7, 200);
   prop(ctx, "l21d-umb", "umbrella_stand", 2.9, 0, C - 0.4, 0); prop(ctx, "l21d-rad", "radiator", -5, 0, C - 0.18, 0); prop(ctx, "l21d-cart", "luggage_cart", 5.2, 0, 5, 40);
   // down the halls: things nobody came back for, on the blank side of a bay
-  const LINE = ["radiator", "fire_hose_box", "wall_sconce", "dead_fern", "umbrella_stand", "luggage_cart", "wait_chair", "mail_slots"];
   HALLS.forEach((_, h) => { for (let k = 1; k < SEGS; k++) { if (hash(h + 3, k, 41) > 0.3) continue; const dr = door(h, k), u = -dr.side, n = LINE[Math.floor(hash(h + 3, k, 43) * LINE.length)], wallHung = n === "fire_hose_box" || n === "wall_sconce" || n === "mail_slots";
-    if (n === "luggage_cart" && k < 6) continue; const p = at(h, dr.d + (hash(h, k, 47) - 0.5) * 3, u * (HW - (wallHung ? 0.08 : n === "luggage_cart" ? 0.6 : 0.32)));
+    if (n === "luggage_cart" && k < 6) continue; const p = at(h, dr.d + (hash(h, k, 47) - 0.5) * 3, u * (HW - (wallHung ? wallInset(n) : n === "luggage_cart" ? 0.6 : 0.32)));
     prop(ctx, `l21d-line-${h}-${k}`, n, p.x, wallHung ? (n === "wall_sconce" ? 1.7 : 1.1) : 0, p.z, yawOut(h) + 90 * u, { solid: !wallHung && n !== "dead_fern" && n !== "umbrella_stand" }); } });
   const hp = at(HOLE.h, C + HOLE.k * SEG + SEG / 2, 0); prop(ctx, "l21d-hole-rim", "floor_rubble_rim", hp.x, 0, hp.z, 0, { solid: false });
   const e = door(EXIT.h, EXIT.k), y = yawOut(EXIT.h) + 90 * e.side, f = fwd(y);
@@ -108,6 +109,18 @@ function dress(ctx) {
     if (dr.kind === "closet" && KIT.closet_shelf && !ctx.place.objects[dr.id + "-c"]) ctx.spawn(dr.id + "-c", { tags: ["l21d", "container", "l21d-closet"], feetPosition: { x: dr.x - f2[0] * 0.45, y: 0, z: dr.z - f2[1] * 0.45 }, rotation: { yaw }, model: { id: KIT.closet_shelf.glb }, layout: fit([0.9, 1.9, 0.4]), physics: { body: "static", collider: "box" }, castShadow: false, visibleRange: { max: 30 }, state: { name: dr.rich ? "Stocked closet" : "Linen closet", items: stock(ctx, dr.rich), rich: !!dr.rich } });
     if (dr.kind === "dead") prop(ctx, dr.id + "-b", "brick_fill", dr.x - f2[0] * 0.3, 0, dr.z - f2[1] * 0.3, yaw, { range: 30 });
   }
+}
+function refit(ctx) {
+  const move = (id, x, z) => { const o = ctx.place.objects[id]; if (o?.feetPosition) o.feetPosition = { ...o.feetPosition, x, z }; };
+  move("l21d-desk-lamp", -0.72, 0); move("l21d-desk-lamp-l", -0.72, 0.1);
+  for (const [id, name, x] of [["l21d-keys", "key_rack", 0], ["l21d-mail", "mail_slots", -2.6], ["l21d-hose", "fire_hose_box", 5]]) move(id, x, -C + wallInset(name));
+  HALLS.forEach((_, h) => { for (let k = 1; k < SEGS; k++) {
+    if (hash(h + 3, k, 41) > 0.3) continue;
+    const n = LINE[Math.floor(hash(h + 3, k, 43) * LINE.length)];
+    if (!["fire_hose_box", "wall_sconce", "mail_slots"].includes(n) || !KIT[n]) continue;
+    const dr = door(h, k), p = at(h, dr.d + (hash(h, k, 47) - 0.5) * 3, -dr.side * (HW - wallInset(n)));
+    move(`l21d-line-${h}-${k}`, p.x, p.z);
+  } });
 }
 // the halls re-shape: the fallen-in bay of each hall moves, every opened door is shut again, emptied closets fill
 function shift(ctx, epoch, quiet) {
@@ -126,6 +139,7 @@ export function tick(ctx) {
   if (st.l21dV !== V) { st.l21dV = V; st.l21dLay = 0; st.l21dKit = -1; st.l21dEpoch = -1; }
   if ((st.l21dLay ?? 0) < LAY.length) { LAY[st.l21dLay](ctx); st.l21dLay++; return; }
   const kitN = Object.keys(KIT).length; if (st.l21dKit !== kitN) { st.l21dKit = kitN; dress(ctx); st.l21dEpoch = -1; }
+  if (st.l21dFitV !== 1) { refit(ctx); st.l21dFitV = 1; }
   const epoch = Math.floor(now / SHIFT_MS); if (st.l21dEpoch !== epoch) { const first = st.l21dEpoch === -1; st.l21dEpoch = epoch; shift(ctx, epoch, first); }
   if (!ctx.place.players.length) return;
   keepFoes(ctx); keepPeople21(ctx);
