@@ -1811,7 +1811,7 @@ export function update(ctx, dt) {
   if (now0(ctx) >= (w.slickAt ?? 0)) { w.slickAt = now0(ctx) + 150; w.onSlick = ctx.query({ tags: ['soupslick'], radius: 1.3, select: 'ids' }).length > 0 } // checked a few times a second, not every tick
   if (w.shockAir) { // launched by a Shock Pad: your momentum carries, and the landing never hurts (data/throwables.yml shock_pad)
     const sa = w.shockAir, fy = ctx.self.feetPosition.y; if (fy > sa.peak) sa.peak = fy
-    if (!sa.v1) sa.v1 = ctx.self.velocity?.y, s.dbgShock2 = sa.v1
+    if (!sa.v1) sa.v1 = ctx.self.velocity?.y
     if ((ctx.self.grounded && now0(ctx) - sa.at > 300) || now0(ctx) - sa.at > 8000) { s.lastShock = { rise: Math.round((sa.peak - sa.y0) * 100) / 100, hp0: sa.hp0, hp: s.hp, at: now0(ctx) }; w.shockAir = null; w.noFall = false }
   }
   const step = (along ? PLAYER.acceleration : PLAYER.deceleration) * dt * (w.onSlick ? 0.07 : 1) * (w.shockAir ? THROW.shock_pad.airControl : 1) // soup underfoot: you skate
@@ -2176,7 +2176,6 @@ function launchShock(ctx, b) { // a Shock Pad went off near you: up and away, an
     const up = Math.sqrt(2 * g * S.launchH) * k, out = d > 0.35 ? S.out * k : 0, v = ctx.self.velocity ?? { x: 0, z: 0 }
     ctx.self.velocity = { x: (v.x ?? 0) + (out ? dx / d * out : 0), y: up, z: (v.z ?? 0) + (out ? dz / d * out : 0) }
     w.shockAir = { at: now0(ctx), y0: f.y, peak: f.y, hp0: s.hp }; w.noFall = true
-    s.dbgShock = { up, k, g, vy: ctx.self.velocity?.y }
     ctx.emit('playSound', { clip: '/cdn/moodboard-scifi-neon/sfx-shock-pad-launch-rising-wind-whoosh.mp3', volume: 0.75, pitch: 0.95 + ctx.random() * 0.1 }, { audience: { player: ctx.self.id } })
     ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: 0 }, intensity: 0.5 }, { audience: { player: ctx.self.id } })
 }
