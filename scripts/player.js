@@ -390,6 +390,16 @@ function takeToken0(ctx, token, opts) {
     sound(ctx, 'pickup-ammo', 0.6, true)
     return { ok: true }
   }
+  if (token.startsWith('recipe:')) { // a one-recipe schematic: teaches exactly that recipe (recipe:shock_pad)
+    const id = token.slice(7), r = CR.recipes[id]
+    if (!r) return { ok: false, msg: '' }
+    const known = String(s.recipes ?? '').split(',').filter(Boolean)
+    if (known.includes(id)) return { ok: false, msg: `You already know the ${r.name}` }
+    s.recipes = [...known, id].join(','); s.pickedAt = now
+    s.notice = { text: `Learned: ${r.name} (Y to craft)`, at: now }; gain(ctx, L.xpAlmond)
+    sound(ctx, 'pickup-weapon', 0.5, true)
+    return { ok: true }
+  }
   if (token.startsWith('manual:')) { // a crafting manual: teaches one random recipe of its kind you lack (scripts/lib/manuals.js)
     const k = token.slice(7), m = MANUALS[k]
     if (!m) return { ok: false, msg: '' }
@@ -533,8 +543,9 @@ function takeToken1(ctx, token, opts) {
     return { ok: true }
   }
   if (token === 'stuffing') { s.stuffing = (s.stuffing ?? 0) + 1; s.pickedAt = now; s.notice = { text: `Stuffing (${s.stuffing}). Soft. Cold`, at: now }; return { ok: true } }
-  if (token === 'frag' || token === 'molotov' || token === 'bauble') { // throwables: counted, G throws (data/throwables.yml)
-    const T = THROW[token]; s[T.key] = (s[T.key] ?? 0) + 1; s.pickedAt = now
+  if (token === 'frag' || token === 'molotov' || token === 'bauble' || token === 'shock_pad') { // throwables: counted, G throws (data/throwables.yml)
+    const T = THROW[token]; if (T.cap && (s[T.key] ?? 0) >= T.cap) return { ok: false, msg: `${T.name}: ${T.cap} is all you can carry` }
+    s[T.key] = (s[T.key] ?? 0) + 1; s.pickedAt = now
     s.notice = { text: `${T.name} (${s[T.key]} carried) · G to throw`, at: now }
     sound(ctx, 'pickup-ammo', 0.6, true)
     return { ok: true }
@@ -1054,7 +1065,7 @@ export function pullToken(ctx, t) { // one carried thing out of the bag as its p
     else if (t.startsWith('almond:')) { const k = AW_KEY[t.slice(7)]; if (k && s[k] > 0) { s[k] -= 1; tok = t } }
     else if (t.startsWith('meat:')) { const c = t.slice(5); if ((s.meat?.[c] ?? 0) > 0) { s.meat = { ...s.meat, [c]: s.meat[c] - 1 }; tok = t } }
     else if (t.startsWith('snack:')) { const c = t.slice(6); if ((s.snacks?.[c] ?? 0) > 0) { s.snacks = { ...s.snacks, [c]: s.snacks[c] - 1 }; tok = c } }
-    else if (t === 'frag' || t === 'molotov' || t === 'bauble') { const k = THROW[t].key; if ((s[k] ?? 0) > 0) { s[k] -= 1; tok = t } }
+    else if (t === 'frag' || t === 'molotov' || t === 'bauble' || t === 'shock_pad') { const k = THROW[t].key; if ((s[k] ?? 0) > 0) { s[k] -= 1; tok = t } }
     else if (t === 'ammo' || t === 'shells' || t === 'cells' || t === 'rockets' || t === 'latex' || t === 'bolt325') { const per = W[t]?.perPickup ?? 1; if ((s[t] ?? 0) >= per) { s[t] -= per; tok = t } else s.notice = { text: `Need a full box (${per})`, at: ctx.now() } }
     else if (t === 'bobbypin') { if (s.bobbypins > 0) { s.bobbypins -= 1; tok = 'bobbypin' } }
     else if (isBookToken(t)) { const cur = s.books?.[t] ?? 0; if (cur > 0) { const next = { ...s.books }; if (cur > 1) next[t] = cur - 1; else delete next[t]; s.books = next; tok = t } }
@@ -1094,7 +1105,7 @@ function invAction(ctx, d) {
     else spawnRemains(ctx, at, [tok], 'Dropped bag')
     sound(ctx, 'gun-raise-cloth-rustle', 0.5, true); return
   }
-  if (d.k === 'nadePick') { s.nadePick = d.t === 'molotov' ? 'molotov' : d.t === 'bauble' ? 'bauble' : d.t === 'fresh' ? 'fresh' : 'frag'; s.notice = { text: `G throws: ${THROW[s.nadePick].name}`, at: ctx.now() }; return }
+  if (d.k === 'nadePick') { s.nadePick = d.t === 'molotov' ? 'molotov' : d.t === 'bauble' ? 'bauble' : d.t === 'shock_pad' ? 'shock_pad' : d.t === 'fresh' ? 'fresh' : 'frag'; s.notice = { text: `G throws: ${THROW[s.nadePick].name}`, at: ctx.now() }; return }
   if (d.k === 'sel') { s.invSel = String(d.t || '').slice(0, 80); return }
   if (d.k === 'tab') { s.invTab = ['all', 'weapons', 'repair', 'aid', 'apparel', 'ammo', 'misc', 'tapes', 'key', 'throw'].includes(d.t) ? d.t : 'all'; return }
   if (d.k === 'sort') { s.invSort = ['name', 'dam', 'wg', 'cnd', 'val'].includes(d.s) ? d.s : 'name'; return }
@@ -1796,10 +1807,14 @@ export function update(ctx, dt) {
   const v = ctx.self.velocity
   const along = intent.x * v.x + intent.z * v.z > 0 || (v.x === 0 && v.z === 0 && moving)
   if (now0(ctx) >= (w.slickAt ?? 0)) { w.slickAt = now0(ctx) + 150; w.onSlick = ctx.query({ tags: ['soupslick'], radius: 1.3, select: 'ids' }).length > 0 } // checked a few times a second, not every tick
-  const step = (along ? PLAYER.acceleration : PLAYER.deceleration) * dt * (w.onSlick ? 0.07 : 1) // soup underfoot: you skate
+  if (w.shockAir) { // launched by a Shock Pad: your momentum carries, and the landing never hurts (data/throwables.yml shock_pad)
+    const sa = w.shockAir, fy = ctx.self.feetPosition.y; if (fy > sa.peak) sa.peak = fy
+    if ((ctx.self.grounded && now0(ctx) - sa.at > 300) || now0(ctx) - sa.at > 8000) { s.lastShock = { rise: Math.round((sa.peak - sa.y0) * 100) / 100, hp0: sa.hp0, hp: s.hp, at: now0(ctx) }; w.shockAir = null; w.noFall = false }
+  }
+  const step = (along ? PLAYER.acceleration : PLAYER.deceleration) * dt * (w.onSlick ? 0.07 : 1) * (w.shockAir ? THROW.shock_pad.airControl : 1) // soup underfoot: you skate
   if (!Number.isFinite(intent.x) || !Number.isFinite(intent.z)) { intent.x = 0; intent.z = 0; if (!Number.isFinite(w.bur)) w.bur = undefined; w.dv = undefined } // a fresh save's sheet can read NaN for a beat: stand still, re-derive next tick
   const vx = Number.isFinite(v.x) ? v.x : 0, vz = Number.isFinite(v.z) ? v.z : 0, vy = Number.isFinite(v.y) ? v.y : 0
-  if (ctx.self.place === 'level31' && fp.y < 0.4 && onRink(fp.x, fp.z)) { // Level 31's wood: shoes slip, skates roll
+  if (!w.shockAir && ctx.self.place === 'level31' && fp.y < 0.4 && onRink(fp.x, fp.z)) { // Level 31's wood: shoes slip, skates roll
     const o = skateStep(SKATE, !!s.skates, w, dir, pressing, sprinting, vx, vz, dt, nowS, ctx.random())
     if (o.slipped) { s.notice = { text: s.skateTip ? 'You slip.' : 'You slip. The wood is slick in shoes. The Coach rents skates.', at: nowS }; s.skateTip = 1; ctx.emit('playSound', { clip: 'cdn/sfx-sneaker-sole-squeak-slip-on-polished-wood-floor.mp3', volume: 0.6 }) }
     if (!w.onRink) { w.onRink = true; if (s.skates) ctx.emit('playSound', { clip: 'cdn/sfx-roller-skate-wheels-step-onto-wood-rink-clack.mp3', volume: 0.5 }) }
@@ -2084,7 +2099,7 @@ function pullPin(ctx) {
   if (s.dead || w.nade || now < (w.throwAt ?? 0)) return
   const selected = THROW[s.nadePick]
   const pick = selected?.key && (s[selected.key] ?? 0) > 0 ? s.nadePick : null
-  const kind = pick ?? ((s.grenades ?? 0) > 0 ? 'frag' : (s.molotovs ?? 0) > 0 ? 'molotov' : (s.baubles ?? 0) > 0 ? 'bauble' : (s.fresh ?? 0) > 0 ? 'fresh' : null)
+  const kind = pick ?? ((s.grenades ?? 0) > 0 ? 'frag' : (s.molotovs ?? 0) > 0 ? 'molotov' : (s.baubles ?? 0) > 0 ? 'bauble' : (s.shockpads ?? 0) > 0 ? 'shock_pad' : (s.fresh ?? 0) > 0 ? 'fresh' : null)
   if (!kind) { s.notice = { text: 'Nothing to throw', at: now }; return }
   const T = THROW[kind]
   w.nade = { kind, at: now, fuseAt: now + (T.fuse ?? 0) }
@@ -2141,6 +2156,22 @@ export const ears = {
       const m = ctx.getObject(h.id); if (!m || m.state?.dead) continue
       const eq = s.equipped; s.equipped = 'fists' // a grenade kill is the grenade's, never the gun in your hand (no vaporize)
       try { hitTarget(ctx, s, m, h.d, { x: h.dir.x, z: h.dir.z }, true, h.heavy) } finally { s.equipped = eq }
+      if (h.shock && !m.state?.dead && (m.state?.hp ?? 1) > 0 && !m.state.down && !m.state.heldBy) { // a Shock Pad throws the foe up and away (scripts/lib/knock.js answers the flight)
+        const vx = h.dir.x * h.shock.out, vz = h.dir.z * h.shock.out
+        m.state.down = { fly: 1, x: vx, z: vz, at: ctx.now(), ms: 700 }; m.state.stunUntil = ctx.now() + 1400
+        m.velocity = { x: vx, y: h.shock.up, z: vz }
+      }
     }
+  },
+  shockLaunch(ctx, b) { // a Shock Pad went off near you: up and away, and no fall damage on the landing that follows
+    const s = ctx.self.state, w = walkOf(ctx), S = THROW.shock_pad
+    if (s.dead || s.downAt || ctx.self.controlling || !b?.from) return
+    const f = ctx.self.feetPosition, dx = f.x - b.from.x, dz = f.z - b.from.z, d = Math.hypot(dx, dz)
+    const k = Math.max(S.edgeLaunch, 1 - d / S.radius), g = Math.abs(ctx.place.gravity?.y ?? -9.8)
+    const up = Math.sqrt(2 * g * S.launchH) * k, out = d > 0.35 ? S.out * k : 0, v = ctx.self.velocity ?? { x: 0, z: 0 }
+    ctx.self.velocity = { x: (v.x ?? 0) + (out ? dx / d * out : 0), y: up, z: (v.z ?? 0) + (out ? dz / d * out : 0) }
+    w.shockAir = { at: now0(ctx), y0: f.y, peak: f.y, hp0: s.hp }; w.noFall = true
+    ctx.emit('playSound', { clip: '/cdn/moodboard-scifi-neon/sfx-shock-pad-launch-rising-wind-whoosh.mp3', volume: 0.75, pitch: 0.95 + ctx.random() * 0.1 }, { audience: { player: ctx.self.id } })
+    ctx.emit('cameraPunch', { direction: { x: 0, y: -1, z: 0 }, intensity: 0.5 }, { audience: { player: ctx.self.id } })
   },
 }

@@ -17,7 +17,7 @@ export const tokenOf = (tag, o) => (tag === 'weapon' ? 'weapon:' + (o?.state?.ki
 // what a token is called and what it does, for the prompt and the loot menu
 export function describe(token) {
   const d = describe0(token)
-  const kg = token.startsWith('cash:') || token.startsWith('manual:') ? 0 : token.startsWith('meat:') ? 0.3 : (['ration', 'bandage', 'battery', 'kit', 'akit', 'bobbypin', 'compass', 'nvg', 'skates', 'royal_ration', ...L2_NOW].includes(token) || token.startsWith('page:')) && !isBookToken(token) && !isMagToken(token) ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : token === 'rockets' ? 1.8 : tokenWeight(token)
+  const kg = token.startsWith('cash:') || token.startsWith('manual:') || token.startsWith('recipe:') ? 0 : token.startsWith('meat:') ? 0.3 : (['ration', 'bandage', 'battery', 'kit', 'akit', 'bobbypin', 'compass', 'nvg', 'skates', 'royal_ration', ...L2_NOW].includes(token) || token.startsWith('page:')) && !isBookToken(token) && !isMagToken(token) ? 0 : token === 'ammo' ? W.ammo.perPickup * 0.03 : token === 'shells' ? W.shells.perPickup * 0.07 : token === 'rockets' ? 1.8 : tokenWeight(token)
   return kg ? { ...d, info: d.info + ` · ${kg.toFixed(1)} kg` } : d
 }
 // Level 2's finds: eaten, wrapped or taped on the spot, or keys you carry (fuse, valve wheel, keycard) that open its doors
@@ -49,6 +49,7 @@ const L2_DESC = {
   fuse: () => ({ name: 'Fuse', info: 'Opens an ELECTRICAL door', color: '#7fc8ff' }),
   valve: () => ({ name: 'Valve wheel', info: 'Opens a PUMP ROOM door', color: '#e05a3a' }),
   frag: () => ({ name: 'Frag grenade', info: 'G throws it. Bounces, 2 s fuse, 6 m blast', color: '#9aa58a' }),
+  shock_pad: () => ({ name: 'Shock Pad', info: 'Throw it, then stand on the blast. Launches you and everything near it', color: '#4aa8ff' }),
   bauble: () => ({ name: 'Glass Bauble', info: 'G throws it. Shatters into glitter, dazes what stands near for 3 s', color: '#d8323c' }),
   stuffing: () => ({ name: 'Stuffing', info: 'White, clean, cold. It came out of something that looked like you', color: '#f2efe6' }),
   molotov: () => ({ name: 'Molotov cocktail', info: 'G throws it. Shatters into a 7 s fire', color: '#e08a3a' }),
@@ -88,6 +89,7 @@ function describe0(token) {
   if (token === 'holo:b8') return { name: 'Tape: "B8, Night Forty"', info: 'A cassette with a hallway count written on the label, crossed out and rewritten. Play it on HALOGEN (I > Tapes)', color: '#ff9a6a' }
   if (token === 'holo:walt41') return { name: 'Tape: "Field Test 41"', info: 'A reel labelled in pencil: KESSLER, R-55, TEST 41. Play it on HALOGEN (I > Tapes)', color: '#ff9a6a' }
   if (token.startsWith('holo:')) return { name: 'Tape: "Atomic Age Defender"', info: 'A scuffed 1950s Backrooms Robotics ad reel. Play it on HALOGEN (I > Tapes)', color: '#ff9a6a' }
+  if (token.startsWith('recipe:')) return { name: 'Shock Pad schematic', info: 'Teaches one recipe', color: '#7fc8ff' }
   if (token.startsWith('manual:')) { const m = MANUALS[token.slice(7)]; return { name: m?.name ?? 'Crafting manual', info: m?.info ?? 'Unlocks recipes', color: '#e8b45a' } }
   if (token === 'page:30') return { name: "Tomorrow's newspaper", info: 'Printed before you arrived at the Level 11 newsstand', color: '#e8dcc0' }
   if (token === 'page:31') return { name: 'Channel 04 advisory', info: 'Copied from the television in Level 114', color: '#e8dcc0' }

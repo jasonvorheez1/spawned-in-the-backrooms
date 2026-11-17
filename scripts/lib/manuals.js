@@ -18,8 +18,8 @@ export const knowsManual = (s, kind) => manualsOf(s).includes(kind)
 // Shelly Nov 17: the pipe weapon is known from the start (the tutorial's supply carton holds its pipe and wire)
 export const STARTER_RECIPES = ['pipeclub']
 export const recipesOf = (s) => [...new Set([...STARTER_RECIPES, ...String(s?.recipes ?? '').split(',')])].filter((id) => Object.hasOwn(C.recipes, id))
-export const knowsRecipe = (s, id, r = C.recipes[id]) => recipesOf(s).includes(id) || knowsManual(s, manualKind(r))
-export const unknownOfKind = (s, kind) => Object.entries(C.recipes).filter(([id, r]) => manualKind(r) === kind && !knowsRecipe(s, id, r)).map(([id]) => id)
+export const knowsRecipe = (s, id, r = C.recipes[id]) => recipesOf(s).includes(id) || (!r?.only && knowsManual(s, manualKind(r))) // only: a schematic's own recipe (recipe:<id>), never a manual's
+export const unknownOfKind = (s, kind) => Object.entries(C.recipes).filter(([id, r]) => !r.only && manualKind(r) === kind && !knowsRecipe(s, id, r)).map(([id]) => id)
 // read one manual: the recipe id it teaches, or null when you know every recipe of that kind
 export function learnFromManual(s, kind, random) {
   const left = unknownOfKind(s, kind); if (!left.length) return null
