@@ -89,10 +89,10 @@ export function stepHordeZ(playerZ, hordeZ, dt, state) {
   const gap = hordeZ - playerZ; // positive means horde is behind the player (along +Z)
   // Pressure, not a wall: far back it closes fast; right behind you it breathes down your neck
   // just under walking pace, so a winded low-Agility runner still crawls ahead. Sprinters gain ground.
-  let chaseSpeed = 7.6; // Shelly Nov 17: harder; the adrenaline shot is what buys the margin back
-  if (gap > 20) chaseSpeed = 9.6;
-  else if (gap > 13) chaseSpeed = 8.6;
-  else if (gap < 4) chaseSpeed = 4.8 + Math.max(0, p.agi - 5) * 0.08;
+  let chaseSpeed = 8.4; // Shelly Nov 17: "still too easy": only a sprint (or the auto-injector) holds the gap
+  if (gap > 20) chaseSpeed = 10.6;
+  else if (gap > 13) chaseSpeed = 9.4;
+  else if (gap < 4) chaseSpeed = 6.4 + Math.max(0, p.agi - 5) * 0.08;
   // never past the runner: the pack piles up 1.2 m behind whoever stops, biting
   return Math.max(CORRIDOR.collapseZ + 3, playerZ + 1.2, hordeZ - chaseSpeed * dt);
 }

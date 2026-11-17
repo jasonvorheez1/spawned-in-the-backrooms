@@ -479,11 +479,11 @@ export function tick(ctx) {
 
       // Catch/slash pressure if player lingers too long
       const gap = chase.hordeZ - p.feetPosition.z;
-      if (gap <= 2.4 && now - (chase.lastHitAt ?? 0) >= 1500) {
+      if (gap <= 2.6 && now - (chase.lastHitAt ?? 0) >= 1000) {
         chase.lastHitAt = now;
-        const dmg = p.feetPosition.z <= CORRIDOR.collapseZ + 8 ? Math.min(10, Math.max(0, (ps.hp ?? 20) - 6)) : 14;
+        const dmg = p.feetPosition.z <= CORRIDOR.collapseZ + 8 ? Math.min(10, Math.max(0, (ps.hp ?? 20) - 6)) : 22;
         if (dmg > 0) ps.hp = Math.max(1, (ps.hp ?? 50) - dmg);
-        if (p.feetPosition.z > CORRIDOR.collapseZ + 8 && (ps.hp ?? 10) <= 14) {
+        if (p.feetPosition.z > CORRIDOR.collapseZ + 8 && (ps.hp ?? 10) <= 22) {
           ps.hp = 0; // lethal catch resets cleanly to z = 1.5 intake via player.js respawn
         }
         ctx.emit("screenFlash", { color: "#b30000", duration: 0.35, intensity: 0.65 }, { audience: { player: p.id } });
