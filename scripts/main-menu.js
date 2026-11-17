@@ -69,7 +69,7 @@ export function update(ctx) {
   }
   const l0 = place === "main" || place === "tutorial0"
   if (place === "main" && st.bonusBack) { st.bonusBack = null; st.arrivePending = false; ctx.self.feetPosition = { x: 6.3, y: 0.02, z: -5.2 }; ctx.self.rotation = { yaw: 90 }; ctx.self.velocity = { x: 0, y: 0, z: 0 } } // back from the mall's glass: out of the Bonus door, facing the Lobby
-  if (place === "level1" && st.t0fade && !ses.t0lift) { ses.t0lift = true; const a = ctx.now() - st.t0fade; if (a > 0 && a < 60000) st.t0fade = ctx.now() } // the tutorial's title card lifts on landing, not before
+  if ((place === "level1" || place === "main") && st.t0fade && !ses.t0lift) { ses.t0lift = true; const a = ctx.now() - st.t0fade; if (a > 0 && a < 60000) st.t0fade = ctx.now() } // the tutorial's title card lifts on landing, not before
   if (l0 && st.arrivePending && !st.menuOpen) { st.arrivePending = false; st.arrive = ctx.now(); ses.arr = null; if (place === "tutorial0") { st.t0n = 0; st.t0cut = null } }
   if (st.arrive) {
     if (!l0) { st.arrive = null; ses.arr = null; ctx.view.camera = null; return }
