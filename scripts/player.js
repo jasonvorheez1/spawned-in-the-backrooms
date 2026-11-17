@@ -1791,6 +1791,7 @@ export function update(ctx, dt) {
     s.notice = { text: 'Suffocating heat (110°F) comes off the pipes. You tire faster here.', at: nowS }
   }
   w.stamina = Math.max(0, Math.min(dv.staMax, w.stamina + (sprinting ? -L.staminaDrain * (green ? AW.green.staminaMul : 1) * (l2Hot ? 1.25 : 1) * (lrAgi ? lrAgi.sprintDrainMul : 1) : L.staminaRegen * dv.staRegen * staminaFromNeeds(s) * (tired ? 0.3 : 1) * (w.winded ? (L.windedRegen ?? 0.6) : 1) * (l2Hot ? 0.68 : 1) * (w.ledge ? L.ledgeRest.stamina : 1)) * dt))
+  if (s.sit?.phase === 'sat') { const rest = ctx.getObject(s.sit.id)?.state?.rest; if (rest >= 1) w.stamina = dv.staMax; else if (rest > 0) w.stamina = Math.min(dv.staMax, w.stamina + rest * 0.1 * dv.staMax * dt) } // a seat's state.rest (Radio Backrooms: 1 = never tired while seated)
   const inArch = fz === 'arches' && (ctx.self.place === 'main' || ctx.self.place === 'tutorial0') // the flooded arches are Level 0's alone: other places without their own zones fall through to Level 0's map
   w.wet = inArch && fp.y < 0.3; w.ledge = inArch && fp.y > 0.45 && ctx.self.grounded
   const lrStumble = lrAgi && nowS < (w.lrunStumbleUntil ?? 0) ? (w.lrunStumbleMul ?? 0.5) : 1
