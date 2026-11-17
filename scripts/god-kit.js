@@ -10,7 +10,7 @@ import { clothToken } from './lib/clothes.js'
 const AMMO = ['ammo', 'shells', 'cells', 'rockets', 'latex', 'bolt325', 'flare70', 'sqfill']
 function grant(s) {
   const have = new Set(String(s.weapons ?? '').split(',').filter(Boolean))
-  for (const k of W.order) if (k !== 'fists' && W[k]) have.add(k)
+  for (const [k, w] of Object.entries(W)) if (k !== 'fists' && w && typeof w === 'object' && !Array.isArray(w) && w.name && w.damage != null) have.add(k) // every weapon row, the M72 too (it sits outside order)
   s.weapons = [...have].join(',')
   for (const k of AMMO) s[k] = Math.max(s[k] ?? 0, 999)
   for (const t of Object.values(THROW)) if (t && typeof t === 'object' && t.key) s[t.key] = Math.max(s[t.key] ?? 0, 20)
