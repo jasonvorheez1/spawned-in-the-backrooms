@@ -84,7 +84,7 @@ export function update(ctx) {
     if (story && lazy("ch2", () => import("./lib/ch2-quest.js"))?.ch2Tick?.(ctx, ses, st, place)) return ctx.sleep(0)
     if (st.rep || st.squadAt) {
       const sq = lazy("squad", () => import("./lib/hit-squad.js"))
-      if (sq) { sq.squadTick?.(ctx, ses, st, place); if (ctx.now() - (ses.sqFollowAt ?? 0) > 3000) { ses.sqFollowAt = ctx.now(); sq.squadFollow?.(ctx) } }
+      if (sq) { sq.squadTick?.(ctx, ses, st, place); if (ctx.now() - (ses.sqFollowAt ?? 0) > 700) { ses.sqFollowAt = ctx.now(); sq.squadFollow?.(ctx) } }
     }
     lazy("err", () => import("./lib/errands.js"))?.errandTick?.(ctx, ses, st, place) // odd jobs people hand out (scripts/lib/errands.js)
   }
