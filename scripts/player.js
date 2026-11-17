@@ -1555,7 +1555,7 @@ function viewmodel(ctx, moving, sprinting) {
   const cs = !hb && !l.modelUrl && !HUMAN && isNewCat(l) ? critterSpec(l) : null // cats (Shelly Nov 12: 'you didnt have to make an entirely new model'): the first-person arm IS her own cat body, its sleeve on it
   const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '') || (cs ? 'cat2:' + JSON.stringify([l.sex, l.fur, l.topw, l.top, l.skin, l.pattern, l.heightS, l.buildS]) : '')
   // cats (Shelly Nov 12 "make the first person arms match the cat charcters"): her fur colour, a round paw with pink beans, her sleeve
-  const arm = hb || ply ? { hidden: true } : { species: l.species ?? 'cat', fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v41' + JSON.stringify(tune ?? null)
+  const arm = hb || ply ? { hidden: true } : { species: l.species ?? 'cat', fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v42' + JSON.stringify(tune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     if (w.plyObj) { ctx.destroy(w.plyObj); w.plyObj = null }
@@ -1567,23 +1567,28 @@ function viewmodel(ctx, moving, sprinting) {
       ? { id: 'gun', feetPosition: tune?.at ?? point(fp?.at ?? [0, -.04, .14]), rotation: tune?.rot ?? tune?.q ?? (tune?.pitch != null || tune?.yaw != null ? eulerQ(tune?.yaw ?? 0, tune?.pitch ?? 0, tune?.roll ?? 0) : fp ? eulerQ(...fp.turn) : Q_GUN), castShadow: false, ...weaponBody(kind), audience: 'local' }
       : MESHGRIP[bk]
         ? { feetPosition: tune?.mat ?? { x: MESHGRIP[bk].at[0], y: MESHGRIP[bk].at[1], z: MESHGRIP[bk].at[2] }, rotation: tune?.mrot ?? { x: MESHGRIP[bk].q[0], y: MESHGRIP[bk].q[1], z: MESHGRIP[bk].q[2], w: MESHGRIP[bk].q[3] }, castShadow: false, ...weaponBody(kind), audience: 'local' }
-        : { feetPosition: tune?.mat ?? { x: 0, y: -g, z: 0 }, rotation: tune?.mrot ?? Q_MELEE, castShadow: false, ...weaponBody(kind), audience: 'local' }]
+        : { feetPosition: tune?.mat ?? { x: 0, y: -g, z: 0.04 }, rotation: tune?.mrot ?? Q_MELEE, castShadow: false, ...weaponBody(kind), audience: 'local' }]
     // a two-handed weapon: the off hand rides the viewmodel too, on the fore-end (guns, ahead of the trigger hand) or up the haft (melee), at weapons.yml two: [up, forward-is-negative, radius]
     const fpa = hb ? FP_ARM[l.sex === 'f' ? 'f' : 'm'] : null, skinM = hb ? { Body_Skin: { ...hb.materials.Body_Skin, color: vmSkin(hb.materials.Body_Skin.color), roughness: 0.78, metalness: 0, emissive: '#000000' } } : null
     if (support && fpa) { const bc = FP_BC[l.sex === 'f' ? 'f' : 'm'], arm = { id: 'fparm-l', model: { id: fpa.L, materials: skinM }, castShadow: false, visibleInFirstPerson: true, audience: 'local' }
       if (gun) child.push({ id: 'fphold-l', feetPosition: support, rotation: tune?.lq ?? (fp?.vertical ? FP_VERTICAL_Q : FP_TWO_Q), audience: 'local', children: [{ ...arm, feetPosition: { x: -bc.x, y: bc.y, z: bc.z } }] })
       else child.push({ ...arm, feetPosition: { x: support.x - bc.x, y: support.y + bc.y, z: support.z + bc.z } })
     } else if (support && !ply) child.push({ feetPosition: support, castShadow: false, audience: 'local', primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: { ...arm, support: { axis: gun && !fp?.vertical ? 'z' : 'y', r: wp.two?.[2] ?? .023 } } } })
-    const supportWrist = support && (fp ? { ...support, x: tune?.lat || fp.vertical ? support.x : -.045 } : { x: -.06, y: support.y - .08, z: support.z + .1 })
-    w.plyGrip = fp ? { x: .01, y: .055, z: .085 } : { x: .03, y: -.02, z: .05 }
+    const supportWrist = support && (fp ? support : { x: -.035, y: support.y - .04, z: support.z + .04 })
+    w.plyGrip = fp ? { x: .01, y: .055, z: .085 } : { x: -.015, y: -.015, z: .03 }
     w.plySupport = supportWrist
     w.catGun = !!cs && gun
     w.catForeEnd = w.catGun && !!fp && !fp.vertical && !!supportWrist
     if (w.catGun) {
-      // Put the wrist behind the grip so the front of the paw wraps over it.
-      w.plyGrip = support ? { x: -.03, y: .03, z: .09 } : { x: -.073, y: .075, z: .046 }
+      // Put the wrist behind each weapon's measured grip so the front of the paw wraps over it.
+      const gp = fp?.grip
+      w.plyGrip = support
+        ? (gp ? { x: gp[0] - .035, y: gp[1] - .005, z: gp[2] + .015 } : { x: -.03, y: .03, z: .09 })
+        : (gp ? { x: gp[0] - .073, y: gp[1] + .037, z: gp[2] + .021 } : { x: -.073, y: .075, z: .046 })
       if (w.catForeEnd && !tune?.lat) {
-        w.plySupport = { x: supportWrist.x + .059, y: supportWrist.y - .062, z: supportWrist.z - .02 }
+        w.plySupport = { x: supportWrist.x + .014, y: supportWrist.y - .062, z: supportWrist.z - .02 }
+      } else if (fp?.vertical && supportWrist && !tune?.lat) {
+        w.plySupport = { x: supportWrist.x + .035, y: supportWrist.y - .01, z: supportWrist.z + .02 }
       }
     }
     // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
@@ -1596,13 +1601,13 @@ function viewmodel(ctx, moving, sprinting) {
       const arms = { model: { ...cs.model, id: cat.glb, materials: mats }, /* no body morph: its shape keys are the whole body's and thin the cut arm to sticks (Shelly: 'why do my arms look like sticks') */ ...(cs.scale ? { scale: cs.scale } : {}),
         castShadow: false, visibleInFirstPerson: true, audience: 'local' }
       child.push({ ...arms, id: 'plyarm', bones: { 'mixamorig:LeftArm': { scale: 0 } }, feetPosition: tune?.cat ?? cat.at })
-      // The cut cat has short arms. Seat the left shoulder behind the fore-end so the paw can reach it.
+      // Seat the left shoulder off-screen bottom-left so the forearm enters naturally without a visible stump.
       if (support) {
         const f = supportWrist
         const scale = cs.scale ?? { x: 1, y: 1, z: 1 }
         child.push({ ...arms, id: 'plyarm-left', bones: { 'mixamorig:RightArm': { scale: 0 } },
           scale: { x: scale.x * 1.22, y: scale.y * 1.22, z: scale.z * 1.22 },
-          feetPosition: { x: f.x + .02, y: f.y - .32, z: f.z + .11 } })
+          feetPosition: { x: Math.min(f.x - .22, -.26), y: Math.min(f.y - .36, -.26), z: gun ? Math.max(f.z + .22, .12) : Math.max(f.z + .28, .28) } })
       }
     }
     else if (ply) child.push({ id: 'plyarm', model: ply, rotation: { yaw: 180, pitch: 0, roll: 0 }, feetPosition: { x: 0.12, y: -1.3, z: 0.68 }, /* a plymodel's rest arm runs along its own +Z: turned 180 it points ahead, the hand at the grip, the shoulder just below-right of the eye (Shelly Nov 15: first person showed no arm) */ castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
