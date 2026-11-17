@@ -5,7 +5,7 @@ import { pushFeed } from "./feed.js";
 import { heard } from "./hear.js";
 import { endQuest, payOnce, setQuest } from "./quests.js";
 import { rollCheck } from "./npc-talk.js";
-import { noNpcs } from "./run-opts.js";
+import { noNpcs, noStory } from "./run-opts.js";
 
 const CHIME = "cdn/sfx-soft-bright-two-note-success-chime.mp3";
 const FANFARE = "/cdn/moodboard-realistic-gritty/sfx-level-up-jingle-retro-terminal-chime-rising-three-notes.mp3";
@@ -167,7 +167,7 @@ export function syncCh2Tone(s) {
 }
 
 export function setCh2Step(ctx, st, n, noteText) {
-  if (!st || st.ch2Done) return false;
+  if (!st || st.ch2Done || noStory(st)) return false;
   if (n <= (st.ch2Q ?? 0) || !STEP[n]) return false;
   st.ch2Q = n;
   syncCh2(st);
@@ -572,7 +572,7 @@ function handleRelayDialogue(ctx, st, npc, text, id) {
 
 export function handleDialogueCh2(ctx, player, npc, text) {
   const st = player?.state;
-  if (!st || !npc || !text) return null;
+  if (!st || !npc || !text || noStory(st)) return null;
   const id = shortId(npc);
   const q = st.ch2Q ?? 0;
 
@@ -744,7 +744,7 @@ export function pointCh3(s) {
   return setQuest(s, CH3.id, { name: CH3.name, main: true, step: "Step through the unmarked cream door on the alcove's south wall into Level 109.", mark: { place: "levelrun", id: "lrun-to-l109" } });
 }
 export function startCh3(ctx, player) {
-  const s = player?.state; if (!s || s.ch3Q) return false;
+  const s = player?.state; if (!s || s.ch3Q || noStory(s)) return false;
   s.ch3Q = 1;
   setQuest(s, CH3.id, { name: CH3.name, main: true, step: "A clean hospital corridor with no end and no signs. Every door is shut for a reason. Find whoever keeps them that way.", mark: { place: "level109", id: "l109-halloran", at: { x: 432, y: 0, z: -88 } } });
   questBanner(ctx, s, "Chapter 3: The Neon Hospital");

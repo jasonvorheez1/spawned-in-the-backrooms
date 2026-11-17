@@ -191,6 +191,7 @@ function whisperTick(ctx, st) {
   pushFeed(st, `A voice, close by: "${line}"`, ctx.now(), "info");
 }
 export function setDinaStep(ctx, st, n, note) {
+  if (noStory(st)) return false;
   if (n <= (st.dinaQ ?? 0) || !STEP[n]) return false;
   for (const k of TRAIL) learn(ctx, st, k, true); // a ship stage means the trail is behind them
   st.dinaQ = n;

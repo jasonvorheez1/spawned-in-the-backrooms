@@ -3,6 +3,7 @@
 // own tracker row, world marker and compass pip in its own tint. Older quests still write player.state.quest; scripts/quest-marker.js
 // folds those in, so nothing a quest giver wrote is lost when a second quest starts.
 import { pushFeed } from "./feed.js";
+import { noStory } from "./run-opts.js";
 import { heard } from "./hear.js";
 import { addRep, addKarma, repOf, GROUPS } from "./rep.js";
 export { PLACE_NAMES } from "./places.js";
@@ -10,6 +11,7 @@ export const MAX_TRACK = 3; // her number
 export const TINT = ["#ffc44d", "#8fd8ff", "#a6f08e"]; // slot 1 amber, 2 pale blue, 3 pale green (my picks)
 export const qid = (name) => String(name ?? "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 export function setQuest(s, id, q) {
+  if (noStory(s) && (q.main || s.quests?.[id]?.main)) return false; // Shelly Nov 17: no main quest in a story-off or multiplayer run
   const cur = s.quests ?? {}, old = cur[id], mark = q.mark === undefined ? old?.mark ?? null : q.mark, main = !!(q.main ?? old?.main), kind = q.kind ?? old?.kind ?? null;
   if (old && old.step === q.step && old.name === q.name && !!old.main === main && (old.kind ?? null) === kind && JSON.stringify(old.mark ?? null) === JSON.stringify(mark)) return false;
   const history = old?.step && old.step !== q.step

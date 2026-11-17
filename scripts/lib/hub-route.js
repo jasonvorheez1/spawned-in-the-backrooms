@@ -4,7 +4,7 @@
 import { setQuest, endQuest } from "./quests.js";
 import { megHostile } from "./hub-quest.js";
 import { hasKey } from "./hubkeys.js";
-import { noNpcs } from "./run-opts.js";
+import { noNpcs, noStory } from "./run-opts.js";
 export const ROUTE = { id: "the-tenth-tunnel", name: "The Tenth Tunnel" };
 const S = {
   door: { step: "Find the door at the end of Level 1's deepest halls.", mark: { place: "level1", id: "l1-hub-door" } },
@@ -19,6 +19,7 @@ const S = {
   follow: { step: "Take the door in the tenth tunnel.", mark: { place: "thehub", id: "hd-t10-a3" } },
 };
 export function hubRoute(ctx, st, place) {
+  if (noStory(st)) return false;
   if (st.hubUPto === "sato" && (st.hubKeys?.level70 ?? 0) > 0 && !st.hubKeyFix) {
     const keys = { ...st.hubKeys }, n = keys.level70 - 1;
     if (n) keys.level70 = n; else delete keys.level70;
