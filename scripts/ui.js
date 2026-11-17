@@ -580,7 +580,7 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
     <div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px">
       <span>LIGHT</span><span style="${s.light ? '' : 'opacity:.45'}">${s.light ? Math.round(s.battery) + '%' : 'OFF'}${s.batteries ? ` · ${s.batteries} spare` : ''}</span>
     </div>
-    ${(s.grenades ?? 0) + (s.molotovs ?? 0) > 0 ? `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px"><span>G</span><span>${s.grenades ? `FRAG ${s.grenades}` : ''}${s.grenades && s.molotovs ? ' · ' : ''}${s.molotovs ? `MOLOTOV ${s.molotovs}` : ''}</span></div>` : ''}
+    ${(s.grenades ?? 0) + (s.molotovs ?? 0) + (s.shockpads ?? 0) > 0 ? `<div class="row" style="margin-top:4px;justify-content:flex-end;gap:8px"><span>G</span><span>${s.grenades ? `FRAG ${s.grenades}` : ''}${s.grenades && s.molotovs ? ' · ' : ''}${s.molotovs ? `MOLOTOV ${s.molotovs}` : ''}${s.shockpads ? `${s.grenades || s.molotovs ? ' · ' : ''}SHOCK ${s.shockpads}` : ''}</span></div>` : ''}
   </div>
 
   <!-- CENTER: Minimal Zone Header -->

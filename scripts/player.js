@@ -2108,7 +2108,7 @@ function pullPin(ctx) {
   // in first person: the grenade or bottle comes up in your free left hand, the gun stays up in the right
   w.nadeVm = ctx.spawn({ audience: 'local', scope: 'session', feetPosition: { attach: 'camera', x: -0.26, y: -0.3, depth: 0.55 }, rotation: { yaw: -20, pitch: kind === 'frag' ? 0 : -20 }, ...(T.model ? { model: T.model, layout: { box: { min: { x: -T.size / 2, y: 0, z: -T.size / 2 }, max: { x: T.size / 2, y: T.size, z: T.size / 2 } } } } : { ...FRESH_BODY, children: FRESH_BODY.children.filter((c) => !c.light) }), visibleInFirstPerson: true, castShadow: false })
   animate(ctx, w.nadeVm, { 'feetPosition.y': [-0.5, -0.22], 'feetPosition.x': [-0.3, -0.32] }, { duration: 0.25, easing: 'easeOutCubic' })
-  ctx.emit('playSound', { clip: kind === 'fresh' ? 'cdn/sfx-aerosol-can-short-hiss-click-plastic-cap.mp3' : kind === 'frag' ? '/cdn/moodboard-realistic-gritty/sfx-grenade-pin-pull-metal-ring-click.mp3' : '/cdn/moodboard-realistic-gritty/sfx-lighter-flick-cloth-rag-catches-fire.mp3', volume: 0.75 })
+  ctx.emit('playSound', { clip: kind === 'fresh' ? 'cdn/sfx-aerosol-can-short-hiss-click-plastic-cap.mp3' : kind === 'frag' ? '/cdn/moodboard-realistic-gritty/sfx-grenade-pin-pull-metal-ring-click.mp3' : kind === 'shock_pad' ? '/cdn/moodboard-scifi-neon/sfx-shock-pad-power-on-rising-charge-chirp.mp3' : '/cdn/moodboard-realistic-gritty/sfx-lighter-flick-cloth-rag-catches-fire.mp3', volume: 0.75 })
   if (kind === 'frag') w.nadeCook = ctx.after(T.fuse / 1000, 'cookedOff', { at: w.nade.at })
 }
 export function cookedOff(ctx, p) { // held too long: it goes off where you stand
