@@ -44,7 +44,7 @@ function stop(ctx) {
 function play(ctx, row) {
   stop(ctx)
   const me = ctx.self, st = me.state, s = me.session
-  st.emote = row.id; s.emoteRow = row; s.emoteUpper = false
+  st.emote = row.id; s.emoteRow = row; s.emoteUpper = false; s.emotePlace = me.place
   me.anim.emote = SPIN(row)
   if (st.equipped && st.equipped !== 'fists') { s.emoteEq = st.equipped; st.equipped = 'fists' } // the gun leaves your hands for the dance
   if (!st.sheathed) { st.sheathed = true; st.sheathAt = ctx.now() - 1000; s.emoteSheath = true } // both hands free to dance
@@ -67,10 +67,23 @@ export function onInput(ctx, input) {
     return play(ctx, row)
   }
   if (!st.emote) return
+  if (s.emotePlace && s.emotePlace !== me.place) return stop(ctx) // a level change ends the dance and its song
   if (input.pressed?.attack || input.pressed?.aim) return stop(ctx)
   const row = s.emoteRow || EMOTES.find((r) => r.id === st.emote)
   if (!row) return stop(ctx)
   const moving = Math.abs(input.axes?.moveX || 0) > 0.15 || Math.abs(input.axes?.moveZ || 0) > 0.15 || !me.grounded
+  if (moving && row.stationary) return stop(ctx) // a stationary emote: walking or jumping ends it
   if (moving !== !!s.emoteUpper) { s.emoteUpper = moving; me.anim.emote = moving ? UPPER(row) : SPIN(row) } // legs to the gait while you travel
+}
+const SONGS = new Set(EMOTES.map((r) => r.song).filter(Boolean))
+function strays(ctx) { // a song object left on the body by a crossing or a reload, with no dance under it
+  const me = ctx.self, s = me.session
+  for (const c of me.children || []) { const o = typeof c === 'string' ? ctx.getObject(c) : c; if (o?.audio?.clip && SONGS.has(o.audio.clip) && o.id !== s.emoteSongObj) ctx.destroy(o.id) }
+}
+export function update(ctx) {
+  const me = ctx.self, st = me.state, s = me.session
+  if (st.emote && s.emotePlace && s.emotePlace !== me.place) stop(ctx)
+  if (s.strayPlace !== me.place) { s.strayPlace = me.place; strays(ctx) }
+  ctx.sleep(1)
 }
 export function onSpawn(ctx) { const st = ctx.self.state; if (st?.emote) { st.emote = null; ctx.self.anim.emote = null; if (st.face?.emote) st.face = null } }
