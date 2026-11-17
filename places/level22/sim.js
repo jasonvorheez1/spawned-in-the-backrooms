@@ -7,6 +7,7 @@
 // fragments that warn before they fall; the pit that has no floor. Numbers are Savi's picks.
 import { animate } from "builtin/tween";
 import { DECKS, CUTS, PANELS, EXIT, PIT, FF, H, deckOf, inRect } from "../../scripts/lib/l22-layout.js";
+import { startL22, noteFloor } from "../../scripts/lib/level22-quest.js";
 import TOP from "../../scripts/lib/data/l22-dress-top.yml";
 import MID from "../../scripts/lib/data/l22-dress-mid.yml";
 import LOW from "../../scripts/lib/data/l22-dress-low.yml";
@@ -83,14 +84,14 @@ export function tick(ctx) {
   if (!ctx.place.objects["l22-deck-1"]) { lay(ctx, s); st.laidAt = now; }
   const l = s.l22 ? { ...s.l22 } : {}; let dirty = false;
   const pos = p.feetPosition, deck = deckOf(pos.y);
-  if (!l.arrivedAt) { l.arrivedAt = now; l.fallen = l.fallen ?? []; dirty = true; }
+  if (!l.arrivedAt) { l.arrivedAt = now; l.fallen = l.fallen ?? []; dirty = true; startL22(ctx, p); }
   if (ctx.session.l22visit !== st.laidAt) { // each visit: say where you are
     ctx.session.l22visit = st.laidAt;
     s.notice = { text: s.l22car ? "The ramp behind you is gone under a fallen ceiling. The engine ticks, cooling. It won't start again." : "Concrete dust. A car park, floors and floors of it, and nobody.", at: now };
     sfx(ctx, p, G("distant-concrete-slab-collapse-rumble-echo-in-car-park"), 0.6);
   }
   // which floor you stand on: the first time on each is remembered
-  if (deck && p.grounded !== false && (l.floors ?? []).indexOf(deck.floor) < 0 && Math.abs(pos.y - deck.y) < 0.4) { l.floors = [...(l.floors ?? []), deck.floor]; dirty = true; s.notice = { text: `FLOOR ${deck.floor}`, at: now }; }
+  if (deck && p.grounded !== false && (l.floors ?? []).indexOf(deck.floor) < 0 && Math.abs(pos.y - deck.y) < 0.4) { l.floors = [...(l.floors ?? []), deck.floor]; dirty = true; s.notice = { text: `FLOOR ${deck.floor}`, at: now }; noteFloor(ctx, p, deck.floor); }
   if (deck && Math.abs(pos.y - deck.y) < 0.3 && !PANELS.some((q) => q.floor === deck.floor && inRect(pos.x, pos.z, q.r, 0.8))) ctx.session.l22safe = { x: pos.x, y: deck.y + 0.2, z: pos.z };
   // the slab panels
   for (const pn of PANELS) {

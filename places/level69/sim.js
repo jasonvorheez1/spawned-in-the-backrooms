@@ -14,6 +14,7 @@ import CAMP from "../../scripts/lib/data/l0-kit-camp.yml";
 
 export const cadence = "100ms";
 const L = 40, TUN_K = 55, TUN_Z = -TUN_K * 40 - 20; // the tunnel mouth's centre (left wall)
+const K22 = 28, Z22 = -K22 * 40 - 20; // Level 22's exit ramp: a mouth in the RIGHT wall at 1.1 km (Wikidot: "taking exit ramps off of Level 69")
 const POSTS = [{ z: -600, km: "0.6" }, { z: -1200, km: "1.2" }, { z: -1800, km: "1.8" }];
 const WREN_Z = -260;
 const SEDAN = "/cdn/value.75b49ca4395a7da77d80c0fe5589224c21034b5a646d18f6577609e76845c706.glb";
@@ -83,6 +84,12 @@ function gantry(k) {
   out.push({ feetPosition: { x: 0, y: 6.1, z }, castShadow: false, primitive: { kind: "cylinder", radiusTop: 0.09, radiusBottom: 0.09, height: 17.6, radialSegments: 12 }, rotation: { roll: 90 }, pivot: "center", material: STEEL });
   out.push({ feetPosition: { x: -3.6, y: 3.9, z: z + 0.15 }, castShadow: false, primitive: { kind: "box", width: 5.2, height: 2.3, depth: 0.08 }, material: { color: "#0e5a34", roughness: 0.35, metalness: 0.2, emissive: "#062a18", emissiveIntensity: 0.6 },
     ui: `<div face="back" width="5.2m" style="width:5200px;height:2300px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:60px solid #e9f0ea;border-radius:120px;box-sizing:border-box;color:#e9f0ea;font:700 360px Arial,sans-serif;letter-spacing:6px;line-height:1">${text}</div>` });
+  const to22 = (wz - Z22) / 1000;
+  if (to22 > 0.05) { // the second board, over the right lanes: the car park
+    out.push({ feetPosition: { x: 3.6, y: 3.9, z: z + 0.15 }, castShadow: false, primitive: { kind: "box", width: 5.2, height: 2.3, depth: 0.08 }, material: { color: "#1d3f73", roughness: 0.35, metalness: 0.2, emissive: "#0a1830", emissiveIntensity: 0.6 },
+      ui: `<div face="back" width="5.2m" style="width:5200px;height:2300px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:60px solid #e9f0ea;border-radius:120px;box-sizing:border-box;color:#e9f0ea;font:700 360px Arial,sans-serif;letter-spacing:6px;line-height:1"><div style="font-size:430px">EXIT 22 &#9413;</div><div style="font-size:340px;margin-top:40px">${to22.toFixed(1)} km &#8599;</div><div style="font-size:240px;margin-top:40px;opacity:.85">RIGHT LANE · PARKING</div></div>` });
+    out.push({ feetPosition: { x: 3.6, y: 6.3, z: z + 0.5 }, light: { kind: "spot", color: "#dfe8ff", intensity: 6, distance: 6, angle: 45, penumbra: 0.6, aim: { x: 0, y: -0.6, z: -0.3 }, shadow: { enabled: false } }, visibleRange: { max: 140 } });
+  }
   out.push({ feetPosition: { x: -3.6, y: 6.3, z: z + 0.5 }, light: { kind: "spot", color: "#dfe8ff", intensity: 6, distance: 6, angle: 45, penumbra: 0.6, aim: { x: 0, y: -0.6, z: -0.3 }, shadow: { enabled: false } }, visibleRange: { max: 140 } });
   return out;
 }
@@ -114,7 +121,7 @@ export function ghostPass(ctx, { pid } = {}) {
 function slice(ctx, k, want) {
   const id = `l69-road-${k}`; want.add(id);
   if (ctx.place.objects[id]) return;
-  const z0 = -k * L, tunnel = k === TUN_K ? "left" : undefined;
+  const z0 = -k * L, tunnel = k === TUN_K ? "left" : k === K22 ? "right" : undefined;
   ctx.spawn(id, { tags: ["l69road"], feetPosition: { x: 0, y: 0, z: z0 }, physics: "static", receiveShadow: true,
     primitive: { kind: "scripted", script: "scripts/l69-road-geo.js", params: { seed: k, ...(tunnel ? { tunnel } : {}) } }, material: { pbr: true },
     children: [...lamps(k), ...gantry(k)] });
@@ -132,7 +139,12 @@ function slice(ctx, k, want) {
       model: { id: SEDAN, forward: "+x", materials: {} }, layout: { box: CAR_BOX }, physics: "static",
       state: { name: "Stalled car · the boot", items: SUPPLY[k % SUPPLY.length], info: "Doors open. Nobody. Somebody packed for a long drive." } });
   }
-  if (tunnel) {
+  if (tunnel === "right") {
+    const gid = `l69-ramp22-glow`; want.add(gid);
+    ctx.spawn(gid, { tags: ["l69stalled"], feetPosition: { x: 13, y: 4, z: Z22 }, light: { kind: "point", color: "#e9f0d8", intensity: 14, distance: 22 },
+      audio: { clip: G("tunnel-sodium-light-hum-and-distant-wind-loop"), loop: true, gain: 0.2, spatial: true, maxDistance: 35 } });
+  }
+  if (tunnel === "left") {
     const gid = `l69-tunnel-glow`; want.add(gid);
     ctx.spawn(gid, { feetPosition: { x: -13, y: 4, z: TUN_Z }, light: { kind: "point", color: "oklch(0.92 0.06 95)", intensity: 18, distance: 22 },
       audio: { clip: G("tunnel-sodium-light-hum-and-distant-wind-loop"), loop: true, gain: 0.25, spatial: true, maxDistance: 35 } });
@@ -232,6 +244,17 @@ export function tick(ctx) {
     l.whisper = { text, at: now }; dirty = true;
     s.sanity = Math.max(0, (s.sanity ?? 100) - (inCar ? 2 : 6));
     ctx.emit("playSound", { clip: `/cdn/voice-the-whispers-saying-${text.replace(/[^a-z ]/g, "").replace(/ /g, "-")}.mp3`, volume: 0.55 }, { audience: { player: p.id } });
+  }
+  // the exit ramp to Level 22: take it and the car climbs into a car park and dies there. The same car goes with you.
+  if (!l.tunnelAt && !l.to22 && pos.x > 10.5 && Math.abs(pos.z - Z22) < 5) {
+    l.to22 = now; s.l69 = l;
+    s.l22car = { hp: Math.min(car?.state?.hp ?? 100, 0), faults: car?.state?.faults ?? [], from: "level69" };
+    sfx(ctx, p, G("car-climbs-concrete-ramp-engine-labouring-then-stalls"), 0.9);
+    ctx.emit("screenFlash", { color: "#000000", duration: 2.5, intensity: 1 }, { audience: { player: p.id } });
+    s.notice = { text: "The ramp climbs. Something lets go behind you, a long concrete roar. The engine quits at the top.", at: now };
+    const pl = ctx.getObject(p.id);
+    if (pl) { if (car) { car.controller = null; car.state.driver = null; } pl.parent = null; ctx.cross(pl, "level22"); }
+    return;
   }
   // the tunnel: drive (or walk) into the mouth
   if (!l.tunnelAt && pos.x < -10.5 && Math.abs(pos.z - TUN_Z) < 5) { l.tunnelAt = now; l.outAt = null; dirty = true; sfx(ctx, p, G("car-engine-drone-fades-into-long-tunnel-hum"), 0.8); }
