@@ -1590,6 +1590,18 @@ pop steam rate=8 on=box(0.1,0.05,2.8) life=1.2..2.2 v=up(0.6..1.2)+sdir()*0.05 s
   // Walkway decks (Tier 1 at y: 2.4, Tier 2 at y: 4.8)
   md("l11-scaf-shed", "scaffold_shed", SCAF_X, 0.1, SCAF_Z, undefined, "mesh", { rotation: { yaw: 0 }, layout: { box: { min: { x: -6, y: 0, z: -6 }, max: { x: 6, y: 3.2, z: 6 } } } });
   bx("l11-scaf-deck1", SCAF_X, 2.4, SCAF_Z, 3.4, 0.08, 4.6, WOOD, { visible: false });
+  // Shelly Nov 17 ("yes"): the noclip site reads as a real construction site, dressed in Boom Town's own street kit:
+  // steel hoarding along the sidewalk with one gap at the trigger, barriers and cones at the gap, a site lamp, bamboo and cement inside.
+  const SK = { hoarding: "/cdn/value.22aa423875c5ede95188a0cb671afd07e66a852a4c6fe5a866db13a80aa1b566.glb", barrier: "/cdn/value.88d8dc9d4a3d2ce24cbfc7b4f3ddc4c1f45f26423a5bf5bfcb3ef301931dcc53.glb", cone: "/cdn/value.f8be9916c689114fb28e64e6d6be4c0dd72c421e4c503bb2970b854860ff918d.glb", sitelamp: "/cdn/value.e092e974c71f6be02c0dc9701749dffd7cb737df9adb1ee87851cecb29fde8a3.glb", polestack: "/cdn/value.711ee4789449e500dcc64aae825f43a63950e7c9b1df65267f555cb39e601a3a.glb", cementpallet: "/cdn/value.dca160be7f4b1d2fd20259692b9becfe6c48d5214a062f73e086c112a2339437.glb", gangbox: "/cdn/value.2c02dedbeaf640665151c99c09562a6a679078976bc57fa28a62268d478cbd2e.glb" };
+  const kit = (id, k, x, z, yaw, extra = {}) => sp(id, { feetPosition: { x, y: 0.1, z }, rotation: { yaw }, model: SK[k], physics: "static", ...extra });
+  [26.4, 28.8, 33.6, 36.0].forEach((z, i) => kit(`l11-site-hoard-${i}`, "hoarding", 15.6, z, 90 + (i % 2) * 1.5));
+  kit("l11-site-barrier-n", "barrier", 14.9, 29.9, 70);
+  kit("l11-site-barrier-s", "barrier", 14.9, 32.5, 110);
+  [[14.3, 30.6], [14.5, 31.8], [16.6, 29.6]].forEach(([x, z], i) => kit(`l11-site-cone-${i}`, "cone", x, z, i * 37));
+  kit("l11-site-lamp", "sitelamp", 16.4, 33.0, 240, { children: [{ feetPosition: { x: 0, y: 1.9, z: 0 }, light: { kind: "point", color: "oklch(0.92 0.09 85)", intensity: 2.2, distance: 9 } }] });
+  kit("l11-site-poles", "polestack", 25.5, 27.2, 8);
+  kit("l11-site-cement", "cementpallet", 26.2, 34.8, 15);
+  kit("l11-site-gangbox", "gangbox", 24.6, 35.6, -12);
 
   // Outer guardrails
 
