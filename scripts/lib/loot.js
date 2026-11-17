@@ -64,7 +64,7 @@ export const LOOT_CATEGORIES = {
   ],
   residential: [
     ["stim_shot", 1.5], // Shelly Nov 17: the auto-injector is a leveled find everywhere (gateItems trims it early)
-    ["almond", 18], ["cloudy_almond", 7], ["warm_tea", 8], ["beans", 9], ["bar", 9],
+    ["almond", 18], ["cloudy_almond", 7], ["warm_tea", 8], ["beans", 9], ["bar", 9], ["milk", 4], // milk: Ralph trades secrets for it (radio-quest.js)
     ["stale_ration", 8], ["meat", 12], ["bandage", 7], ["painkillers", 6], ["antiseptic", 4],
     ["bobbypin", 9], ["cloth", 9], ["weapon", 9], ["ammo", 7],
     ["mag:survival", 2.5], ["mag:sneak", 2.5], ["mag:melee", 2], ["mag:unarmed", 2], ["manual:armor", 3], ["manual:food", 3],
@@ -89,7 +89,7 @@ export const LOOT_CATEGORIES = {
     ["mag:repair", 3.5], ["mag:lockpick", 2.5], ["mag:science", 2], ["manual:tools", 5], ["manual:aid", 2],
   ],
   food_service: [
-    ["almond", 22], ["warm_tea", 14], ["cloudy_almond", 10], ["bar", 14], ["beans", 14],
+    ["almond", 22], ["warm_tea", 14], ["cloudy_almond", 10], ["bar", 14], ["beans", 14], ["milk", 6],
     ["ration", 10], ["stale_ration", 9], ["meat", 16], ["charcoal", 6], ["painkillers", 4],
     ["bandage", 4], ["cloth", 4], ["mag:survival", 2.5], ["mag:barter", 2.5], ["manual:food", 6],
   ],
@@ -355,7 +355,7 @@ export function spawnContainerL2(ctx, kind, p, yaw, opts = {}) {
 }
 
 // ---- Level 5 (Terror Hotel): what a hotel room's dresser, wardrobe or kitchen holds. Meat feeds Samantha; the SMG and knife are this floor's guns.
-export const L5_WEIGHTS = [["almond", 22], ["warm_tea", 4], ["ammo", 17], ["meat", 20], ["ration", 5], ["stale_ration", 3], ["bandage", 5], ["painkillers", 3], ["antiseptic", 2], ["battery", 5], ["bobbypin", 8], ["weapon", 6], ["mag", 2.5], ["manual", 4], ["cloth", 6], ["royal_ration", 1]] // nvg: Ines's quest only (scripts/l5-goggles.js);
+export const L5_WEIGHTS = [["almond", 22], ["warm_tea", 4], ["milk", 3], ["ammo", 17], ["meat", 20], ["ration", 5], ["stale_ration", 3], ["bandage", 5], ["painkillers", 3], ["antiseptic", 2], ["battery", 5], ["bobbypin", 8], ["weapon", 6], ["mag", 2.5], ["manual", 4], ["cloth", 6], ["royal_ration", 1]] // nvg: Ines's quest only (scripts/l5-goggles.js);
 export const MEAT5 = [["steak", 3], ["fish", 4], ["chicken", 6], ["spam", 8], ["sardines", 8], ["jerky", 7], ["hotdog", 4], ["rat", 6]];
 export function rollMeat(ctx) { const t = MEAT5.reduce((a, [, w]) => a + w, 0); let r = ctx.random() * t; for (const [k, w] of MEAT5) { r -= w; if (r <= 0) return "meat:" + k; } return "meat:rat"; }
 export const rollWeaponL5 = (ctx, level) => rollWeapon(ctx, "l5", undefined, level);

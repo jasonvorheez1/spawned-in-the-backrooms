@@ -96,3 +96,4 @@ l178_toasted_onigiri: { name: "Toasted salmon onigiri", info: "A crisp edge and 
 l178_water: { name: "Kyoto tap water", info: "A bottle filled at the kitchen sink. Restores 20 thirst.", thirst: 20, drink: true, color: "#b7d7df" }
 l178_barley_tea: { name: "Roasted barley tea", info: "Toasty and unsweetened. Restores 12 thirst and 4 sanity and reduces chill by 8.", thirst: 12, sanity: 4, warm: 8, drink: true, color: "#be914c" }
 l178_towel: { name: "Fresh cotton towel", verb: "Use", info: "Wrap up after a soak. Soothes aches, restores 5 sanity and reduces chill by 15.", hp: 2, sanity: 5, warm: 15, aid: true, color: "#e6dfcd" }
+milk:    { name: "Carton of milk", info: "Whole milk, still cold somehow. Someone on the radio wants this", hunger: 6, thirst: 22, sanity: 4, hp: 3, color: "#f2f0e6", drink: true }
