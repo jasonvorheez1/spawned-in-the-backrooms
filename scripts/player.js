@@ -1555,7 +1555,7 @@ function viewmodel(ctx, moving, sprinting) {
   const cs = !hb && !l.modelUrl && !HUMAN && isNewCat(l) ? critterSpec(l) : null // cats (Shelly Nov 12: 'you didnt have to make an entirely new model'): the first-person arm IS her own cat body, its sleeve on it
   const ply = l.modelUrl || (hb ? hb.id + '#' + (hb.materials.Body_Skin.color ?? '') : '') || (cs ? 'cat2:' + JSON.stringify([l.sex, l.fur, l.topw, l.top, l.skin, l.pattern, l.heightS, l.buildS]) : '')
   // cats (Shelly Nov 12 "make the first person arms match the cat charcters"): her fur colour, a round paw with pink beans, her sleeve
-  const arm = hb || ply ? { hidden: true } : { species: l.species ?? 'cat', fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v43' + JSON.stringify(tune ?? null)
+  const arm = hb || ply ? { hidden: true } : { species: l.species ?? 'cat', fur: l.fur, topw: l.topw, top: l.top }, armKey = kind + JSON.stringify(arm) + ply + 'v44' + JSON.stringify(tune ?? null)
   if (w.vmKind !== armKey || !w.vm) {
     if (w.vm) ctx.destroy(w.vm)
     if (w.plyObj) { ctx.destroy(w.plyObj); w.plyObj = null }
@@ -1602,13 +1602,13 @@ function viewmodel(ctx, moving, sprinting) {
         castShadow: false, visibleInFirstPerson: true, audience: 'local' }
       const g = w.plyGrip, rAt = tune?.cat ?? { x: cat.at.x, y: Math.max(cat.at.y, g.y - .16), z: Math.min(cat.at.z, g.z + .21) }
       child.push({ ...arms, id: 'plyarm', bones: { 'mixamorig:LeftArm': { scale: 0 } }, feetPosition: rAt })
-      // Seat LeftArm shoulder off-screen bottom-left within the 0.32 m reach radius so the forearm enters naturally and always reaches the fore-end.
+      // Seat LeftArm shoulder off-screen bottom-left within the scaled reach radius so the forearm enters naturally and no sleeve cuff enters view.
       if (support) {
         const f = w.plySupport ?? supportWrist
         const scale = cs.scale ?? { x: 1, y: 1, z: 1 }
         child.push({ ...arms, id: 'plyarm-left', bones: { 'mixamorig:RightArm': { scale: 0 } },
-          scale: { x: scale.x * 1.22, y: scale.y * 1.22, z: scale.z * 1.22 },
-          feetPosition: { x: f.x - .22, y: f.y - .26, z: f.z + .14 } })
+          scale: { x: scale.x * 1.32, y: scale.y * 1.32, z: scale.z * 1.32 },
+          feetPosition: { x: Math.min(f.x - .24, -.26), y: Math.min(f.y - .33, -.26), z: f.z + .16 } })
       }
     }
     else if (ply) child.push({ id: 'plyarm', model: ply, rotation: { yaw: 180, pitch: 0, roll: 0 }, feetPosition: { x: 0.12, y: -1.3, z: 0.68 }, /* a plymodel's rest arm runs along its own +Z: turned 180 it points ahead, the hand at the grip, the shoulder just below-right of the eye (Shelly Nov 15: first person showed no arm) */ castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
