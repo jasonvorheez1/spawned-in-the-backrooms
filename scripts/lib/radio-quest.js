@@ -56,7 +56,7 @@ export function handleDialogueQuestRadio(ctx, p, npc, text) {
   if (r.picking) {
     const title = SONGS.find((x) => is(q.pick.replace("{title}", x)));
     r.picking = false;
-    if (title) { s.radioReq = { title, at: Date.now() }; tellQuest(ctx, p, `Song request: "${title}" is next on Radio Backrooms`); return say(T.picked.replace("{title}", title)); }
+    if (title) { s.radioReq = { title, at: ctx.now() }; tellQuest(ctx, p, `Song request: "${title}" is next on Radio Backrooms`); return say(T.picked.replace("{title}", title)); }
   }
   if (is(q.request)) { r.picking = true; return say(T.request); }
   if (is(q.milk) && !m) { advanceQuest(ctx, p, QM, 1, `Quest Started: ${QM.name} · ${QM.tips[1]}`); return say(T.milk); }
@@ -77,7 +77,7 @@ export function handleDialogueQuestRadio(ctx, p, npc, text) {
     return say(`${T.more} ${tip}`);
   }
   if (is(q.air) && m === 99 && !s.radioGuest) {
-    s.radioGuest = true; s.radioGuestAt = Date.now();
+    s.radioGuest = true; s.radioGuestAt = ctx.now();
     queuePayout(s, { xp: PAY.air, text: `On the air: Talkin' with Ralph · +${PAY.air} XP` });
     tellQuest(ctx, p, "You were a guest on Talkin' with Ralph");
     return say(`${T.air} ${T.aired}`);
