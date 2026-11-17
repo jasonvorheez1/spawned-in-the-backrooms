@@ -2,12 +2,12 @@
 - id: chase  # replaced Timeless (Shelly Nov 17); motion + song from her Riff's emote pack 2 (Unity humanoid .anim baked to a clip)
   label: Chase Me Down
   stationary: true  # Shelly Nov 17: not a traversal emote, moving ends it
-  clip: cdn/clip-chase-me-down-5cc525d4-loop.glb
+  clip: cdn/clip-chase-me-down-ik-619d9eb9-loop.glb
   song: /cdn/value.a21c2e61743c4c01f8d0827eede40f87780c3c18e14580109d57a21cc4a2e324.mp3  # the pack's own track, 10.7 s, loops with the dance
   face: joy
 - id: whatyouwant  # Shelly Nov 17: from her mini fortnite emote pack 1 (Unity humanoid .anim baked to a clip)
   label: What You Want
-  clip: cdn/clip-what-you-want-6eabb73c-loop.glb
+  clip: cdn/clip-what-you-want-ik-7872f4cd-loop.glb
   song: /cdn/value.3071272a01bd2927baaaecbbde3be9c8dafb63b2e7652adfa01cd6c6b1a18370.mp3  # the pack's own track, 16.4 s, loops with the dance
   face: joy
 - id: dance
