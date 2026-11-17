@@ -163,11 +163,15 @@ export function tick(ctx) {
       ui: '<div face="left" width="1.2m" style="font-size:120px;font-weight:900;color:#1a1410;text-align:center;line-height:1.1">LIFT 4<div style="font-size:70px">▲ abandoned office</div></div>' });
     ctx.spawn({ feetPosition: { x: LIFT.x - 1.2, y: 2.6, z: LIFT.z }, light: { kind: "point", color: "oklch(0.85 0.1 85)", intensity: 3, distance: 6, shadow: { enabled: false }, visibleRange: { max: 35 } } });
   }
-  if (ctx.place.state.l69V !== 1) { ctx.place.state.l69V = 1; // Level 69's way in (Shelly Nov 17): an unmarked steel door past LIFT 4, no sign, one weak lamp. Behind it, the road
+  if (ctx.place.state.l69V !== 2) { ctx.place.state.l69V = 2; // Shelly Nov 17: this door is Level 669's, not 69's. 669 isn't built yet, so it stays locked; Level 69 is Boom Town's sedan
     const z9 = LIFT.z - 4;
-    ctx.spawn("l3-to-l69", { tags: ["door"], feetPosition: { x: LIFT.x - 0.6, y: 0, z: z9 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.6, height: 2.4, depth: 1.4 }, visible: false, behavior: "scripts/level-door.js", state: { to: "level69" } });
-    ctx.spawn("l3-l69-door", { feetPosition: { x: LIFT.x - 0.12, y: 0, z: z9 }, rotation: { yaw: 90 }, visibleRange: { max: 45 }, castShadow: false, primitive: { kind: "box", width: 1.0, height: 2.15, depth: 0.08 }, material: { color: "oklch(0.42 0.02 250)", texture: "cdn/texture-scratched-worn-steel.png", metalness: 0.8, roughness: 0.45 } });
-    ctx.spawn({ feetPosition: { x: LIFT.x - 1.0, y: 2.5, z: z9 }, light: { kind: "point", color: "oklch(0.8 0.05 90)", intensity: 1.2, distance: 4, shadow: { enabled: false }, visibleRange: { max: 30 } } });
+    if (ctx.place.objects["l3-to-l69"]) ctx.destroy("l3-to-l69");
+    if (!ctx.place.objects["l3-l669-door"]) {
+      if (ctx.place.objects["l3-l69-door"]) ctx.destroy("l3-l69-door");
+      ctx.spawn("l3-l669-door", { feetPosition: { x: LIFT.x - 0.12, y: 0, z: z9 }, rotation: { yaw: 90 }, visibleRange: { max: 45 }, castShadow: false, physics: "static", primitive: { kind: "box", width: 1.0, height: 2.15, depth: 0.08 }, material: { color: "oklch(0.42 0.02 250)", texture: "cdn/texture-scratched-worn-steel.png", metalness: 0.8, roughness: 0.45 },
+        state: { name: "Steel door", info: "Locked. Painted over, no handle. Cold air leaks under it" } });
+      ctx.spawn({ feetPosition: { x: LIFT.x - 1.0, y: 2.5, z: z9 }, light: { kind: "point", color: "oklch(0.8 0.05 90)", intensity: 1.2, distance: 4, shadow: { enabled: false }, visibleRange: { max: 30 } } });
+    }
   }
   if (ctx.place.state.lift5V !== 1) { ctx.place.state.lift5V = 1; // the guest lift beside it: brass doors, to Level 5's hotel (one cell south of LIFT 4)
     const z5 = LIFT.z + 4;
