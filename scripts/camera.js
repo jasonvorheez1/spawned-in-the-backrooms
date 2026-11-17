@@ -30,6 +30,11 @@ function seatedOn(player, ride) {
 export function update(ctx, dt) {
   // The eye sits inside the body, so the body is not drawn for its owner (everyone else still sees it).
   ctx.self.hideLocalPlayer = true
+  { // Shelly Nov 17 "my car is invisible": the rig's own-body hide also swallowed the car being driven; behind a wheel only the body leaves this screen
+    const me = ctx.place?.players?.find((q) => q.id === ctx.player?.id && q.isLocal), driving = !!me?.controlling
+    if (me) { const has = (me.hidden ?? []).includes(me.id)
+      if (driving) { ctx.self.hideLocalPlayer = false; if (!has) me.hidden = [...(me.hidden ?? []), me.id]; ctx.self.session.driveHid = true }
+      else if (ctx.self.session.driveHid) { ctx.self.session.driveHid = false; me.hidden = (me.hidden ?? []).filter((i) => i !== me.id) } } }
   { const v = ctx.view?.camera, b = ctx.player?.worldFeetPosition ?? ctx.player?.feetPosition // a stray view (a cut's eye lost in the void, non-finite or km off its player) is handed back
     const e = v && !v.parent && v.eye && typeof v.eye === 'object' ? v.eye : null
     if (e && b && (![e.x, e.y, e.z].every(Number.isFinite) || Math.abs(e.x - b.x) + Math.abs(e.y - b.y) + Math.abs(e.z - b.z) > 2000)) { ctx.view.camera = null; ctx.log('[camera] stray view dropped', e) } }
