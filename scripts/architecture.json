@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 10378,
-  "updatedAt": "2026-11-17T13:00:29.853Z",
-  "summary": "Spawned in the Backrooms is a persistent survival RPG across Level 0, the Hub and authored Backrooms destinations. Character progression and gear live in player.state, while Solo/Multiplayer story state is switched separately; shared player behaviors, quests and local place sims connect the world. Radio Backrooms is Ralph's studio/guest room built by its sim, and Level 31 has a solo ephemeral maintenance underbelly beneath its rink.",
+  "basedOnSpecVersion": 10392,
+  "updatedAt": "2026-11-17T13:17:01.840Z",
+  "summary": "Spawned in the Backrooms is a survival RPG across Level 0, the Hub and authored Backrooms destinations. Character progression and gear live in player.state, while Solo/Multiplayer story state is switched separately; shared player behaviors, quests and local place sims connect the world. Ralph's Radio Backrooms is built and maintained by its sim, entered from a Radio Station storefront in Level 11 and exited back outside that station.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes and anomalies; Bonus Rooms door is north of the waking point in x0z0.",
@@ -11,8 +11,8 @@
     "places/intake (3D), places/laundromat (solo ephemeral) and places/tutorial0 (solo ephemeral) - fresh-player creator/opening chain.",
     "places/levelrun (solo ephemeral), places/level69 (solo ephemeral) and places/level22 (solo ephemeral) - Level ! hospital chase; highway car route and repeatable ramps; then Emstable decks, hazards, quest and return.",
     "places/doors21 (3D) - Level 21 hotel square, four shifting numbered-door halls, dead-end bays, closets, nests and dark EXIT wing; Concierge/Wardens and a RADIO door.",
-    "places/level31 (3D) - The Roller Rink, with arcade/food court/rental/gift shop, service hatch behind the arcade back room, and return marker from its underbelly.",
-    "places/l31crawl (3D, solo ephemeral) - Level 31 dark maintenance underbelly; places/radio (3D) - Ralph's furnished studio/guest room, generated and maintained by its sim."
+    "places/level31 (3D) - The Roller Rink and service hatch to the separately built underbelly; places/l31crawl (solo ephemeral) is its dark maintenance crawlspace.",
+    "places/radio (3D) - Ralph's furnished studio/guest room, generated and maintained by its sim; places/level11/sim.js builds the Radio Station storefront entrance and exit arrival."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera and ordered player behavior/actions; scripts/ui.js and lib/screen.js compose the HUD and mutually exclusive panels.",
@@ -21,8 +21,8 @@
     "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, static placements and generation/tick behavior.",
     "places/doors21/config.yaml + places/doors21/sim.js - Level 21 procedural square/halls/doors/dress, foe and NPC upkeep, reshaping and quest ticking.",
     "places/level31/sim.js + scripts/lib/level31.js and level31-* helpers - Roller Rink shell/zones, dressing and local upkeep; hatch marker transitions to separately built crawl instance.",
-    "places/l31crawl/sim.js + scripts/lib/l31crawl.js - first-tick construction of the entire underbelly and recovery of players arriving before its floor is built; scripts/l31-bot.js manages bots, walkers and flickering lights.",
-    "places/radio/sim.js - versioned construction/maintenance of Ralph's furnished studio, TV/ON AIR state and safety; scripts/radio-use.js handles usable studio/guest-room props."
+    "places/l31crawl/sim.js + scripts/lib/l31crawl.js - first-tick construction of the underbelly and recovery of early arrivals; scripts/l31-bot.js manages bots, walkers and flickering lights.",
+    "places/radio/sim.js + places/level11/sim.js - versioned Radio Backrooms construction/maintenance and Level 11 station entrance/return marker; scripts/radio-use.js handles usable studio/guest-room props."
   ],
   "shared": [
     "scripts/lib/level69-quest.js + scripts/lib/level22-quest.js - Wren dialogue/progression, beacon planting and Emstable exploration/record goals; consumed by talk, sims and level-specific props.",
@@ -50,15 +50,14 @@
     "scripts/lib/run-opts.js + scripts/main-menu.js - mode/run picks; run/quest/story/resume keys swap per mode through SQL slots 91/92 while character and gear remain player.state.",
     "scripts/db.js + scripts/main-menu.js - named save-slot snapshots and hidden Solo/Multiplayer mode snapshots; live character state remains player.state.",
     "scripts/lib/hub.js noteAtlas, called by scripts/player.js on arrival - player.state.atlas first-seen dates/visit counts; place sims own local texture/sign completion stamps.",
-    "scripts/lib/doors21-quest.js owns player.state.l21d quest/objective counters and payouts; doors21 sim owns local layout epoch/objects/dead-foe tracking.",
-    "scripts/lib/level69-quest.js, level22-quest.js and radio-quest.js own player quest fields l69q/l69planted, l22q and radiomq/radioq/radioSecrets/radioReq/radioGuest; each place sim owns its local room/build state.",
-    "scripts/l31crawl/sim.js owns per-instance built flag; scripts/lib/l31crawl.js defines generated room/door/foe layout and Prize Locker contents; radio sim owns built/live/TV state and radio-use changes player snacks, cents or sanity; scripts/player.js owns grenade counts and nadePick selection in player.state."
+    "scripts/lib/doors21-quest.js owns player.state.l21d quest/objective counters and payouts; doors21 sim owns local layout epoch/objects/dead-foe tracking and l21dFitV fixture refit stamp.",
+    "scripts/lib/level69-quest.js, level22-quest.js and radio-quest.js own player quest fields l69q/l69planted, l22q and radiomq/radioq/radioSecrets/radioReq/radioGuest; place sims own local room/build state, including level22 l22FitV.",
+    "places/l31crawl/sim.js owns per-instance built flag; scripts/lib/l31crawl.js defines generated room/door/foe layout and Prize Locker contents; radio sim owns built/live/TV state and radio-use changes player snacks, cents or sanity."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered behavior stack for locomotion, interaction, combat, inventory, social, hub, camera, quests, CCTV, radio, barter, phone, emote and god mode; scripts/lib/data/throwables.yml parameters …",
-    "world.config.yaml nadeCycle (B) → scripts/player.js onInput cycles nadePick across carried frag/molotov/bauble/shock_pad/fresh; G/pullPin uses the selection, while scripts/ui.js HUD lists FRAG/MOLOTOV/BAUBLE/SHOCK counts and a B swap hint.",
+    "world.config.yaml actions → templates/player.js ordered behavior stack for locomotion, interaction, combat, inventory, social, hub, camera, quests, CCTV, radio, barter, phone, emote and god mode; scripts/lib/data/throwables.yml parameters action behavior.",
+    "world.config.yaml nadeCycle (B) → scripts/player.js onInput cycles nadePick across carried frag/molotov/bauble/shock_pad/fresh; G/pullPin uses the selection, and scripts/ui.js HUD shows counts and swap hint; held nadevm is cleared on cycle/throw.",
     "templates/player.js god-kit.js onInput handles configured U/godMode → editor player.state.god and gear grant; update refills survival values before scripts/player.js core update.",
-    "scripts/player.js held-grenade viewmodel → local session object tagged nadevm; clearNadeVm destroys it on cycle/throw so the thrown projectile takes over without a floating held copy.",
     "scripts/fall-guard.js holds velocity across place changes for ground streaming; grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit and aimPt/aimPitch → camera and ballistics/weaponAim; camera uses worldFeetPosition for parented/seated bodies.",
     "Fresh player via scripts/main-menu.js → intake/creator → solo laundromat → tutorial0; laundromat cut and tutorial sim/lib/tutorial drive opening and guidance.",
@@ -66,7 +65,8 @@
     "scripts/lib/run-opts.js mpRoom/toSolo → party or personal room; scripts/bonus-door.js → hub; Bonus glass hall routes to main and main-menu places player outside the return door.",
     "Level 3 door or Boom Town sedan → Level 69 solo instance; Level 69 sim streams road/beacon posts and ramps to Level 11/22; l69-car drives and l69-post → level69-quest plants beacon.",
     "Level 13 tear → doors21; Level 21 exit door 13 → Level 13; west hall hole → Level 22 rubble arrival; Level 22 bottom-floor exit → Level 21 ARRIVE22. Level 21 door dispatch/layout and sim own shifting/RADIO routing.",
-    "Level 31 arcade back-room service hatch → scripts/level-door.js mapping l31-to-crawl → l31crawl#crawl-from-l31; crawl-back/service ladder → level31#l31-from-crawl. Crawl sim builds once and returns arrivals below y=-1 to its landing; Level 4/11 Radio Backrooms doors → radio, whose exit returns to Level 11 and whose sim maintains Ralph, ON AIR/TV and world-radio receiver."
+    "Level 31 arcade back-room service hatch → scripts/level-door.js l31-to-crawl → l31crawl#crawl-from-l31; crawl-back/service ladder → level31#l31-from-crawl. Crawl sim builds once and returns arrivals below y=-1 to its landing.",
+    "Level 11 l11-to-radio door → places/radio via scripts/level-door.js; Radio Backrooms radio-exit → level11#l11-from-radio, whose sim-maintained marker returns the player just outside the storefront station door."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
@@ -91,7 +91,7 @@
     "Fresh-player opening chain is main-menu → intake → laundromat → tutorial0; lmDone/arrivePending are player.state flags, while lmSkip and cut timing are session state. Opening places are solo/ephemeral.",
     "Level ! uses places/levelrun/config.yaml solo/ephemeral; CORRIDOR and its 26 m chunk/door generation come from scripts/lib/levelrun-mechanics.js; keep sim geometry and hazard/pursuit/midpoint/collapse/exit depths aligned.",
     "Level 69 slices are 40 m along -Z; the left Level 11 tunnel and right Level 22 ramp repeat every 60 slices (2.4 km), with exits at slice offsets 55 and 28; preserve modulo-based sign, tunnel/ramp geometry and streamed positions.",
-    "Level 22 layout uses FF=3.2 m floor spacing; scripts/lib/l22-layout.js defines six tiered decks, cuts, mine/pit and exit, while per-player fallen state in l22 changes panel generation and quest progress is separately in l22q.",
-    "Level 31 crawl is solo/ephemeral and its sim builds on first tick, recovering arrivals below y=-1 to (0, 0.1, 1.5). Radio's cells/x0z0.scene is empty; places/radio/sim.js V=5 generates the furnished room, sizing props from their forward +x model proportions and placing tabletop props at measured surface heights."
+    "Level 22 uses FF=3.2 m floor spacing; scripts/lib/l22-layout.js defines six tiered decks, cuts, mine/pit and exit; l22q quest progress is separate from per-player fallen state. scripts/lib/data/l22-dress-{top,mid,low}.yml supplies rows; sim's l22FitV refit stamp and tests/level22-placement.test.js guard footprint clearance and holes.",
+    "Level 31 crawl is solo/ephemeral and its sim builds on first tick, recovering arrivals below y=-1 to (0, 0.1, 1.5). Radio's cells/x0z0.scene is empty and places/radio/sim.js V=7 generates the room; its versioned layout and Level 11 station markers require matching placement/return coordinates."
   ]
 }
