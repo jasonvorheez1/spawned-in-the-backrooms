@@ -161,6 +161,11 @@ inputs:
       touch:
         button: false
     emotePick: {}
+    godMode:
+      keys:
+        - j
+      touch:
+        button: false
     dress: {}
     mmenu: {}
     tabaway: {}
