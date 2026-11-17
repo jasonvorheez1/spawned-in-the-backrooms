@@ -219,11 +219,26 @@ function sniperScope(s, wp) {
 // camp chatter: the line an npc is saying floats over its head while it lasts (chatter.js writes state.line)
 // the doorway transition: black that fades off the new level, its name in the middle
 function xferCard(s, now) {
-  const x = s.xfer; if (!x || now - x.at > 2600) return ''
+  const x = s.xfer; if (!x) return ''
+  const age = (now - x.at) / 1000; if (age < 0 || age > 5.4) return ''
   const to = String(x.to ?? '').startsWith('tutorial0') ? 'main' : x.to // a solo tutorial copy is still Level 0
-  if (x.kind) return lazy('noclip', () => import('./noclip-ui.js'))?.clipCard?.({ ...x, to }, now, LEVEL_NAMES) ?? '' // the noclip between levels (scripts/noclip-ui.js)
   const [a, b] = LEVEL_NAMES[to] ?? [String(to).toUpperCase(), '']
-  return `<style>@keyframes xferOut{0%,45%{opacity:1}100%{opacity:0;visibility:hidden}}</style><div id="xfer${x.at}" style="position:absolute;inset:0;background:#050403;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:xferOut 2.4s forwards;color:#f2c14e;text-shadow:2px 2px #000"><div style="font-size:44px;letter-spacing:.2em">${a}</div><div style="font-size:18px;letter-spacing:.3em;opacity:.75;margin-top:6px">${b}</div></div>`
+  if (x.kind) return (age < 2.6 ? lazy('noclip', () => import('./noclip-ui.js'))?.clipCard?.({ ...x, to }, now, LEVEL_NAMES) ?? '' : '') + placeSlug(x.at, a, b, age, 1.7) // the noclip between levels (scripts/noclip-ui.js)
+  // a doorway: the black lifts at once off the new level, no held card
+  const black = age < 1.2 ? `<div id="xferb${x.at}" style="position:absolute;inset:0;background:#050403;pointer-events:none;animation:slFade 1.2s ease-out forwards;animation-delay:-${age.toFixed(2)}s"></div>` : ''
+  return black + placeSlug(x.at, a, b, age, 0.35)
+}
+// Shelly Nov 17: "revamp the entrance/exit animations (the one that shows the name) with something more immersive".
+// The name arrives like a location slug in a film: lower left, over the live world, the number typed in, a rule drawn, the name settling, gone in five seconds.
+const titleCase = (v) => String(v).toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())
+function placeSlug(at, a, b, age, start) {
+  const d = (k) => `animation-delay:${(start + k - age).toFixed(2)}s`, n = String(a).length
+  return `<style>@keyframes slFade{from{opacity:1}to{opacity:0;visibility:hidden}}@keyframes slType{from{width:0}to{width:calc(${n}ch + ${n * 0.32}em)}}@keyframes slRule{from{width:0}to{width:150px}}@keyframes slIn{from{opacity:0;transform:translateY(7px);letter-spacing:.14em}to{opacity:1;transform:none;letter-spacing:.06em}}@keyframes slOut{0%,80%{opacity:1}100%{opacity:0}}@keyframes slCur{50%{opacity:0}}</style>
+  <div id="slug${at}" style="position:absolute;left:clamp(18px,6vw,90px);bottom:clamp(120px,19vh,210px);pointer-events:none;color:#f3e6bf;text-shadow:0 1px 4px #000d;animation:slOut ${(5.4 - start).toFixed(2)}s linear forwards;animation-delay:${(start - age).toFixed(2)}s">
+    <div style="display:flex;align-items:center;gap:2px"><div style="font:500 12px/1.2 'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.32em;color:#e0b95c;white-space:nowrap;overflow:hidden;width:0;animation:slType .7s steps(${n}) forwards;${d(0)}">${a}</div><div style="width:7px;height:13px;background:#e0b95c;animation:slCur .5s steps(1) infinite"></div></div>
+    <div style="height:1px;background:linear-gradient(90deg,#e0b95ccc,#e0b95c00);margin:9px 0 8px;width:0;animation:slRule 1.1s cubic-bezier(.2,.7,.2,1) forwards;${d(0.55)}"></div>
+    ${b ? `<div style="font:300 clamp(20px,2.4vw,30px)/1.1 Geist,system-ui,sans-serif;opacity:0;animation:slIn 1.1s ease-out forwards;${d(0.85)}">${titleCase(b)}</div>` : ''}
+  </div>`
 }
 const TALKERS = ['meg-ale', 'meg-ortiz', 'meg-callum', 'surv-wren', 'surv-hollis', 'surv-mags', 'omega-okafor', 'omega-rhea', 'hk-constance', 'hk-vance', 'homely-barnaby', 'homely-auguste', 'l5-samantha', 'l5-ambrose', 'l5-dolores', 'l5-pip', 'l5-odette', 'l5-harlan', 'l5-vesna', 'l5-tobias', 'l5-imani', 'l5-millie', 'l5-whitlock', 'l5-vanderholt', 'l5-zelda', 'l5-wat', 'l11-meg-agent-vance', 'l11-trader-kael', 'l11-commuter-faceling', 'l11-walker-1', 'l11-walker-2', 'l11-walker-3']
 // everyone who can bark: the named camp crews above plus any npc with a fresh line, so a combat shout always gets its bubble and subtitle

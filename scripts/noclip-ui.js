@@ -107,7 +107,7 @@ export function clipCard(x, now, names) {
   const [a, b] = names[x.to] ?? [String(x.to).toUpperCase(), '']
   const d = `animation-delay:-${t.toFixed(2)}s`, an = (n, dur, e = 'linear forwards') => `animation:${n} ${dur}s ${e};${d}`
   const card = `<div style="font-size:min(9vw,46px);letter-spacing:.24em">${a}</div><div style="font-size:16px;letter-spacing:.3em;opacity:.78;margin-top:6px">${b}</div>`
-  const title = `<div class="ttl" style="${an('xc-title', 2.4)}">${card}</div>`
+  const title = '' // Shelly Nov 17: no centred title over the effect; scripts/ui.js placeSlug writes the name into the corner as the world comes back
   const wrap = (inner, shake) => `${CLIP_CSS}<div class="xc"${shake ? ` style="${an('xc-shk', 2.4)}"` : ''}><div style="position:absolute;inset:0;background:#050403"></div><div style="position:absolute;inset:0;${an('xc-all', 2.6)}">${inner}</div></div>`
   if (x.kind === 'floor') {
     const f = (sp) => `animation:xc-streak ${sp}s linear infinite,xc-streakA 2.4s linear forwards;animation-delay:0s,-${t.toFixed(2)}s`
@@ -135,5 +135,5 @@ export function clipCard(x, now, names) {
       <div style="position:absolute;inset:0;mix-blend-mode:screen;background:rgba(255,0,60,.16);transform:translateX(5px);${an('xc-flick', 2.4)}"></div><div style="position:absolute;inset:0;mix-blend-mode:screen;background:rgba(0,220,255,.16);transform:translateX(-5px)"></div>${title}`)
   }
   return wrap(`<div class="st"></div><div class="sc"></div><div style="position:absolute;inset:0;background:#000;opacity:.75;${an('xc-fade', 1.6)}"></div>
-    <div class="ttl rgb" style="${an('xc-title', 2.4)}">${card}</div>`)
+`)
 }
