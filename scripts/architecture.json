@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "basedOnSpecVersion": 10364,
-  "updatedAt": "2026-11-17T12:40:54.166Z",
-  "summary": "Spawned in the Backrooms is a persistent survival RPG across Level 0, the Hub and authored Backrooms destinations. Character progression and gear live in player.state, while Solo/Multiplayer story state is switched separately; shared player behaviors, quests and local place sims connect the world. Radio Backrooms is Ralph's safe studio/guest room on the shared radio clock, and Level 31 now has a solo ephemeral maintenance underbelly beneath its rink.",
+  "basedOnSpecVersion": 10371,
+  "updatedAt": "2026-11-17T12:50:36.266Z",
+  "summary": "Spawned in the Backrooms is a persistent survival RPG across Level 0, the Hub and authored Backrooms destinations. Character progression and gear live in player.state, while Solo/Multiplayer story state is switched separately; shared player behaviors, quests and local place sims connect the world. Radio Backrooms is Ralph's studio/guest room built by its sim, and Level 31 has a solo ephemeral maintenance underbelly beneath its rink.",
   "scriptPaths": [],
   "places": [
     "places/main (3D) - Level 0 yellow maze, routes and anomalies; Bonus Rooms door is north of the waking point in x0z0.",
@@ -12,7 +12,7 @@
     "places/levelrun (solo ephemeral), places/level69 (solo ephemeral) and places/level22 (solo ephemeral) - Level ! hospital chase; highway car route and repeatable ramps; then Emstable decks, hazards, quest and return.",
     "places/doors21 (3D) - Level 21 hotel square, four shifting numbered-door halls, dead-end bays, closets, nests and dark EXIT wing; Concierge/Wardens and a RADIO door.",
     "places/level31 (3D) - The Roller Rink, with arcade/food court/rental/gift shop, service hatch behind the arcade back room, and return marker from its underbelly.",
-    "places/l31crawl (3D, solo ephemeral) - Level 31's dark maintenance underbelly: corridors, service doors, flickering/emergency lights, Rink Warden robots, Level 13 lurkers/tenants and a Prize Locker; places/radio (3D) - Ralph's studio and guest room, ON AIR light, shared-clock broadcast, interactive props and Level 11 exit."
+    "places/l31crawl (3D, solo ephemeral) - Level 31 dark maintenance underbelly; places/radio (3D) - Ralph's studio and guest room, generated and maintained by its sim."
   ],
   "roots": [
     "world.config.yaml + templates/player.js - multiplayer/player entry, camera and ordered player behavior/actions; scripts/ui.js and lib/screen.js compose the HUD and mutually exclusive panels.",
@@ -20,9 +20,9 @@
     "scripts/main-menu.js + scripts/lib/run-opts.js - per-player arrival, fresh-character and mode/run routing; main-menu-ui.js renders title/pause and expedition settings.",
     "places/<place>/config.yaml + cells/*.scene + sim.js - local configuration, static placements and generation/tick behavior.",
     "places/doors21/config.yaml + places/doors21/sim.js - Level 21 procedural square/halls/doors/dress, foe and NPC upkeep, reshaping and quest ticking.",
-    "places/level31/sim.js + scripts/lib/level31.js and level31-* helpers - Roller Rink shell/zones, dressing and local upkeep; hatch marker transitions to the separately built crawl instance.",
-    "places/l31crawl/sim.js + scripts/lib/l31crawl.js - first-tick construction of the entire underbelly; scripts/l31-bot.js manages its bots, walkers and flickering lights.",
-    "places/radio/sim.js - builds/maintains Ralph's studio, TV/ON AIR state and safety; scripts/radio-use.js handles usable studio/guest-room props."
+    "places/level31/sim.js + scripts/lib/level31.js and level31-* helpers - Roller Rink shell/zones, dressing and local upkeep; hatch marker transitions to separately built crawl instance.",
+    "places/l31crawl/sim.js + scripts/lib/l31crawl.js - first-tick construction of the entire underbelly and recovery of players arriving before its floor is built; scripts/l31-bot.js manages bots, walkers and flickering lights.",
+    "places/radio/sim.js - versioned construction/maintenance of Ralph's studio, TV/ON AIR state and safety; scripts/radio-use.js handles usable studio/guest-room props."
   ],
   "shared": [
     "scripts/lib/level69-quest.js + scripts/lib/level22-quest.js - Wren dialogue/progression, beacon planting and Emstable exploration/record goals; consumed by talk, sims and level-specific props.",
@@ -42,7 +42,7 @@
     "scripts/lib/l21d-layout.js - place/dimensions/timing, hall/door/shift/warp/wing/arrival helpers incl. RADIO target; scripts/lib/l21d-body.js - CLIPS, foeBody.",
     "scripts/lib/doors21-quest.js - CONCIERGE, OKAFOR, TRAY_DOOR, QA/QB/QC, keepPeople21, l21dChoices, handleDialogueQuestD21, questTick21, stepPlayer21.",
     "scripts/lib/level69-quest.js, scripts/lib/level22-quest.js - Wren/beacon and Emstable quest APIs; scripts/lib/places.js exports canonical place-name/title registries.",
-    "scripts/player.js - xpNeed, gain, takeToken, weaponAim, hitTarget and player actions; scripts/lib/stats.js - derived/carry/combat helpers; scripts/lib/loot.js - shared loot helpers."
+    "scripts/player.js - maxHp, maxSan, weaponOf, gain, HOLO, holoEnd, takeToken, readBookAction, readMagAction, useSnack, weaponAim, onInput; scripts/lib/stats.js - derived/carry/combat helpers; scripts/lib/loot.js - shared loot helpers."
   ],
   "ownership": [
     "scripts/player.js + scripts/lib/save.js - durable character player.state: progression/XP, health/sanity, inventory/equipment/ammo, needs, combat, access, appearance, currency and gear shared across Solo/Multiplayer.",
@@ -55,7 +55,7 @@
     "places/l31crawl/sim.js owns per-instance built flag; scripts/lib/l31crawl.js defines generated room/door/foe layout and Prize Locker contents; radio sim owns built/live/TV state and radio-use changes player snacks, cents or sanity."
   ],
   "flows": [
-    "world.config.yaml actions → templates/player.js ordered player behavior stack for locomotion, interaction, combat, inventory, social, hub, camera, quests, CCTV, radio, barter, phone, emote and god mode.",
+    "world.config.yaml actions → templates/player.js ordered behavior stack for locomotion, interaction, combat, inventory, social, hub, camera, quests, CCTV, radio, barter, phone, emote and god mode; scripts/lib/data/throwables.yml parameters → scripts/player.js throwable behavior.",
     "templates/player.js god-kit.js onInput handles configured U/godMode → editor player.state.god and gear grant; update refills survival values before scripts/player.js core update.",
     "scripts/fall-guard.js holds velocity across place changes for ground streaming; grounded positions refresh session fgSafe, and out-of-bounds restores it or leaves for spawn.",
     "world.config.yaml camera → scripts/camera.js; view3 writes player.state.tp/orbit and aimPt/aimPitch → camera and ballistics/weaponAim; camera uses worldFeetPosition for parented/seated bodies.",
@@ -64,10 +64,9 @@
     "scripts/lib/run-opts.js mpRoom/toSolo → party or personal room; scripts/bonus-door.js → hub; Bonus glass hall routes to main and main-menu places player outside the return door.",
     "Level 3 door or Boom Town sedan → Level 69 solo instance; Level 69 sim streams road/beacon posts and ramps to Level 11/22; l69-car drives and l69-post → level69-quest plants beacon.",
     "Level 13 tear → doors21; Level 21 exit door 13 → Level 13; west hall hole → Level 22 rubble arrival; Level 22 bottom-floor exit → Level 21 ARRIVE22. Level 21 door dispatch/layout and sim own shifting/RADIO routing.",
-    "Level 31 arcade back-room service hatch → scripts/level-door.js mapping l31-to-crawl → l31crawl#crawl-from-l31; crawl-back/service ladder → level31#l31-from-crawl. l31crawl sim builds once per ephemeral visit; one l31-bot manager updates tagged wardens and Level 13 walkers.",
-    "Level 4 Radio Backrooms door or Level 11 radio-station door → radio; radio exit trigger → Level 11. Radio sim maintains Ralph, ON AIR/TV and world-radio receiver; radio-use ears.press handles coffee/vending/mirror/PC/TV.",
-    "Ralph NPC dialogue through npc-starters/talk → radioChoices/handleDialogueQuestRadio; radio-quest owns milk, secrets, song request and guest progression in player.state; station requests are read by the shared radio playback timeline.",
-    "HALOGEN radio action → scripts/radio.js toggles saved player.state.radioOn/station and radioOpen; lib/screen.js arbitrates wrist tab and scripts/ui.js lazy-renders radio UI."
+    "Level 31 arcade back-room service hatch → scripts/level-door.js mapping l31-to-crawl → l31crawl#crawl-from-l31; crawl-back/service ladder → level31#l31-from-crawl. Crawl sim builds once and returns arrivals below y=-1 to its landing; scripts/l31-bot.js updates underbelly entities.",
+    "Level 4 Radio Backrooms door or Level 11 radio-station door → radio; radio exit trigger → Level 11. Radio sim builds/maintains Ralph, ON AIR/TV and world-radio receiver; radio-use ears.press handles coffee/vending/mirror/PC/TV.",
+    "Ralph NPC dialogue through npc-starters/talk → radioChoices/handleDialogueQuestRadio; radio-quest owns milk, secrets, song request and guest progression in player.state; station requests are read by the shared radio playback timeline."
   ],
   "behaviorFamilies": [
     "scripts/lib/data/furniture.yml + build-piece.js + build.js + home reconstruction - furniture-specific models/dimensions through common placement, persistence and rebuild; dining_set composes table and fitted chairs.",
@@ -93,6 +92,6 @@
     "Level ! uses places/levelrun/config.yaml solo/ephemeral; CORRIDOR and its 26 m chunk/door generation come from scripts/lib/levelrun-mechanics.js; keep sim geometry and hazard/pursuit/midpoint/collapse/exit depths aligned.",
     "Level 69 slices are 40 m along -Z; the left Level 11 tunnel and right Level 22 ramp repeat every 60 slices (2.4 km), with exits at slice offsets 55 and 28; preserve modulo-based sign, tunnel/ramp geometry and streamed positions.",
     "Level 22 layout uses FF=3.2 m floor spacing; scripts/lib/l22-layout.js defines six tiered decks, cuts, mine/pit and exit, while per-player fallen state in l22 changes panel generation and quest progress is separately in l22q.",
-    "Level 31's hatch transition is keyed by l31-to-crawl/crawl-back and uses the crawl-from-l31/l31-from-crawl spawn markers; the solo ephemeral crawl is rebuilt on first tick. Radio Backrooms is reachable from Level 4 and 11 and exits to Level 11; Shock Pad aim pitch comes from scripts/camera.js and throw handling in player.js/nade.js."
+    "Level 31 crawl is solo/ephemeral: its sim lays the room on first tick and moves players below y=-1 to (0, 0.1, 1.5); radio/cells/x0z0.scene is empty and radio sim V=4 builds the room, with fitted models using forward +x. Shock Pad launch height uses throwables.yml launchH calibrated with gMul=2 because observed body fall acceleration differs from place gravity."
   ]
 }
