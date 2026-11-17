@@ -1,9 +1,10 @@
 # records shows.py into out.json, then splices each block between songs in scripts/lib/data/<station>.yml
-import subprocess, re, json, os, sys, time, urllib.parse, glob, yaml
+import subprocess, re, json, os, sys, time, urllib.parse, glob, yaml, hashlib
 from concurrent.futures import ThreadPoolExecutor
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import shows as S
 HERE = os.path.dirname(os.path.abspath(__file__)); OUT = os.path.join(HERE, 'out.json')
 out = json.load(open(OUT)) if os.path.exists(OUT) else {}
+KEY = lambda st, who, text: st + '-' + hashlib.md5((who + '|' + text).encode()).hexdigest()[:12]  # by text: a block added later never takes another's take
 RALPH = 'voice-calm-warm-middle-aged-man-late-night-radio-dj-host-ralph-close-mic-saying-'
 def sh(c, t=300): return subprocess.run(c, shell=True, capture_output=True, text=True, timeout=t).stdout
 def dur(p): return round(float(sh(f'ffprobe -v error -show_entries format=duration -of csv=p=0 "{p}"').strip()), 2)
@@ -31,7 +32,7 @@ jobs = []
 for st, blocks in S.SHOWS.items():
     for bi, (title, lines) in enumerate(blocks):
         for li, ln in enumerate(lines):
-            jobs.append((f'{st}-{bi}-{li}', ln[0], ln[1]))
+            jobs.append((KEY(st, ln[0], ln[1]), ln[0], ln[1]))
 for rnd in range(3):
     with ThreadPoolExecutor(6) as ex: list(ex.map(job, jobs))
     json.dump(out, open(OUT, 'w'), indent=1)
@@ -43,7 +44,7 @@ for st, blocks in S.SHOWS.items():
     songs = [i for i, s in enumerate(segs) if s['kind'] == 'song']
     ins = []
     for bi, (title, lines) in enumerate(blocks):
-        keys = [f'{st}-{bi}-{li}' for li in range(len(lines))]
+        keys = [KEY(st, ln[0], ln[1]) for ln in lines]
         if not all(k in out for k in keys): print('skip block', st, title); continue
         seg = []
         for k, ln in zip(keys, lines):
