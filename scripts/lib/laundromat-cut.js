@@ -26,6 +26,7 @@ export function lmTick(ctx, ses, st) {
   if (t > LEN || ses.lmSkip) {
     for (const i of LIGHTS) light(i, 2.2)
     ctx.view.camera = null; me.anim && (me.anim.cut = null); ses.lm = null; ses.lmSkip = false
+    st.cut = null // the letterbox mark is the laundromat's alone: left set, the HUD drew the old intro's yellow fade over the tutorial
     st.lmDone = true; st.arrivePending = true; ctx.cross(me, "tutorial0")
     return true
   }
