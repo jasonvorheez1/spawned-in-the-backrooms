@@ -292,7 +292,7 @@ export function poseViewmodel(ctx, dt) {
   let x = REST[0] + (ads[0] - REST[0]) * a, y = REST[1] + (ads[1] - REST[1]) * a, d = REST[2] + (ads[2] - REST[2]) * a
   if (wp.scope) y -= 0.3 * a // through the scope the rifle drops out of the glass (it used to cover everything under the crosshair)
   if (!gun && kind !== 'fists') { x += wp.two ? 0.03 : 0.1; y -= 0.1; d += 0.3 } // a melee weapon rides out at the right edge, the fist low; two hands bring it to the middle
-  else if (gun && (fp?.left || wp.two)) { x -= 0.07 * (1 - m.ads); y += 0.015 * (1 - m.ads) } // the carry offset fades away at the sights
+  else if (gun && (fp?.left || wp.two)) { x -= 0.015 * (1 - m.ads); y += 0.01 * (1 - m.ads) } // the carry offset fades away at the sights
   x += m.swayX * sway + bobX + m.sp[0] + m.off[0] + pump[0]
   y += m.swayY * sway + bobY + brY + m.sp[1] + m.off[1] + pump[1]
   d += -m.sp[2] + m.off[2] + pump[2]

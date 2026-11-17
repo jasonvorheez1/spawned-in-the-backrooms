@@ -1556,7 +1556,7 @@ function viewmodel(ctx, moving, sprinting) {
   if (s.sheathed && w.vm && ctx.now() - (s.sheathAt ?? 0) < 400) return // still lowering out of view
   if (s.sheathed || s.climbing || s.mj?.seats || s.tp || s.menuOpen || s.arrive || s.arrivePending || ctx.self.place === 'intake') { if (w.plyObj) { ctx.destroy(w.plyObj); w.plyObj = null } if (w.vm) { ctx.destroy(w.vm); w.vm = null; w.vmKind = null; w.vmEq = null; w.plyRig = null } if (s.vmId) s.vmId = null; return } // holstered: the hands are down, out of view
   // the look and tune only change by a press: the full key is rebuilt when the weapon changes or on the 4 Hz stats beat
-  if (w.vm && w.vmEq === kind && !w.vmCheck) { if (w.plyWant && !w.plyRig && ctx.now() >= (w.plyNext ?? 0)) { w.plyNext = ctx.now() + 500; plyArm(ctx, w) } return }
+  if (w.vm && w.vmEq === kind && !w.vmCheck) { if (w.plyWant && !w.plyRig && ctx.now() >= (w.plyNext ?? 0)) { w.plyNext = ctx.now() + 60; plyArm(ctx, w) } return }
   w.vmEq = kind; w.vmCheck = false
   const tune = firstPersonTuning(s)
   const hb = !l.modelUrl && HUMAN ? humanBody(l) : null // human bodies: Shelly's own model's arm holds the weapon (her rule: first-person arms come from her model or a PLYMODEL)
@@ -1582,21 +1582,22 @@ function viewmodel(ctx, moving, sprinting) {
       if (gun) child.push({ id: 'fphold-l', feetPosition: support, rotation: tune?.lq ?? (fp?.vertical ? FP_VERTICAL_Q : FP_TWO_Q), audience: 'local', children: [{ ...arm, feetPosition: { x: -bc.x, y: bc.y, z: bc.z } }] })
       else child.push({ ...arm, feetPosition: { x: support.x - bc.x, y: support.y + bc.y, z: support.z + bc.z } })
     } else if (support && !ply) child.push({ feetPosition: support, castShadow: false, audience: 'local', primitive: { kind: 'scripted', script: 'scripts/viewmodel-geo.js', params: { ...arm, support: { axis: gun && !fp?.vertical ? 'z' : 'y', r: wp.two?.[2] ?? .023 } } } })
-    const supportWrist = support && (fp ? support : { x: .025, y: support.y - .03, z: support.z + .02 })
+    const supportWrist = support && (fp ? support : { x: -.02, y: support.y - .015, z: support.z + .025 })
     w.plyGrip = fp ? { x: .01, y: .055, z: .085 } : { x: -.015, y: -.015, z: .03 }
     w.plySupport = supportWrist
     w.catGun = !!cs && gun
     w.catForeEnd = w.catGun && !!fp && !fp.vertical && !!supportWrist
+    w.plyLeftScale = 1
     if (w.catGun) {
       // Put the wrist behind each weapon's measured grip so the front of the paw wraps over it.
       const gp = fp?.grip
       w.plyGrip = support
-        ? (gp ? { x: gp[0] - .035, y: gp[1] - .005, z: gp[2] + .015 } : { x: -.03, y: .03, z: .09 })
+        ? (gp ? { x: gp[0] - .032, y: gp[1] - .005, z: gp[2] + .02 } : { x: -.03, y: .03, z: .09 })
         : (gp ? { x: gp[0] - .073, y: gp[1] + .037, z: gp[2] + .021 } : { x: -.073, y: .075, z: .046 })
       if (w.catForeEnd && !tune?.lat) {
-        w.plySupport = { x: supportWrist.x + .014, y: supportWrist.y - .062, z: supportWrist.z - .02 }
+        w.plySupport = { x: supportWrist.x + .005, y: supportWrist.y - .042, z: supportWrist.z + .005 }
       } else if (fp?.vertical && supportWrist && !tune?.lat) {
-        w.plySupport = { x: supportWrist.x + .035, y: supportWrist.y - .01, z: supportWrist.z + .02 }
+        w.plySupport = { x: supportWrist.x - .01, y: supportWrist.y - .015, z: supportWrist.z + .025 }
       }
     }
     // the worn model rides the viewmodel: shoulder just behind and below the eye, its right hand reaching the grip
@@ -1608,15 +1609,21 @@ function viewmodel(ctx, moving, sprinting) {
       const mats = Object.fromEntries(Object.entries(cs.model.materials ?? {}).map(([k, m]) => [k, m?.params ? { ...m, params: { ...m.params, tuckT: 0, tuckB: 0, tuckS: 0 } } : m]))
       const arms = { model: { ...cs.model, id: cat.glb, materials: mats }, /* no body morph: its shape keys are the whole body's and thin the cut arm to sticks (Shelly: 'why do my arms look like sticks') */ ...(cs.scale ? { scale: cs.scale } : {}),
         castShadow: false, visibleInFirstPerson: true, audience: 'local' }
-      const g = w.plyGrip, rAt = tune?.cat ?? { x: cat.at.x, y: Math.max(cat.at.y, g.y - .16), z: Math.min(cat.at.z, g.z + .21) }
+      const g = w.plyGrip, rAt = tune?.cat ?? { x: cat.at.x, y: Math.max(cat.at.y - (fp?.shoulder ? .04 : 0), g.y - .16), z: Math.min(cat.at.z, g.z + .21) }
       child.push({ ...arms, id: 'plyarm', bones: { 'mixamorig:LeftArm': { scale: 0 } }, feetPosition: rAt })
-      // Seat LeftArm shoulder off-screen bottom-left within the scaled reach radius so the forearm enters naturally and no sleeve cuff enters view.
+      // Seat LeftArm off-screen below-left and scale the arm chain so IK reaches the fore-end without bending Spine into view; LeftHand inverse-scales to match the right paw.
       if (support) {
         const f = w.plySupport ?? supportWrist
         const scale = cs.scale ?? { x: 1, y: 1, z: 1 }
+        const baseReach = l.sex === 'f' ? .265 : .295
+        const lx = l.sex === 'f' ? -.095 : -.11, ly = l.sex === 'f' ? .039 : .065, lz = l.sex === 'f' ? -.014 : -.007
+        const sh = { x: f.x - .16, y: Math.min(f.y - .27, -.21), z: f.z + .18 }
+        const dist = Math.hypot(f.x - sh.x, f.y - sh.y, f.z - sh.z)
+        const sMul = w.catGun ? Math.max(1.28, Math.min(1.72, (dist + .045) / baseReach)) : 1.35
+        w.plyLeftScale = sMul
         child.push({ ...arms, id: 'plyarm-left', bones: { 'mixamorig:RightArm': { scale: 0 } },
-          scale: { x: scale.x * 1.32, y: scale.y * 1.32, z: scale.z * 1.32 },
-          feetPosition: { x: Math.min(f.x - .24, -.26), y: Math.min(f.y - .33, -.26), z: f.z + .16 } })
+          scale: { x: scale.x * sMul, y: scale.y * sMul, z: scale.z * sMul },
+          feetPosition: w.catGun ? { x: sh.x - lx * sMul, y: sh.y - ly * sMul, z: sh.z - lz * sMul } : { x: f.x - .18, y: Math.min(f.y - .355, -.25), z: f.z + .23 } })
       }
     }
     else if (ply) child.push({ id: 'plyarm', model: ply, rotation: { yaw: 180, pitch: 0, roll: 0 }, feetPosition: { x: 0.12, y: -1.3, z: 0.68 }, /* a plymodel's rest arm runs along its own +Z: turned 180 it points ahead, the hand at the grip, the shoulder just below-right of the eye (Shelly Nov 15: first person showed no arm) */ castShadow: false, visibleInFirstPerson: true, audience: 'local', anim: { idle: { clip: 'Idle', loop: 'loop', weight: 1 } } })
@@ -1627,7 +1634,7 @@ function viewmodel(ctx, moving, sprinting) {
     w.vmKind = armKey
   }
   w.plyWant = !!ply && !hb
-  if (ply && !w.plyRig && ctx.now() >= (w.plyNext ?? 0)) { w.plyNext = ctx.now() + 500; plyArm(ctx, w) } // its skeleton arrives with the model: look twice a second, not every tick
+  if (ply && !w.plyRig && ctx.now() >= (w.plyNext ?? 0)) { w.plyNext = ctx.now() + 80; plyArm(ctx, w) } // its skeleton arrives with the model: check quickly until seated
   if (w.vm && s.vmId !== w.vm) s.vmId = w.vm // scripts/lib/vmpose.js poses it every display frame from the camera rig
 }
 
@@ -1674,7 +1681,7 @@ function fitPaws(body, w, left, both) {
   for (const name of names) if (cut.some((r) => r.test(bone(name)))) bones[name] = { scale: 0 }
   const grip = (left, offset) => {
     const name = names.find((n) => (left ? LH : RH).test(bone(n)))
-    if (name) bones[name] = { ...(left && w.plySplit ? { scale: 1 / 1.22 } : {}), ...(w.catGun && (!left || w.catForeEnd) ? { rotate: [0, 0, left ? 24 : -18] } : {}), reach: { to: { object: w.vm, offset }, pole: { object: w.vm, offset: { x: left ? -.45 : .42, y: -.55, z: .38 } } } }
+    if (name) bones[name] = { ...(left && w.plySplit ? { scale: 1 / (w.plyLeftScale || 1.32) } : {}), ...(left && w.catForeEnd ? { rotate: [-22, 0, 52] } : w.catGun ? { rotate: [0, 0, left ? 14 : -18] } : {}), reach: { to: { object: w.vm, offset }, pole: { object: w.vm, offset: { x: left ? (w.catGun ? -.16 : -.45) : .42, y: left ? (w.catGun ? -.85 : -.55) : -.55, z: left ? (w.catGun ? .08 : .38) : .38 } } } }
   }
   if (left || both) grip(true, w.plySupport)
   if (!left) grip(false, w.plyGrip)
