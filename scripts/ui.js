@@ -5,6 +5,7 @@ import { quickBar } from './lib/hud-quickbar.js'
 import { UI_THEME } from './lib/ui-theme.js'
 import { uiPrefsAttrs, uiPrefsOf, noticeToast, escKeyHandler } from './lib/ui-kit.js'
 import { screen, hasHalogen } from './lib/screen.js'
+import { runOf } from './lib/run-opts.js'
 import { rulesHtml, grm as grmPress, grmType as grmTyped } from "../mods/game-rules-manager/lib/panel.js";
 export function grm(a, i, s) { grmPress(a, i, s); }
 export function grmType(i, v) { grmTyped(i, v); }
@@ -60,6 +61,7 @@ export async function plyUpload(input) { const m = await import('./lib/plyimport
 const NEEDS_CSS = `<style>#tk{position:fixed;left:22px;bottom:192px;max-width:300px;pointer-events:none;font-size:11px;letter-spacing:.08em;color:#f2c14e;text-shadow:0 1px 3px #000}#tk b{color:#fff3d6}#nd{position:fixed;left:22px;bottom:192px;width:150px;pointer-events:none;font-size:10.5px;letter-spacing:.14em;color:#ffcf87;text-shadow:0 1px 3px #000}#nd .r{display:flex;align-items:center;gap:6px;margin-top:3px}#nd .r span{width:34px}#nd .b{flex:1;height:5px;background:#0009;border:1px solid #ffb34755}#nd .b u{display:block;height:100%;background:#7fc4e8}#nd .r.h .b u{background:#d9a35a}#nd .r.lo{color:#ff7a5a}#nd .r.lo .b u{background:#e0644f}</style>`
 function needsHud(s) {
   if (s.level == null || s.hunger == null) return ''
+  if (runOf(s).needs === 'off' && !s.l4task) return '' // Hunger & Thirst off: no bars to watch
   const lo = 25
   return NEEDS_CSS + `<div id="nd"><div class="r h ${s.hunger < lo ? 'lo' : ''}"><span>FOOD</span><div class="b"><u style="width:${s.hunger}%"></u></div></div><div class="r ${s.thirst < lo ? 'lo' : ''}"><span>WATER</span><div class="b"><u style="width:${s.thirst}%"></u></div></div>${(s.l169sun ?? 0) > 0 || s.l169lit ? `<div class="r ${s.l169sun >= 50 ? 'lo' : ''}"><span>SUN</span><div class="b"><u style="width:${Math.min(100, s.l169sun ?? 0)}%"></u></div></div>` : ''}${(s.l169chill ?? 0) > 5 ? `<div class="r ${s.l169chill >= 50 ? 'lo' : ''}"><span>COLD</span><div class="b"><u style="width:${s.l169chill}%"></u></div></div>` : ''}</div>` + (s.l4task ? `<div id="tk">TASK · ${esc(s.l4task.text)} <b>${s.l4task.have ?? 0}/${s.l4task.need}</b></div>` : '')
 }
@@ -530,7 +532,7 @@ ${underwater(s)}<div id="hud" data-panel-open="${['inventory','craft','sheet','j
   <!-- BOTTOM-LEFT: HP, sanity, compass, rank -->
   ${halogen ? `<div class="bl" style="position:absolute;left:28px;bottom:22px;width:min(300px,44vw)">
     ${bar('HP', s.hp, mh, hpF < 0.3 ? 'oklch(0.68 0.2 35)' : 'var(--a)', `${Math.ceil(s.hp)}/${mh}`)}
-    ${bar(`SAN <span style="opacity:.7">· ${sanWord}</span>`, s.sanity, ms, sanF < 0.25 ? 'oklch(0.68 0.2 35)' : 'var(--a)', `${Math.round(Math.max(0,Math.min(1,sanF))*100)}%`)}
+    ${runOf(s).sanity === 'off' ? '' : bar(`SAN <span style="opacity:.7">· ${sanWord}</span>`, s.sanity, ms, sanF < 0.25 ? 'oklch(0.68 0.2 35)' : 'var(--a)', `${Math.round(Math.max(0,Math.min(1,sanF))*100)}%`)}
     ${(s.cold ?? 0) > 0 ? bar(`COLD <span style="opacity:.7">· ${s.cold >= 70 ? 'freezing' : s.cold >= 40 ? 'shivering' : 'chilly'}</span>`, s.cold, 100, s.cold >= 70 ? 'oklch(0.72 0.14 235)' : 'oklch(0.82 0.08 220)') : ''}
     ${(s.chill ?? 0) > 0 && (player?.place ?? ctx?.place?.id) === 'level70' ? bar(`CHILL <span style="opacity:.7">· ${s.chill >= 70 ? 'numb' : s.chill >= 40 ? 'shivering' : 'nippy'}</span>`, s.chill, 100, s.chill >= 70 ? 'oklch(0.72 0.14 235)' : 'oklch(0.82 0.08 220)') : ''}
     ${(s.heat ?? 0) > 0 ? bar(`HEAT <span style="opacity:.7">· ${s.heat >= 70 ? 'scalding' : s.heat >= 40 ? 'sweltering' : 'warm'}</span>`, s.heat, 100, s.heat >= 70 ? 'oklch(0.66 0.22 30)' : s.heat >= 40 ? 'oklch(0.75 0.17 55)' : 'oklch(0.82 0.14 80)', `${Math.round(s.heat)}°`) : ''}
