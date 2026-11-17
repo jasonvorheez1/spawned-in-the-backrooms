@@ -8,7 +8,7 @@ import { spawnPhoebe, dropPhoebe } from "./phoebe.js"
 import { noStory } from "./run-opts.js"
 const SND = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
 const SMILER_MODEL = { id: "/cdn/value.fb443f6a23bcd4977c437db42b3f9abe2510fcb6cf2076ee4956fb235d581b26.glb", forward: "+x" } // scripts/smilers.js
-export const LEN = { encounter: 16.5, final: 14 } // Shelly Nov 16: the cut ends once the name is fully up (12 s); the card then holds through the crossing (cutscene-ui t0Fade)
+export const LEN = { encounter: 20.7, final: 14 } // Shelly Nov 16: the cut ends once the name is fully up (12 s); the card then holds through the crossing (cutscene-ui t0Fade)
 const GASP = "/cdn/value.1f5d195f954552c9304c8d13f9177b97b62b100316d004215a918c9282445aad.mp3"   // johnadams2 (Nov 9): "the cutscenes feel like bootleg mobile games": every shot is held by a person, never a tripod.
 // Savi's picks: a slow breathing drift (~1.5 cm at the eye, ~0.35 deg of aim) made of three sines, so no two seconds repeat
 const wob = (t, s) => Math.sin(t * 0.83 + s) * 0.6 + Math.sin(t * 2.1 + s * 2.3) * 0.3 + Math.sin(t * 4.7 + s * 3.7) * 0.1
@@ -103,6 +103,28 @@ function walkHall(ctx, ses, st, p) {
 const BEAT = {
   // unarmed. something crawls out of hall C; they back into the corner; the broken desk; a leg on the floor; one swing; run
   encounter(ctx, c, t, once, st) {
+    // Shelly Nov 17: "new context". Before anything moves: a walkie on the floor of hall C, a tired man's last call, then static,
+    // and the shape slumped beside it, which you took for him, lifts its head. Then the old beats, 4.2 s later.
+    const PRE = 4.2
+    if (t < PRE) {
+      const me = ctx.self, from = { x: ENC.from.x, y: 0, z: ENC.from.z }
+      me.feetPosition = { x: c.p0.x, y: 0, z: c.p0.z }; me.rotation = { yaw: yawTo(c.p0, from) }
+      once("pre", () => {
+        me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" }
+        for (const i of [7, 8]) { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) o.light = { ...o.light, intensity: 1.2 } }
+        c.ent = ctx.spawn({ audience: "local", scope: "session", lifetime: 60, feetPosition: from, rotation: 90, scale: 1.6, model: SMILER_MODEL, children: [{ feetPosition: { x: 0, y: 0.75, z: 0 }, light: { kind: "point", color: "#f4f1e6", intensity: 0, distance: 3 } }] })
+        const e = ctx.getObject(c.ent); if (e) e.anim.body = { clip: "cdn/clip-crouch-idle-loop.glb", loop: "loop", weight: 1 }
+        raw(ctx, `/cdn/voice-tired-hoarse-man-on-a-crackling-walkie-talkie-saying-${encodeURIComponent("Anyone on this channel... if you can hear me, don't go toward the lights.")}.mp3`, 0.85, { x: from.x - 0.6, y: 0.2, z: from.z })
+      })
+      if (t > 3.3) once("static", () => {
+        raw(ctx, "/cdn/moodboard-realistic-gritty/sfx-walkie-talkie-squelch-cutting-to-dead-static.mp3", 0.7, { x: from.x - 0.6, y: 0.2, z: from.z })
+        const l = ctx.getObject(c.ent)?.children?.[0]; if (l?.light) l.light = { ...l.light, intensity: 0.7 } // its face catches the light
+      })
+      if (t < 2.4) ctx.view.camera = { eye: { x: c.p0.x - 0.35, y: 1.55, z: c.p0.z + 0.6 }, aim: { x: from.x, y: 0.5, z: from.z }, fov: 50 - 8 * ss(0, 2.4, t), cut: t < 0.05 }
+      else ctx.view.camera = { eye: { x: from.x - 2.2, y: 0.55, z: from.z + 0.9 }, aim: { x: from.x, y: 0.75, z: from.z }, fov: 38 - 6 * ss(2.4, PRE, t) } // low on the floor: the walkie, then it
+      return false
+    }
+    t -= PRE
     const me = ctx.self, cor = { x: ENC.corner.x, y: 0, z: ENC.corner.z }, legAt = { x: ENC.leg.x, y: 0.05, z: ENC.leg.z }
     const stop = { x: -0.9, z: -29.5 }, lunge = { x: -2.05, z: -29.85 }, out = { x: 6.5, y: 0, z: -28 }
     once("set", () => {
@@ -112,7 +134,7 @@ const BEAT = {
     })
     // the entity: crawls in, stops short, lunges, gets hit, goes down
     if (t > 1.0) once("ent", () => {
-      c.ent = ctx.spawn({ audience: "local", scope: "session", lifetime: 60, feetPosition: { x: ENC.from.x, y: 0, z: ENC.from.z }, rotation: 90, scale: 1.6, model: SMILER_MODEL, children: [{ feetPosition: { x: 0, y: 0.75, z: 0 }, light: { kind: "point", color: "#f4f1e6", intensity: 0.7, distance: 3 } }] })
+      c.ent ??= ctx.spawn({ audience: "local", scope: "session", lifetime: 60, feetPosition: { x: ENC.from.x, y: 0, z: ENC.from.z }, rotation: 90, scale: 1.6, model: SMILER_MODEL, children: [{ feetPosition: { x: 0, y: 0.75, z: 0 }, light: { kind: "point", color: "#f4f1e6", intensity: 0.7, distance: 3 } }] })
       const e = ctx.getObject(c.ent); if (e) e.anim.body = { clip: "cdn/clip-crouch-walk-loop.glb", loop: "loop", weight: 1 }
     })
     const E = c.ent && ctx.getObject(c.ent)
@@ -168,7 +190,7 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
     else if (t < 11.6) ctx.view.camera = { eye: { x: 0.9, y: 1.35, z: -30.7 }, aim: L3({ x: cor.x, y: 1.1, z: cor.z }, { x: lunge.x, y: 0.9, z: lunge.z }, ss(9, 10.2, t)), fov: lerp(46, 34, ss(9.4, 10.3, t)) } // side on: the lunge, the swing
     else if (t < 13) ctx.view.camera = { eye: { x: cor.x + 0.2, y: 1.6, z: cor.z + 0.1 }, aim: { x: lunge.x + 1.1, y: 0.15, z: lunge.z + 0.5 }, fov: 50 } // it's down
     else { const p = me.feetPosition; ctx.view.camera = { eye: { x: p.x - 1.4, y: 1.7, z: p.z - 0.6 }, aim: { x: p.x + 4, y: 1.3, z: p.z + 0.2 }, fov: 72 } }
-    if (t > LEN.encounter) { me.feetPosition = out; me.rotation = { yaw: -90 }; return true }
+    if (t > LEN.encounter - 4.2) { me.feetPosition = out; me.rotation = { yaw: -90 }; return true }
     return false
   },
   // room D: the Backrooms Robotics HALOGEN issue machine, still powered; an arm in the port, a clamp, a unit on the wrist, the sheet
