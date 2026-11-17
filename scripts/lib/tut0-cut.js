@@ -191,30 +191,42 @@ pop chips burst=8..12 life=.6..1 v=sdir()*(2..3.5)+up(1) size=.02..0.04 acc=grav
     return t > 4 && !st.sheetOpen
   },
   // the far wall of room F won't sit still (Shelly Nov 17, no Phoebe): behind them the hall's lamps die one by one, coming closer, and they walk into the wallpaper and through it
+  // Shelly Nov 17: "the ending part should be more interesting with better sounds". The wet patch is the laundromat calling
+  // you back: the dryer you left thumps up through the carpet, the lights go, the floor takes you, black on its end-of-cycle buzzer.
   final(ctx, c, t, once, st) {
-    const me = ctx.self, at = { x: SOFT.x, y: 0, z: SOFT.z }, S = 5.2 // the walk starts
-    const wall = { x: 45, y: 1.35, z: 4 }, past = { x: 45, y: 0, z: 4.6 }
-    if (t < S) me.feetPosition = { x: lerp(c.p0.x, at.x, ss(0, 0.8, t)), y: 0, z: lerp(c.p0.z, at.z, ss(0, 0.8, t)) }
-    else me.feetPosition = L3(at, past, ss(S, S + 3.0, t))
-    me.rotation = { yaw: 180 } // eyes on the wall the whole time: they never see the dark coming
-    const dark = (i) => { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) { o.light = { ...o.light, intensity: 0 }; raw(ctx, H.switch, 0.55, o.feetPosition) } }
-    for (const [i, at2] of [[17, 2.2], [18, 3.0], [19, 3.7], [20, 4.3]]) if (t > at2) once("dark" + i, () => dark(i)) // far to near, each one closer
-    once("hum", () => { raw(ctx, H.buzz, 0.7, wall); me.anim.cut = { clip: "cdn/clip-idle-loop.glb", weight: 4, loop: "loop" } })
-    if (t > 2.0) once("breath", () => raw(ctx, BREATH, 0.5))
-    if (t > 4.2) once("groan", () => raw(ctx, H.doom, 0.7))
-    if (t > S) once("walk", () => { me.anim.cut = { clip: "cdn/clip-walk-loop.glb", weight: 4, loop: "loop", speed: 0.8 } })
-    if (t > S + 2.2) once("score", () => raw(ctx, SCORE, 1.0)) // the score comes up as they touch the wall and carries the fall and the title
-    if (t > S + 2.4) once("through", () => {
-      raw(ctx, H.sting2, 1.0, wall); raw(ctx, GASP, 0.8)
-      fx1(ctx, "screenFlash", { color: "#fffbe0", duration: 0.6, intensity: 0.35 }); fx1(ctx, "screenShake", { intensity: 0.18, duration: 0.8 })
+    const me = ctx.self, at = { x: SOFT.x, y: 0, z: SOFT.z }, W = (n) => `/cdn/moodboard-realistic-gritty/sfx-${n}.mp3`
+    const SINK0 = 5.0, SINK1 = 8.0
+    const y = t < SINK0 ? 0 : -1.9 * ss(SINK0, SINK1, t)
+    me.feetPosition = { x: lerp(c.p0.x, at.x, ss(0, 1.2, t)), y, z: lerp(c.p0.z, at.z, ss(0, 1.2, t)) }
+    me.rotation = { yaw: 180 }
+    once("crouch", () => { me.anim.cut = { clip: "cdn/clip-crouch-idle-loop.glb", weight: 4, loop: "loop" } })
+    once("seep", () => {
+      raw(ctx, W("water-seeping-up-through-soaked-carpet-squelch"), 0.7, at)
+      c.pool = ctx.spawn({ audience: "local", scope: "session", lifetime: 60, feetPosition: { x: at.x, y: 0.015, z: at.z }, scale: 0.3,
+        primitive: { kind: "circle", radius: SOFT.r * 1.3, segments: 40 }, rotation: { pitch: -90 }, material: { kind: "water", color: "#141008", opacity: 0.92, waveIntensity: 0.25 } })
+      animate(ctx, c.pool, { scale: [0.3, 1.0] }, { duration: SINK1 * PACE, easing: "easeOutQuad" })
     })
-    if (t > S + 2.7) once("gone", () => { me.hidden = [...(me.hidden || []), me.id]; raw(ctx, H.scream, 0.35) })
-    if (t > S + 3.8) once("thud", () => raw(ctx, H.slowst, 0.8))
-    if (t > 9.5) once("title", () => raw(ctx, H.cresc, 0.9)) // lands with the name (cutscene-ui: 9.8 s)
-    if (t < 2) { const u = ss(0, 2, t); ctx.view.camera = { eye: { x: at.x + 0.4, y: 1.6, z: at.z + 0.6 }, aim: wall, fov: lerp(55, 32, u) } } // the wallpaper ahead, crawling
-    else if (t < S) { const u = ss(2, S, t); ctx.view.camera = { eye: { x: 44.2, y: 1.5, z: 2.8 }, aim: L3({ x: 44.9, y: 1.45, z: -4 }, { x: 44.95, y: 1.4, z: -12 }, u), fov: lerp(46, 36, u) } } // from the wall: their face, oblivious, and the hall behind them going dark lamp by lamp
-    else { const p = me.feetPosition, k = ss(S + 2.7, S + 3.4, t); ctx.view.camera = { eye: { x: at.x + 0.5, y: 1.75, z: lerp(Math.min(p.z - 2.2, 1.6), 4.4, k) }, aim: { x: wall.x, y: wall.y, z: wall.z + 1 }, fov: lerp(50, 80, k) } } // behind them as they press in, then the lens goes through after them
-    if (t > LEN.final) { st.t0Done = true; st.t0fade = ctx.now(); return true }
+    if (t > 0.8) once("thump", () => raw(ctx, W("muffled-tumble-dryer-thumping-a-shoe-heard-through-a-floor"), 0.85, { ...at, y: -1 }))
+    const dark = (i) => { const o = ctx.getObject(`t0-light-${i}`); if (o?.light) { o.light = { ...o.light, intensity: 0 }; raw(ctx, H.switch, 0.55, o.feetPosition) } }
+    for (const [i, a] of [[17, 2.4], [18, 3.1], [19, 3.7], [20, 4.2], [21, 4.6]]) if (t > a) once("dark" + i, () => dark(i))
+    if (t > 3.0) once("breath", () => raw(ctx, BREATH, 0.45))
+    if (t > SINK0) once("give", () => {
+      raw(ctx, W("wet-carpet-tearing-floor-giving-way-into-deep-water-gulp"), 1.0, at)
+      fx1(ctx, "screenShake", { intensity: 0.12, duration: 0.9 })
+      ctx.emit("fx", { position: { ...at, y: 0.05 }, script: `fx
+pop ring burst=3 life=1.6..2.2 size=.4 sz=$size*(1>6) col=<.2,.17,.1> a=.5>0 r=sprite(soft-disc,alpha)
+pop drip burst=24 life=.5..0.9 on=disc(.6) v=up(1.2..2.4)+sdir()*.4 size=.02..0.04 acc=grav() col=<.18,.15,.09> a=.8 floor=die r=sprite(droplet,alpha)` }, { audience: { player: me.id } })
+    })
+    if (t > SINK0 + 0.8) once("under", () => raw(ctx, W("muffled-underwater-rumble-fluorescent-hum-fading-away"), 0.8, { ...at, y: -1 }))
+    if (t > SINK1 - 0.4) once("gone", () => { me.hidden = [...(me.hidden || []), me.id] })
+    if (t > 8.6) once("bubbles", () => raw(ctx, W("last-air-bubbles-breaking-a-still-dark-surface"), 0.6, at))
+    if (t > 10.4) once("buzzer", () => raw(ctx, W("old-laundromat-dryer-end-of-cycle-buzzer-far-away"), 0.7))
+    // shots: the carpet at the patch, low; the hall from the far end going dark; straight down on them as it takes them; the water closing
+    if (t < 2.4) { const u = ss(0, 2.4, t); ctx.view.camera = { eye: { x: at.x + 1.3, y: 0.22, z: at.z + 0.9 }, aim: { x: at.x, y: lerp(0.05, 0.5, u), z: at.z }, fov: lerp(46, 38, u) } }
+    else if (t < SINK0) { const u = ss(2.4, SINK0, t); ctx.view.camera = { eye: { x: 44.3, y: 1.55, z: lerp(-6.5, -5.2, u) }, aim: { x: at.x, y: 0.7, z: at.z }, fov: 40 } }
+    else if (t < 9.6) { const u = ss(SINK0, 9.6, t); ctx.view.camera = { eye: { x: at.x + 0.02, y: lerp(2.6, 1.9, u), z: at.z + 0.05 }, aim: { x: at.x, y: -2, z: at.z }, fov: lerp(62, 34, u) } }
+    else ctx.view.camera = { eye: { x: at.x + 0.02, y: 1.9, z: at.z + 0.05 }, aim: { x: at.x, y: -2, z: at.z }, fov: 34 }
+    if (t > LEN.final) { if (c.pool) ctx.destroy(c.pool); st.t0Done = true; st.t0fade = ctx.now(); return true }
     return false
   },
 }
