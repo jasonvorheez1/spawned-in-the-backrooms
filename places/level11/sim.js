@@ -1907,7 +1907,7 @@ const L11_VOICES = {
 // Master tick simulation loop
 const mem = { ringAt: 0, adAt: 0, lightAt: 0, lightPhase: 0 };
 export function tick(ctx) {
-  if (ctx.place.state.radioV !== 3 || !ctx.place.objects["l11-to-radio"]) { ctx.place.state.radioV = 3;
+  if (ctx.place.state.radioV !== 4 || !ctx.place.objects["l11-to-radio"]) { ctx.place.state.radioV = 4;
     { // the station house: a squat brick booth the door is set into, a flat tar roof, an aerial on top
       const B = { texture: "cdn/texture-weathered-red-brick-wall.png", repeat: [1, 1], wrap: "repeat", color: "oklch(0.62 0.07 35)", roughness: 0.9 };
       const W = (id, x, z, w, d, h = 3) => ctx.spawn(id, { feetPosition: { x, y: 0, z }, physics: "static", primitive: { kind: "box", width: w, height: h, depth: d }, material: B });
@@ -1919,7 +1919,7 @@ export function tick(ctx) {
     } // Wikidot: the Radio Station in Level 11 leads to Radio Backrooms
     ctx.spawn("l11-radio-door-mesh", { feetPosition: { x: -6.5, y: 0, z: 13.5 }, rotation: { yaw: 90 }, physics: { body: "static", collider: "mesh" }, primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "metal", w: 1.0, h: 2.15, part: "set", vision: true, seed: 11 } }, material: { pbr: true } });
     ctx.spawn("l11-to-radio", { tags: ["door"], feetPosition: { x: -6.85, y: 0, z: 13.5 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 0.5, height: 2.3, depth: 1.1 }, visible: false, behavior: "scripts/level-door.js", state: { to: "radio" } });
-    ctx.spawn("l11-radio-sign", { feetPosition: { x: -6.62, y: 2.35, z: 13.5 }, rotation: { yaw: 90 }, castShadow: false, vector: "<svg viewBox='0 0 300 60' width='1.3m'><rect x='2' y='2' width='296' height='56' rx='4' fill='#14110d' stroke='#d8452e' stroke-width='3'/><circle cx='26' cy='30' r='8' fill='#ff4a2e' filter='drop-shadow(0 0 6 #ff4a2e)'/><text x='160' y='41' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='30' fill='#f3ead8'>RADIO STATION</text></svg>" });
+    ctx.spawn("l11-radio-sign", { feetPosition: { x: -6.5, y: 2.45, z: 13.5 }, rotation: { yaw: 90 }, castShadow: false, vector: "<svg viewBox='0 0 300 60' width='1.3m'><rect x='2' y='2' width='296' height='56' rx='4' fill='#14110d' stroke='#d8452e' stroke-width='3'/><circle cx='26' cy='30' r='8' fill='#ff4a2e' filter='drop-shadow(0 0 6 #ff4a2e)'/><text x='160' y='41' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='30' fill='#f3ead8'>RADIO STATION</text></svg>" });
   }
   if (ctx.place.players?.length) kitPass(ctx, "level11"); // every usable answers with its own part, sound and light (scripts/lib/data/usable-kit.json)
   texSigns(ctx, SIGN_TEX);
