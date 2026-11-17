@@ -156,6 +156,11 @@ export function tick(ctx) {
     ctx.spawn({ feetPosition: { x: STAIRS.x, y: 2.45, z: STAIRS.z - 0.12 }, rotation: { yaw: 180 }, primitive: { kind: "box", width: 1.1, height: 0.32, depth: 0.03 }, material: { color: "oklch(0.25 0.04 50)" },
       ui: '<div face="front" width="1.1m" style="font-family:serif;font-size:120px;font-weight:900;color:#e8c983;text-align:center;line-height:1.05">LEVEL 5<div style="font-size:60px;font-style:italic">▼ the hotel</div></div>' });
   }
+  if (ctx.place.state.radioV !== 1) { ctx.place.state.radioV = 1; // Wikidot: a door in Level 4 that says "Radio Backrooms"
+    ctx.spawn("l4-radio-door-mesh", { feetPosition: { x: 26, y: 0, z: -31.75 }, rotation: { yaw: 180 }, physics: { body: "static", collider: "mesh" }, castShadow: false, primitive: { kind: "scripted", script: "scripts/door-geo.js", params: { style: "wood", w: 0.95, h: 2.1, part: "set", seed: 4 } }, material: { pbr: true } });
+    ctx.spawn("l4-to-radio", { tags: ["door"], feetPosition: { x: 26, y: 0, z: -31.4 }, physics: { body: "static", trigger: true }, primitive: { kind: "box", width: 1, height: 2.2, depth: 0.5 }, visible: false, behavior: "scripts/level-door.js", state: { to: "radio" } });
+    ctx.spawn("l4-radio-sign", { feetPosition: { x: 26, y: 2.25, z: -31.7 }, castShadow: false, vector: "<svg viewBox='0 0 300 60' width='1.1m'><rect x='2' y='2' width='296' height='56' rx='6' fill='#2a1d14' stroke='#c9a35a' stroke-width='3'/><text x='150' y='40' text-anchor='middle' font-family='serif' font-size='30' fill='#f1d9a0'>Radio Backrooms</text></svg>" });
+  }
   const s = ctx.place.state;
   if (s.builtV !== V) { s.builtV = V; lay(ctx); }
   if (!s.cotUseV) { wireOfficeCots(ctx); s.cotUseV = 1; }
